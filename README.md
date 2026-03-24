@@ -2,7 +2,7 @@
 
 **Build the best team in any field — before you write a single line.**
 
-A Claude Code skill that researches your domain, finds the best practitioners, blends their philosophies into focused expert personas, and scaffolds a lean project that makes every future session smarter. Run it again later and it audits your setup, finds the gaps, and restores balance.
+A Claude Code skill that researches your domain, finds the best practitioners, blends their philosophies into focused expert personas, and scaffolds a lean project that makes every future session smarter. Run it again later and it audits your setup, finds the gaps, and protects what you built.
 
 > *"You want to build something great? Start by assembling the right team."*
 
@@ -67,7 +67,7 @@ Every line in `.claude/rules/` loads on every conversation — even when irrelev
 | `CLAUDE.md` | Team roster with blended philosophies, project identity |
 | `.claude/rules/standards.md` | Quality gates, anti-patterns, forbidden list |
 | `.claude/rules/workflow.md` | How to approach work in this domain |
-| `.claude/rules/snap.md` | **The Snap** — restores balance, prevents bloat |
+| `.claude/rules/snap.md` | **The Snap** — protects the kit, whatever it takes |
 | `.claude/rules/{extensions}.md` | Domain-specific rules as needed |
 
 **Tier 2: Deep references** — on-demand, zero cost when unused
@@ -106,12 +106,12 @@ No hardcoded categories. No routing logic.
 
 ### The Snap
 
-Named after the moment that restored balance to the universe — because that's what it does to your kit.
+Tony Stark's snap wasn't about wiping things clean — it was about sacrificing what had to go so everything that mattered could survive. That's what this file does to your kit.
 
 Every project gets `snap.md`, which runs at the end of every session:
 
 - **Audits first, saves second** — the primary job is maintaining kit health, not logging
-- **Snaps away derivable rules** — if the codebase now makes it obvious, remove it
+- **Lets go of derivable rules** — if the codebase now makes it obvious, it's served its purpose
 - **Merges overlaps** — three versions of the same rule become one
 - **Enforces ~60 line caps** — pushes detail to references when files get heavy
 - **Questions every rule** — "is this worth loading on every conversation?"
@@ -207,7 +207,7 @@ Every project gets exactly what it needs. No more, no less.
 4. **Every rule pays rent.** Auto-loaded rules cost tokens on every task. Only write rules worth that cost.
 5. **Non-derivable only.** If the agent can figure it out from the project, don't write a rule.
 6. **Task-aware depth.** Rules tell the agent *when* to read references, not just that they exist.
-7. **The Snap.** The kit gets sharper over time, not bigger. Every session restores balance.
+7. **The Snap.** The kit gets sharper over time, not bigger. Whatever it takes.
 8. **Nothing without approval.** It proposes. You approve. Files are written last.
 
 ---
@@ -249,7 +249,7 @@ This research shaped three core decisions in the skill:
 
 **The non-derivable rule.** Only write rules for things the agent can't figure out by reading the project files. Philosophy, quality bars, blended authorities — write those, they're not discoverable. Directory structure, code patterns, file organization — never write those, the agent navigates codebases on its own. Codebase overviews are actively harmful because they waste attention on information the agent would have found anyway.
 
-**The Snap.** Every project gets `snap.md` — a file that runs at the end of every session and restores balance. Before adding a rule: "Does this overlap with something that already exists? Can the agent figure this out from the code? Is this needed on every conversation or just sometimes?" After adding: "Is each rule still earning its token cost?" The kit gets sharper over time, not bigger. We named it after the moment that restored balance to the universe — because that's exactly what it does to the kit.
+**The Snap.** Every project gets `snap.md` — named after Tony's snap, not Thanos's. It's not about indiscriminate wiping — it's about sacrificing what has to go so everything that matters survives. Before adding a rule: "Does this overlap with something that already exists? Can the agent figure this out from the code? Is this needed on every conversation or just sometimes?" After adding: "Is each rule still earning its token cost?" The kit gets sharper over time, not bigger. Whatever it takes.
 
 ### Why two tiers instead of one
 
