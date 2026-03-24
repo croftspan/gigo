@@ -4,7 +4,7 @@
 
 A Claude Code skill that researches your domain, finds the best practitioners, blends their philosophies into focused expert personas, and scaffolds a lean project that makes every future session smarter. Run it again later and it audits your setup, finds the gaps, and protects what you built.
 
-> *"You want to build something great? Start by assembling the right team."*
+> *"There was an idea... to bring together a group of remarkable people, so when we needed them, they could fight the battles we never could." — Nick Fury*
 
 ---
 
