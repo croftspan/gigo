@@ -36,22 +36,22 @@ cd ~/projects/my-board-game
 /avengers-assemble
 ```
 
-The skill sees no `CLAUDE.md` and kicks off the assembly. It's a conversation — you describe what you're building, it does the rest.
+Fury sees no `CLAUDE.md` and kicks off the assembly. It's a conversation — you describe what you're building, he does the rest.
 
 ```
 You: "I'm designing a cooperative deck-building board game. 2-4 players,
      60 minute target play time. Fantasy theme but not generic tolkien
      stuff — more like Hades meets Slay the Spire on a tabletop."
 
-Skill: "Want me to do a quick setup from what I know, or deep-research
+Fury: "Want me to do a quick setup from what I know, or deep-research
         the current board game design landscape first?"
 
 You: "Quick is fine"
 
-Skill: researches the domain... identifies authorities in deck-builder
+Fury: researches the domain... identifies authorities in deck-builder
        design, cooperative game theory, tabletop development...
 
-Skill: "Here's the team I'd assemble:
+Fury: "Here's the team I'd assemble:
 
         The Systems Architect
         Blends Donald X. Vaccarino's deck-building engine design
@@ -86,10 +86,10 @@ You: "I like it but I don't need a production lead yet — we're
      months from manufacturing. And the fantasy theme is important,
      I want someone who gets worldbuilding."
 
-Skill: drops Production Lead, researches narrative/worldbuilding
+Fury: drops Production Lead, researches narrative/worldbuilding
        authorities, re-presents with a new persona...
 
-Skill: "Updated team:
+Fury: "Updated team:
 
         The Systems Architect — [same as above]
 
@@ -106,7 +106,7 @@ Skill: "Updated team:
 You: "Lock it in"
 ```
 
-The skill writes everything to disk:
+Fury writes everything to disk:
 
 ```
 CLAUDE.md                              # Team roster + project identity
@@ -133,10 +133,10 @@ mode with an AI opponent. I need someone who gets small player
 count design.
 ```
 
-The skill reads your existing team, researches small-count and solo board game design, and comes back:
+Fury reads your existing team, researches small-count and solo board game design, and comes back:
 
 ```
-Skill: "Your current team covers systems, experience, and world — but
+Fury: "Your current team covers systems, experience, and world — but
         nobody specializes in player count scaling. Here's who I'd add:
 
         The Solo Architect
