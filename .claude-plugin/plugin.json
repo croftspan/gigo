@@ -1,0 +1,10 @@
+{
+  "name": "avengers-assemble",
+  "description": "Assembles expert teams and scaffolds Claude Code projects for any domain. Researches the best practitioners, blends their philosophies into focused personas, and writes lean project structure with rules, standards, and workflow. Re-runnable: first run scaffolds, re-runs add expertise or audit the kit.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Eaven"
+  },
+  "repository": "https://github.com/Eaven/avengers-assemble",
+  "license": "MIT"
+}
