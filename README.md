@@ -125,7 +125,7 @@ Without The Snap, rules bloat within weeks. With it, they get sharper.
 | You say | What happens |
 |---|---|
 | `/avengers-assemble` (new project) | Full assembly — research, team, scaffold |
-| `/avengers-assemble I need audio design` | Targeted addition — researches, proposes, merges |
+| `/avengers-assemble` + "the game needs spatial audio and dynamic soundscapes" | Targeted addition — researches, proposes, merges |
 | `/avengers-assemble` (existing project) | Health check — audit, triage, recommend |
 
 ### Quick or deep research
@@ -149,8 +149,8 @@ cp -r avengers-assemble/skills/avengers-assemble ~/.claude/skills/avengers-assem
 cd ~/projects/my-new-thing
 /avengers-assemble
 
-# Add expertise to existing project
-/avengers-assemble I need someone who knows multiplayer networking
+# Add expertise — describe what you need, the skill does the rest
+/avengers-assemble we're adding multiplayer and I need someone who gets netcode, lag compensation, and lobby systems
 
 # Health check
 /avengers-assemble
