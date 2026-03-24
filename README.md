@@ -18,39 +18,143 @@ You start with a blank `CLAUDE.md`. You write some rules, add some context, hope
 
 ---
 
-## How It Works
+## Getting Started
+
+### Install
+
+```bash
+git clone https://github.com/Eaven/avengers-assemble.git
+cp -r avengers-assemble/skills/avengers-assemble ~/.claude/skills/avengers-assemble
+```
+
+### Your first assembly
+
+Open a new project and run the skill:
+
+```bash
+cd ~/projects/my-board-game
+/avengers-assemble
+```
+
+The skill sees no `CLAUDE.md` and kicks off the assembly. It's a conversation — you describe what you're building, it does the rest.
 
 ```
-You: "I'm building a children's mystery novel series for ages 10-14"
+You: "I'm designing a cooperative deck-building board game. 2-4 players,
+     60 minute target play time. Fantasy theme but not generic tolkien
+     stuff — more like Hades meets Slay the Spire on a tabletop."
 
-Skill: researches the domain... finds Wendelin Van Draanen's plot
-       structure, Blue Balliett's puzzle design, Kate DiCamillo's
-       prose discipline...
+Skill: "Want me to do a quick setup from what I know, or deep-research
+        the current board game design landscape first?"
+
+You: "Quick is fine"
+
+Skill: researches the domain... identifies authorities in deck-builder
+       design, cooperative game theory, tabletop development...
 
 Skill: "Here's the team I'd assemble:
 
-        The Story Architect
-        Blends Van Draanen's clue pacing with Balliett's
-        intellectual puzzle design
+        The Systems Architect
+        Blends Donald X. Vaccarino's deck-building engine design
+        (Dominion) with Eric Lang's tension mechanics and Matt
+        Leacock's cooperative balance philosophy (Pandemic). Owns
+        card economy, action systems, and win/loss conditions.
 
-        The Prose Stylist
-        DiCamillo's clarity with Rebecca Stead's emotional precision
+        The Experience Designer
+        Draws from Jamey Stegmaier's player engagement principles
+        (Wingspan, Scythe) with Rob Daviau's legacy/narrative
+        progression and Bruno Cathala's elegant interaction design.
+        Owns table feel, player agency, and session pacing.
 
-        The Age Lens
-        Calibrated to Fountas & Pinnell's reading level research
+        The Production Lead
+        Informed by Stonemaier Games' manufacturing pipeline,
+        The Game Crafter's prototyping methodology, and
+        Tabletop Simulator's digital playtesting workflow.
+        Owns component specs, print-readiness, and prototype cycles.
+
+        Quality bar: every card earns its place in the deck. If removing
+        a card doesn't make the game worse, the card shouldn't exist.
+        A full game fits in 60 minutes including teach time.
+
+        Key anti-patterns I found: runaway leader in co-op (kills table
+        feel), analysis paralysis from too many card options per turn,
+        and component bloat that inflates manufacturing cost without
+        improving gameplay.
+
+        What do you think?"
+
+You: "I like it but I don't need a production lead yet — we're
+     months from manufacturing. And the fantasy theme is important,
+     I want someone who gets worldbuilding."
+
+Skill: drops Production Lead, researches narrative/worldbuilding
+       authorities, re-presents with a new persona...
+
+Skill: "Updated team:
+
+        The Systems Architect — [same as above]
+
+        The Experience Designer — [same as above]
+
+        The World Builder
+        Blends Patrick Rothfuss's lived-in world design with the
+        Supergiant Games approach to mythological remixing (Hades,
+        Pyre). Cultures feel discovered, not invented. Every
+        mechanical faction has a narrative reason to exist.
 
         Ready to lock this in?"
 
-You: "Make it darker — more Lemony Snicket"
-
-Skill: adjusts, re-presents...
-
 You: "Lock it in"
-
-Skill: writes CLAUDE.md, .claude/rules/, references/ — done.
 ```
 
-No forms. No questionnaires. A conversation that ends with a fully scaffolded project.
+The skill writes everything to disk:
+
+```
+CLAUDE.md                              # Team roster + project identity
+.claude/rules/standards.md             # Quality gates + anti-patterns
+.claude/rules/workflow.md              # Design-playtest-iterate loop
+.claude/rules/snap.md                  # The Snap
+.claude/rules/game-systems.md          # Deck-builder architecture rules
+.claude/rules/worldbuilding.md         # Narrative design constraints
+references/deckbuilder-patterns.md     # Deep card economy patterns
+references/cooperative-balance.md      # Co-op tuning techniques
+references/worldbuilding-guide.md      # Extended lore methodology
+```
+
+You now have a project where every session thinks like Vaccarino, Leacock, and Stegmaier — before you've designed a single card.
+
+### Two months later
+
+The game is taking shape. Playtesting reveals that 2-player mode feels flat — the co-op mechanics were tuned for 3-4 and don't scale down. You need expertise you don't have.
+
+```
+/avengers-assemble the 2-player mode is broken — co-op doesn't
+scale down and we might need a competitive variant or a solo
+mode with an AI opponent. I need someone who gets small player
+count design.
+```
+
+The skill reads your existing team, researches small-count and solo board game design, and comes back:
+
+```
+Skill: "Your current team covers systems, experience, and world — but
+        nobody specializes in player count scaling. Here's who I'd add:
+
+        The Solo Architect
+        Blends Morten Monrad Pedersen's solo AI design (the Automa
+        system used in Scythe, Viticulture) with Shadi Torbey's
+        elegant solo-only design (Onirim, Sylvion) and David
+        Turczi's approach to scaling co-op games down to one.
+
+        I'd also update game-systems.md with player count scaling
+        patterns and add references/solo-ai-design.md for the
+        Automa framework details.
+
+        Want me to merge this in?"
+
+You: "Do it"
+```
+
+New persona added to `CLAUDE.md`. Rules updated. References expanded. The project didn't start over — it grew.
 
 ---
 
@@ -72,7 +176,7 @@ Every line in `.claude/rules/` loads on every conversation — even when irrelev
 
 **Tier 2: Deep references** — on-demand, zero cost when unused
 
-Extended examples, authority deep-dives, pattern libraries, and technique catalogs live in `references/`. Rules files include **"When to Go Deeper"** sections that tell the agent *when* to read them — not just that they exist. The agent loads `references/dialogue-techniques.md` when writing dialogue, not when editing plot structure.
+Extended examples, authority deep-dives, pattern libraries, and technique catalogs live in `references/`. Rules files include **"When to Go Deeper"** sections that tell the agent *when* to read them — not just that they exist. The agent loads `references/cooperative-balance.md` when tuning difficulty, not when writing flavor text.
 
 ### The non-derivable rule
 
@@ -120,83 +224,10 @@ Every project gets `snap.md`, which runs at the end of every session:
 
 Without The Snap, rules bloat within weeks. With it, they get sharper.
 
-### Re-runnable
-
-| You say | What happens |
-|---|---|
-| `/avengers-assemble` (new project) | Full assembly — research, team, scaffold |
-| `/avengers-assemble` + "the game needs spatial audio and dynamic soundscapes" | Targeted addition — researches, proposes, merges |
-| `/avengers-assemble` (existing project) | Health check — audit, triage, recommend |
-
 ### Quick or deep research
 
 - **Quick** (default) — Claude's training knowledge. Fast, usually sufficient.
 - **Deep** — live web search for current authorities, communities, tools. For unfamiliar territory or production-grade work.
-
----
-
-## Installation
-
-```bash
-git clone https://github.com/Eaven/avengers-assemble.git
-cp -r avengers-assemble/skills/avengers-assemble ~/.claude/skills/avengers-assemble
-```
-
-## Usage
-
-```bash
-# New project — full assembly
-cd ~/projects/my-new-thing
-/avengers-assemble
-
-# Add expertise — describe what you need, the skill does the rest
-/avengers-assemble we're adding multiplayer and I need someone who gets netcode, lag compensation, and lobby systems
-
-# Health check
-/avengers-assemble
-```
-
----
-
-## Example Output
-
-**A Roblox game:**
-```
-CLAUDE.md                              # Team + identity
-.claude/rules/standards.md             # Quality gates
-.claude/rules/workflow.md              # Dev loop
-.claude/rules/snap.md                  # The Snap
-.claude/rules/stack.md                 # Luau, Rojo, Wally, versions
-.claude/rules/engine-patterns.md       # Architecture invariants
-references/luau-style-guide.md         # Full style reference
-references/datastore-patterns.md       # Extended examples
-```
-
-**A children's novel:**
-```
-CLAUDE.md                              # Team + identity
-.claude/rules/standards.md             # Quality gates
-.claude/rules/workflow.md              # Editorial process
-.claude/rules/snap.md                  # The Snap
-.claude/rules/voice-guide.md           # Prose rules
-.claude/rules/story-structure.md       # Mystery plotting
-references/voice-examples.md           # Writing samples
-references/mystery-plotting.md         # Extended patterns
-```
-
-**A SaaS app:**
-```
-CLAUDE.md                              # Team + identity
-.claude/rules/standards.md             # Quality gates
-.claude/rules/workflow.md              # Dev loop
-.claude/rules/snap.md                  # The Snap
-.claude/rules/stack.md                 # Framework, DB, versions
-.claude/rules/testing.md               # Test philosophy
-references/architecture-decisions.md   # Extended rationale
-references/deployment-guide.md         # Infrastructure detail
-```
-
-Every project gets exactly what it needs. No more, no less.
 
 ---
 
@@ -256,21 +287,21 @@ This research shaped three core decisions in the skill:
 
 The obvious approach is one tier: put everything in `.claude/rules/` and let it load. Simpler. No decisions about what goes where.
 
-The problem: every line in `rules/` loads on every conversation. A deep-dive on Roblox DataStore patterns is invaluable when you're implementing persistence — and pure noise when you're tweaking UI colors. Loading it every time wastes tokens and dilutes attention on whatever the agent is actually doing.
+The problem: every line in `rules/` loads on every conversation. A deep-dive on solo AI opponent design is invaluable when you're building the Automa system — and pure noise when you're writing card flavor text. Loading it every time wastes tokens and dilutes attention on whatever the agent is actually doing.
 
-The two-tier architecture solves this. Tier 1 (rules) contains only what applies to *all* work — philosophy, quality gates, universal patterns. Tier 2 (references) contains everything else — extended examples, deep-dives, technique catalogs. The key innovation is **"When to Go Deeper"** — rules files don't just point to references, they tell the agent *when* to read them. "When writing dialogue scenes, read `references/dialogue-techniques.md`." This makes the system task-aware: the agent loads deep context only when it's relevant.
+The two-tier architecture solves this. Tier 1 (rules) contains only what applies to *all* work — philosophy, quality gates, universal patterns. Tier 2 (references) contains everything else — extended examples, deep-dives, technique catalogs. The key innovation is **"When to Go Deeper"** — rules files don't just point to references, they tell the agent *when* to read them. "When tuning cooperative balance, read `references/cooperative-balance.md`." This makes the system task-aware: the agent loads deep context only when it's relevant.
 
 ### Why conversational, not procedural
 
 Early versions used a phased approach: fill out this form, answer these questions, review this output. It felt like a wizard. Users didn't know the answers to half the questions (especially in unfamiliar domains), and the rigid structure prevented the natural back-and-forth that surfaces the best ideas.
 
-The current design is a conversation. You say what you want to build. The skill does the research, proposes a team, and presents it. You react — "make it darker," "I don't need a separate testing persona," "what about multiplayer?" The skill adjusts. When it feels right, you lock it in.
+The current design is a conversation. You say what you want to build. The skill does the research, proposes a team, and presents it. You react — "drop the production lead, add a worldbuilder," "I don't need a separate testing persona," "what about solo mode?" The skill adjusts. When it feels right, you lock it in.
 
-This works better because the skill does the homework. You don't need to know who the authorities are in children's mystery fiction — the skill finds Wendelin Van Draanen, Blue Balliett, and Lemony Snicket and explains why each matters. The operator's job is taste and direction, not domain expertise.
+This works better because the skill does the homework. You don't need to know who the best deck-builder designers are — the skill finds Vaccarino, Leacock, and Stegmaier and explains why each matters. Your job is taste and direction, not domain expertise.
 
 ### What we'd still like to figure out
 
-**Persona interaction.** The assembled team currently lives as static rules. We think there's value in being able to consult individual personas in a conversational way — "What would The Story Architect think about this plot twist?" — without bloating the always-on context. The architecture supports this (deep persona profiles in references, loaded on demand), but we haven't nailed the UX yet.
+**Persona interaction.** The assembled team currently lives as static rules. We think there's value in being able to consult individual personas in a conversational way — "What would The Systems Architect think about adding a fifth resource type?" — without bloating the always-on context. The architecture supports this (deep persona profiles in references, loaded on demand), but we haven't nailed the UX yet.
 
 **Cross-project learning.** Right now each project's rules are independent. A pattern discovered in one Rails project could benefit another, but there's no mechanism for that. The Snap prevents bloat, but it doesn't help projects learn from siblings.
 
