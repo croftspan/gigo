@@ -105,18 +105,11 @@ Presented as a clear choice at the start:
 
 ## Installation
 
-### Claude Code Plugin (recommended)
+Clone the repo and copy the skill to your global Claude Code skills directory:
 
 ```bash
-claude plugin add avengers-assemble
-```
-
-### Manual
-
-Copy the `skills/` directory to your global Claude Code skills:
-
-```bash
-cp -r skills/avengers-assemble ~/.claude/skills/avengers-assemble
+git clone https://github.com/Eaven/avengers-assemble.git
+cp -r avengers-assemble/skills/avengers-assemble ~/.claude/skills/avengers-assemble
 ```
 
 ## Usage
