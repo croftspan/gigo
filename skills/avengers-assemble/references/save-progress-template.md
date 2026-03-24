@@ -16,7 +16,7 @@ Generate a `.claude/rules/save-progress.md` that follows this structure, adapted
 ```markdown
 # Save Progress
 
-At the end of every work session, capture what you learned. But do it smart — the goal is a kit that gets sharper over time, not one that gets bloated.
+At the end of every work session, capture what you learned. But do it smart — the goal is a kit that gets sharper over time, not bigger.
 
 ## What to Save
 
@@ -33,30 +33,32 @@ Route each learning to the right file:
 
 ## The Governor
 
-These controls keep the kit lean. Follow them on every save.
+These controls prevent kit bloat. Follow them on every save. Every rule you add is a constraint applied to every future task and costs tokens on every conversation — even when irrelevant.
 
 **Before adding anything:**
-1. Check if it overlaps with an existing rule. If yes, merge — don't append a second version.
-2. Check if the codebase/project now makes this obvious. If yes, don't state it explicitly.
-3. Check if this belongs in rules (needed every conversation) or references (needed sometimes). Default to references unless it's truly "always apply."
+1. Check if it overlaps with an existing rule. If yes, **merge** — don't append a second version.
+2. Ask: "Can the agent figure this out by reading the project files?" If yes, don't write it.
+3. Ask: "Is this needed on every conversation, or only sometimes?" Default to `references/` unless it's truly always-apply.
 
 **After adding:**
-4. Check the file's line count. Rules files should stay under ~100 lines. If approaching the cap, move the least-frequently-needed content to `references/` and leave a pointer.
-5. Scan the file for rules that haven't been relevant recently. If a rule hasn't mattered in the last several sessions, consider moving it to references or removing it.
+4. Check the file's line count. Rules files cap at **~60 lines**. Approaching the cap → move the least-essential content to `references/` and leave a "When to Go Deeper" pointer.
+5. Ask: "Is each rule in this file still earning its token cost?" If a rule hasn't mattered recently, or the project has outgrown it, move it to references or remove it.
 
 **Periodically (every few sessions):**
-6. Ask: "Has the project grown into areas the team doesn't cover?" If yes, suggest running `/avengers-assemble` to add expertise.
+6. Full audit: scan each rules file. Remove derivable rules (things the code now makes obvious). Consolidate overlapping rules. Tighten wordy entries.
+7. Ask: "Has the project grown into areas the team doesn't cover?" If yes, suggest running `/avengers-assemble` to add expertise.
 
 ## What NOT to Save
 
 - Ephemeral task state (what you're working on right now)
 - Things git history already captures (who changed what, when)
 - Reference-depth content in rules files (move it to `references/`)
+- Things the agent can figure out by reading the project files
 - Duplicate information — if two rules say the same thing, merge them
 
 ## Format
 
-When adding to a rules file, match the existing format. Short, scannable entries. If you need more than 2-3 lines to explain something, it probably belongs in `references/`.
+When adding to a rules file, match the existing format. Short, scannable entries. If you need more than 2-3 lines to explain something, it belongs in `references/`.
 
 ## If Nothing Was Learned
 
@@ -78,7 +80,7 @@ When generating the save-progress file, customize the "What to Save" routing tab
 | Code standard discovered | `.claude/rules/code-standards.md` → Patterns |
 | Testing insight | `.claude/rules/testing.md` |
 | Security concern | `.claude/rules/standards.md` → Anti-Patterns |
-| Framework-specific trick | `references/{framework}-patterns.md` |
+| Framework-specific deep dive | `references/{framework}-patterns.md` |
 
 ### Fiction / Writing Project
 
@@ -104,10 +106,10 @@ When generating the save-progress file, customize the "What to Save" routing tab
 
 ## Why the Governor Matters
 
-Without active pruning and consolidation, rules files grow monotonically — every session adds, nothing ever removes. Within weeks, the kit becomes bloated with rules that:
-- Overlap with each other (three slightly different ways of saying the same thing)
-- State what's now obvious from the project state
-- Contain reference-depth detail that doesn't need to load every conversation
-- Were relevant early on but no longer apply
+Without active pruning, rules files grow monotonically — every session adds, nothing removes. Within weeks, the kit bloats with:
+- Overlapping rules (three ways of saying the same thing)
+- Derivable rules (things the codebase now makes obvious)
+- Reference-depth detail loading on every conversation
+- Stale rules that no longer apply
 
-The governor prevents this. Every save is a chance to make the kit leaner and sharper, not just bigger.
+Research shows that bloated context files *reduce* task success rates while *increasing* cost by 20%+. The governor prevents this. Every save is a chance to make the kit leaner, not just bigger.

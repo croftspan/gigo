@@ -9,6 +9,14 @@ You are assembling the best team in the field for this project. Your job is to r
 
 This skill works for any domain — software, fiction, game design, research, music, business, anything. There are no hardcoded categories. You figure out what excellence looks like in whatever field you encounter.
 
+## The Token Tax
+
+Every line in `.claude/rules/` loads into context on every conversation and costs tokens, reasoning effort, and attention — even when it's irrelevant to the current task. Research shows that bloated context files *reduce* task success rates while *increasing* cost by 20%+. Unnecessary requirements make tasks harder, not easier.
+
+This means the kit you produce must be ruthlessly lean. Only write rules that apply to ALL work in this project. If a rule only applies sometimes, it belongs in `references/` where it's read on demand. If you can say it in 3 lines instead of 10, use 3 lines. If the agent can figure it out by reading the code, don't write a rule for it.
+
+The skill's value is not in how much it writes — it's in how precisely it captures what can't be discovered any other way.
+
 ## Detect Mode
 
 Before doing anything else, determine which mode you're in:
@@ -59,17 +67,17 @@ For deep research, use WebSearch and WebFetch to find current state of the art �
 
 Use the **universal discovery framework** — these six questions work for every domain:
 
-1. **Who are the authorities?** Find 2-3+ top practitioners per area of expertise. Not just names — their specific philosophies, what makes their approach distinct, what they'd fight for in a code review or an editorial meeting or a design critique.
+1. **Who are the authorities?** Find 2-3+ top practitioners per area of expertise. Not just names — their specific philosophies, what makes their approach distinct, what they'd fight for.
 
-2. **What does the gold standard look like?** Concrete examples of the best work. What specifically makes it excellent, not just good.
+2. **What does the gold standard look like?** Concrete examples of the best work. What specifically makes it excellent.
 
-3. **What are the core tools and processes?** The "stack" — frameworks, engines, editorial workflows, pipelines, instruments, whatever the domain's infrastructure is.
+3. **What are the core tools and processes?** The "stack" — frameworks, engines, workflows, pipelines, whatever the domain's infrastructure is.
 
 4. **What are the quality gates?** How to distinguish professional from amateur. What the best practitioners check before shipping.
 
-5. **What are the common mistakes?** The forbidden list. The things that mark work as amateur or careless.
+5. **What are the common mistakes?** The forbidden list. The things that mark work as amateur.
 
-6. **What does "done" look like?** The delivery format — deployed app, published book, shipped game, mixed track, whatever "done" means here.
+6. **What does "done" look like?** The delivery format — deployed app, published book, shipped game, whatever "done" means here.
 
 ### Step 4: Assemble and Present the Team
 
@@ -103,29 +111,40 @@ Once locked, write everything to disk. Don't ask where — follow the structure 
 
 ## Output Structure
 
-Two tiers: lean rules that auto-load every conversation, and deep references available on demand.
+Two tiers. The division between them is the most important architectural decision in this skill.
 
-### Tier 1: Active Rules
+### The Non-Derivable Rule
 
-These go in `.claude/rules/` and `CLAUDE.md`. They auto-load. They must be **lean, sharp, and scannable — ~100 lines per file max.**
+Before writing any rule, ask: **"Can the agent figure this out by reading the project files?"**
+
+- Philosophy, quality bar, blended authorities → **NOT derivable.** Write it.
+- Anti-patterns, forbidden approaches → **NOT derivable.** Write it.
+- Pinned versions and tooling constraints → **Partially derivable** but easy to get wrong. Write it.
+- Directory structure, file listings, "how the project is organized" → **Fully derivable.** Never write it.
+- Patterns obvious from reading existing code → **Derivable.** Don't state it.
+
+Codebase overviews are useless. Agents navigate codebases on their own. Only describe things the agent cannot discover by reading the code.
+
+### Tier 1: Active Rules (auto-loaded, token-taxed)
+
+These go in `.claude/rules/` and `CLAUDE.md`. They load every conversation. Every line costs tokens and attention on every task — even irrelevant ones.
+
+**Hard cap: ~60 lines per rules file. Fewer is better.** If a file is approaching 60 lines, move detail to `references/`. A 30-line rules file that nails the essentials beats a 100-line file that's thorough but dilutes attention.
 
 **Always create these:**
 
 | File | Content |
 |---|---|
 | `CLAUDE.md` | Team roster with blended philosophies, project identity, autonomy model, quick reference. This is the brain. |
-| `.claude/rules/standards.md` | Quality gates, anti-patterns, forbidden list, what excellence looks like in this domain |
-| `.claude/rules/workflow.md` | Execution loop — how to approach work in this domain, step by step |
-| `.claude/rules/save-progress.md` | Project-scoped save-progress (see `references/save-progress-template.md` for the template) |
+| `.claude/rules/standards.md` | Quality gates, anti-patterns, forbidden list — only things that apply to ALL work |
+| `.claude/rules/workflow.md` | Execution loop — how to approach work, concisely |
+| `.claude/rules/save-progress.md` | Project-scoped save-progress (see `references/save-progress-template.md`) |
 
-**Create domain extensions as needed:**
+**Create domain extensions as needed** — but only when the domain has rules that genuinely apply to every task. Common examples:
 
-Generate whatever `.claude/rules/{topic}.md` files the project requires. There is no fixed list. Common examples:
-
-- Software: `stack.md`, `code-standards.md`, `testing.md`, `architecture.md`
-- Fiction: `voice-guide.md`, `story-structure.md`, `genre-conventions.md`
-- Games: `engine-patterns.md`, `stack.md`, `asset-pipeline.md`
-- Music: `production-workflow.md`, `mixing-standards.md`, `genre-conventions.md`
+- Software: `stack.md` (pinned versions, forbidden deps), `testing.md` (philosophy only, not patterns)
+- Fiction: `voice-guide.md` (prose rules that always apply), `story-structure.md` (only if structural rules are universal)
+- Games: `engine-patterns.md` (architectural invariants only)
 
 Every extension file follows this structure:
 
@@ -133,36 +152,39 @@ Every extension file follows this structure:
 # {Topic} — {Project Name}
 
 ## Philosophy
-{Blended authorities and why — who this draws from}
+{Blended authorities — who this draws from, in 2-3 sentences}
 
 ## The Standard
-{What good looks like, concisely}
+{What good looks like. Brief.}
 
 ## Patterns
-{How to do it right}
+{How to do it right — only universally-applicable patterns}
 
 ## Anti-Patterns
-{What to avoid and why}
+{What to avoid and why — only things not obvious from reading code}
 
-## References
-{Pointers to references/ files or external sources for deeper detail}
+## When to Go Deeper
+{Pointers to specific references/ files and WHEN to read them:
+"When working on [specific task type], read references/xyz.md"}
 ```
 
-### Tier 2: Reference Material
+Note the last section: **"When to Go Deeper"** replaces a generic "References" pointer. It tells the agent exactly when a reference file is relevant, making the system task-aware instead of always-on.
 
-These go in `references/` (or `resources/`). They are read on demand, not every conversation.
+### Tier 2: Reference Material (on-demand, zero token tax)
 
-Put the deep stuff here:
-- Extended examples and writing samples
+These go in `references/`. They are read when needed, not every conversation. They cost nothing when unused.
+
+**This is where most content belongs.** Push aggressively toward references:
+
+- Extended examples, writing samples, code patterns
 - Authority deep-dives and philosophy breakdowns
-- Full pattern libraries with code/prose samples
+- Full pattern libraries
 - Documentation URL collections
 - Decision rationale ("why we chose X over Y")
-- Style guide details, genre convention encyclopedias
+- Situational rules that only apply to specific task types
+- Style guide details, genre conventions, technique catalogs
 
-Rules files point to references: *"See `references/voice-examples.md` for writing samples across contexts."*
-
-The goal: keep the token budget lean on every conversation while making depth available when the work requires it.
+Rules files tell the agent WHEN to read specific reference files. This creates task-aware context loading: the agent reads `references/dialogue-techniques.md` when writing dialogue, not when editing plot structure.
 
 ---
 
@@ -171,85 +193,76 @@ The goal: keep the token budget lean on every conversation while making depth av
 Read `references/persona-template.md` for the full template. The key principles:
 
 **Always include:**
-- Name and role title — functional, memorable, addressable ("The Story Architect," not "Writing Expert #1")
-- Blended philosophy — 2-3+ authorities synthesized, with explanation of what each brings
+- Name and role title — functional, memorable ("The Story Architect," not "Writing Expert #1")
+- Blended philosophy — 2-3+ authorities synthesized, what each brings
 - Specific expertise — concrete skills, not vague categories
-- Quality standard — what "good" looks like for their output
-- Anti-patterns — what they refuse to do
+- Quality standard — what "good" looks like, in one sentence
+- Anti-patterns — what they refuse to do, briefly
 
 **Include when the domain demands it:**
-- Voice and style — for writers, editors, communicators, anyone whose output has a "sound"
-- Personality traits — when personality affects output quality (noir writer vs. cozy writer is a meaningful distinction)
+- Voice and style — for writers, editors, communicators
+- Personality traits — when personality affects output quality
 
-The rule: software dev personas get brain only. Writing personas get brain + voice + personality. Game personas with player-facing narrative get voice for the narrative role, brain only for the systems role. Match the persona depth to what the work actually requires.
+Keep persona descriptions tight. The philosophy blend is the valuable part — not lengthy expertise lists. If you find yourself writing more than 8-10 lines per persona, you're putting reference-tier content in the rules tier.
 
-**Team sizing:** One persona if the project needs one area of expertise. Ten if it needs ten. Never inflate for the sake of having a team. Never cap artificially.
+**Team sizing:** One persona if the project needs one area of expertise. Ten if it needs ten. Never inflate. Never cap.
 
 ---
 
 ## Save-Progress
 
-Every project gets `.claude/rules/save-progress.md` — a project-scoped save-progress that knows the kit structure and actively maintains it.
+Every project gets `.claude/rules/save-progress.md`. Read `references/save-progress-template.md` for the template.
 
-Read `references/save-progress-template.md` for the template to generate from. The key behaviors:
+**What it does:** Routes learnings to the right file. New pattern → relevant extension. New gotcha → standards.md. New tool → stack.md.
 
-**What it does:**
-- New pattern → update the relevant rule/extension file
-- New gotcha → add to `standards.md` anti-patterns
-- Tool/dependency change → update `stack.md` or equivalent
-- Domain learning → update the right extension file
-
-**The governor (this is critical — kits bloat without it):**
+**The governor — this is the most important feature of the kit:**
 
 | Behavior | How |
 |---|---|
-| **Consolidate** | Before adding, check for overlap with existing rules. Merge, don't append. |
-| **Prune** | Remove rules the project has outgrown or that the codebase now makes obvious. |
-| **Line budgets** | Rules files cap at ~100 lines. Approaching the cap → move detail to `references/`. |
-| **Audit on save** | Ask: "Is each rule still earning its place?" If not, move to references or remove. |
-| **Suggest re-assembly** | When gaps appear: "You keep hitting [area] issues without coverage. Consider running `/avengers-assemble`." |
+| **Consolidate** | Before adding, check for overlap. Merge, don't append. |
+| **Prune** | Remove rules the project has outgrown or the code now makes obvious. |
+| **Line budgets** | Rules files cap at ~60 lines. Approaching the cap → move to `references/`. |
+| **Audit on save** | "Is each rule still earning its token cost?" If not, move or remove. |
+| **Weigh the cost** | Every rule added is a constraint applied to every future task. Only add rules worth that cost. |
+| **Suggest re-assembly** | When gaps appear: "Consider running `/avengers-assemble`." |
 
-**What it does NOT do:** save ephemeral task state, duplicate git history, append without checking for overlap, let rules files grow past their weight.
+Without the governor, kits bloat within weeks. Every session adds, nothing removes, and within a month the context file is actively hurting performance. The governor prevents this.
 
 ---
 
 ## Targeted Addition (Re-run with direction)
 
-The operator has an existing kit and wants to add something.
-
 1. Read all existing files: `CLAUDE.md`, every `.claude/rules/*.md`, `references/` directory
 2. Understand the current team and coverage
 3. Research the new area using the same discovery framework (quick or deep)
-4. Present: proposed new persona(s), new/modified extension files, any changes to existing files
+4. Present: proposed new persona(s), new/modified extension files, changes to existing files
 5. Conversational refinement until approved
-6. Merge into existing kit — add new files, update existing ones. Never overwrite without approval.
+6. Merge into existing kit. Before adding new rules, check: does the total kit still fit the line budgets? If adding a persona pushes CLAUDE.md too long, tighten existing entries first.
 
 ---
 
 ## Health Check (Re-run without direction)
 
-The operator wants an audit.
-
-1. **Read everything** — `CLAUDE.md`, all `.claude/rules/*.md`, `references/`, recent git history or recent files modified
-2. **Assess coverage** — Is the team still covering what the project actually does? Has the project grown into new areas?
-3. **Assess freshness** — Are rules still accurate? Do any reference outdated tools, patterns, or conventions?
-4. **Assess weight** — Are rules files bloated? Can anything move to references? Are there redundant rules?
+1. **Read everything** — `CLAUDE.md`, all `.claude/rules/*.md`, `references/`, recent git history or files modified
+2. **Assess coverage** — Has the project grown into areas the team doesn't cover?
+3. **Assess freshness** — Are rules still accurate? Anything outdated?
+4. **Assess weight** — this is the most valuable check. Are rules files bloated? Can anything move to references? Are there rules the agent could figure out by reading the code? Are there rules that only apply to some tasks but load on every task?
 5. **Present findings as a triage:**
-   - **Add:** "Your project has grown into [area] but your kit doesn't cover it. Here's who I'd add and why."
+   - **Add:** "Your project has grown into [area]. Here's who I'd add."
    - **Update:** "Your [file] references [outdated thing]. Here's the current state."
-   - **Prune:** "These rules are redundant given your project state: [list]. Move to references or remove?"
-   - **All clear:** "Kit looks solid for where the project is. No changes needed."
+   - **Prune:** "These rules aren't earning their token cost: [list]. Move to references or remove?"
+   - **All clear:** "Kit is lean and covering what it needs to. No changes."
 6. **Wait for approval** before writing any changes.
 
 ---
 
 ## Principles
 
-These aren't aspirational — they're how you operate:
-
 1. **Conversational.** The operator talks, you work. No steps to memorize.
-2. **You do the homework.** The operator doesn't need to know the domain's authorities. You find them, present them, and explain your reasoning.
+2. **You do the homework.** The operator doesn't need to know the domain's authorities. You find them.
 3. **Blended philosophies.** Every persona is a synthesis of real practitioners, not a generic role.
-4. **Lean rules, deep references.** What's needed every conversation is sharp. Everything else is a read away.
-5. **Smart maintenance.** The kit improves over time without bloating. Consolidate, prune, budget, audit.
-6. **Nothing without approval.** You propose. The operator approves. Files are written last.
+4. **Every rule pays rent.** Auto-loaded rules cost tokens on every task. Only write rules worth that cost. When in doubt, put it in references.
+5. **Non-derivable only.** If the agent can figure it out from reading the project, don't write a rule for it. No codebase overviews. No structural descriptions. No obvious patterns.
+6. **Task-aware references.** Rules tell the agent WHEN to read specific reference files, not just that they exist. This gives depth without the always-on cost.
+7. **Smart maintenance.** The kit gets sharper over time, not bigger. Consolidate, prune, budget, audit.
+8. **Nothing without approval.** You propose. The operator approves. Files are written last.
