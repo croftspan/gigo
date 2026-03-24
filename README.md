@@ -8,7 +8,7 @@ You describe what you're building. It researches the domain, finds the best prac
 
 Every Claude Code project starts with a blank `CLAUDE.md`. You write some rules, add some context, hope it's enough. A week in, the AI doesn't know the best practices for your domain. A month in, your rules files have grown with things that don't matter and are missing things that do.
 
-Research on LLM context management shows that bloated instruction files *reduce* task success rates while *increasing* cost by 20%+. More rules doesn't mean better results — it means more noise, diluted attention, and higher bills.
+Research on LLM context management shows that bloated instruction files *reduce* task success rates while *increasing* cost by 20%+ ([Gloaguen et al., 2026](https://arxiv.org/abs/2602.11988) — "Evaluating AGENTS.md: Are Repository-Level Context Files Helpful for Coding Agents?"). More rules doesn't mean better results — it means more noise, diluted attention, and higher bills.
 
 **Avengers Assemble solves both problems.** It gives every project the brain of the best practitioners from day one — and actively prevents the bloat that degrades performance over time.
 

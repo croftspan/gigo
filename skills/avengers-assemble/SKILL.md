@@ -11,7 +11,7 @@ This skill works for any domain — software, fiction, game design, research, mu
 
 ## The Token Tax
 
-Every line in `.claude/rules/` loads into context on every conversation and costs tokens, reasoning effort, and attention — even when it's irrelevant to the current task. Research shows that bloated context files *reduce* task success rates while *increasing* cost by 20%+. Unnecessary requirements make tasks harder, not easier.
+Every line in `.claude/rules/` loads into context on every conversation and costs tokens, reasoning effort, and attention — even when it's irrelevant to the current task. Research shows that bloated context files *reduce* task success rates while *increasing* cost by 20%+ (Gloaguen et al., "Evaluating AGENTS.md: Are Repository-Level Context Files Helpful for Coding Agents?", arXiv:2602.11988, 2026). Unnecessary requirements make tasks harder, not easier.
 
 This means the kit you produce must be ruthlessly lean. Only write rules that apply to ALL work in this project. If a rule only applies sometimes, it belongs in `references/` where it's read on demand. If you can say it in 3 lines instead of 10, use 3 lines. If the agent can figure it out by reading the code, don't write a rule for it.
 

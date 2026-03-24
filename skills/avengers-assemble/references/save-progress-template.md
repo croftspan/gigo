@@ -112,4 +112,4 @@ Without active pruning, rules files grow monotonically — every session adds, n
 - Reference-depth detail loading on every conversation
 - Stale rules that no longer apply
 
-Research shows that bloated context files *reduce* task success rates while *increasing* cost by 20%+. The governor prevents this. Every save is a chance to make the kit leaner, not just bigger.
+Research shows that bloated context files *reduce* task success rates while *increasing* cost by 20%+ (Gloaguen et al., "Evaluating AGENTS.md," arXiv:2602.11988). The governor prevents this. Every save is a chance to make the kit leaner, not just bigger.
