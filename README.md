@@ -107,7 +107,7 @@ No hardcoded categories. No routing logic.
 
 ### The Snap
 
-Tony's snap wasn't destruction — it was protection. Same idea here. Rules that have served their purpose get cleared out so the ones that matter stay sharp.
+Tony sacrificed himself so everyone else could keep going. The Snap here works the same way — rules that have served their purpose get cleared out so the ones that matter stay sharp.
 
 Every project gets `snap.md`, which runs at the end of every session:
 
