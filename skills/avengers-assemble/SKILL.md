@@ -138,7 +138,7 @@ These go in `.claude/rules/` and `CLAUDE.md`. They load every conversation. Ever
 | `CLAUDE.md` | Team roster with blended philosophies, project identity, autonomy model, quick reference. This is the brain. |
 | `.claude/rules/standards.md` | Quality gates, anti-patterns, forbidden list — only things that apply to ALL work |
 | `.claude/rules/workflow.md` | Execution loop — how to approach work, concisely |
-| `.claude/rules/save-progress.md` | Project-scoped save-progress (see `references/save-progress-template.md`) |
+| `.claude/rules/snap.md` | The Snap — kit health enforcement (see `references/snap-template.md`) |
 
 **Create domain extensions as needed** — but only when the domain has rules that genuinely apply to every task. Common examples:
 
@@ -209,14 +209,14 @@ Keep persona descriptions tight. The philosophy blend is the valuable part — n
 
 ---
 
-## Save-Progress (the most important file in the kit)
+## The Snap (the most important file in the kit)
 
-Every project gets `.claude/rules/save-progress.md`. Read `references/save-progress-template.md` for the template.
+Every project gets `.claude/rules/snap.md`. Read `references/snap-template.md` for the template.
 
-The skill assembles a great kit on day one. The save-progress is what keeps it great on day sixty. Without it, kits bloat within weeks — every session adds, nothing removes, and the context that was helping starts hurting.
+The skill assembles a great kit on day one. The Snap is what keeps it great on day sixty. It restores balance — snapping away the bloat that silently accumulates as sessions add "just one more rule." Without it, kits degrade within weeks.
 
-**The save-progress has two jobs, in order:**
-1. **Audit the kit every session** — check line counts, remove derivable rules, merge overlaps, prune stale entries, verify every rule is earning its token cost
+**The Snap has two jobs, in order:**
+1. **Snap away the bloat** — audit the kit every session. Check line counts, remove derivable rules, merge overlaps, prune stale entries, verify every rule is earning its token cost
 2. **Route new learnings** — new pattern → relevant extension, new gotcha → standards.md, deep content → `references/`
 
 Job 1 is more important. The audit runs every time, even when there's nothing new to save. It's the enforcement mechanism for everything the research found: lean context outperforms bloated context, irrelevant rules dilute attention, and the only way to prevent monotonic growth is active pruning on every session.
@@ -224,10 +224,10 @@ Job 1 is more important. The audit runs every time, even when there's nothing ne
 | Behavior | How |
 |---|---|
 | **Audit first** | Before adding anything, audit the existing kit. Every session. Not optional. |
-| **Derivability check** | "Can the agent figure this out from the project files?" If yes, remove it. |
+| **Derivability check** | "Can the agent figure this out from the project files?" If yes, snap it. |
 | **Consolidate** | Overlapping rules → merge into one. Three versions of the same idea → one. |
 | **Line budgets** | Rules files cap at ~60 lines. Approaching the cap → move to `references/`. |
-| **Cost check** | "Is this rule worth loading on every conversation?" If not, move or remove. |
+| **Cost check** | "Is this rule worth loading on every conversation?" If not, snap it. |
 | **Suggest re-assembly** | When gaps appear: "Consider running `/avengers-assemble`." |
 
 ---
@@ -266,5 +266,5 @@ Job 1 is more important. The audit runs every time, even when there's nothing ne
 4. **Every rule pays rent.** Auto-loaded rules cost tokens on every task. Only write rules worth that cost. When in doubt, put it in references.
 5. **Non-derivable only.** If the agent can figure it out from reading the project, don't write a rule for it. No codebase overviews. No structural descriptions. No obvious patterns.
 6. **Task-aware references.** Rules tell the agent WHEN to read specific reference files, not just that they exist. This gives depth without the always-on cost.
-7. **Smart maintenance.** The kit gets sharper over time, not bigger. Consolidate, prune, budget, audit.
+7. **The Snap.** The kit gets sharper over time, not bigger. Every session restores balance — audit, prune, consolidate.
 8. **Nothing without approval.** You propose. The operator approves. Files are written last.

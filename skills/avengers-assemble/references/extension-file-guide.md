@@ -1,6 +1,6 @@
 # Extension File Guide
 
-Domain extension files live in `.claude/rules/` and auto-load every conversation. They contain domain-specific rules that don't fit in the universal core (standards, workflow, save-progress).
+Domain extension files live in `.claude/rules/` and auto-load every conversation. They contain domain-specific rules that don't fit in the universal core (standards, workflow, snap).
 
 **Every line in these files costs tokens and attention on every task — even irrelevant ones.** Only write rules that genuinely apply to all work in this project.
 

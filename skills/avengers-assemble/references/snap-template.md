@@ -1,35 +1,37 @@
-# Save-Progress Template
+# The Snap — Template
 
-When the skill scaffolds a project, it writes `.claude/rules/save-progress.md` using this template. Adapt the specifics to the domain.
+When the skill scaffolds a project, it writes `.claude/rules/snap.md` using this template. Adapt the specifics to the domain.
 
-**This is the most important file in the kit.** The save-progress rule is what prevents the kit from degrading over time. Without it, every session adds rules, nothing removes them, and within weeks the context is bloated enough to actively hurt performance. The generated save-progress must carry this weight — it's not a logging utility, it's the immune system.
+**This is the most important file in the kit.** The Snap is what prevents the kit from degrading over time. Without it, every session adds rules, nothing removes them, and within weeks the context is bloated enough to actively hurt performance. The generated snap must carry this weight — it's not a logging utility, it's the thing that restores balance.
 
 ---
 
 ## Template
 
-Generate a `.claude/rules/save-progress.md` that follows this structure, adapted to the project:
+Generate a `.claude/rules/snap.md` that follows this structure, adapted to the project:
 
 ```markdown
-# Save Progress
+# The Snap
 
-This file has two jobs, in this order:
-1. **Maintain kit health** — prevent the bloat that degrades performance
+*Restore balance to the kit.*
+
+Run this at the end of every work session. Two jobs, in this order:
+1. **Snap away the bloat** — audit the kit, remove what doesn't belong
 2. **Capture learnings** — route new knowledge to the right file
 
 Job 1 is more important. A lean kit with missing knowledge outperforms a bloated kit with everything. Research shows bloated context files reduce task success rates while increasing cost by 20%+ (Gloaguen et al., arXiv:2602.11988). Every rule you add loads on every conversation and costs tokens, reasoning, and attention — even when irrelevant to the current task.
 
-## The Audit (run this EVERY session)
+## The Audit (every session, not optional)
 
-Before saving anything new, audit the existing kit. This is not optional and not periodic — it runs every time.
+Before saving anything new, audit the existing kit. This runs every time.
 
 **1. Line check.** Scan each `.claude/rules/` file. Any file approaching ~60 lines needs content moved to `references/` with a "When to Go Deeper" pointer.
 
-**2. Derivability check.** For each rule, ask: "Can the agent figure this out by reading the project files?" If the codebase now makes a rule obvious — through code patterns, test structure, config files — remove the rule. It's costing tokens for information the agent would find anyway.
+**2. Derivability check.** For each rule, ask: "Can the agent figure this out by reading the project files?" If the codebase now makes a rule obvious — through code patterns, test structure, config files — snap it. It's costing tokens for information the agent would find anyway.
 
-**3. Overlap check.** Look for rules that say the same thing in different words, or rules that partially overlap. Merge them into one clear statement.
+**3. Overlap check.** Rules that say the same thing in different words, or rules that partially overlap. Merge into one clear statement.
 
-**4. Staleness check.** Has any rule become irrelevant? Early-project rules often don't apply once the project matures. Remove or move to references.
+**4. Staleness check.** Has any rule become irrelevant? Early-project rules often don't apply once the project matures. Snap it — remove or move to references.
 
 **5. Cost check.** For each rule that survived steps 1-4, ask: "Is this worth loading on every single conversation, including ones where it doesn't apply?" If no, move to `references/`.
 
@@ -64,14 +66,14 @@ After the audit, capture what you learned this session. Route to the right file:
 
 ## If Nothing Was Learned
 
-Still run the audit. Say "No new learnings. Kit audited — [clean / moved X to references / removed Y]." The audit is the primary job. Saving is secondary.
+Still run the audit. Say "No new learnings. Kit audited — [clean / snapped X / moved Y to references]." The audit is the primary job. Saving is secondary.
 ```
 
 ---
 
 ## Domain-Specific Routing Examples
 
-When generating the save-progress file, customize the "Saving New Learnings" routing table for the domain.
+When generating the snap file, customize the "Saving New Learnings" routing table for the domain.
 
 ### Software Project
 
@@ -106,7 +108,7 @@ When generating the save-progress file, customize the "Saving New Learnings" rou
 
 ---
 
-## Why This File Is the Most Important One
+## Why The Snap Is the Most Important File
 
 The skill assembles a great kit on day one. But day one is the *easiest* day. The hard part is month two, when dozens of sessions have each added "just one more rule" and the kit has silently grown from lean and focused to bloated and counterproductive.
 
@@ -116,4 +118,4 @@ This happens to every project without active maintenance:
 - Reference-depth content sits in rules (loading every conversation when it's needed once a week)
 - Early rules go stale (the project matured past them)
 
-The save-progress governor is the only thing that prevents this. It runs every session. It audits before it adds. It prunes before it grows. Without it, the kit the skill built will degrade until it's actively hurting the work it was designed to help.
+The Snap is the only thing that prevents this. It runs every session. It audits before it adds. It snaps away what doesn't belong. Without it, the kit the skill built will degrade until it's actively hurting the work it was designed to help.

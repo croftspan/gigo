@@ -53,7 +53,7 @@ No forms. No questionnaires. A conversation that ends with a fully scaffolded pr
 | `CLAUDE.md` | Team roster with blended philosophies, project identity |
 | `.claude/rules/standards.md` | Quality gates, anti-patterns, forbidden list |
 | `.claude/rules/workflow.md` | How to approach work in this domain |
-| `.claude/rules/save-progress.md` | Smart maintenance that keeps the kit sharp |
+| `.claude/rules/snap.md` | The Snap — restores balance, prevents bloat |
 | `.claude/rules/{extensions}.md` | Domain-specific rules as needed |
 
 **Tier 2: Deep references** (on-demand, zero token cost when unused)
@@ -91,9 +91,9 @@ Software, fiction, game design, research, music, business — anything. A univer
 
 No hardcoded categories. No routing logic. Just a framework that works everywhere.
 
-### Smart save-progress with governor
+### The Snap
 
-The kit doesn't fossilize after day one. The included save-progress actively maintains it:
+The kit doesn't fossilize after day one. Every project gets a `snap.md` — named after the moment that restored balance — which actively maintains the kit:
 
 - **Consolidates** — merges learnings with existing rules instead of appending
 - **Prunes** — removes rules the project has outgrown or the code now makes obvious
@@ -101,7 +101,7 @@ The kit doesn't fossilize after day one. The included save-progress actively mai
 - **Audits on every save** — "is each rule still earning its token cost?"
 - **Suggests re-assembly** — when it spots gaps the team doesn't cover
 
-Without the governor, kits bloat within weeks. Every session adds, nothing removes, and soon the context file is actively hurting performance. The governor prevents this.
+Without The Snap, kits bloat within weeks. Every session adds, nothing removes, and soon the context file is actively hurting performance. The Snap prevents this.
 
 ### Re-runnable
 
@@ -153,7 +153,7 @@ A Roblox game:
 CLAUDE.md                              # Team + identity
 .claude/rules/standards.md             # Quality gates
 .claude/rules/workflow.md              # Dev loop
-.claude/rules/save-progress.md         # Kit maintenance
+.claude/rules/snap.md                  # The Snap — kit balance
 .claude/rules/stack.md                 # Luau, Rojo, Wally, versions
 .claude/rules/engine-patterns.md       # Architecture invariants
 references/luau-style-guide.md         # Full style reference
@@ -165,7 +165,7 @@ A children's novel:
 CLAUDE.md                              # Team + identity
 .claude/rules/standards.md             # Quality gates
 .claude/rules/workflow.md              # Editorial process
-.claude/rules/save-progress.md         # Kit maintenance
+.claude/rules/snap.md                  # The Snap — kit balance
 .claude/rules/voice-guide.md           # Prose rules
 .claude/rules/story-structure.md       # Mystery plotting
 references/voice-examples.md           # Writing samples
@@ -177,7 +177,7 @@ A SaaS app:
 CLAUDE.md                              # Team + identity
 .claude/rules/standards.md             # Quality gates
 .claude/rules/workflow.md              # Dev loop
-.claude/rules/save-progress.md         # Kit maintenance
+.claude/rules/snap.md                  # The Snap — kit balance
 .claude/rules/stack.md                 # Framework, DB, versions
 .claude/rules/testing.md               # Test philosophy
 references/architecture-decisions.md   # Extended rationale
@@ -194,7 +194,7 @@ Every project gets exactly what it needs. No more, no less.
 4. **Every rule pays rent.** Auto-loaded rules cost tokens on every task. Only write rules worth that cost.
 5. **Non-derivable only.** If the agent can figure it out from reading the project, don't write a rule.
 6. **Task-aware depth.** Rules tell the agent *when* to read references, not just that they exist.
-7. **Smart maintenance.** The kit gets sharper over time, not bigger.
+7. **The Snap.** The kit gets sharper over time, not bigger. Every session restores balance.
 8. **Nothing without approval.** It proposes. You approve. Files are written last.
 
 ## Behind the Design
@@ -234,7 +234,7 @@ This research shaped three core decisions in the skill:
 
 **The non-derivable rule.** Only write rules for things the agent can't figure out by reading the project files. Philosophy, quality bars, blended authorities — write those, they're not discoverable. Directory structure, code patterns, file organization — never write those, the agent navigates codebases on its own. Codebase overviews are actively harmful because they waste attention on information the agent would have found anyway.
 
-**The governor.** Every project's save-progress includes active pruning and consolidation. Before adding a rule: "Does this overlap with something that already exists? Can the agent figure this out from the code? Is this needed on every conversation or just sometimes?" After adding: "Is each rule still earning its token cost?" The kit gets sharper over time, not bigger.
+**The Snap.** Every project gets `snap.md` — a file that runs at the end of every session and restores balance. Before adding a rule: "Does this overlap with something that already exists? Can the agent figure this out from the code? Is this needed on every conversation or just sometimes?" After adding: "Is each rule still earning its token cost?" The kit gets sharper over time, not bigger. We named it after the moment that restored balance to the universe — because that's exactly what it does to the kit.
 
 ### Why two tiers instead of one
 
@@ -258,7 +258,7 @@ This works better because the skill does the homework. You don't need to know wh
 
 **Cross-project learning.** Right now each project's kit is independent. A pattern discovered in one Rails project could benefit another, but there's no mechanism for that. The governor prevents kits from growing, but it doesn't help them learn from siblings.
 
-**Automated health checks.** The skill can audit a kit when you run it, but it'd be better if the save-progress could flag "your kit is getting stale, consider running `/avengers-assemble`" based on actual usage patterns rather than a generic periodic reminder.
+**Automated health checks.** The skill can audit a kit when you run it, but it'd be better if The Snap could flag "your kit is getting stale, consider running `/avengers-assemble`" based on actual usage patterns rather than a generic periodic reminder.
 
 ### Further reading
 
