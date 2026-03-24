@@ -1,11 +1,8 @@
 # Save-Progress Template
 
-When the skill scaffolds a project, it writes `.claude/rules/save-progress.md` using this template. Adapt the specifics to the domain — the examples below show software and non-software variants.
+When the skill scaffolds a project, it writes `.claude/rules/save-progress.md` using this template. Adapt the specifics to the domain.
 
-The save-progress rule must be generated custom for each project because it needs to know:
-- What rule files exist and what each one covers
-- What domain-specific learnings to watch for
-- How to maintain the kit without letting it bloat
+**This is the most important file in the kit.** The save-progress rule is what prevents the kit from degrading over time. Without it, every session adds rules, nothing removes them, and within weeks the context is bloated enough to actively hurt performance. The generated save-progress must carry this weight — it's not a logging utility, it's the immune system.
 
 ---
 
@@ -16,11 +13,31 @@ Generate a `.claude/rules/save-progress.md` that follows this structure, adapted
 ```markdown
 # Save Progress
 
-At the end of every work session, capture what you learned. But do it smart — the goal is a kit that gets sharper over time, not bigger.
+This file has two jobs, in this order:
+1. **Maintain kit health** — prevent the bloat that degrades performance
+2. **Capture learnings** — route new knowledge to the right file
 
-## What to Save
+Job 1 is more important. A lean kit with missing knowledge outperforms a bloated kit with everything. Research shows bloated context files reduce task success rates while increasing cost by 20%+ (Gloaguen et al., arXiv:2602.11988). Every rule you add loads on every conversation and costs tokens, reasoning, and attention — even when irrelevant to the current task.
 
-Route each learning to the right file:
+## The Audit (run this EVERY session)
+
+Before saving anything new, audit the existing kit. This is not optional and not periodic — it runs every time.
+
+**1. Line check.** Scan each `.claude/rules/` file. Any file approaching ~60 lines needs content moved to `references/` with a "When to Go Deeper" pointer.
+
+**2. Derivability check.** For each rule, ask: "Can the agent figure this out by reading the project files?" If the codebase now makes a rule obvious — through code patterns, test structure, config files — remove the rule. It's costing tokens for information the agent would find anyway.
+
+**3. Overlap check.** Look for rules that say the same thing in different words, or rules that partially overlap. Merge them into one clear statement.
+
+**4. Staleness check.** Has any rule become irrelevant? Early-project rules often don't apply once the project matures. Remove or move to references.
+
+**5. Cost check.** For each rule that survived steps 1-4, ask: "Is this worth loading on every single conversation, including ones where it doesn't apply?" If no, move to `references/`.
+
+**6. Coverage check.** Has the project grown into areas the team doesn't cover? If yes, suggest: "Consider running `/avengers-assemble` to add expertise."
+
+## Saving New Learnings
+
+After the audit, capture what you learned this session. Route to the right file:
 
 | Learning type | Where it goes |
 |---|---|
@@ -29,47 +46,32 @@ Route each learning to the right file:
 | {tool or dependency change} | `.claude/rules/{stack-or-equivalent}.md` |
 | {quality insight} | `.claude/rules/standards.md` → Quality Gates section |
 | {workflow improvement} | `.claude/rules/workflow.md` |
-| {deep reference material} | `references/{topic}.md` (NOT rules — keep rules lean) |
+| {deep reference material} | `references/{topic}.md` (NOT rules) |
 
-## The Governor
+**Before adding anything new:**
+- Does it overlap with an existing rule? → **Merge**, don't append.
+- Can the agent figure this out from the project files? → **Don't write it.**
+- Is it needed every conversation, or only sometimes? → Default to `references/`.
+- Will adding this push the file past ~60 lines? → Move something else out first.
 
-These controls prevent kit bloat. Follow them on every save. Every rule you add is a constraint applied to every future task and costs tokens on every conversation — even when irrelevant.
-
-**Before adding anything:**
-1. Check if it overlaps with an existing rule. If yes, **merge** — don't append a second version.
-2. Ask: "Can the agent figure this out by reading the project files?" If yes, don't write it.
-3. Ask: "Is this needed on every conversation, or only sometimes?" Default to `references/` unless it's truly always-apply.
-
-**After adding:**
-4. Check the file's line count. Rules files cap at **~60 lines**. Approaching the cap → move the least-essential content to `references/` and leave a "When to Go Deeper" pointer.
-5. Ask: "Is each rule in this file still earning its token cost?" If a rule hasn't mattered recently, or the project has outgrown it, move it to references or remove it.
-
-**Periodically (every few sessions):**
-6. Full audit: scan each rules file. Remove derivable rules (things the code now makes obvious). Consolidate overlapping rules. Tighten wordy entries.
-7. Ask: "Has the project grown into areas the team doesn't cover?" If yes, suggest running `/avengers-assemble` to add expertise.
-
-## What NOT to Save
+## What Never Goes in Rules
 
 - Ephemeral task state (what you're working on right now)
-- Things git history already captures (who changed what, when)
-- Reference-depth content in rules files (move it to `references/`)
-- Things the agent can figure out by reading the project files
-- Duplicate information — if two rules say the same thing, merge them
-
-## Format
-
-When adding to a rules file, match the existing format. Short, scannable entries. If you need more than 2-3 lines to explain something, it belongs in `references/`.
+- Things git history captures (who changed what, when)
+- Reference-depth content (extended examples, deep-dives, pattern libraries)
+- Things derivable from reading the project files
+- Duplicates of existing rules in different words
 
 ## If Nothing Was Learned
 
-Say so and skip. Don't add noise for the sake of saving something.
+Still run the audit. Say "No new learnings. Kit audited — [clean / moved X to references / removed Y]." The audit is the primary job. Saving is secondary.
 ```
 
 ---
 
 ## Domain-Specific Routing Examples
 
-When generating the save-progress file, customize the "What to Save" routing table for the domain.
+When generating the save-progress file, customize the "Saving New Learnings" routing table for the domain.
 
 ### Software Project
 
@@ -104,12 +106,14 @@ When generating the save-progress file, customize the "What to Save" routing tab
 
 ---
 
-## Why the Governor Matters
+## Why This File Is the Most Important One
 
-Without active pruning, rules files grow monotonically — every session adds, nothing removes. Within weeks, the kit bloats with:
-- Overlapping rules (three ways of saying the same thing)
-- Derivable rules (things the codebase now makes obvious)
-- Reference-depth detail loading on every conversation
-- Stale rules that no longer apply
+The skill assembles a great kit on day one. But day one is the *easiest* day. The hard part is month two, when dozens of sessions have each added "just one more rule" and the kit has silently grown from lean and focused to bloated and counterproductive.
 
-Research shows that bloated context files *reduce* task success rates while *increasing* cost by 20%+ (Gloaguen et al., "Evaluating AGENTS.md," arXiv:2602.11988). The governor prevents this. Every save is a chance to make the kit leaner, not just bigger.
+This happens to every project without active maintenance:
+- Rules overlap (three slightly different ways of saying the same thing)
+- Rules become derivable (the codebase grew to make them obvious)
+- Reference-depth content sits in rules (loading every conversation when it's needed once a week)
+- Early rules go stale (the project matured past them)
+
+The save-progress governor is the only thing that prevents this. It runs every session. It audits before it adds. It prunes before it grows. Without it, the kit the skill built will degrade until it's actively hurting the work it was designed to help.

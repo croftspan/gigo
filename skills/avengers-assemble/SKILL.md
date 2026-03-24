@@ -209,24 +209,26 @@ Keep persona descriptions tight. The philosophy blend is the valuable part — n
 
 ---
 
-## Save-Progress
+## Save-Progress (the most important file in the kit)
 
 Every project gets `.claude/rules/save-progress.md`. Read `references/save-progress-template.md` for the template.
 
-**What it does:** Routes learnings to the right file. New pattern → relevant extension. New gotcha → standards.md. New tool → stack.md.
+The skill assembles a great kit on day one. The save-progress is what keeps it great on day sixty. Without it, kits bloat within weeks — every session adds, nothing removes, and the context that was helping starts hurting.
 
-**The governor — this is the most important feature of the kit:**
+**The save-progress has two jobs, in order:**
+1. **Audit the kit every session** — check line counts, remove derivable rules, merge overlaps, prune stale entries, verify every rule is earning its token cost
+2. **Route new learnings** — new pattern → relevant extension, new gotcha → standards.md, deep content → `references/`
+
+Job 1 is more important. The audit runs every time, even when there's nothing new to save. It's the enforcement mechanism for everything the research found: lean context outperforms bloated context, irrelevant rules dilute attention, and the only way to prevent monotonic growth is active pruning on every session.
 
 | Behavior | How |
 |---|---|
-| **Consolidate** | Before adding, check for overlap. Merge, don't append. |
-| **Prune** | Remove rules the project has outgrown or the code now makes obvious. |
+| **Audit first** | Before adding anything, audit the existing kit. Every session. Not optional. |
+| **Derivability check** | "Can the agent figure this out from the project files?" If yes, remove it. |
+| **Consolidate** | Overlapping rules → merge into one. Three versions of the same idea → one. |
 | **Line budgets** | Rules files cap at ~60 lines. Approaching the cap → move to `references/`. |
-| **Audit on save** | "Is each rule still earning its token cost?" If not, move or remove. |
-| **Weigh the cost** | Every rule added is a constraint applied to every future task. Only add rules worth that cost. |
+| **Cost check** | "Is this rule worth loading on every conversation?" If not, move or remove. |
 | **Suggest re-assembly** | When gaps appear: "Consider running `/avengers-assemble`." |
-
-Without the governor, kits bloat within weeks. Every session adds, nothing removes, and within a month the context file is actively hurting performance. The governor prevents this.
 
 ---
 
