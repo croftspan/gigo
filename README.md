@@ -107,7 +107,7 @@ No hardcoded categories. No routing logic.
 
 ### The Snap
 
-Tony Stark's snap wasn't about wiping things clean — it was about sacrificing what had to go so everything that mattered could survive. That's what this file does to your project.
+Tony's snap cost him everything — but it saved everyone. That's the philosophy here. Some rules served their purpose. Letting them go is what keeps the project alive.
 
 Every project gets `snap.md`, which runs at the end of every session:
 
