@@ -107,7 +107,7 @@ No hardcoded categories. No routing logic.
 
 ### The Snap
 
-Tony's snap cost him everything — but it saved everyone. That's the philosophy here. Some rules served their purpose. Letting them go is what keeps the project alive.
+Tony's snap wasn't destruction — it was protection. Same idea here. Rules that have served their purpose get cleared out so the ones that matter stay sharp.
 
 Every project gets `snap.md`, which runs at the end of every session:
 
