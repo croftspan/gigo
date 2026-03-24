@@ -67,7 +67,7 @@ Every line in `.claude/rules/` loads on every conversation — even when irrelev
 | `CLAUDE.md` | Team roster with blended philosophies, project identity |
 | `.claude/rules/standards.md` | Quality gates, anti-patterns, forbidden list |
 | `.claude/rules/workflow.md` | How to approach work in this domain |
-| `.claude/rules/snap.md` | **The Snap** — protects the kit, whatever it takes |
+| `.claude/rules/snap.md` | **The Snap** — protects the project, whatever it takes |
 | `.claude/rules/{extensions}.md` | Domain-specific rules as needed |
 
 **Tier 2: Deep references** — on-demand, zero cost when unused
@@ -106,18 +106,18 @@ No hardcoded categories. No routing logic.
 
 ### The Snap
 
-Tony Stark's snap wasn't about wiping things clean — it was about sacrificing what had to go so everything that mattered could survive. That's what this file does to your kit.
+Tony Stark's snap wasn't about wiping things clean — it was about sacrificing what had to go so everything that mattered could survive. That's what this file does to your project.
 
 Every project gets `snap.md`, which runs at the end of every session:
 
-- **Audits first, saves second** — the primary job is maintaining kit health, not logging
+- **Audits first, saves second** — the primary job is protecting the project, not logging
 - **Lets go of derivable rules** — if the codebase now makes it obvious, it's served its purpose
 - **Merges overlaps** — three versions of the same rule become one
 - **Enforces ~60 line caps** — pushes detail to references when files get heavy
 - **Questions every rule** — "is this worth loading on every conversation?"
 - **Flags gaps** — suggests `/avengers-assemble` when the project outgrows the team
 
-Without The Snap, kits bloat within weeks. With it, they get sharper.
+Without The Snap, rules bloat within weeks. With it, they get sharper.
 
 ### Re-runnable
 
@@ -207,7 +207,7 @@ Every project gets exactly what it needs. No more, no less.
 4. **Every rule pays rent.** Auto-loaded rules cost tokens on every task. Only write rules worth that cost.
 5. **Non-derivable only.** If the agent can figure it out from the project, don't write a rule.
 6. **Task-aware depth.** Rules tell the agent *when* to read references, not just that they exist.
-7. **The Snap.** The kit gets sharper over time, not bigger. Whatever it takes.
+7. **The Snap.** The project gets sharper over time, not bigger. Whatever it takes.
 8. **Nothing without approval.** It proposes. You approve. Files are written last.
 
 ---
@@ -220,19 +220,19 @@ This skill didn't start as a skill. It started as a problem we kept hitting at [
 
 Every Croftspan project begins with a "dev kit" — a set of files that give Claude the brain of a domain expert before any work starts. The first kit was for Ruby on Rails: DHH's philosophy, 37signals' practices, Rails 8's patterns, all distilled into lean rules files.
 
-It worked immediately. Sessions that used the kit produced better code, caught more edge cases, and needed fewer corrections than sessions without it. The kit wasn't just context — it was opinionated expertise that shaped every decision.
+It worked immediately. Sessions with the rules produced better code, caught more edge cases, and needed fewer corrections than sessions without them. It wasn't just context — it was opinionated expertise that shaped every decision.
 
 The question became: can this work for anything? Not just Rails, but children's novels, Roblox games, research papers, brand strategy? The answer turned out to be yes — the pattern is universal. Every domain has authorities, best practices, quality gates, and common mistakes. The skill just needed a framework for finding them in any field.
 
 ### Why blended philosophies, not single authorities
 
-Early kits said things like "you are a senior Rails developer." Generic. No personality, no opinions, no specific approach to fight for. The breakthrough was modeling personas after Croftspan's C-suite — each executive is a blend of real practitioners. The CTO isn't "a CTO" — she works in the tradition of DHH's monolith philosophy with Sandi Metz's object design and Kent Beck's testing discipline. She has opinions. She pushes back. She catches things a generic role wouldn't.
+Early setups said things like "you are a senior Rails developer." Generic. No personality, no opinions, no specific approach to fight for. The breakthrough was modeling personas after Croftspan's C-suite — each executive is a blend of real practitioners. The CTO isn't "a CTO" — she works in the tradition of DHH's monolith philosophy with Sandi Metz's object design and Kent Beck's testing discipline. She has opinions. She pushes back. She catches things a generic role wouldn't.
 
 Blending multiple authorities creates something better than any single authority alone. Each practitioner brings a specific strength, and the combination covers blind spots that any one person would have. It also prevents the persona from being a shallow impersonation — it's a synthesis with its own coherent worldview.
 
 ### The bloat problem (and what the research confirmed)
 
-The first kits grew out of control. Every session discovered something worth remembering, so rules files grew monotonically — adding, never removing. Within weeks, context files were hundreds of lines long, full of overlapping rules, outdated guidance, and reference-depth detail that didn't need to load on every conversation.
+The first projects grew out of control. Every session discovered something worth remembering, so rules files grew monotonically — adding, never removing. Within weeks, context files were hundreds of lines long, full of overlapping rules, outdated guidance, and reference-depth detail that didn't need to load on every conversation.
 
 We noticed performance degrading. Sessions took longer, made more mistakes, and sometimes ignored rules entirely — there was too much to attend to. We started pruning manually and saw immediate improvement.
 
@@ -249,7 +249,7 @@ This research shaped three core decisions in the skill:
 
 **The non-derivable rule.** Only write rules for things the agent can't figure out by reading the project files. Philosophy, quality bars, blended authorities — write those, they're not discoverable. Directory structure, code patterns, file organization — never write those, the agent navigates codebases on its own. Codebase overviews are actively harmful because they waste attention on information the agent would have found anyway.
 
-**The Snap.** Every project gets `snap.md` — named after Tony's snap, not Thanos's. It's not about indiscriminate wiping — it's about sacrificing what has to go so everything that matters survives. Before adding a rule: "Does this overlap with something that already exists? Can the agent figure this out from the code? Is this needed on every conversation or just sometimes?" After adding: "Is each rule still earning its token cost?" The kit gets sharper over time, not bigger. Whatever it takes.
+**The Snap.** Every project gets `snap.md` — named after Tony's snap, not Thanos's. It's not about indiscriminate wiping — it's about sacrificing what has to go so everything that matters survives. Before adding a rule: "Does this overlap with something that already exists? Can the agent figure this out from the code? Is this needed on every conversation or just sometimes?" After adding: "Is each rule still earning its token cost?" The project gets sharper over time, not bigger. Whatever it takes.
 
 ### Why two tiers instead of one
 
@@ -271,9 +271,9 @@ This works better because the skill does the homework. You don't need to know wh
 
 **Persona interaction.** The assembled team currently lives as static rules. We think there's value in being able to consult individual personas in a conversational way — "What would The Story Architect think about this plot twist?" — without bloating the always-on context. The architecture supports this (deep persona profiles in references, loaded on demand), but we haven't nailed the UX yet.
 
-**Cross-project learning.** Right now each project's kit is independent. A pattern discovered in one Rails project could benefit another, but there's no mechanism for that. The Snap prevents kits from growing, but it doesn't help them learn from siblings.
+**Cross-project learning.** Right now each project's rules are independent. A pattern discovered in one Rails project could benefit another, but there's no mechanism for that. The Snap prevents bloat, but it doesn't help projects learn from siblings.
 
-**Automated health checks.** The skill can audit a kit when you run it, but it'd be better if The Snap could flag "your kit is getting stale, consider running `/avengers-assemble`" based on actual usage patterns rather than a generic periodic reminder.
+**Automated health checks.** The skill can audit a project when you run it, but it'd be better if The Snap could flag "your rules are getting stale, consider running `/avengers-assemble`" based on actual usage patterns rather than a generic periodic reminder.
 
 ---
 

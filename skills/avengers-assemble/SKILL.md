@@ -1,6 +1,6 @@
 ---
 name: avengers-assemble
-description: "Assembles an expert team and scaffolds a Claude Code project for any domain — software, writing, game dev, research, design, anything. Researches the best practitioners in the field, blends their philosophies into focused personas, and writes lean .claude/ project structure with rules, standards, and workflow. Re-runnable: first run scaffolds from scratch, re-runs add new expertise or audit the kit for gaps and bloat. Use this skill when the user wants to start a new project, set up Claude Code for a project, add domain expertise, kick off work in an unfamiliar field, or says 'assemble.' Also use when the user wants to check or audit their existing project setup, add a new role or expert, or mentions needing more expertise for their project."
+description: "Assembles an expert team and scaffolds a Claude Code project for any domain — software, writing, game dev, research, design, anything. Researches the best practitioners in the field, blends their philosophies into focused personas, and writes lean .claude/ project structure with rules, standards, and workflow. Re-runnable: first run scaffolds from scratch, re-runs add new expertise or audit for gaps and bloat. Use this skill when the user wants to start a new project, set up Claude Code for a project, add domain expertise, kick off work in an unfamiliar field, or says 'assemble.' Also use when the user wants to check or audit their existing project setup, add a new role or expert, or mentions needing more expertise for their project."
 ---
 
 # Avengers, Assemble
@@ -13,7 +13,7 @@ This skill works for any domain — software, fiction, game design, research, mu
 
 Every line in `.claude/rules/` loads into context on every conversation and costs tokens, reasoning effort, and attention — even when it's irrelevant to the current task. Research shows that bloated context files *reduce* task success rates while *increasing* cost by 20%+ (Gloaguen et al., "Evaluating AGENTS.md: Are Repository-Level Context Files Helpful for Coding Agents?", arXiv:2602.11988, 2026). Unnecessary requirements make tasks harder, not easier.
 
-This means the kit you produce must be ruthlessly lean. Only write rules that apply to ALL work in this project. If a rule only applies sometimes, it belongs in `references/` where it's read on demand. If you can say it in 3 lines instead of 10, use 3 lines. If the agent can figure it out by reading the code, don't write a rule for it.
+This means the rules you produce must be ruthlessly lean. Only write rules that apply to ALL work in this project. If a rule only applies sometimes, it belongs in `references/` where it's read on demand. If you can say it in 3 lines instead of 10, use 3 lines. If the agent can figure it out by reading the code, don't write a rule for it.
 
 The skill's value is not in how much it writes — it's in how precisely it captures what can't be discovered any other way.
 
@@ -25,7 +25,7 @@ Before doing anything else, determine which mode you're in:
 Go to **The Kickoff Conversation** below.
 
 **Re-Run with direction** — `CLAUDE.md` and `.claude/rules/` exist, and the operator asked for something specific ("I need audio design expertise," "add a QA persona," "the project now has multiplayer").
-Read all existing kit files first. Then go to **Targeted Addition** below.
+Read all existing files first. Then go to **Targeted Addition** below.
 
 **Re-Run without direction** — `CLAUDE.md` and `.claude/rules/` exist, and the operator just ran the skill or said "check on things."
 Go to **Health Check** below.
@@ -103,7 +103,7 @@ The operator reacts. You adjust. This is a natural back-and-forth:
 
 Keep going until the operator says "lock it in" or you sense alignment and ask: "Ready to lock this in?"
 
-### Step 6: Write the Kit
+### Step 6: Write the Files
 
 Once locked, write everything to disk. Don't ask where — follow the structure below.
 
@@ -138,7 +138,7 @@ These go in `.claude/rules/` and `CLAUDE.md`. They load every conversation. Ever
 | `CLAUDE.md` | Team roster with blended philosophies, project identity, autonomy model, quick reference. This is the brain. |
 | `.claude/rules/standards.md` | Quality gates, anti-patterns, forbidden list — only things that apply to ALL work |
 | `.claude/rules/workflow.md` | Execution loop — how to approach work, concisely |
-| `.claude/rules/snap.md` | The Snap — kit health enforcement (see `references/snap-template.md`) |
+| `.claude/rules/snap.md` | The Snap — protects the project (see `references/snap-template.md`) |
 
 **Create domain extensions as needed** — but only when the domain has rules that genuinely apply to every task. Common examples:
 
@@ -209,21 +209,21 @@ Keep persona descriptions tight. The philosophy blend is the valuable part — n
 
 ---
 
-## The Snap (the most important file in the kit)
+## The Snap (the most important file in the project)
 
 Every project gets `.claude/rules/snap.md`. Read `references/snap-template.md` for the template.
 
-The skill assembles a great kit on day one. The Snap is what keeps it great on day sixty. Named after Tony's snap — not Thanos's. It's not about indiscriminate wiping. It's about sacrificing what has to go so everything that matters survives. Without it, kits degrade within weeks.
+The skill assembles a great project on day one. The Snap is what keeps it great on day sixty. Named after Tony's snap — not Thanos's. It's not about indiscriminate wiping. It's about sacrificing what has to go so everything that matters survives. Without it, projects degrade within weeks.
 
 **The Snap has two jobs, in order:**
-1. **Protect the kit** — audit every session. Check line counts, let go of derivable rules, merge overlaps, prune stale entries, verify every rule is earning its token cost
+1. **Protect the project** — audit every session. Check line counts, let go of derivable rules, merge overlaps, prune stale entries, verify every rule is earning its token cost
 2. **Route new learnings** — new pattern → relevant extension, new gotcha → standards.md, deep content → `references/`
 
 Job 1 is more important. The audit runs every time, even when there's nothing new to save. It's the enforcement mechanism for everything the research found: lean context outperforms bloated context, irrelevant rules dilute attention, and the only way to prevent monotonic growth is active pruning on every session.
 
 | Behavior | How |
 |---|---|
-| **Audit first** | Before adding anything, audit the existing kit. Every session. Not optional. |
+| **Audit first** | Before adding anything, audit the existing rules. Every session. Not optional. |
 | **Derivability check** | "Can the agent figure this out from the project files?" If yes, it's served its purpose — let it go. |
 | **Consolidate** | Overlapping rules → merge into one. Three versions of the same idea → one. |
 | **Line budgets** | Rules files cap at ~60 lines. Approaching the cap → move to `references/`. |
@@ -239,7 +239,7 @@ Job 1 is more important. The audit runs every time, even when there's nothing ne
 3. Research the new area using the same discovery framework (quick or deep)
 4. Present: proposed new persona(s), new/modified extension files, changes to existing files
 5. Conversational refinement until approved
-6. Merge into existing kit. Before adding new rules, check: does the total kit still fit the line budgets? If adding a persona pushes CLAUDE.md too long, tighten existing entries first.
+6. Merge into existing files. Before adding new rules, check: does everything still fit the line budgets? If adding a persona pushes CLAUDE.md too long, tighten existing entries first.
 
 ---
 
@@ -253,7 +253,7 @@ Job 1 is more important. The audit runs every time, even when there's nothing ne
    - **Add:** "Your project has grown into [area]. Here's who I'd add."
    - **Update:** "Your [file] references [outdated thing]. Here's the current state."
    - **Prune:** "These rules aren't earning their token cost: [list]. Move to references or remove?"
-   - **All clear:** "Kit is lean and covering what it needs to. No changes."
+   - **All clear:** "Everything's lean and covering what it needs to. No changes."
 6. **Wait for approval** before writing any changes.
 
 ---
@@ -266,5 +266,5 @@ Job 1 is more important. The audit runs every time, even when there's nothing ne
 4. **Every rule pays rent.** Auto-loaded rules cost tokens on every task. Only write rules worth that cost. When in doubt, put it in references.
 5. **Non-derivable only.** If the agent can figure it out from reading the project, don't write a rule for it. No codebase overviews. No structural descriptions. No obvious patterns.
 6. **Task-aware references.** Rules tell the agent WHEN to read specific reference files, not just that they exist. This gives depth without the always-on cost.
-7. **The Snap.** The kit gets sharper over time, not bigger. Whatever it takes.
+7. **The Snap.** The project gets sharper over time, not bigger. Whatever it takes.
 8. **Nothing without approval.** You propose. The operator approves. Files are written last.
