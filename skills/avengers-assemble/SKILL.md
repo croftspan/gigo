@@ -176,7 +176,7 @@ These go in `references/`. They are read when needed, not every conversation. Th
 
 **This is where most content belongs.** Push aggressively toward references:
 
-- Extended examples, writing samples, code patterns
+- Extended examples, technique catalogs, code patterns
 - Authority deep-dives and philosophy breakdowns
 - Full pattern libraries
 - Documentation URL collections

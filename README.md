@@ -72,7 +72,7 @@ Every line in `.claude/rules/` loads on every conversation — even when irrelev
 
 **Tier 2: Deep references** — on-demand, zero cost when unused
 
-Extended examples, authority deep-dives, pattern libraries, and writing samples live in `references/`. Rules files include **"When to Go Deeper"** sections that tell the agent *when* to read them — not just that they exist. The agent loads `references/dialogue-techniques.md` when writing dialogue, not when editing plot structure.
+Extended examples, authority deep-dives, pattern libraries, and technique catalogs live in `references/`. Rules files include **"When to Go Deeper"** sections that tell the agent *when* to read them — not just that they exist. The agent loads `references/dialogue-techniques.md` when writing dialogue, not when editing plot structure.
 
 ### The non-derivable rule
 
