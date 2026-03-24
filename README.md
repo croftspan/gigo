@@ -93,14 +93,15 @@ Not "you are a senior developer" — that's generic. Instead: *"you work in the 
 
 ### Works for any domain
 
-Software, fiction, game design, research, music, business — anything. Six questions that work everywhere:
+Software, fiction, game design, research, music, business — anything. Seven questions that work everywhere:
 
-1. Who are the authorities?
-2. What does the gold standard look like?
-3. What are the core tools and processes?
-4. What are the quality gates?
-5. What are the common mistakes?
-6. What does "done" look like?
+1. What are you building, and who is it for?
+2. Who are the authorities?
+3. What does the gold standard look like?
+4. What are the core tools and processes?
+5. What are the quality gates?
+6. What are the common mistakes?
+7. What does "done" look like?
 
 No hardcoded categories. No routing logic.
 

@@ -65,19 +65,21 @@ For deep research, use WebSearch and WebFetch to find current state of the art �
 
 ### Step 3: Research the Domain
 
-Use the **universal discovery framework** — these six questions work for every domain:
+Use the **universal discovery framework** — these seven questions work for every domain:
 
-1. **Who are the authorities?** Find 2-3+ top practitioners per area of expertise. Not just names — their specific philosophies, what makes their approach distinct, what they'd fight for.
+1. **What is being built, and who is it for?** Understand the project's purpose, audience, and constraints before researching the domain. Everything else flows from this.
 
-2. **What does the gold standard look like?** Concrete examples of the best work. What specifically makes it excellent.
+2. **Who are the authorities?** Find 2-3+ top practitioners per area of expertise. Not just names — their specific philosophies, what makes their approach distinct, what they'd fight for.
 
-3. **What are the core tools and processes?** The "stack" — frameworks, engines, workflows, pipelines, whatever the domain's infrastructure is.
+3. **What does the gold standard look like?** Concrete examples of the best work. What specifically makes it excellent.
 
-4. **What are the quality gates?** How to distinguish professional from amateur. What the best practitioners check before shipping.
+4. **What are the core tools and processes?** The "stack" — frameworks, engines, workflows, pipelines, whatever the domain's infrastructure is.
 
-5. **What are the common mistakes?** The forbidden list. The things that mark work as amateur.
+5. **What are the quality gates?** How to distinguish professional from amateur. What the best practitioners check before shipping.
 
-6. **What does "done" look like?** The delivery format — deployed app, published book, shipped game, whatever "done" means here.
+6. **What are the common mistakes?** The forbidden list. The things that mark work as amateur.
+
+7. **What does "done" look like?** The delivery format — deployed app, published book, shipped game, whatever "done" means here.
 
 ### Step 4: Assemble and Present the Team
 
