@@ -10,39 +10,64 @@ Avengers Assemble is a set of Claude Code skills that researches the best practi
 
 ## See it in action
 
+Fury reads the room — your experience, your style, how clear your vision is — and builds a team that meets you where you are.
+
+**You know exactly what you're building:**
+
 ```
 /avengers-assemble
 
-You: "I'm designing a cooperative deck-building board game. 2-4 players,
-     60 minute target play time. Fantasy theme — more like Hades meets
-     Slay the Spire on a tabletop."
+You: "Building a CLI tool for database migrations. Go, targets
+     Postgres and MySQL. Rollbacks, dry runs, schema diffing."
 
-Fury: "Here's the team I'd assemble:
+Fury: "Three on this one:
 
-        The Systems Architect
-        Blends Donald X. Vaccarino's deck-building engine design
-        (Dominion) with Eric Lang's tension mechanics and Matt
-        Leacock's cooperative balance philosophy (Pandemic). Owns
-        card economy, action systems, and win/loss conditions.
+        The Migration Architect
+        Andrew Kane's database ops pragmatism + Sandi Metz's
+        'small objects that talk to each other.' Owns migration
+        safety, rollback logic, and the 'will this lock the
+        table?' question.
 
-        The Experience Designer
-        Draws from Jamey Stegmaier's player engagement principles
-        (Wingspan, Scythe) with Rob Daviau's legacy/narrative
-        progression and Bruno Cathala's elegant interaction design.
-        Owns table feel, player agency, and session pacing.
+        The CLI Designer
+        Steve Francia's cobra/viper patterns + Rob Pike's Go
+        proverbs. Owns the interface — flags, output formatting,
+        error messages that actually help.
 
-        The World Builder
-        Blends Patrick Rothfuss's lived-in world design with the
-        Supergiant Games approach to mythological remixing (Hades,
-        Pyre). Cultures feel discovered, not invented. Every
-        mechanical faction has a narrative reason to exist.
+        The Test Strategist
+        Mitchell Hashimoto's infrastructure testing philosophy —
+        if you can't test it against a real database, the test
+        is lying. Owns integration tests and CI reliability.
 
-        What do you think?"
-
-You: "Lock it in"
+       Lock it in, or adjustments?"
 ```
 
-That's it. You describe the project, Fury finds the authorities, you shape the team, and it writes everything to disk. Every session after this thinks like Vaccarino, Leacock, and Stegmaier — before you've designed a single card.
+**You're still figuring it out:**
+
+```
+/avengers-assemble
+
+You: "kids books. like mystery ones? idk"
+
+Fury: "I can work with that. Here's who I'd bring in:
+
+        The Story Architect
+        I'm pulling from Wendelin Van Draanen — she's the master
+        of clues kids can actually follow. Mixing in Lemony
+        Snicket's philosophy that kids are way smarter than adults
+        give them credit for. This person owns your plot and makes
+        sure the mystery plays fair.
+
+        The Voice Coach
+        Kate DiCamillo writes sentences that sound simple but hit
+        you right in the chest. Mixing that with Mo Willems —
+        nobody alive is better at making kids laugh with fewer
+        words. This person owns how your book sounds and feels.
+
+       That's two to start. Want me to dig into either of them,
+       or does this feel right?"
+```
+
+Same skill, different calibration. Detailed brief gets peers who challenge. "idk" gets guides who lead.
 
 Works for anything: software, fiction, game design, research, music, business.
 

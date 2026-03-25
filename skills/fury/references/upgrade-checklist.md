@@ -12,6 +12,7 @@ Read the project's setup and check for these features. Missing ones are upgrade 
 | Cumulative line budget | ~300 lines total across all `.claude/rules/` | No total budget awareness, only per-file caps (or no caps) |
 | The Snap protocol | `snap.md` triggers on save/wrap-up, 7-step audit including total budget | Missing snap.md, or snap that says "run at end of every session" (old protocol) |
 | Snap overlap check includes cross-file redundancy | Overlap check (#3) explicitly catches the same rule in 3+ auto-loaded files, not just "same thing in different words" | Snap's overlap check only mentions rewording, not cross-file duplication |
+| Persona format | `Modeled after` + `Owns` + `Quality bar` + `Won't do`, with optional `Personality`/`Decides by`/`Depth` pointer. Rich tier in `.claude/references/personas/` | Old format uses `Philosophy`/`Expertise`/`Quality standard`/`Anti-patterns` labels, or personas are dense paragraphs instead of scannable bullets |
 | Persona line targets | 8-10 lines per persona, max 12 | Personas are 15+ lines in CLAUDE.md |
 | Two-tier split | `.claude/rules/` (lean) + `.claude/references/` (deep) | Reference-depth content living in rules files, or no `.claude/references/` directory |
 | Cross-file dedup | A rule appears in at most 2 auto-loaded locations (brief in CLAUDE.md persona, full in relevant rules file) | Same rule repeated in 3+ auto-loaded files (CLAUDE.md, standards.md, extension, workflow.md) |
@@ -46,7 +47,8 @@ Once approved:
 - Update or create `snap.md` using current template (read `avengers-assemble/references/snap-template.md` for the latest)
 - Strengthen snap's overlap check to include cross-file redundancy if missing
 - Deduplicate rules that appear in 3+ auto-loaded files — pick the best two homes, remove the rest
-- Tighten personas to 8-10 lines, move detail to references
+- Reformat personas from old labels (`Philosophy`/`Expertise`/`Quality standard`/`Anti-patterns`) to new labels (`Modeled after`/`Owns`/`Quality bar`/`Won't do`) with one authority per line using `+` format
+- Tighten personas to 8-10 lines, move detail to `.claude/references/personas/`
 - Add total budget check to snap
 - Preserve all existing domain knowledge — upgrading the architecture, not the expertise
 

@@ -66,9 +66,15 @@ Before writing any files, scan all proposed content for cross-file redundancy. T
 
 **The pattern:** CLAUDE.md states the principle as part of a persona's quality standard (brief). The relevant rules file states it as an actionable rule with consequences (full). That's two. Not three. Not six.
 
-## Persona Structure
+## Persona Structure — Two Tiers
 
-Read `persona-template.md` for the full template and examples. Target: 8-10 lines per persona. If you're writing more than 12 lines, you're putting reference-tier content in the rules tier. Never inflate. Never cap.
+Read `persona-template.md` for format, examples, and calibration guidance.
+
+**Lean tier (CLAUDE.md):** Scannable, bullet-driven. Uses `Modeled after` (one authority per line with `+`), `Owns`, `Quality bar`, `Won't do`. Optional: `Personality`, `Decides by`, `Depth` pointer. Target: 8-10 lines, hard ceiling 12.
+
+**Rich tier (`.claude/references/personas/{name}.md`):** Character sheets with Bio, Personality, Communication Style, Decision Framework, Pushes Back On, Champions. Depth calibrated to the operator — full treatment for casual/creative operators who need personas that lead, minimal treatment (just decision frameworks and edge cases) for direct/technical operators who need personas that execute.
+
+Never inflate. Never cap.
 
 ## The Snap
 

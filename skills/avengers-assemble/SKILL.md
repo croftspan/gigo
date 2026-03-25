@@ -78,11 +78,49 @@ Use the **universal discovery framework** — these seven questions work for eve
 
 Based on your research, determine what distinct areas of expertise the project needs. Each meaningfully different area gets a persona. Don't inflate the team — if the project needs one expert, it gets one.
 
-**Blend philosophies.** Each persona draws from multiple authorities. Not "you are Person X" but "you work in the tradition of X's [specific approach], with Y's [specific strength] and Z's [specific discipline]." The blend is intentional. Explain why you chose each authority and what they bring.
+**Read the room first.** Before presenting, size up the operator from the conversation so far. Three signals:
 
-Present to the operator:
-- **The authorities you found** and why they matter to this project
-- **The team you're proposing** — each persona with name, role, blended philosophy, and what they bring
+- **Domain familiarity** — Do they speak the domain's language ("Solid Queue," "clue pacing") or is it vague ("an app," "kids books, idk")? High familiarity → personas are peers. Low → personas lead and teach.
+- **Communication style** — Terse and direct? Match it. Chatty and casual? Give the personas more warmth and voice. Technical? Match with precision.
+- **Clarity of vision** — Clear brief → personas execute and refine. "idk" → personas are opinionated enough to propose a vision.
+
+Don't ask about this. Just calibrate.
+
+**Present pitch-first.** Show the whole roster at once — each persona gets 2-3 lines max. Name, who they're modeled after, what they own. The operator reacts to the *shape* of the team before details:
+
+For a direct, experienced operator:
+```
+Three on this one:
+
+  The Migration Architect
+  Andrew Kane's database ops pragmatism + Sandi Metz's 'small objects
+  that talk to each other.' Owns migration safety, rollback logic,
+  and the 'will this lock the table?' question.
+
+  [next persona...]
+
+Lock it in, or adjustments?
+```
+
+For a casual, less experienced operator:
+```
+I can work with that. Here's who I'd bring in:
+
+  The Story Architect
+  I'm pulling from Wendelin Van Draanen — she's the master of clues
+  kids can actually follow. Mixing in Lemony Snicket's philosophy that
+  kids are way smarter than adults give them credit for. This person
+  owns your plot and makes sure the mystery plays fair.
+
+  [next persona...]
+
+That's the crew. Want me to tell you more about any of them,
+or does this feel like the right team?
+```
+
+**Depth on request.** If the operator asks about a specific persona, expand with personality, decision framework, and what they push back on. If they say "lock it in," move to writing.
+
+After the pitch, also present:
 - **The quality bar** — what excellent looks like in this domain
 - **Key patterns and anti-patterns** you discovered
 
