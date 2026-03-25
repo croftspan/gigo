@@ -42,7 +42,7 @@ For every rules file, evaluate against five checks:
 
 **3. Relevance check.** Does this rule apply to ALL work in the project, or only to specific types of work? A coding standard applies to all code. A schema verification protocol only applies when touching the data layer. A branding deliverable standard only applies when producing brand work.
 
-**4. Overlap check.** Do multiple rules say the same thing in different words? Do multiple files cover the same ground?
+**4. Overlap check.** Do multiple rules say the same thing in different words? Do multiple files cover the same ground? Check for cross-file redundancy — the same rule appearing in more than two auto-loaded files. A rule should live in at most two auto-loaded locations: once briefly in CLAUDE.md, once fully in the relevant rules file.
 
 **5. Staleness check.** Is this still accurate? Has the project evolved past it? Were there early-project rules that made sense at the time but the codebase now makes obvious?
 

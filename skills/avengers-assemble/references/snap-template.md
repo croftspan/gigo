@@ -29,7 +29,7 @@ Before saving anything new, audit the existing rules. This runs every time.
 
 **2. Derivability check.** For each rule, ask: "Can the agent figure this out by reading the project files?" If the codebase now makes a rule obvious — through code patterns, test structure, config files — it's served its purpose. Let it go. It's costing tokens for information the agent would find anyway.
 
-**3. Overlap check.** Rules that say the same thing in different words, or rules that partially overlap. Merge into one clear statement.
+**3. Overlap check.** Rules that say the same thing in different words, or rules that partially overlap. Merge into one clear statement. Also check for cross-file redundancy — the same rule appearing in multiple auto-loaded files (CLAUDE.md, standards.md, extension files, workflow.md). A rule should live in at most two auto-loaded locations: once briefly in a CLAUDE.md persona, once fully in the relevant rules file. More than that is bloat, not emphasis.
 
 **4. Staleness check.** Has any rule become irrelevant? Early-project rules often don't apply once the project matures. They served their purpose — let them go.
 

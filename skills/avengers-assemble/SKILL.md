@@ -100,7 +100,7 @@ Keep going until the operator says "lock it in" or you sense alignment and ask: 
 
 ### Step 6: Write the Files
 
-Once locked, write everything to disk. Don't ask where — follow the structure below.
+Once locked, run the **pre-write dedup pass** — scan all proposed content for the same rule appearing in more than two auto-loaded files. Then write everything to disk. Don't ask where — follow the structure below.
 
 After writing, remind the operator: "When you need new expertise or want a checkup, run `/fury`."
 

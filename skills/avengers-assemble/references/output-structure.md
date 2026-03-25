@@ -58,6 +58,14 @@ These go in `.claude/references/`. They are read when needed, not every conversa
 
 Rules files tell the agent WHEN to read specific reference files. This creates task-aware context loading.
 
+## Pre-Write Dedup Pass
+
+Before writing any files, scan all proposed content for cross-file redundancy. The same rule must not appear in more than two auto-loaded locations (once in CLAUDE.md persona context, once in the relevant rules file). This is the most common failure mode — a core principle gets stated in CLAUDE.md, restated in standards.md, echoed in an extension file, and mentioned again in workflow.md. The agent reads it 4 times per conversation. That's bloat, not emphasis.
+
+**How to check:** For each key rule or principle you're about to write, search your proposed content for the same idea across files. If it appears in more than 2 auto-loaded files, pick the best home and remove it from the others.
+
+**The pattern:** CLAUDE.md states the principle as part of a persona's quality standard (brief). The relevant rules file states it as an actionable rule with consequences (full). That's two. Not three. Not six.
+
 ## Persona Structure
 
 Read `persona-template.md` for the full template and examples. Target: 8-10 lines per persona. If you're writing more than 12 lines, you're putting reference-tier content in the rules tier. Never inflate. Never cap.
