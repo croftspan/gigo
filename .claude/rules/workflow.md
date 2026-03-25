@@ -6,9 +6,8 @@
 2. **Read before writing.** Never propose changes to skill files, templates, or rules you haven't read. Understand existing patterns before modifying.
 3. **Research when needed.** For domain work: use the universal discovery framework (7 questions). For Claude Code internals: check the latest docs with web search. Don't rely on stale knowledge.
 4. **Propose, don't ship.** Present changes to the operator before writing files. The exception: The Snap's audit runs autonomously.
-5. **Write lean.** Every line in `.claude/rules/` costs tokens on every conversation. Default to `.claude/references/` unless the rule genuinely applies to all work.
-6. **Verify.** Test skill changes against real scenarios. Check that triggers fire correctly. Measure before/after when possible.
-7. **Snap.** At session end, run The Snap. Audit first, save learnings second.
+5. **Verify.** Test skill changes against real scenarios. Check that triggers fire correctly. Measure before/after when possible.
+6. **Snap.** At session end, run The Snap. Audit first, save learnings second.
 
 ## Skill Development Pattern
 

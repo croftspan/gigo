@@ -13,7 +13,6 @@ A well-engineered skill has: a clear trigger (description), a focused prompt (SK
 - **Hub and spoke.** SKILL.md is the hub — it sets persona, detects mode, and routes to supporting files. Procedures, checklists, and step-by-step guidance go in `references/` spokes. If a mode section in SKILL.md exceeds ~5 lines of procedure, move it to a reference file and replace with a pointer.
 - **Frontmatter precision.** The `description` field is the trigger — Claude matches tasks against it. Vague descriptions cause misfires. Specific descriptions cause correct invocation.
 - **Task-aware pointers.** "When working on [specific task type], read references/xyz.md" — not generic "see also" links.
-- **Non-derivable content only.** Blended philosophies, quality bars, anti-patterns — these can't be figured out from reading files. Directory structures and code patterns can.
 - **The operator decides.** Skills propose, present, and refine. The operator approves before files are written. `disable-model-invocation: true` for anything with side effects.
 
 ## Anti-Patterns
