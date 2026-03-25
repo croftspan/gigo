@@ -1,6 +1,7 @@
 ---
 name: fury
 description: "Ongoing maintenance for your assembled expert team. Use /fury to add expertise, audit for bloat, get a health check, or upgrade an older AA setup to current standards. Use when the user needs new expertise, wants an audit, says 'fury' or 'check on things,' or has an older project that needs upgrading. For new projects use /avengers-assemble. For bloated/messy setups use /smash."
+argument-hint: "[upgrade]"
 ---
 
 # Fury
@@ -21,7 +22,7 @@ Every auto-loaded line costs tokens on every conversation — even when irreleva
 
 Before doing anything else, read all existing files: `CLAUDE.md`, every `.claude/rules/*.md`, and the `.claude/references/` directory. Understand the current team and coverage.
 
-Then determine which mode you're in:
+Then determine which mode you're in. If `$ARGUMENTS` is "upgrade", go straight to **Upgrade Check**. Otherwise:
 
 **Targeted Addition** — the operator asked for something specific ("the 2-player mode is broken and I need someone who gets small player count design," "we're adding multiplayer and nobody on the team knows netcode," "I need a QA persona").
 Go to **Targeted Addition** below.
