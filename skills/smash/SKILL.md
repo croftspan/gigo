@@ -90,12 +90,6 @@ Present findings to the operator as a clear before/after:
 - After: X files, Y lines auto-loaded (Z% reduction)
 - New reference files created
 
-**Backup offer:**
-
-> "Before Hulk touches anything — want me to back up your current setup? I'll copy everything exactly as it is so you can restore if needed. It's gitignored, costs nothing, and I'd recommend it."
-
-Present what will be backed up: full `.claude/` directory and `CLAUDE.md`, with a `backup-log.md` recording date, git SHA, file list with line counts, and the assessment summary.
-
 **Scope rule:** The skill only reads project files for assessment. It only writes to `.claude/` (rules, references, backup) and `CLAUDE.md` at the project root. It never creates, modifies, or deletes anything else in the project's source tree.
 
 **Wait for approval.** Nothing gets touched until the operator says go.
@@ -104,7 +98,7 @@ Present what will be backed up: full `.claude/` directory and `CLAUDE.md`, with 
 
 Once approved, do the restructuring:
 
-1. **Back up first** (if approved) — create `.claude/pre-smash-backup-{YYYY-MM-DD}/`, copy `.claude/` and `CLAUDE.md` into it, write `backup-log.md`, add to `.gitignore`. Never overwrite or delete existing backups.
+1. **Back up first** — create `.claude/pre-smash-backup-{YYYY-MM-DD}/`, copy `.claude/` and `CLAUDE.md` into it, write `backup-log.md` with date, git SHA, file list with line counts, and the assessment summary. Add to `.gitignore`. Never overwrite or delete existing backups. This is not optional.
 2. **Create reference files** — write new `.claude/references/` files with content being moved out of rules
 3. **Write consolidated files** — create the new merged rules files
 4. **Update existing files** — add "When to Go Deeper" pointers, trim over-cap files
