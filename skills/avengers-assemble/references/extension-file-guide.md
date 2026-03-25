@@ -28,18 +28,22 @@ Each pattern earns its place — if it's obvious from reading the code, don't st
 not just the rule. "Don't do X because Y happens."}
 
 ## When to Go Deeper
-{Task-aware pointers to references/ files. Tell the agent WHEN to read them:
-"When writing dialogue scenes, read references/dialogue-techniques.md"
-"When designing economy loops, read references/monetization-framework.md"}
+{Task-aware pointers to .claude/references/ files. Tell the agent WHEN to read them:
+"When writing dialogue scenes, read .claude/references/dialogue-techniques.md"
+"When designing economy loops, read .claude/references/monetization-framework.md"}
 ```
 
-Note the last section: **"When to Go Deeper"** replaces a generic "References" link. It tells the agent *when* a reference file is relevant, making the system task-aware. The agent reads `references/dialogue-techniques.md` when writing dialogue, not when editing plot structure.
+Note the last section: **"When to Go Deeper"** replaces a generic "References" link. It tells the agent *when* a reference file is relevant, making the system task-aware. The agent reads `.claude/references/dialogue-techniques.md` when writing dialogue, not when editing plot structure.
 
 ## Line Budget
 
-**Hard cap: ~60 lines per file. Fewer is better.** If a file is growing past this, move detail to `references/` and leave a "When to Go Deeper" pointer.
+**Per-file cap: ~60 lines. Fewer is better.** If a file is growing past this, move detail to `.claude/references/` and leave a "When to Go Deeper" pointer.
 
-Ask: "Does the agent need this on every conversation, or only when working in this specific area?" If the latter, it belongs in `references/`.
+**Total cap: ~300 lines across all `.claude/rules/` files.** A project with 8 extensions at 60 lines each is 480 lines of auto-loaded context — that's systemic bloat even though each file is individually "fine." Track the total.
+
+**Reference files:** No hard cap, but keep individual reference files under ~200 lines. If a reference is growing larger, split it by subtopic.
+
+Ask: "Does the agent need this on every conversation, or only when working in this specific area?" If the latter, it belongs in `.claude/references/`.
 
 Ask: "Can the agent figure this out by reading the project files?" If yes, don't write it. No codebase overviews. No structural descriptions. No obvious patterns.
 
@@ -74,8 +78,8 @@ Every dependency is pinned. Every forbidden tool has a reason.
 | RSpec | Minitest | Rails default |
 
 ## When to Go Deeper
-When setting up deployment or infrastructure, read `references/deployment-guide.md`.
-When adding a new gem, read `references/gem-evaluation-criteria.md`.
+When setting up deployment or infrastructure, read `.claude/references/deployment-guide.md`.
+When adding a new gem, read `.claude/references/gem-evaluation-criteria.md`.
 ```
 
 ### Fiction: voice-guide.md
@@ -102,9 +106,9 @@ Read it aloud. If you stumble, rewrite. Anglo-Saxon over Latinate.
 - Purple prose in action scenes — short sentences, active verbs
 
 ## When to Go Deeper
-When writing dialogue-heavy scenes, read `references/dialogue-techniques.md`.
-When writing action/chase sequences, read `references/pacing-guide.md`.
-When starting a new chapter, read `references/voice-examples.md` for calibration.
+When writing dialogue-heavy scenes, read `.claude/references/dialogue-techniques.md`.
+When writing action/chase sequences, read `.claude/references/pacing-guide.md`.
+When starting a new chapter, read `.claude/references/voice-examples.md` for calibration.
 ```
 
 ### Game: engine-patterns.md
@@ -132,9 +136,9 @@ game state. Client predicts, server validates.
 - Raw DataStore calls scattered across scripts — single access point
 
 ## When to Go Deeper
-When designing a new game system, read `references/roblox-architecture.md`.
-When implementing DataStore persistence, read `references/datastore-patterns.md`.
-When optimizing network traffic, read `references/replication-guide.md`.
+When designing a new game system, read `.claude/references/roblox-architecture.md`.
+When implementing DataStore persistence, read `.claude/references/datastore-patterns.md`.
+When optimizing network traffic, read `.claude/references/replication-guide.md`.
 ```
 
 ## When to Create a New Extension vs. Add to an Existing One

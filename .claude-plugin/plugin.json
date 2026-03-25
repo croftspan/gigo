@@ -1,7 +1,7 @@
 {
   "name": "avengers-assemble",
-  "description": "Assembles expert teams and scaffolds Claude Code projects for any domain. Researches the best practitioners, blends their philosophies into focused personas, and writes lean project structure with rules, standards, and workflow. Re-runnable: first run scaffolds, re-runs add expertise or audit the kit.",
-  "version": "1.0.0",
+  "description": "Four skills for building expert Claude Code projects. /avengers-assemble researches the best practitioners in any domain, blends their philosophies into focused personas, and scaffolds lean project structure. /fury adds expertise as the project grows and audits for bloat. /smash restructures existing legacy setups into the lean two-tier architecture. /cap turns vague ideas into clear, prioritized action plans before the team executes.",
+  "version": "4.0.0",
   "author": {
     "name": "Eaven"
   },

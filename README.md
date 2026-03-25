@@ -2,7 +2,7 @@
 
 **Build the best team in any field — before you write a single line.**
 
-A Claude Code skill that researches your domain, finds the best practitioners, blends their philosophies into focused expert personas, and scaffolds a lean project that makes every future session smarter. Run it again later and it audits your setup, finds the gaps, and protects what you built.
+Four Claude Code skills that research your domain, find the best practitioners, blend their philosophies into focused expert personas, and scaffold a lean project that makes every future session smarter. Come back later and Fury audits your setup, finds the gaps, and protects what you built. Already have a Claude project that's grown unwieldy? Hulk smashes it into shape. Don't know what you want yet? Cap turns your fuzzy ideas into clear battle plans.
 
 > *"There was an idea... to bring together a group of remarkable people, so when we needed them, they could fight the battles we never could." — Nick Fury*
 
@@ -14,7 +14,7 @@ You start with a blank `CLAUDE.md`. You write some rules, add some context, hope
 
 [Research confirms this](https://arxiv.org/abs/2602.11988): bloated context files *reduce* task success rates while *increasing* cost by 20%+. More rules doesn't mean better results — it means more noise, diluted attention, and higher bills.
 
-**Avengers Assemble fixes both problems.** Expert knowledge from day one. Active bloat prevention from day two.
+**Avengers Assemble fixes all three.** `/avengers-assemble` gives you expert knowledge from day one. `/fury` keeps it sharp from day two. `/smash` restructures existing setups that have already grown heavy. `/cap` turns your vague ideas into clear plans before anyone moves.
 
 ---
 
@@ -25,6 +25,9 @@ You start with a blank `CLAUDE.md`. You write some rules, add some context, hope
 ```bash
 git clone https://github.com/Eaven/avengers-assemble.git
 cp -r avengers-assemble/skills/avengers-assemble ~/.claude/skills/avengers-assemble
+cp -r avengers-assemble/skills/fury ~/.claude/skills/fury
+cp -r avengers-assemble/skills/smash ~/.claude/skills/smash
+cp -r avengers-assemble/skills/cap ~/.claude/skills/cap
 ```
 
 ### Your first assembly
@@ -115,22 +118,31 @@ CLAUDE.md                              # Team roster + project identity
 .claude/rules/snap.md                  # The Snap
 .claude/rules/game-systems.md          # Deck-builder architecture rules
 .claude/rules/worldbuilding.md         # Narrative design constraints
-references/deckbuilder-patterns.md     # Deep card economy patterns
-references/cooperative-balance.md      # Co-op tuning techniques
-references/worldbuilding-guide.md      # Extended lore methodology
+.claude/references/deckbuilder-patterns.md  # Deep card economy patterns
+.claude/references/cooperative-balance.md   # Co-op tuning techniques
+.claude/references/worldbuilding-guide.md   # Extended lore methodology
 ```
 
 You now have a project where every session thinks like Vaccarino, Leacock, and Stegmaier — before you've designed a single card.
+
+### Upgrading an older project
+
+Already using an older version of Avengers Assemble? Fury handles that too:
+
+```
+/fury upgrade this project to current standards
+```
+
+Fury compares your setup against the current spec — "When to Go Deeper" pointers, cumulative budget checks, persona line targets, the latest Snap protocol — creates a timestamped backup (never touching existing backups), and proposes specific upgrades. Your domain expertise stays intact; only the architecture gets updated.
 
 ### Two months later
 
 The game is taking shape. Playtesting reveals that 2-player mode feels flat — the co-op mechanics were tuned for 3-4 and don't scale down. You need expertise you don't have.
 
 ```
-/avengers-assemble the 2-player mode is broken — co-op doesn't
-scale down and we might need a competitive variant or a solo
-mode with an AI opponent. I need someone who gets small player
-count design.
+/fury the 2-player mode is broken — co-op doesn't scale down
+and we might need a competitive variant or a solo mode with an
+AI opponent. I need someone who gets small player count design.
 ```
 
 Fury reads your existing team, researches small-count and solo board game design, and comes back:
@@ -146,7 +158,7 @@ Fury: "Your current team covers systems, experience, and world — but
         Turczi's approach to scaling co-op games down to one.
 
         I'd also update game-systems.md with player count scaling
-        patterns and add references/solo-ai-design.md for the
+        patterns and add .claude/references/solo-ai-design.md for the
         Automa framework details.
 
         Want me to merge this in?"
@@ -155,6 +167,92 @@ You: "Do it"
 ```
 
 New persona added to `CLAUDE.md`. Rules updated. References expanded. The project didn't start over — it grew.
+
+### Already have a project? Smash it into shape
+
+> *"And Hulk... smash." — Captain America*
+
+Got an existing Claude Code project where the rules have grown heavy? Maybe you set it up months ago, or someone else did, or it just accumulated over time. `/smash` reads everything, measures every file against line caps and derivability rules, and presents a restructuring plan.
+
+This is what it looked like when we ran it on [Croftspan](https://croftspan.com)'s own production codebase — the Rails monolith where this methodology was developed. Even our own project had grown past its rules:
+
+```
+/smash
+```
+
+Fury walks in, reads your entire setup, and comes back with a triage:
+
+```
+Fury: "Read everything. Here's what I found:
+
+        16 rules files, 405 lines auto-loaded.
+
+        Issues:
+        - app-architecture.md is 138 lines — 2.3x over cap.
+          30 lines of gotchas (gold), 50 lines of derivable
+          content the agent can figure out by reading your code.
+        - 7 one-liner files that cover related ground.
+          Consolidating into 2 files.
+        - schema-verification.md (48 lines) only applies when
+          touching the data layer. Moving to references.
+
+        After restructuring: 8 files, ~195 lines. 52% reduction.
+        Everything non-derivable stays. Gotchas stay. Quality
+        bars stay. The stuff that moved to references is still
+        there — it just loads when needed, not every time.
+
+        Want me to back up your current setup before I touch
+        anything?"
+
+You: "Yeah, back it up. Then do it."
+```
+
+Fury backs up your entire `.claude/` setup, then Hulk does the work. Your project goes from bloated to lean without losing a single piece of institutional knowledge.
+
+> Smash.
+
+### Don't know what you want yet? Cap's got you
+
+> *"I can do this all day."*
+
+Most wasted tokens come from unclear intent. You say "I want to make it better" and the AI spends 20 messages figuring out what "it" is and what "better" means. `/cap` front-loads that clarity.
+
+```
+/cap I want to add some kind of analytics to our app but I'm not
+sure if it should be a dashboard or reports or what, we just need
+to understand what our clients are doing better
+```
+
+Cap reads your project, asks 2-3 targeted questions (one at a time, only questions where the answer changes the plan), and hands you a clear, prioritized action plan:
+
+```
+Cap: "Here's the plan:
+
+      1. Add event tracking to the three client touchpoints
+         that matter most: intake completion, deliverable
+         downloads, and message responses. This is the data
+         layer — everything else builds on it.
+
+      2. Build an operator-facing analytics view (not client-
+         facing yet). You need to see the patterns before
+         deciding what to show clients.
+
+      3. Once you have 2-4 weeks of data, decide: dashboard
+         (real-time, always visible) or reports (periodic,
+         exportable). The data will tell you which.
+
+      Risk: Don't build the UI before you have the data.
+      That's how you end up rebuilding it.
+
+      Next steps:
+      - Start on step 1 now — your team's got the Rails
+        chops for this.
+      - If you want event tracking expertise specifically,
+        /fury can add that to your team first.
+      - This is straightforward enough to just go."
+```
+
+Cap doesn't execute. The assembled team in your `CLAUDE.md` does. Cap just makes sure everyone knows what the work is before anyone starts.
 
 ---
 
@@ -176,7 +274,13 @@ Every line in `.claude/rules/` loads on every conversation — even when irrelev
 
 **Tier 2: Deep references** — on-demand, zero cost when unused
 
-Extended examples, authority deep-dives, pattern libraries, and technique catalogs live in `references/`. Rules files include **"When to Go Deeper"** sections that tell the agent *when* to read them — not just that they exist. The agent loads `references/cooperative-balance.md` when tuning difficulty, not when writing flavor text.
+Extended examples, authority deep-dives, pattern libraries, and technique catalogs live in `.claude/references/`. Rules files include **"When to Go Deeper"** sections that tell the agent *when* to read them — not just that they exist. The agent loads `.claude/references/cooperative-balance.md` when tuning difficulty, not when writing flavor text.
+
+**Skills use the same pattern.** Each SKILL.md is a lean hub that detects what mode to use and points to supporting reference files for the full procedure. When you invoke `/fury` for a health check, only the hub loads — then just the health-check procedure loads, not the targeted-addition or upgrade procedures. Each conversation pays only for what it uses.
+
+**Budgets:** ~60 lines per rules file, ~300 lines total across all rules, CLAUDE.md under 200 lines, 8-10 lines per persona.
+
+**Everything stays inside `.claude/`.** Rules, references, backups — the only file outside `.claude/` is `CLAUDE.md` at the project root (required by Claude Code). The skill never touches your source tree.
 
 ### The non-derivable rule
 
@@ -213,14 +317,14 @@ No hardcoded categories. No routing logic.
 
 Tony sacrificed himself so everyone else could keep going. The Snap here works the same way — rules that have served their purpose get cleared out so the ones that matter stay sharp.
 
-Every project gets `snap.md`, which runs at the end of every session:
+Every project gets `snap.md` — a protocol the agent follows when you save progress or wrap up:
 
 - **Audits first, saves second** — the primary job is protecting the project, not logging
 - **Lets go of derivable rules** — if the codebase now makes it obvious, it's served its purpose
 - **Merges overlaps** — three versions of the same rule become one
 - **Enforces ~60 line caps** — pushes detail to references when files get heavy
 - **Questions every rule** — "is this worth loading on every conversation?"
-- **Flags gaps** — suggests `/avengers-assemble` when the project outgrows the team
+- **Flags gaps** — suggests `/fury` when the project outgrows the team
 
 Without The Snap, rules bloat within weeks. With it, they get sharper.
 
@@ -289,7 +393,7 @@ The obvious approach is one tier: put everything in `.claude/rules/` and let it 
 
 The problem: every line in `rules/` loads on every conversation. A deep-dive on solo AI opponent design is invaluable when you're building the Automa system — and pure noise when you're writing card flavor text. Loading it every time wastes tokens and dilutes attention on whatever the agent is actually doing.
 
-The two-tier architecture solves this. Tier 1 (rules) contains only what applies to *all* work — philosophy, quality gates, universal patterns. Tier 2 (references) contains everything else — extended examples, deep-dives, technique catalogs. The key innovation is **"When to Go Deeper"** — rules files don't just point to references, they tell the agent *when* to read them. "When tuning cooperative balance, read `references/cooperative-balance.md`." This makes the system task-aware: the agent loads deep context only when it's relevant.
+The two-tier architecture solves this. Tier 1 (rules) contains only what applies to *all* work — philosophy, quality gates, universal patterns. Tier 2 (references) contains everything else — extended examples, deep-dives, technique catalogs. The key innovation is **"When to Go Deeper"** — rules files don't just point to references, they tell the agent *when* to read them. "When tuning cooperative balance, read `.claude/references/cooperative-balance.md`." This makes the system task-aware: the agent loads deep context only when it's relevant. And everything stays inside `.claude/` — non-destructive by design.
 
 ### Why conversational, not procedural
 
@@ -305,7 +409,7 @@ This works better because the skill does the homework. You don't need to know wh
 
 **Cross-project learning.** Right now each project's rules are independent. A pattern discovered in one Rails project could benefit another, but there's no mechanism for that. The Snap prevents bloat, but it doesn't help projects learn from siblings.
 
-**Automated health checks.** The skill can audit a project when you run it, but it'd be better if The Snap could flag "your rules are getting stale, consider running `/avengers-assemble`" based on actual usage patterns rather than a generic periodic reminder.
+**Automated health checks.** `/fury` can audit a project when you run it, but it'd be better if The Snap could flag "your rules are getting stale, consider running `/fury`" based on actual usage patterns rather than a generic periodic reminder.
 
 ---
 

@@ -1,277 +1,242 @@
-# `/avengers-assemble` — Skill Specification
+# Avengers Assemble — Skill Specification
 
 ## Overview
 
-A global Claude Code skill that assembles expert teams and scaffolds projects for any domain. Researches the best practitioners in the field, blends their philosophies into focused personas, establishes quality standards, and writes a lean `.claude/` project structure. Re-runnable — works on day one and day thirty.
+A Claude Code skill ecosystem that researches domain experts, blends their philosophies into focused personas, and scaffolds lean AI-native project setups. Four skills, four distinct jobs.
 
-**Location:** `~/.claude/skills/avengers-assemble/SKILL.md`
+**Location:** Installed as a Claude Code plugin or in `~/.claude/skills/`
 
 **Scope:** Global (not project-scoped). Works in any directory, any domain.
 
 ---
 
-## Skill Metadata
+## The Four Skills
 
-```yaml
----
-name: avengers-assemble
-description: "Assembles an expert team and scaffolds a Claude Code project for any domain. Researches the best practitioners, builds blended personas, establishes quality standards, and writes the full project structure. Re-runnable: first run scaffolds, re-runs add expertise or audit the kit."
----
-```
+| Skill | Persona | Job | Trigger |
+|---|---|---|---|
+| `/avengers-assemble` | Nick Fury | First assembly — research domain, build team, scaffold project | New project, no CLAUDE.md, "assemble" |
+| `/fury` | Nick Fury | Ongoing maintenance — add expertise, audit, health check | Existing project, "check on things," need new expertise |
+| `/smash` | Nick Fury + Hulk | Restructure — tear down bloated setups, rebuild lean | Bloated rules, "smash," messy .claude/ |
+| `/cap` | Steve Rogers | Planning — turn vague intent into clear action plans | Vague ideas, "cap," "plan this out" |
 
----
-
-## Trigger Conditions
-
-**Invoke when:**
-- User says "assemble," "avengers assemble," "kick off a project," "set up a project for X"
-- User says "I want to build X" in a directory with no CLAUDE.md
-- User says "I need more expertise" or "we need a [role]" in an existing project
-- Explicitly invoked via `/avengers-assemble`
-
-**Do not invoke when:**
-- User is asking to implement a feature (that's implementation, not assembly)
-- User is debugging or fixing something in an existing project
+**Routing logic:**
+- No CLAUDE.md → `/avengers-assemble`
+- CLAUDE.md exists, lean and well-structured → `/fury`
+- CLAUDE.md exists, bloated or disorganized → `/smash`
+- Operator has vague intent, needs clarity before execution → `/cap`
 
 ---
 
-## Modes
+## Skill: `/avengers-assemble` (First Assembly)
 
-The skill operates in one of two modes, determined automatically from project state:
+### Trigger Conditions
 
-### First Run (no CLAUDE.md exists)
+**Invoke when:** User says "assemble," wants to start a new project, set up Claude Code for a project, or kick off work in an unfamiliar field. No CLAUDE.md exists yet.
 
-Full assembly — understand the mission, research the domain, build the team, write the kit.
+**Do not invoke when:** Project already has CLAUDE.md (use `/fury` or `/smash` instead), user is implementing a feature, user is debugging.
 
-### Re-Run (CLAUDE.md and `.claude/rules/` already exist)
+### The Kickoff Conversation
 
-Two paths based on operator input:
+**Phase 1: Understand the Mission** — Ask lightweight follow-ups one at a time. All questions are skippable. If the description is rich enough, skip to research.
 
-| Operator says | Skill does |
-|---|---|
-| "I need X" / "Add a [role]" / describes new scope | **Targeted addition** — researches the new area, proposes new/modified personas and extensions, merges into existing kit |
-| "Check on things" / "Run it again" / no specific direction | **Health check** — reads project state (files, recent work, git history), audits the kit against what's actually happening, triages: suggests additions, flags gaps, recommends pruning stale rules |
+**Phase 2: Research & Assemble** — Choose research depth (quick vs deep). Use the universal discovery framework (7 questions). Find 2-3+ authorities per expertise area. Blend philosophies intentionally.
 
-Re-runs never overwrite or remove existing work without explicit approval.
+**Phase 3: Conversational Refinement** — Operator reacts, skill adjusts. Loop until "lock it in."
 
----
+**Phase 4: Write the Files** — Write everything to disk following the output structure. Remind operator about `/fury` for future maintenance.
 
-## The Kickoff Conversation
-
-### Phase 1: Understand the Mission
-
-Operator describes what they want to build. The skill asks lightweight follow-up questions **one at a time** to fill in the picture:
-
-- What is this thing?
-- Who is it for?
-- What does "done" look like?
-- Operator's experience level in this domain
-- Any strong opinions or constraints already
-
-**All questions are skippable.** If the operator says "I don't know" or moves on, the skill doesn't block. Unanswered questions get figured out through research (Phase 2) or the back-and-forth (Phase 3). The skill never asks the operator to make decisions they don't have context for.
-
-The skill reads the operator's initial description and only asks what's genuinely missing. If the description is rich enough, it moves straight to research.
-
-### Phase 2: Research & Assemble
-
-**Research depth** — presented as a clear choice, not a hidden flag:
-
-> "Want me to do a quick setup from what I know, or deep-research this domain first?"
+### Research Depth
 
 | Mode | Method | Best for |
 |---|---|---|
-| **Quick** (default) | Claude's training knowledge | Established domains, operator has some familiarity, weekend projects |
-| **Deep research** | WebSearch + WebFetch for current authorities, community consensus, tool versions, living practitioners | Fast-moving domains, operator is unfamiliar, production-grade projects |
+| **Quick** (default) | Training knowledge | Domain has stable standards, operator has some familiarity |
+| **Deep research** | WebSearch + WebFetch | Domain changed in last 12 months, operator unfamiliar, production-grade |
 
-**Universal discovery framework** — every domain, every time, the skill answers:
+### Universal Discovery Framework
 
-1. **Who are the authorities?** Find 2-3+ top practitioners per area of expertise. Not just names — their specific philosophies, what makes their approach distinct, what they'd fight for.
-2. **What does the gold standard look like?** Examples of the best work in this domain. What specifically makes it the best.
-3. **What are the core tools/processes?** The "stack" for any domain — frameworks, workflows, pipelines, whatever the domain's infrastructure is.
-4. **What are the quality gates?** How to distinguish excellent from merely okay.
-5. **What are the common mistakes?** The forbidden list. What separates amateur from professional.
-6. **What does "done" look like?** Delivery format, publishing pipeline, deployment — whatever "ship it" means here.
+Seven questions, every domain, every time:
 
-**Team assembly logic:**
+1. What is being built, and who is it for?
+2. Who are the authorities? (2-3+ per area, specific philosophies)
+3. What does the gold standard look like?
+4. What are the core tools and processes?
+5. What are the quality gates?
+6. What are the common mistakes?
+7. What does "done" look like?
 
-The skill looks at what distinct areas of expertise the project requires. Each meaningfully different area gets a persona. It doesn't start from a template roster or inflate the team.
+---
 
-Each persona's philosophy is a **blend** of the best practitioners found — not "you are Person X" but "you work in the tradition of X's [specific approach], with Y's [specific strength] and Z's [specific discipline]." The blend is intentional and explained.
+## Skill: `/fury` (Ongoing Maintenance)
 
-**Skill presents:**
-- The authorities it found and why they matter
-- The team it's proposing — each persona with blended philosophy
-- The quality bar for this domain
-- Key patterns and anti-patterns discovered
+### Trigger Conditions
 
-### Phase 3: Conversational Refinement
+**Invoke when:** Operator needs new expertise added, wants a health check, wants to upgrade an older setup, says "fury" or "check on things." Project already has CLAUDE.md and `.claude/rules/`.
 
-No formal structure. The operator reacts naturally. The skill adjusts.
+**Do not invoke when:** No CLAUDE.md exists (use `/avengers-assemble`). Setup is bloated or disorganized (use `/smash` first).
 
-- Operator pushes back on a persona → skill adjusts or replaces
-- Operator reveals new scope → skill integrates
-- Operator doesn't understand something → skill educates briefly, asks preference
-- Operator has a strong opinion → skill incorporates as an override
+### Three Modes
 
-The loop continues until the operator says "lock it in" or the skill senses alignment and asks: "Ready to lock this in?"
+**Targeted Addition** — Operator identifies a specific gap. Skill researches, proposes new persona(s), merges without bloating.
 
-### Phase 4: Lock In & Build
+**Upgrade Check** — Project was built with older AA version. Skill compares against current spec (two-tier split, "When to Go Deeper" pointers, cumulative budgets, snap protocol, persona targets), creates timestamped backup, proposes upgrades without touching domain expertise.
 
-Once locked, the skill writes everything to disk following current Claude Code best practices. Before writing, it checks:
-- Current Claude Code conventions for `.claude/` structure
-- Whether the project already has any Claude Code files to merge with
-- The latest patterns for rules auto-loading
+**Health Check** — No specific direction. Skill assesses coverage, freshness, and weight. Presents triage: add, update, prune, or all clear.
 
-Output is automatic — no asking "where should I put this?"
+### Backup Policy
+
+Every upgrade creates a timestamped backup at `.claude/pre-upgrade-backup-{date}/`. Existing backups (from `/smash` or previous upgrades) are never overwritten or deleted. Each backup is a snapshot in time — gitignored, costs nothing.
+
+### Health Check Axes
+
+- **Coverage:** Has the project grown beyond the team's expertise?
+- **Freshness:** Are rules still accurate and current?
+- **Weight:** Is every rule earning its token cost? Can the agent figure any of them out from the code?
+
+---
+
+## Skill: `/smash` (Restructure)
+
+### Trigger Conditions
+
+**Invoke when:** Rules files are bloated, disorganized, or messy. User says "smash." Setup wasn't built by `/avengers-assemble`.
+
+**Do not invoke when:** No CLAUDE.md exists (use `/avengers-assemble`). Setup is already lean (use `/fury`).
+
+### Six Phases
+
+1. **Read Everything** — CLAUDE.md, all rules, references, project structure, git history
+2. **Measure** — Five checks per file: line count, derivability, relevance, overlap, staleness
+3. **Triage** — Categorize: Gold, Gold but heavy, Gold but narrow, Consolidation candidate, Derivable, Stale, Missing
+4. **Present the Plan** — Before/after numbers, backup offer, wait for approval
+5. **Execute** — Back up, create references, write consolidated files, add The Snap, remove old files
+6. **Assessment** — Check expertise layer depth, suggest `/fury` or `/avengers-assemble` if gaps remain
+
+### Triage Categories
+
+| Category | Action |
+|---|---|
+| **Gold** | Keep — non-derivable, universal, under cap |
+| **Gold but heavy** | Split — core stays in rules, detail to references |
+| **Gold but narrow** | Move to references with "When to Go Deeper" pointer |
+| **Consolidation** | Merge related small files into one |
+| **Derivable** | Let go — the codebase makes it obvious now |
+| **Stale** | Let go — was true once, isn't anymore |
+| **Missing** | Flag for addition |
+
+---
+
+## Skill: `/cap` (Planning)
+
+### Trigger Conditions
+
+**Invoke when:** Operator has vague intent, a big idea that needs breaking down, is thinking out loud, says "cap" or "plan this out."
+
+**Do not invoke when:** Operator knows exactly what they want and just needs execution.
+
+### Four Steps
+
+1. **Listen** — Find the core intent. Check project state if it exists (CLAUDE.md, rules, git history). If no project exists, work from description alone.
+2. **Ask** — 2-3 questions max, one at a time. Only questions that change the plan.
+3. **Plan** — Scale to task: 3-5 bullets (small), numbered steps (medium), phases with milestones (large).
+4. **Recommend** — 2-3 next steps. Cap doesn't execute or auto-route. The operator decides.
+
+### What Cap Is Not
+
+- Not a brainstormer (doesn't explore possibilities)
+- Not a project manager (doesn't track progress)
+- Not an executor (doesn't write code or create files)
+- Not a router (doesn't auto-invoke other skills)
 
 ---
 
 ## Output Structure
 
-### Tier 1: Active Rules (auto-loaded every conversation)
+Two tiers. The division between them is the most important architectural decision.
 
-**Target: lean, sharp, scannable. ~100 lines per file max.**
+### Tier 1: Active Rules (auto-loaded, token-taxed)
 
-| File | Purpose | Always present? |
+| File | Content | Always? |
 |---|---|---|
-| `CLAUDE.md` | The brain — team roster (names, roles, blended philosophies), project identity, autonomy model, quick reference | Yes |
-| `.claude/rules/standards.md` | Quality gates, anti-patterns, forbidden list, what excellence looks like | Yes |
-| `.claude/rules/workflow.md` | Execution loop, how to approach work, domain-appropriate process | Yes |
-| `.claude/rules/save-progress.md` | Project-scoped save-progress behavior (see Save-Progress section) | Yes |
-| `.claude/rules/{domain-extension}.md` | Domain-specific rules — as many as needed, no fixed list | As needed |
+| `CLAUDE.md` | Team roster, project identity, autonomy model, quick reference | Yes |
+| `.claude/rules/standards.md` | Quality gates, anti-patterns, forbidden list | Yes |
+| `.claude/rules/workflow.md` | Execution loop, how to approach work | Yes |
+| `.claude/rules/snap.md` | The Snap — project protection protocol | Yes |
+| `.claude/rules/{extension}.md` | Domain-specific rules | As needed |
 
-**Domain extension examples (illustrative, not prescriptive):**
+**Budgets:**
+- Per-file cap: ~60 lines. Fewer is better.
+- Total cap: ~300 lines across all `.claude/rules/` files.
+- CLAUDE.md: under 200 lines.
+- Persona target: 8-10 lines each.
 
-Software: `stack.md`, `code-standards.md`, `testing.md`, `architecture.md`
-Novel: `voice-guide.md`, `story-structure.md`, `genre-conventions.md`
-Game: `engine-patterns.md`, `stack.md`, `asset-pipeline.md`, `economy-design.md`
-Board game: `mechanics.md`, `playtesting.md`, `production.md`
+### Tier 2: Reference Material (on-demand, zero token tax)
 
-### Tier 2: Reference Material (read on demand)
+Deep knowledge that rules files point to but don't contain. Extended examples, authority deep-dives, pattern libraries, decision rationale, narrow rules.
 
-**Deep knowledge that rules files point to but don't contain.**
+Rules files include "When to Go Deeper" pointers: task-aware links that tell the agent WHEN to read specific reference files, not just that they exist.
 
-| Location | Content |
-|---|---|
-| `references/` (or `resources/`) | Extended examples, authority deep-dives, full pattern libraries, documentation URL collections, decision rationale, style guide details |
+### The Non-Derivable Rule
 
-Rules files link to references: *"See `references/voice-examples.md` for full writing samples across contexts."*
+Before writing any rule: "Can the agent figure this out by reading the project files?"
 
-### Extension File Format
+- Philosophy, quality bar, blended authorities → NOT derivable. Write it.
+- Anti-patterns, forbidden approaches → NOT derivable. Write it.
+- Pinned versions, tooling constraints → Partially derivable. Write it (easy to get wrong).
+- Directory structure, file listings → Fully derivable. Never write it.
+- Patterns obvious from code → Derivable. Don't state it.
 
-Every domain extension follows a consistent internal structure:
+### Scope Rule
 
-```markdown
-# {Topic} — {Project Name}
-
-## Philosophy
-{Who/what this is modeled after — blended authorities and why}
-
-## The Standard
-{What good looks like, concisely}
-
-## Patterns
-{How to do it right}
-
-## Anti-Patterns
-{What to avoid and why}
-
-## References
-{Pointers to references/ files or external resources}
-```
+Skills only write to `.claude/` (rules, references, backup) and `CLAUDE.md` at the project root. They never create, modify, or delete files in the project's source tree.
 
 ---
 
 ## Persona Structure
 
-**Always present:**
+Each persona blends 2-3+ real authorities with specific contributions named. Not "you are Person X" but "works in the tradition of X's [approach], with Y's [strength] and Z's [discipline]."
 
-```markdown
-## {Name} — {Role Title}
-
-**Philosophy:** {Blended from 2-3+ authorities — e.g., "Works in the tradition of
-X's [specific approach], with Y's [specific strength] and Z's [specific discipline]"}
-
-**Expertise:** {Specific skills, not vague categories}
-
-**Quality standard:** {What "good" looks like for their work}
-
-**Anti-patterns:** {What they refuse to do}
-```
-
-**Included when the domain demands it:**
-
-```markdown
-**Voice & style:** {For writers, editors, communicators — how the work sounds}
-
-**Personality:** {When it affects output — noir writer vs. cozy writer is a
-meaningful distinction}
-```
-
-The skill decides what's relevant. Software dev → brain only. Novel writing → brain + voice + personality. Game with player-facing narrative → voice for the narrative persona, brain only for the systems designer.
-
-**Team sizing:** Matches project needs. One persona if the project genuinely only needs one area of expertise. No inflation for the sake of having a team.
-
-**Naming:** Functional names that make them addressable. "The Story Architect," "The Systems Designer." Direct and memorable.
+See `references/persona-template.md` for the full template, including optional fields (Voice & Style, Personality), naming conventions, team sizing, persona retirement, and conflict resolution.
 
 ---
 
-## Save-Progress Integration
+## The Snap (Project Protection)
 
-The skill writes `.claude/rules/save-progress.md` — a project-scoped save-progress that knows the kit.
+Every project gets `.claude/rules/snap.md`. See `references/snap-template.md` for the full template.
 
-### What It Does (same philosophy as Croftspan)
+**When it runs:** When the operator asks to save progress, wrap up, or end a session.
 
-- New pattern discovered → update the relevant rule/extension file
-- New gotcha found → add to `standards.md` anti-patterns
-- Tool or dependency changed → update `stack.md` or equivalent
-- Domain learning → update the right extension file
-- Something repeatedly goes wrong → add to the forbidden list
+**Two jobs, in order:**
+1. **Protect the project** — audit line counts, derivability, overlap, staleness, cost, total budget, coverage
+2. **Capture learnings** — route new knowledge to the correct file
 
-### The Governor (preventing bloat)
-
-This is the critical difference from a naive save-progress. The skill includes built-in controls:
-
-| Behavior | How |
-|---|---|
-| **Consolidate** | Before adding a learning, check if it overlaps with something already there. Merge, don't append. |
-| **Prune** | Flag lines that are now obvious from the project state and don't need explicit statement. Remove them. |
-| **Line budgets** | Rules files have soft caps (~100 lines). When approaching the cap, move detail to `references/` rather than letting rules grow. |
-| **Audit on save** | Every save-progress asks: "Is each rule still earning its place?" If a rule hasn't been relevant in recent work, consider moving it to references or removing it. |
-| **Suggest re-assembly** | When learnings reveal team gaps: "You keep hitting [area] issues but have no expertise for it. Consider running `/avengers-assemble` to add coverage." |
-
-### What It Does NOT Do
-
-- Save ephemeral task state
-- Duplicate what git history captures
-- Bloat rules with reference-tier content
-- Append without checking for overlap
-
----
-
-## Health Check Mode (Re-run without direction)
-
-When the operator runs `/avengers-assemble` without specific direction, the skill performs a triage:
-
-1. **Read project state** — CLAUDE.md, all rules files, references, recent git history (if applicable), recent files modified
-2. **Compare against kit** — Is the team still covering what the project actually does? Are rules still relevant? Are there gaps?
-3. **Present findings:**
-   - **Add:** "Your project has grown into [area] but your kit doesn't cover it. Here's who I'd add."
-   - **Update:** "Your [file] references [outdated thing]. Here's the current state."
-   - **Prune:** "These rules are now redundant given your project state: [list]. Remove them?"
-   - **All clear:** "Kit looks solid for where the project is. No changes needed."
-4. **Operator approves changes** — nothing written without approval
+**The audit is the primary job.** It runs every time, even when there's nothing new to save. It's the enforcement mechanism that keeps projects lean over time.
 
 ---
 
 ## Key Design Principles
 
-1. **Conversational, not procedural.** No phases to memorize. The operator talks, the skill works.
-2. **The skill does the homework.** The operator doesn't need to know the domain's authorities. The skill finds them.
-3. **Blended philosophies.** Each persona draws from multiple authorities — synthesis, not imitation.
-4. **Lean rules, deep references.** Auto-loaded files are sharp and scannable. Depth lives on demand.
-5. **Smart save-progress.** Consolidate, prune, enforce budgets, audit. Never let the kit bloat.
-6. **Re-runnable.** First run scaffolds. Re-runs add, audit, or prune. Always safe to run again.
-7. **No artificial limits.** The team can be 1 persona or 10. Extensions can be 2 files or 12. Depth matches the project.
-8. **Current best practices.** Always writes files following the latest Claude Code conventions, not a hardcoded structure.
-9. **Nothing without approval.** The skill proposes. The operator approves. Files are written last.
+1. **Conversational, not procedural.** The operator talks, the skill works.
+2. **The skill does the homework.** Finds authorities, the operator has taste and direction.
+3. **Blended philosophies.** Every persona is a synthesis of real practitioners, not a generic role.
+4. **Every rule pays rent.** Auto-loaded rules cost tokens on every task. Only write rules worth that cost.
+5. **Non-derivable only.** If the agent can figure it out, don't write it.
+6. **Task-aware references.** "When to Go Deeper" pointers, not generic links.
+7. **The Snap.** The project gets sharper over time, not bigger. Whatever it takes.
+8. **Nothing without approval.** Skills propose. The operator approves. Files are written last.
+9. **Simple over clever.** The right system, not the most sophisticated system.
+
+---
+
+## Research Foundation
+
+The skill's lean-context philosophy is validated by Gloaguen et al., "Evaluating AGENTS.md: Are Repository-Level Context Files Helpful for Coding Agents?" (arXiv:2602.11988, 2026). Key findings:
+
+- LLM-generated context files reduce task success rates by ~3% while increasing cost by 20%+
+- Developer-written files help only ~4%, and only when containing non-inferable information
+- Repository overviews do NOT help agents find relevant files faster
+- Recommendation: "Include only minimal requirements"
+
+This leads to three core decisions in the skill:
+- **~60 line cap** — nails essentials without diluting attention
+- **Non-derivable rule** — don't write what the agent would discover
+- **The Snap** — active pruning every session prevents bloat

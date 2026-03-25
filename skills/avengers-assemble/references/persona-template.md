@@ -23,9 +23,9 @@ chapters before its payoff, and the solution is fair."}
 **Anti-patterns:** {What they refuse to do. Brief — 1-2 lines max.}
 ```
 
-**Keep it tight.** The philosophy blend is the valuable part — that's what can't be derived from reading the code. Lengthy expertise lists, detailed anti-pattern catalogs, and verbose quality descriptions belong in `references/`, not the persona entry.
+**Keep it tight.** The philosophy blend is the valuable part — that's what can't be derived from reading the code. Lengthy expertise lists, detailed anti-pattern catalogs, and verbose quality descriptions belong in `.claude/references/`, not the persona entry.
 
-**Target: 6-8 lines per persona in CLAUDE.md.** If you're writing more than 10 lines, you're putting reference-tier content in the always-loaded tier. Every extra line costs tokens on every conversation — even when the agent is doing something that persona isn't involved in.
+**Target: 8-10 lines per persona in CLAUDE.md.** If you're writing more than 12 lines, you're putting reference-tier content in the always-loaded tier. Every extra line costs tokens on every conversation — even when the agent is doing something that persona isn't involved in.
 
 ## Optional Fields (include when the domain demands them)
 
@@ -87,3 +87,11 @@ Each authority contributes something specific. The blend has a reason.
 - **Five or more** for complex multi-discipline projects
 
 Never inflate for the sake of having a team. Never cap artificially. If unsure whether something needs its own persona, ask: "Would this area benefit from its own blended philosophy?" If not, fold it into an existing persona.
+
+## Persona Retirement
+
+When a persona's expertise is no longer needed (the project pivoted, the domain narrowed), remove it from CLAUDE.md during The Snap. Don't keep retired personas for "historical reference" — they cost tokens on every conversation. Git history preserves the record.
+
+## Conflicting Personas
+
+When two personas have genuinely different philosophies on a topic, the operator's intent takes precedence. If no clear intent exists, default to the persona whose expertise is more relevant to the current task. Flag the conflict for the operator rather than silently choosing.

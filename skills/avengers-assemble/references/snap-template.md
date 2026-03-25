@@ -15,7 +15,7 @@ Generate a `.claude/rules/snap.md` that follows this structure, adapted to the p
 
 *Whatever it takes to protect the project.*
 
-Run this at the end of every work session. Two jobs, in this order:
+When the operator asks to save progress, wrap up, or end a session, follow this protocol. Two jobs, in this order:
 1. **Protect the project** — audit, sacrifice what has to go so what matters survives
 2. **Capture learnings** — route new knowledge to the right file
 
@@ -25,7 +25,7 @@ Job 1 is more important. A lean project with missing knowledge outperforms a blo
 
 Before saving anything new, audit the existing rules. This runs every time.
 
-**1. Line check.** Scan each `.claude/rules/` file. Any file approaching ~60 lines needs content moved to `references/` with a "When to Go Deeper" pointer.
+**1. Line check.** Scan each `.claude/rules/` file. Any file approaching ~60 lines needs content moved to `.claude/references/` with a "When to Go Deeper" pointer.
 
 **2. Derivability check.** For each rule, ask: "Can the agent figure this out by reading the project files?" If the codebase now makes a rule obvious — through code patterns, test structure, config files — it's served its purpose. Let it go. It's costing tokens for information the agent would find anyway.
 
@@ -33,9 +33,11 @@ Before saving anything new, audit the existing rules. This runs every time.
 
 **4. Staleness check.** Has any rule become irrelevant? Early-project rules often don't apply once the project matures. They served their purpose — let them go.
 
-**5. Cost check.** For each rule that survived steps 1-4, ask: "Is this worth loading on every single conversation, including ones where it doesn't apply?" If no, move to `references/`.
+**5. Cost check.** For each rule that survived steps 1-4, ask: "Is this worth loading on every single conversation, including ones where it doesn't apply?" If no, move to `.claude/references/`.
 
-**6. Coverage check.** Has the project grown into areas the team doesn't cover? If yes, suggest: "Consider running `/avengers-assemble` to add expertise."
+**6. Total budget check.** Count total lines across ALL `.claude/rules/` files. If approaching ~300 lines total, consolidate or move content to references. Per-file cap (~60) prevents individual bloat; total cap (~300) prevents systemic bloat.
+
+**7. Coverage check.** Has the project grown into areas the team doesn't cover? If yes, suggest: "Consider running `/fury` to add expertise." If multiple files are over the line cap or the structure has drifted significantly, suggest: "Consider running `/smash` to restructure."
 
 ## Saving New Learnings
 
@@ -48,12 +50,12 @@ After the audit, capture what you learned this session. Route to the right file:
 | {tool or dependency change} | `.claude/rules/{stack-or-equivalent}.md` |
 | {quality insight} | `.claude/rules/standards.md` → Quality Gates section |
 | {workflow improvement} | `.claude/rules/workflow.md` |
-| {deep reference material} | `references/{topic}.md` (NOT rules) |
+| {deep reference material} | `.claude/references/{topic}.md` (NOT rules) |
 
 **Before adding anything new:**
 - Does it overlap with an existing rule? → **Merge**, don't append.
 - Can the agent figure this out from the project files? → **Don't write it.**
-- Is it needed every conversation, or only sometimes? → Default to `references/`.
+- Is it needed every conversation, or only sometimes? → Default to `.claude/references/`.
 - Will adding this push the file past ~60 lines? → Move something else out first.
 
 ## What Never Goes in Rules
@@ -66,7 +68,7 @@ After the audit, capture what you learned this session. Route to the right file:
 
 ## If Nothing Was Learned
 
-Still run the audit. Say "No new learnings. Rules audited — [clean / let go of X / moved Y to references]." The audit is the primary job. Saving is secondary.
+Still run the audit. The audit is the primary job — saving is secondary. Say "No new learnings. Rules audited — [clean / let go of X / moved Y to references]."
 ```
 
 ---
@@ -84,7 +86,7 @@ When generating the snap file, customize the "Saving New Learnings" routing tabl
 | Code standard discovered | `.claude/rules/code-standards.md` → Patterns |
 | Testing insight | `.claude/rules/testing.md` |
 | Security concern | `.claude/rules/standards.md` → Anti-Patterns |
-| Framework-specific deep dive | `references/{framework}-patterns.md` |
+| Framework-specific deep dive | `.claude/references/{framework}-patterns.md` |
 
 ### Fiction / Writing Project
 
@@ -94,7 +96,7 @@ When generating the snap file, customize the "Saving New Learnings" routing tabl
 | Plot structure insight | `.claude/rules/story-structure.md` |
 | Character consistency rule | `.claude/rules/standards.md` |
 | Genre convention discovered | `.claude/rules/genre-conventions.md` |
-| Extended writing samples | `references/voice-examples.md` |
+| Extended writing samples | `.claude/references/voice-examples.md` |
 
 ### Game Development Project
 
@@ -104,7 +106,14 @@ When generating the snap file, customize the "Saving New Learnings" routing tabl
 | Performance gotcha | `.claude/rules/standards.md` → Anti-Patterns |
 | Asset pipeline change | `.claude/rules/asset-pipeline.md` |
 | Economy balance insight | `.claude/rules/economy-design.md` |
-| Extended technical reference | `references/{topic}-deep-dive.md` |
+| Extended technical reference | `.claude/references/{topic}-deep-dive.md` |
+
+### Research / Business / Music Projects
+
+Adapt the routing table to the domain's structure. The pattern is always the same:
+- Universal quality rules → `standards.md`
+- Domain-specific patterns → the relevant extension file
+- Deep reference material → `.claude/references/`
 
 ---
 
