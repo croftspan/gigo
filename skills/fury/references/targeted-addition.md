@@ -34,6 +34,7 @@ Present to the operator:
 - **Proposed new persona(s)** — name, role, blended philosophy, what they bring
 - **Changes to existing files** — new/modified extension files, new references
 - **Impact on line budgets** — will adding this push any file past ~60 lines or the total past ~300? If so, what gets tightened or moved to references?
+- **Alignment vs knowledge split** — which parts of the new persona are alignment signal (quality bars, approach, constraints → rules) vs knowledge signal (factual specifics, patterns → references)?
 
 ## Step 4: Conversational Refinement
 
@@ -48,3 +49,5 @@ Write the changes. This is a merge, not a rewrite:
 - **Before adding new rules, check line budgets.** If adding a persona pushes `CLAUDE.md` too long, tighten existing entries first. If a rules file is approaching ~60 lines, move content to references.
 
 When creating personas or extensions, read the templates from the avengers-assemble skill's bundled `references/` directory.
+
+When designing the new persona, separate alignment signal from knowledge signal. The lean tier entry in CLAUDE.md should contain only alignment content — quality bars, approach, constraints, what to push back on. Domain-specific knowledge (factual details, implementation patterns, technical specifics) belongs in `.claude/references/personas/` or a reference file, loaded on demand. See `avengers-assemble/references/persona-template.md` for the "Alignment vs Knowledge Signal" section.
