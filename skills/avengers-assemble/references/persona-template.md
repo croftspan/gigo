@@ -198,8 +198,9 @@ Never inflate for the sake of having a team. Never cap artificially.
 
 Every assembled team gets adversarial output verification. This is not optional.
 
-**Tier 1 (all teams):** An "Overwatch" section in the generated `workflow.md`. ~6 lines. Runs on every response. Template:
+**Tier 1 (all teams):** An "Overwatch" section in the generated `workflow.md`. ~5 lines. Runs on every response. **Adapt the checks to the domain** — structured domains (software, data) focus on process compliance; creative domains (fiction, design) focus on manuscript/project engagement.
 
+Structured domain template:
 > ## Overwatch
 >
 > Before finalizing any response, step back and verify:
@@ -207,6 +208,14 @@ Every assembled team gets adversarial output verification. This is not optional.
 > - Does your response address what was asked, or did you drift?
 > - Would removing the persona language change your answer? If not, the persona added nothing.
 > - Did you check the references you were told to check, or skip them?
+
+Creative domain template:
+> ## Overwatch
+>
+> Before finalizing, confirm your response engages with the actual work:
+> - Did you reference specific characters, chapters, or project details — or give generic advice?
+> - Does your response address what was asked, or did you drift into meta-commentary?
+> - If pushing back, did you ground it in this project's details, not just general principles?
 
 **Tier 2 (3+ team members):** A Hawkeye persona in `CLAUDE.md`. Uses the lean persona template:
 
