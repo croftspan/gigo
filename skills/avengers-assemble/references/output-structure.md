@@ -74,6 +74,8 @@ Read `persona-template.md` for format, examples, and calibration guidance.
 
 **Rich tier (`.claude/references/personas/{name}.md`):** Character sheets with Bio, Personality, Communication Style, Decision Framework, Pushes Back On, Champions. Depth calibrated to the operator — full treatment for casual/creative operators who need personas that lead, minimal treatment (just decision frameworks and edge cases) for direct/technical operators who need personas that execute.
 
+**Alignment vs knowledge placement:** The lean tier should contain alignment signal only — how to approach work (quality bars, constraints, anti-patterns). Domain knowledge (factual specifics, technical patterns, implementation details) belongs in the rich tier, loaded on demand. System-prompt placement (rules) amplifies both persona benefits and persona damage; reference placement (mid-task loading) gives the model domain context without competing with its factual recall. This isn't just about token cost — it's about where in the context the persona lands.
+
 Never inflate. Never cap.
 
 ## The Snap
