@@ -68,7 +68,7 @@ for domain in "${DOMAINS[@]}"; do
     JUDGE_PROMPT="${JUDGE_PROMPT//\{RESPONSE_B\}/$RESPONSE_B}"
 
     echo "  Scoring prompt $PADDED..."
-    JUDGE_OUTPUT=$(claude -p "$JUDGE_PROMPT" --bare --output-format json --permission-mode bypassPermissions 2>/dev/null || echo '{"result":"ERROR"}')
+    JUDGE_OUTPUT=$(claude -p "$JUDGE_PROMPT" --output-format json --permission-mode bypassPermissions 2>/dev/null || echo '{"result":"ERROR"}')
     JUDGE_RESULT=$(echo "$JUDGE_OUTPUT" | jq -r '.result // "ERROR"')
 
     # Save raw score with unblinding metadata
