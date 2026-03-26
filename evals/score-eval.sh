@@ -69,7 +69,8 @@ for domain in "${DOMAINS[@]}"; do
 
     echo "  Scoring prompt $PADDED..."
     JUDGE_OUTPUT=$(claude -p "$JUDGE_PROMPT" --output-format json --permission-mode bypassPermissions 2>/dev/null || echo '{"result":"ERROR"}')
-    JUDGE_RESULT=$(echo "$JUDGE_OUTPUT" | jq -r '.result // "ERROR"')
+    # Extract result text and strip markdown code fences if present
+    JUDGE_RESULT=$(echo "$JUDGE_OUTPUT" | jq -r '.result // "ERROR"' | sed 's/^```json//;s/^```//;/^$/d')
 
     # Save raw score with unblinding metadata
     echo "{\"a_is\": \"$A_IS\", \"judge_output\": $JUDGE_RESULT}" > "$score_file" 2>/dev/null || \
