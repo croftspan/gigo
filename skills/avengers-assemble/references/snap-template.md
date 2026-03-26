@@ -41,6 +41,8 @@ Before saving anything new, audit the existing rules. This runs every time.
 
 **8. Coverage check.** Has the project grown into areas the team doesn't cover? If yes, suggest: "Consider running `/fury` to add expertise." If multiple files are over the line cap or the structure has drifted significantly, suggest: "Consider running `/smash` to restructure."
 
+**9. Overwatch check.** Is the Overwatch section present in `workflow.md`? If the team has 3+ domain personas, is Hawkeye in `CLAUDE.md`? Is `.claude/references/overwatch.md` present? If any are missing, restore them — the overwatch system is not optional.
+
 ## Saving New Learnings
 
 After the audit, capture what you learned this session. Route to the right file:
