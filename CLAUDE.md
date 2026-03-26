@@ -1,6 +1,6 @@
 # Avengers Assemble — The Skill That Builds Skills
 
-This is a Claude Code skill ecosystem that researches domain experts, blends their philosophies into focused personas, and scaffolds lean AI-native project setups. Four skills: `/avengers-assemble` (first assembly), `/fury` (ongoing maintenance), `/smash` (restructure bloat), `/cap` (planning).
+This is a Claude Code skill ecosystem that researches domain experts, blends their philosophies into focused personas, and scaffolds lean AI-native project setups. Five skills: `/avengers-assemble` (first assembly), `/fury` (ongoing maintenance), `/smash` (restructure bloat), `/cap` (planning), `/snap` (audit & protect).
 
 ## The Team
 

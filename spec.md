@@ -2,7 +2,7 @@
 
 ## Overview
 
-A Claude Code skill ecosystem that researches domain experts, blends their philosophies into focused personas, and scaffolds lean AI-native project setups. Four skills, four distinct jobs.
+A Claude Code skill ecosystem that researches domain experts, blends their philosophies into focused personas, and scaffolds lean AI-native project setups. Five skills, five distinct jobs.
 
 **Location:** Installed as a Claude Code plugin or in `~/.claude/skills/`
 
@@ -10,7 +10,7 @@ A Claude Code skill ecosystem that researches domain experts, blends their philo
 
 ---
 
-## The Four Skills
+## The Five Skills
 
 | Skill | Persona | Job | Trigger |
 |---|---|---|---|
@@ -18,12 +18,14 @@ A Claude Code skill ecosystem that researches domain experts, blends their philo
 | `/fury` | Nick Fury | Ongoing maintenance — add expertise, audit, health check | Existing project, "check on things," need new expertise |
 | `/smash` | Nick Fury + Hulk | Restructure — tear down bloated setups, rebuild lean | Bloated rules, "smash," messy .claude/ |
 | `/cap` | Steve Rogers | Planning — turn vague intent into clear action plans | Vague ideas, "cap," "plan this out" |
+| `/snap` | The Snap | Audit rules and capture learnings — project protection protocol | Session end, "snap," saving progress |
 
 **Routing logic:**
 - No CLAUDE.md → `/avengers-assemble`
 - CLAUDE.md exists, lean and well-structured → `/fury`
 - CLAUDE.md exists, bloated or disorganized → `/smash`
 - Operator has vague intent, needs clarity before execution → `/cap`
+- Wrapping up, saving progress, or want an audit → `/snap`
 
 ---
 

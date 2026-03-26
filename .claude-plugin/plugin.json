@@ -1,12 +1,13 @@
 {
   "name": "avengers-assemble",
-  "description": "Four skills for building expert Claude Code projects. /avengers-assemble researches the best practitioners in any domain, blends their philosophies into focused personas, and scaffolds lean project structure. /fury adds expertise as the project grows and audits for bloat. /smash restructures existing legacy setups into the lean two-tier architecture. /cap turns vague ideas into clear, prioritized action plans before the team executes.",
-  "version": "4.0.0",
+  "description": "Five skills for building expert Claude Code projects. /avengers-assemble researches the best practitioners in any domain, blends their philosophies into focused personas, and scaffolds lean project structure. /fury adds expertise as the project grows and audits for bloat. /smash restructures existing legacy setups into the lean two-tier architecture. /cap turns vague ideas into clear, prioritized action plans before the team executes. /snap audits rules and captures learnings — the project protection protocol.",
+  "version": "4.1.0",
   "skills": [
     "skills/avengers-assemble",
     "skills/fury",
     "skills/smash",
-    "skills/cap"
+    "skills/cap",
+    "skills/snap"
   ],
   "author": {
     "name": "Eaven"
