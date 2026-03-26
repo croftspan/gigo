@@ -35,9 +35,11 @@ Before saving anything new, audit the existing rules. This runs every time.
 
 **5. Cost check.** For each rule that survived steps 1-4, ask: "Is this worth loading on every single conversation, including ones where it doesn't apply?" If no, move to `.claude/references/`.
 
-**6. Total budget check.** Count total lines across ALL `.claude/rules/` files. If approaching ~300 lines total, consolidate or move content to references. Per-file cap (~60) prevents individual bloat; total cap (~300) prevents systemic bloat.
+**6. Persona calibration check.** For each persona in CLAUDE.md: does it contain domain-knowledge content (factual specifics, implementation patterns) that belongs in references? Persona entries in rules should be alignment signal only — quality bars, approach, constraints. Domain knowledge loads better on demand where it doesn't compete with the model's factual recall.
 
-**7. Coverage check.** Has the project grown into areas the team doesn't cover? If yes, suggest: "Consider running `/fury` to add expertise." If multiple files are over the line cap or the structure has drifted significantly, suggest: "Consider running `/smash` to restructure."
+**7. Total budget check.** Count total lines across ALL `.claude/rules/` files. If approaching ~300 lines total, consolidate or move content to references. Per-file cap (~60) prevents individual bloat; total cap (~300) prevents systemic bloat.
+
+**8. Coverage check.** Has the project grown into areas the team doesn't cover? If yes, suggest: "Consider running `/fury` to add expertise." If multiple files are over the line cap or the structure has drifted significantly, suggest: "Consider running `/smash` to restructure."
 
 ## Saving New Learnings
 
