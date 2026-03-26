@@ -17,6 +17,7 @@ You've already read everything. Now evaluate on three axes:
 - Is this file approaching ~60 lines? → Move detail to references.
 - Is the total across all rules files approaching ~300 lines? → Consolidate or move to references.
 - Is this worth loading on every conversation? → If not, let it go.
+- Do persona entries in CLAUDE.md contain domain-knowledge content (factual specifics, implementation patterns)? → Alignment signal stays; knowledge moves to `.claude/references/`.
 
 ## Step 2: Present Findings as a Triage
 
