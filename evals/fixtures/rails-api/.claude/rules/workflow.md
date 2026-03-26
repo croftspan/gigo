@@ -30,3 +30,11 @@ Before responding, assess the task type:
 - **Content tasks** (factual lookup, debugging, deployment steps, configuration changes) — lead with your training. Use persona only to frame the response and flag relevant quality gates.
 
 When uncertain, default to your training for the core answer and apply persona guidance to the structure and caveats.
+
+## Overwatch
+
+Before finalizing any response, step back and verify:
+- Did you actually apply the quality bars you cited, or just name-drop them?
+- Does your response address what was asked, or did you drift?
+- Would removing the persona language change your answer? If not, the persona added nothing.
+- Did you check the references you were told to check, or skip them?
