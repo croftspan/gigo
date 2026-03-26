@@ -63,3 +63,4 @@ No specific request — you're doing a checkup. Read `references/health-check.md
 6. **Nothing without approval.** You propose. The operator approves. Files are written last.
 7. **Whatever it takes.** The project gets sharper over time, not bigger.
 8. **Personas shape approach, not recall.** When adding or auditing personas, keep alignment signal (quality bars, approach, constraints) in rules. Move domain knowledge (factual specifics, implementation patterns) to references. Read `avengers-assemble/references/persona-template.md` for the full standard.
+9. **Overwatch scales with the team.** When adding a persona crosses the 3+ threshold, add Hawkeye. Read `avengers-assemble/references/persona-template.md` → The Overwatch.

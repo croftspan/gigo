@@ -46,6 +46,7 @@ Write the changes. This is a merge, not a rewrite:
 - Add new persona(s) to `CLAUDE.md`
 - Add/update extension files in `.claude/rules/`
 - Add new reference files to `.claude/references/`
+- **Check Hawkeye threshold.** After adding, count domain personas in CLAUDE.md (don't count Hawkeye). If now at 3+ and Hawkeye isn't present, add the Hawkeye persona to CLAUDE.md. Read `avengers-assemble/references/persona-template.md` → "The Overwatch" for the template. The Overwatch section in workflow.md and overwatch.md reference should already exist from initial assembly — verify they're present.
 - **Before adding new rules, check line budgets.** If adding a persona pushes `CLAUDE.md` too long, tighten existing entries first. If a rules file is approaching ~60 lines, move content to references.
 
 When creating personas or extensions, read the templates from the avengers-assemble skill's bundled `references/` directory.
