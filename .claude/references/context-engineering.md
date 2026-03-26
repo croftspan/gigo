@@ -107,3 +107,14 @@ Not everything is clearly derivable or non-derivable. Use this spectrum:
 | Directory structure, file organization | Fully derivable | Never write |
 | Patterns obvious from reading code | Derivable | Don't state |
 | Framework defaults and standard conventions | Known to Claude | Don't state |
+
+## Persona and Model Architecture
+
+Hu et al. (2026) found that persona effectiveness depends on model training:
+
+- **Instruction-tuned models** (Claude's architecture): Personas amplify alignment behaviors learned during instruction-tuning. Expert personas consistently outperform random personas. System-prompt placement amplifies both gains and losses.
+- **Reasoning-distilled models** (e.g., DeepSeek-R1 variants): Any structured context triggers reasoning chains regardless of persona identity. Expert personas provide only marginal benefit over random personas. The gain is from context length, not persona specificity.
+
+**Current implication:** Claude is instruction-tuned, so our specific-persona approach is on the right side of this split. Our personas provide genuine alignment value beyond what random context would.
+
+**Future consideration:** If Claude's architecture shifts toward reasoning-distilled patterns, persona value would shift from identity to context structure. The specific authorities and philosophies we blend would matter less; the structured format and length would matter more. Monitor for this in model updates.
