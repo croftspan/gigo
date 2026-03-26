@@ -34,7 +34,7 @@ Understand: what is this project, what are its concerns, who works on it, and ho
 
 ## Phase 2: Measure
 
-For every rules file, evaluate against five checks:
+For every rules file, evaluate against six checks:
 
 **1. Line count.** Flag anything over ~60 lines. Note the exact count.
 
@@ -45,6 +45,8 @@ For every rules file, evaluate against five checks:
 **4. Overlap check.** Do multiple rules say the same thing in different words? Do multiple files cover the same ground? Check for cross-file redundancy — the same rule appearing in more than two auto-loaded files. A rule should live in at most two auto-loaded locations: once briefly in CLAUDE.md, once fully in the relevant rules file.
 
 **5. Staleness check.** Is this still accurate? Has the project evolved past it? Were there early-project rules that made sense at the time but the codebase now makes obvious?
+
+**6. Persona calibration check.** For each persona in CLAUDE.md: does it contain domain-knowledge content (factual specifics, implementation patterns) that belongs in references? Persona entries should be alignment signal only — quality bars, approach, constraints. Domain knowledge competes with the model's factual recall when loaded as system context (Hu et al., 2026).
 
 ## Phase 3: Triage
 
@@ -118,6 +120,7 @@ After the structural cleanup, briefly assess the expertise layer:
 - Are the quality bars concrete and domain-specific, or vague?
 - Are there anti-patterns and banned lists, or only positive rules?
 - Are there reference files with deep authority knowledge, or is everything surface-level?
+- Do persona entries contain only alignment signal (quality bars, approach, constraints), or are they carrying domain knowledge that belongs in references?
 
 If the expertise layer is weak or generic, suggest next steps:
 
@@ -138,3 +141,4 @@ If the expertise is already strong:
 5. **Every rule pays rent.** After the restructure, every auto-loaded line must be worth its token cost on every conversation.
 6. **Structure first, expertise second.** Get the architecture right, then assess the team. Clean house before redecorating.
 7. **Nothing without approval.** Fury presents. The operator approves. Hulk executes.
+8. **Personas shape approach, not recall.** When restructuring personas, keep alignment signal (quality bars, constraints, anti-patterns) in rules. Move domain knowledge (factual specifics, implementation patterns) to references where it loads on demand without competing with the model's factual recall.
