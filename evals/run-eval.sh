@@ -35,6 +35,26 @@ for domain in "${DOMAINS[@]}"; do
 
   mkdir -p "$DOMAIN_RESULTS"
 
+  # Create isolated temp directories to prevent parent project context leaking in
+  BARE_TMPDIR=$(mktemp -d)
+  ASSEMBLED_TMPDIR=$(mktemp -d)
+
+  # Copy source files to both (excluding .claude/ and CLAUDE.md for bare)
+  cp -r "$DOMAIN_DIR"/* "$ASSEMBLED_TMPDIR/" 2>/dev/null || true
+  cp -r "$DOMAIN_DIR"/.claude "$ASSEMBLED_TMPDIR/" 2>/dev/null || true
+
+  # Bare gets source files only — no .claude/ or CLAUDE.md
+  for f in "$DOMAIN_DIR"/*; do
+    fname=$(basename "$f")
+    if [ "$fname" != "CLAUDE.md" ]; then
+      cp -r "$f" "$BARE_TMPDIR/" 2>/dev/null || true
+    fi
+  done
+
+  echo "[$domain] Bare dir: $BARE_TMPDIR"
+  echo "[$domain] Assembled dir: $ASSEMBLED_TMPDIR"
+  echo ""
+
   PROMPT_NUM=0
   while IFS='|' read -r axis prompt; do
     PROMPT_NUM=$((PROMPT_NUM + 1))
@@ -42,20 +62,23 @@ for domain in "${DOMAINS[@]}"; do
 
     echo "[$domain] Prompt $PADDED ($axis): $prompt"
 
-    # Bare run — --bare skips CLAUDE.md and .claude/rules/ auto-discovery
+    # Bare run — temp dir with no CLAUDE.md or .claude/
     echo "  Running bare..."
-    (cd "$DOMAIN_DIR" && claude -p "$prompt" --bare --output-format json --permission-mode bypassPermissions 2>/dev/null) \
+    (cd "$BARE_TMPDIR" && claude -p "$prompt" --output-format json --permission-mode bypassPermissions 2>/dev/null) \
       > "$DOMAIN_RESULTS/${PADDED}-bare.json" || true
 
-    # Assembled run — normal mode, loads CLAUDE.md and .claude/rules/
+    # Assembled run — temp dir with CLAUDE.md and .claude/rules/
     echo "  Running assembled..."
-    (cd "$DOMAIN_DIR" && claude -p "$prompt" --output-format json --permission-mode bypassPermissions 2>/dev/null) \
+    (cd "$ASSEMBLED_TMPDIR" && claude -p "$prompt" --output-format json --permission-mode bypassPermissions 2>/dev/null) \
       > "$DOMAIN_RESULTS/${PADDED}-assembled.json" || true
 
     echo "  Done."
     echo ""
 
   done < "$PROMPT_FILE"
+
+  # Cleanup temp dirs
+  rm -rf "$BARE_TMPDIR" "$ASSEMBLED_TMPDIR"
 done
 
 echo "=== All prompts complete ==="
