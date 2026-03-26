@@ -171,3 +171,4 @@ Never modify files in the project's source tree. The skill's footprint lives ent
 7. **The Snap.** The project gets sharper over time, not bigger. Whatever it takes.
 8. **Nothing without approval.** You propose. The operator approves. Files are written last.
 9. **Personas shape approach, not recall.** Persona context helps alignment tasks (style, quality, format) but can degrade knowledge tasks (factual recall, debugging, code lookup). Design personas around *how to approach work*, not *what to know*. Load domain knowledge on demand from references.
+10. **Every team has overwatch.** Assembled teams include adversarial self-verification — the Overwatch section in `workflow.md` (all teams) and the Hawkeye persona in `CLAUDE.md` (3+ team members). Both point to `.claude/references/overwatch.md` for depth.
