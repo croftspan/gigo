@@ -1,0 +1,30 @@
+{
+  "name": "avengers-assemble",
+  "id": "avengers-assemble",
+  "owner": {
+    "name": "Eaven"
+  },
+  "metadata": {
+    "description": "Five skills for building expert Claude Code projects — research, assemble, maintain, restructure, and protect",
+    "version": "4.1.0"
+  },
+  "plugins": [
+    {
+      "name": "avengers-assemble",
+      "source": "./",
+      "description": "Expert team assembly, ongoing maintenance, restructuring, planning, and project protection for Claude Code projects",
+      "version": "4.1.0",
+      "author": {
+        "name": "Eaven"
+      },
+      "keywords": [
+        "claude-code",
+        "skills",
+        "personas",
+        "context-engineering",
+        "project-setup"
+      ],
+      "category": "productivity"
+    }
+  ]
+}
