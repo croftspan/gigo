@@ -152,6 +152,24 @@ Each authority brings something distinct. The blend has a reason.
 > Raph Koster's theory of fun applied to reward loops
 > + the Roblox Developer Hub's monetization framework for ethical in-game economies.
 
+## Alignment vs Knowledge Signal
+
+When blending authorities, distinguish two types of persona content:
+
+**Alignment signal** — how to approach work. Style, quality bars, anti-patterns, decision heuristics, what to push back on. This shapes *how the answer is presented* and benefits from always-on persona context.
+
+**Knowledge signal** — what to know about the domain. Factual specifics, technical details, implementation patterns, domain terminology. This is *what the answer contains* and can be degraded by persona context competing with the model's factual recall (Hu et al., 2026).
+
+**The split:**
+- Alignment signal stays in the lean tier (CLAUDE.md) and rules — it's the persona's core value
+- Knowledge signal goes in the rich tier (references) — loaded when the task needs domain depth, not on every conversation
+- When assembling, ask of each persona element: "Does this shape *how* the agent works, or *what* it knows?" How → rules. What → references.
+
+**Example — a database migration persona:**
+- Alignment (rules): "Every migration is reversible and tested against production-size data" — this is a quality bar
+- Alignment (rules): "Won't do migrations that lock tables over 10 seconds" — this is a constraint
+- Knowledge (references): PostgreSQL lock types, migration rollback patterns, specific pg_stat_activity queries — these are domain facts the model already knows and loads better on demand
+
 ## Team Sizing
 
 - **One persona** is fine for a focused project
