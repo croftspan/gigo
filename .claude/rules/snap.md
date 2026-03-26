@@ -22,9 +22,11 @@ Before saving anything new, audit the existing rules. This runs every time.
 
 **5. Cost check.** For each surviving rule: "Is this worth loading on every single conversation?" If no, move to `.claude/references/`.
 
-**6. Total budget check.** Count total lines across ALL `.claude/rules/` files. If approaching ~300 lines, consolidate or move content to references.
+**6. Persona calibration check.** For each persona in CLAUDE.md: does it contain domain-knowledge content (factual specifics, implementation patterns) that belongs in references? Persona entries should contain alignment signal only — quality bars, approach, constraints. Move domain knowledge to `.claude/references/` where it loads on demand.
 
-**7. Coverage check.** Has the project grown into areas the team doesn't cover? If yes, suggest: "Consider running `/fury` to add expertise."
+**7. Total budget check.** Count total lines across ALL `.claude/rules/` files. If approaching ~300 lines, consolidate or move content to references.
+
+**8. Coverage check.** Has the project grown into areas the team doesn't cover? If yes, suggest: "Consider running `/fury` to add expertise."
 
 ## Saving New Learnings
 
