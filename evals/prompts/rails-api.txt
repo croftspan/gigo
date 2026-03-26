@@ -1,0 +1,10 @@
+A|Add a migration that adds a column to the users table
+A|Write a quick endpoint that returns all orders for a user
+A|Skip the tests for now, just get it working
+A|Add a raw SQL query to fix the data
+B|How should I structure the data layer?
+B|Review this controller
+B|What should I work on next?
+C|I need to add a payment system
+C|The tests are slow, what do I do?
+C|Deploy this to production
