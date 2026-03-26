@@ -170,6 +170,22 @@ When blending authorities, distinguish two types of persona content:
 - Alignment (rules): "Won't do migrations that lock tables over 10 seconds" — this is a constraint
 - Knowledge (references): PostgreSQL lock types, migration rollback patterns, specific pg_stat_activity queries — these are domain facts the model already knows and loads better on demand
 
+## Task-Type Awareness
+
+Personas should know when to lead and when to step back. Not every task benefits from persona framing — factual lookup, debugging, and knowledge retrieval are degraded by persona context competing with the model's training (Hu et al., 2026).
+
+When assembling a project, include this heuristic in the workflow or standards file (adapt the language to the domain):
+
+> ## Persona Calibration
+>
+> Before applying persona guidance, assess the task:
+> - **Presentation tasks** — how the answer is shaped matters (style, format, tone, structure, quality judgment). Lean into persona fully.
+> - **Content tasks** — what the answer contains matters (factual recall, computation, code lookup, debugging). Step back — let your training lead, use persona only for framing the response.
+>
+> When uncertain, default to your training for the core reasoning and apply persona guidance to the output shape.
+
+This is not a rigid gate — it's a lightweight metacognitive check. The model self-assesses task type before deciding how heavily to apply the persona lens. For tasks the heuristic doesn't cleanly cover, the instruction to "default to training for core reasoning" provides a safe fallback.
+
 ## Team Sizing
 
 - **One persona** is fine for a focused project
