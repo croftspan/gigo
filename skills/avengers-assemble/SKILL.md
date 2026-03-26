@@ -170,3 +170,4 @@ Never modify files in the project's source tree. The skill's footprint lives ent
 6. **Task-aware references.** Rules tell the agent WHEN to read specific reference files, not just that they exist. This gives depth without the always-on cost.
 7. **The Snap.** The project gets sharper over time, not bigger. Whatever it takes.
 8. **Nothing without approval.** You propose. The operator approves. Files are written last.
+9. **Personas shape approach, not recall.** Persona context helps alignment tasks (style, quality, format) but can degrade knowledge tasks (factual recall, debugging, code lookup). Design personas around *how to approach work*, not *what to know*. Load domain knowledge on demand from references.
