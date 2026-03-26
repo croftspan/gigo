@@ -35,6 +35,8 @@ not just the rule. "Don't do X because Y happens."}
 
 Note the last section: **"When to Go Deeper"** replaces a generic "References" link. It tells the agent *when* a reference file is relevant, making the system task-aware. The agent reads `.claude/references/dialogue-techniques.md` when writing dialogue, not when editing plot structure.
 
+**Anti-pattern: generic pointers.** "When working on migrations, read rails-patterns.md" is insufficient. Each pointer must name the observable task and what to check in the reference file: "When writing or reviewing a migration, read `.claude/references/rails-patterns.md` — especially safe migration patterns and lock-duration checks." Generic pointers don't trigger on real tasks. Task-specific pointers do — this was the single highest-leverage change in the eval suite (children's novel: 86% to 100%).
+
 ## Line Budget
 
 **Per-file cap: ~60 lines. Fewer is better.** If a file is growing past this, move detail to `.claude/references/` and leave a "When to Go Deeper" pointer.
