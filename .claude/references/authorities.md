@@ -65,12 +65,18 @@ Initializer + coding agent pattern. One feature at a time, incremental progress.
 
 **Xu et al. — ExpertPrompting (2023):** Detailed, customized expert identity descriptions per instruction improve answer quality. The persona must be *synthesized for the specific task*, not a generic role.
 
+**Hu et al. — "Expert Personas Improve LLM Alignment but Damage Accuracy" (2026):** Persona effectiveness is task-type dependent. Expert personas consistently improve alignment-dependent tasks (writing style, tone, safety refusal, format adherence: +0.40 to +0.65 on MT-Bench) but consistently damage pretraining-dependent tasks (factual recall, coding knowledge, math: -0.10 to -0.65). Longer personas amplify both effects. Models more optimized for system-prompt steering are more sensitive to both gains and losses. For reasoning-distilled models, gains come from added context length triggering reasoning chains, not from persona identity itself.
+
 **Hong et al. — MetaGPT (2023):** Multi-agent framework with SOPs and intermediate verification. Assembly line paradigm with diverse roles. Key insight: checking at every stage prevents cascading hallucinations.
 
 ## What This Means for Persona Blending
 
-The research is clear: personas work when they're **specific syntheses of real authorities** applied to the task at hand. They fail when they're generic role labels. This is why every persona in the skill ecosystem must:
+The research presents a nuanced picture: personas work when they're **specific syntheses of real authorities** (Kong, Xu, Pei) — but they also carry a cost. Hu et al. (2026) showed that persona context competes with factual recall at the attention level, consistently degrading knowledge-retrieval tasks even when the persona is well-matched.
+
+This means every persona in the skill ecosystem must:
 1. Name 2-3+ specific authorities with their distinct contributions
 2. Explain what each authority brings to the blend
 3. Apply specifically to the project's domain, not generically
 4. Be concrete enough that the persona would produce measurably different output than a generic prompt
+5. **Separate alignment signal from knowledge signal** — alignment-shaping content (quality bars, approach, anti-patterns) belongs in always-on rules; domain-knowledge content (factual specifics, technical details) belongs in on-demand references
+6. **Include task-type awareness** — personas should know when to step back and let the model's training lead (see persona template)
