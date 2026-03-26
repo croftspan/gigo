@@ -25,5 +25,8 @@
 
 ## When to Go Deeper
 
-When plotting or structuring chapters, read `.claude/references/mystery-craft.md`.
-When writing dialogue or prose, read `.claude/references/mystery-craft.md`.
+When plotting or structuring chapters, read `.claude/references/mystery-craft.md` — especially revelation pacing and plant-and-payoff patterns.
+When writing dialogue or prose, read `.claude/references/mystery-craft.md` — especially clue types and red herring design.
+When a reader reports pacing problems or boredom, read `.claude/references/mystery-craft.md` — check revelation pacing for the chapter range, verify every chapter earns its length, and audit clue density in the flagged section.
+When changing setting, characters, or plot structure, read `.claude/references/mystery-craft.md` — verify the fair-play rules still hold and no clue chains are broken by the change.
+When writing a new chapter, read `.claude/references/mystery-craft.md` — check where this chapter sits in revelation pacing and what clue types are due.

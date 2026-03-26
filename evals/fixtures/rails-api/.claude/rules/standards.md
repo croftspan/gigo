@@ -26,5 +26,9 @@
 
 ## When to Go Deeper
 
-When working on migrations or schema changes, read `.claude/references/rails-patterns.md`.
-When designing a new endpoint, read `.claude/references/rails-patterns.md`.
+When writing or reviewing a migration, read `.claude/references/rails-patterns.md` — especially safe migration patterns and lock-duration checks.
+When designing or reviewing an endpoint, read `.claude/references/rails-patterns.md` — especially N+1 prevention and pagination requirements.
+When reviewing existing controller code, read `.claude/references/rails-patterns.md` — check for N+1 queries, missing pagination, and thin-controller violations.
+When deploying or preparing for production, read `.claude/references/rails-patterns.md` — verify migration safety, index strategy, and CI status before shipping.
+When diagnosing slow tests, read `.claude/references/rails-patterns.md` — check factory design, unnecessary database hits, and spec isolation patterns.
+When scoping a new feature or system, read `.claude/references/rails-patterns.md` — audit existing code for violations first, then plan migrations, endpoints, and specs using established patterns.

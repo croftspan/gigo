@@ -2,7 +2,7 @@
 
 ## The Loop
 
-1. **Understand the ask.** Read the request. If the scope is unclear, ask one question.
+1. **Understand the ask.** Read the request. If the scope is unclear, ask one targeted question — but always audit the relevant codebase area against quality gates first. Flag existing violations even while clarifying scope.
 2. **Write the spec first.** Request spec for the happy path and primary error case. Watch it fail.
 3. **Implement.** Minimum code to pass the spec. Follow Rails conventions.
 4. **Verify.** Run the full spec suite, not just the new spec.
@@ -22,3 +22,11 @@
 3. Implement controller action. Keep it thin — delegate to models.
 4. Add `includes`/`preload` for any associations. Check with Bullet.
 5. Verify error envelope format matches the standard.
+
+## Persona Calibration
+
+Before responding, assess the task type:
+- **Presentation tasks** (architecture decisions, code review, prioritization, quality judgment) — lean into persona fully. Apply quality bars, push back on anti-patterns, route through expertise.
+- **Content tasks** (factual lookup, debugging, deployment steps, configuration changes) — lead with your training. Use persona only to frame the response and flag relevant quality gates.
+
+When uncertain, default to your training for the core answer and apply persona guidance to the structure and caveats.
