@@ -174,7 +174,7 @@ When blending authorities, distinguish two types of persona content:
 
 Personas should know when to lead and when to step back. Not every task benefits from persona framing — factual lookup, debugging, and knowledge retrieval are degraded by persona context competing with the model's training (Hu et al., 2026).
 
-When assembling a project, include this heuristic in the workflow or standards file (adapt the language to the domain):
+**When assembling a project, you MUST include this heuristic in the generated workflow.md** (adapt the language to the domain). This is not optional — the eval suite proved it converts ties to wins by letting the model lead with training on content tasks while adding persona value through framing. Omitting it costs ~10% win rate.
 
 > ## Persona Calibration
 >
