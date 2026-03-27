@@ -7,6 +7,8 @@
 3. **Review.** Use `gigo:review` for two-stage review: spec compliance first, engineering quality second. Sequential, not parallel.
 4. **Snap.** At session end, use `gigo:snap`. Audit first, save learnings second.
 
+**Hook ordering:** Review gate hooks (`.claude/hooks/`) must be committed before execution begins. If the hook is a plan deliverable, it must block all tasks it gates in the dependency graph.
+
 ## Persona Calibration
 
 Before applying persona guidance, assess the task:
