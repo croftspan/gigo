@@ -35,7 +35,7 @@ After each task's last step, append a checkpoint comment:
 |---|---|---|
 | `sha` | Short git commit hash | Verify the work still exists on disk |
 | `status` | `done`, `in-review`, `in-progress`, `blocked` | Where the task was when interrupted |
-| `reviewed` | `pass`, `issues-found`, `ask-operator-pending`, `pending` | Review state at interruption |
+| `reviewed` | `pass`, `issues-found`, `ask-operator-pending`, `ask-operator-resolved`, `pending` | Review state at interruption |
 | `tier` | `1`, `2`, `3` | Which execution tier was running |
 
 ## Resume Detection Procedure
@@ -83,6 +83,7 @@ Wait for operator decision before proceeding.
 | `status=done, reviewed=pass` | Skip. Task is complete. |
 | `status=in-review, reviewed=issues-found` | Re-run review on current state. If issues persist, dispatch fix. |
 | `status=in-review, reviewed=ask-operator-pending` | Re-surface ask-operator items to the operator. Wait for decision. |
+| `status=in-review, reviewed=ask-operator-resolved` | Operator already decided. Dispatch worker with the decision — don't re-ask. |
 | `status=in-progress` | Dispatch worker to continue. Provide addendum context from completed dependencies. |
 | `status=blocked` | Re-evaluate the blocker. Surface to operator if still blocked. |
 
@@ -111,6 +112,10 @@ No shared state to reconcile. Checkpoints are the sole source of truth.
 **A `done` task's tests now fail:** This can happen if a later task introduced a regression, or if external dependencies changed. The checkpoint says "done" but the code is broken. The lead should run the full test suite before resuming and flag any failures in completed tasks.
 
 **Partial checkpoint (crash mid-write):** If the checkpoint comment is malformed or incomplete, treat the task as `in-progress`. Better to re-do work than to skip a broken task.
+
+**Tier 1 race window between hook pass and checkpoint write:** In Tier 1, the review hook passes (task marked complete in task list) before the lead writes the addendum and checkpoint. If the session crashes in this window, the task list says "complete" but no checkpoint exists. On resume, "checkpoint state wins" means this task would be treated as not started and re-dispatched. This is wasteful but not destructive — the work exists in git, and re-doing a completed task produces the same result. The window is narrow (seconds between hook pass and lead writing the checkpoint). Accepted as a known limitation; two-phase checkpoints would add complexity for a rare scenario.
+
+**Operator decided, worker implementing:** When the operator resolves an ask-operator item and the worker starts implementing the decision, write a checkpoint with `reviewed=ask-operator-resolved`. This distinguishes "operator hasn't responded yet" (`ask-operator-pending`) from "operator decided, implementation in progress" (`ask-operator-resolved`). On resume, `ask-operator-resolved` means dispatch the worker with the operator's decision — don't re-ask the operator.
 
 ## When to Write Checkpoints
 

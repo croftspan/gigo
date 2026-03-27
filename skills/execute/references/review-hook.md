@@ -62,7 +62,9 @@ The hook script (`.claude/hooks/gigo-review-gate.sh`) should:
 | Ask-operator only | 2 | Task blocked. `[ASK-OPERATOR]` prefixed feedback tells worker to move to another task. Lead handles operator communication. |
 | Auto-fix + ask-operator | 2 | Worker fixes auto-fix items first. Task stays blocked on ask-operator items after auto-fix re-review passes. |
 | Accept only | 0 | Task complete. `[ACCEPT]` prefixed items in stderr for lead to capture into addendum. |
+| Ask-operator + accept | 2 | Task blocked on ask-operator. Accept items captured into addendum. Worker moves to independent task. |
 | Auto-fix + accept | 2 | Worker fixes auto-fix items. Accept items captured into addendum after fix passes. |
+| Auto-fix + ask-operator + accept | 2 | Worker fixes auto-fix first. Task stays blocked on ask-operator. Accept items captured into addendum. |
 | No issues | 0 | Task complete. |
 
 **Stderr prefixes:**

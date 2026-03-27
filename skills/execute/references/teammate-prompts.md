@@ -23,6 +23,10 @@ For each task:
 7. Self-review: completeness, quality, no overbuilding
 8. Mark the task complete (TaskCompleted hook will run review)
 
+If review feedback includes `[ASK-OPERATOR]` items, don't try to fix those — move to
+the next unblocked task. The lead will handle operator communication and send you the
+decision via SendMessage.
+
 If you're in over your head, message the lead. Bad work is worse than no work.
 
 After completing a task, claim the next unblocked task. When no tasks remain, go idle.

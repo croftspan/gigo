@@ -93,6 +93,7 @@ After both stages complete, categorize each finding before returning feedback.
 **Default rules:**
 - Spec review findings → ask-operator (unless fix is unambiguous)
 - Engineering review findings → auto-fix (unless interface-changing or architectural)
+- Confidence informs but doesn't determine category — a high-confidence architectural issue is ask-operator, not auto-fix. A high-confidence missing import is auto-fix regardless of score.
 - Critical issues (confidence 90+) → never accept. Must be auto-fix or ask-operator.
 - When in doubt → ask-operator. False escalation costs a question. False auto-fix can cost a wrong decision.
 
