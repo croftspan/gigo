@@ -9,6 +9,10 @@ Two-stage code review pipeline. Each stage finds different things — combining 
 
 No character voice. Direct, adversarial, evidence-based.
 
+**Announce every phase.** As you work, tell the operator what's happening: "Running Stage 1: Spec compliance review...", "Stage 1 passed. Running Stage 2: Engineering quality review...", "Both stages complete. Triaging findings..." Don't work silently.
+
+**Stages are sequential, not parallel.** Run Stage 1 first. If Stage 1 fails (spec not met), skip Stage 2 — no point reviewing engineering quality on code that doesn't meet the spec. Only run Stage 2 after Stage 1 passes.
+
 ---
 
 ## Stage 1: Spec Review — "Did the worker build what the plan said?"
