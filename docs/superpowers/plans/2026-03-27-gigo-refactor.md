@@ -584,140 +584,251 @@ git commit -m "feat: write gigo:plan — unified brainstorm→spec→plan, absor
 
 **Files:**
 - Create: `skills/execute/SKILL.md`
-- Create: `skills/execute/references/implementer-prompt.md`
+- Create: `skills/execute/references/teammate-prompts.md`
 - Create: `skills/execute/references/model-selection.md`
+- Create: `skills/execute/references/review-hook.md`
 
 **Depends on:** Tasks 1-4
 
-Build from superpowers:subagent-driven-development (MIT) + Phase 7 findings.
+Build using Claude Code agent teams (experimental) with subagent and inline fallbacks. The lead has assembled context, teammates are bare workers.
 
-- [ ] **Step 1: Read the source skill**
+- [ ] **Step 1: Read the agent teams documentation**
 
-Read: `~/.claude/plugins/cache/claude-plugins-official/superpowers/5.0.6/skills/subagent-driven-development/SKILL.md`
+Read: https://code.claude.com/docs/en/agent-teams — understand TeamCreate, task dependencies, teammate spawning, TaskCompleted hooks, inter-agent messaging, plan approval mode.
+
+Also read the source skill for process patterns:
+`~/.claude/plugins/cache/claude-plugins-official/superpowers/5.0.6/skills/subagent-driven-development/SKILL.md`
 
 - [ ] **Step 2: Write skills/execute/SKILL.md**
 
 ```markdown
 ---
 name: execute
-description: "Execute implementation plans by dispatching bare worker subagents per task, with per-task review via gigo:review. Respects dependency ordering and parallelizes independent tasks. Use when you have an approved plan from gigo:plan."
+description: "Execute implementation plans using Claude Code agent teams. Lead creates tasks with dependencies, spawns bare worker teammates, reviews each task via gigo:review before completion. Falls back to subagents if agent teams unavailable, inline if neither available. Use when you have an approved plan from gigo:plan."
 ---
 
 # Execute
-
-[Skill content — see detailed guidance below]
 ```
 
 **Content structure for SKILL.md:**
 
-1. **Core principle:** Bare workers + good spec = senior/staff code. No assembled context injection.
+1. **Core principle:** Good spec + bare workers + per-task review = quality output. The lead coordinates, teammates implement, infrastructure handles parallelization and review gates.
 
-2. **The process:**
-   - Read plan, extract all tasks with dependency graph
-   - Create task tracking (TodoWrite)
-   - For each task (respecting dependency order):
-     - Dispatch bare worker subagent with implementer prompt
-     - Handle status (DONE → review, DONE_WITH_CONCERNS → review + address, NEEDS_CONTEXT → ask operator, BLOCKED → skip to independent tasks or escalate)
-     - Invoke gigo:review (per-task mode)
-     - If issues: re-dispatch worker with fix prompt + review feedback
-     - Mark task complete
-   - Report results to operator
+2. **Three execution tiers (try in order):**
 
-3. **Parallelization:** Read dependency graph. Tasks with no unresolved blockers can run in parallel. Never dispatch tasks whose blockers haven't completed.
+   **Tier 1: Agent Teams (optimal)** — requires `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` enabled.
+   - Lead reads the plan, creates tasks in shared task list with `addBlocks`/`addBlockedBy` dependency relationships
+   - Lead spawns teammates (bare workers) — one per parallelizable group or per task depending on plan size
+   - Teammates auto-claim unblocked tasks and implement them
+   - TaskCompleted hook invokes `gigo:review` — task can't be marked done until review passes
+   - If review finds issues, teammate gets feedback via the hook and stays on the task
+   - When all tasks complete, lead synthesizes results and reports to operator
+   - Inter-agent messaging: if a worker discovers something another worker needs, they communicate directly
 
-4. **Inline fallback:** If subagents aren't available, fall back to sequential inline execution with warning.
+   **Tier 2: Subagents (good)** — if agent teams not available.
+   - Lead dispatches fresh subagent per task via Agent tool
+   - Sequential with manual parallelization of independent tasks
+   - Lead invokes `gigo:review` after each task completes
+   - If issues: dispatch new subagent with fix prompt + review feedback
+   - Surface warning: "Agent teams not available. Running with subagents — no auto-parallelization, no inter-worker communication. Enable agent teams with CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS for better results."
 
-5. **Status handling — expand each case fully:**
+   **Tier 3: Inline (functional)** — if neither available.
+   - Execute tasks sequentially in the current session
+   - No context isolation between tasks
+   - Surface warning: "Neither agent teams nor subagents available. Running inline — no parallelization, no context isolation. Consider enabling subagent support."
 
-   **DONE** → invoke gigo:review (per-task mode). If review passes, mark complete, next task. If review finds issues, re-dispatch worker with fix prompt.
+3. **Agent team setup (Tier 1 detail):**
 
-   **DONE_WITH_CONCERNS** → read the concerns. Invoke gigo:review. If review catches the concern, fix loop handles it. If concern is something review wouldn't catch (e.g., "this file is getting large"), note it for the operator in the final report.
+   The lead (gigo:execute) is the controller with assembled context (CLAUDE.md, personas loaded automatically).
 
-   **NEEDS_CONTEXT** → pause execution. Surface the worker's specific question to the operator. Once answered, re-dispatch the SAME task with the additional context appended to the implementer prompt. Don't skip.
+   **Creating tasks:** Read the plan. For each task, use TaskCreate with:
+   - `subject`: task name from plan
+   - `description`: FULL TEXT of task from plan (don't make teammates read the plan file)
+   - Then use TaskUpdate with `addBlocks`/`addBlockedBy` to set dependency relationships matching the plan's `blocks:`/`blocked-by:` fields
 
-   **BLOCKED** → this is the complex path. The skill must:
-   1. Log the blocked task and its reason
-   2. Check the dependency graph for tasks with NO unresolved blockers (neither blocked-by dependencies nor the blocked task itself)
-   3. If independent tasks exist: dispatch them while the blocked task waits. Track what's blocked vs what's running.
-   4. If nothing can proceed: escalate to operator — "Task N is blocked: [reason]. Tasks [X, Y] depend on it. Want me to skip it, break it into smaller pieces, or do you have context that unblocks it?"
-   5. Never silently skip a blocked task. Never guess. The operator decides.
+   **Spawning teammates:** Use TeamCreate to create the team, then spawn teammates with:
+   - Bare spawn prompt (see `references/teammate-prompts.md`)
+   - Model selected per task complexity (see `references/model-selection.md`)
+   - Teammates auto-load project CLAUDE.md — this is acceptable for v1 (see CLAUDE.md note below)
 
-6. **Model selection:** Pointer to `references/model-selection.md`.
+   **The CLAUDE.md question:** Teammates auto-load project CLAUDE.md. Our Phase 7 data says bare workers perform best. However:
+   - The real value is in spec quality, not worker context presence/absence
+   - Assembled workers still got approved in engineering review (Phase 7: warstories 3/3 approvals)
+   - Agent teams' coordination benefits (auto-parallelization, shared task list, inter-worker messaging, hook-enforced review) outweigh the theoretical context concern
+   - Accept for v1. Test and optimize later with `gigo:eval`.
 
-7. **Prompt templates:** Pointer to `references/implementer-prompt.md`.
+   **TaskCompleted hook:** Configure a hook that invokes `gigo:review` before any task can be marked complete. See `references/review-hook.md` for the hook implementation. This enforces per-task review at the infrastructure level — the lead doesn't need to remember to review.
 
-8. **Context management:** Each worker and reviewer is a fresh subagent. No accumulation across tasks.
+   **Handling blocked teammates:** Agent teams handle dependency ordering automatically — tasks with unresolved `blockedBy` dependencies can't be claimed. If a teammate reports BLOCKED (implementation blocker, not a dependency):
+   - Teammate sends message to lead with the blocker description
+   - Lead checks for independent unblocked tasks (other teammates may already be on them)
+   - If nothing can proceed, lead escalates to operator
+   - Never silently skip. The operator decides.
 
-- [ ] **Step 3: Write skills/execute/references/implementer-prompt.md**
+   **When all tasks complete:** Lead synthesizes results, reports to operator. Lead cleans up the team.
 
-Two prompt templates:
+4. **Prompt templates:** See `references/teammate-prompts.md`.
 
-**Implementation prompt:**
-```
-You are implementing Task N: [task name]
+5. **Model selection:** See `references/model-selection.md`.
 
-## Task Description
-[FULL TEXT of task from plan — don't make subagent read file]
+6. **Review integration:** `gigo:review` is invoked via TaskCompleted hook (Tier 1) or manually by the lead (Tier 2/3). See `references/review-hook.md`.
 
-## Context
-[Where this fits, dependencies, what was built in prior tasks]
+- [ ] **Step 3: Write skills/execute/references/teammate-prompts.md**
 
-## Before You Begin
-If anything is unclear about requirements, approach, or dependencies — ask now.
+Two prompt templates. These are spawn prompts for teammates (Tier 1) or subagent prompts (Tier 2).
 
-## Your Job
-1. Implement exactly what the task specifies
-2. Write tests as the task describes
-3. Verify implementation works
-4. Commit your work
-5. Self-review: completeness, quality, no overbuilding
-6. Report back
+```markdown
+# Teammate/Worker Prompt Templates
 
-Status: DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT
+## Implementation Prompt
 
-If you're in over your head, say so. Bad work is worse than no work.
-```
+Use as the spawn prompt when creating a teammate, or as the Agent tool prompt for subagents.
 
-**Fix prompt (re-dispatch after review finds issues):**
-```
-You are fixing issues found in Task N: [task name]
+The prompt is intentionally lean. The plan's task description (in the shared task list) provides the spec. The teammate reads it when they claim the task.
+
+### Template
+
+You are a worker implementing tasks from the shared task list.
+
+Claim an unblocked task, implement it, and mark it complete.
+
+For each task:
+1. Read the task description carefully — it contains the full spec
+2. If anything is unclear, ask via SendMessage to the lead before starting
+3. Implement exactly what the task specifies
+4. Write tests as the task describes
+5. Verify implementation works
+6. Commit your work
+7. Self-review: completeness, quality, no overbuilding
+8. Mark the task complete (TaskCompleted hook will run review)
+
+If you're in over your head, message the lead. Bad work is worse than no work.
+
+After completing a task, claim the next unblocked task. When no tasks remain, go idle.
+
+## Fix Prompt
+
+Use when a TaskCompleted hook rejects completion with review feedback. The teammate receives the feedback via stderr and continues working.
+
+The teammate already has context from the implementation attempt. The hook feedback tells them what to fix. No re-dispatch needed — the teammate stays on the task and fixes the issues.
+
+For Tier 2 (subagents), dispatch a new subagent with:
+
+You are fixing issues found in a task.
 
 ## Review Feedback
 [SPECIFIC issues from gigo:review — what's wrong, where, why it matters]
 
-## Original Task Description
+## Original Task
 [FULL TEXT of task from plan]
 
 ## Your Job
 Fix the issues listed above. Don't change anything else.
 Run tests. Commit. Report back.
-
-Status: DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT
 ```
 
 - [ ] **Step 4: Write skills/execute/references/model-selection.md**
 
-From superpowers:subagent-driven-development's model selection section:
-
 ```markdown
-# Model Selection for Worker Dispatch
+# Model Selection for Workers
 
-Use the least powerful model that can handle each role.
+Use the least powerful model that can handle each role to conserve cost and increase speed.
+
+## For Agent Team Teammates
+
+Specify model when spawning teammates. Agent teams let you set model per teammate.
 
 | Task complexity | Signals | Model |
 |---|---|---|
-| Mechanical | Touches 1-2 files, complete spec, isolated function | Fast/cheap (haiku) |
-| Integration | Multiple files, integration concerns, pattern matching | Standard (sonnet) |
-| Architecture/judgment | Design decisions, broad codebase understanding, debugging | Most capable (opus) |
+| Mechanical | Touches 1-2 files, complete spec, isolated function | haiku |
+| Integration | Multiple files, integration concerns, pattern matching | sonnet |
+| Architecture/judgment | Design decisions, broad codebase understanding, debugging | opus |
 
-Review subagents: use standard model (sonnet) — they need judgment but have focused scope.
+## For Subagent Dispatch (Tier 2 fallback)
+
+Same guidance, specified via Agent tool's `model` parameter.
+
+## For Review Subagents
+
+Use sonnet — review needs judgment but has focused scope.
+
+## Sizing the Team
+
+Agent teams docs recommend 5-6 tasks per teammate. If the plan has 15 tasks, spawn 3 teammates. If 6 tasks, spawn 1-2 teammates.
+
+Start small. 3 focused teammates outperform 5 scattered ones.
 ```
 
-- [ ] **Step 5: Commit**
+- [ ] **Step 5: Write skills/execute/references/review-hook.md**
+
+Document the TaskCompleted hook that enforces per-task review via `gigo:review`.
+
+```markdown
+# Review Hook — TaskCompleted Gate
+
+This hook runs when any teammate marks a task as complete. It invokes `gigo:review` and blocks completion if review finds issues.
+
+## How It Works
+
+1. Teammate marks task complete → TaskCompleted hook fires
+2. Hook invokes `gigo:review` (per-task mode) on the committed code
+3. If review passes → hook exits 0, task is marked complete
+4. If review finds issues → hook exits 2 with review feedback as stderr
+5. Teammate receives the feedback and continues working on the task
+6. Teammate tries to mark complete again → hook runs again
+7. Repeat until review passes
+
+## Hook Configuration
+
+Configure in `.claude/settings.json` or `.claude/settings.local.json`:
+
+{
+  "hooks": {
+    "TaskCompleted": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/gigo-review-gate.sh",
+            "timeout": 300,
+            "statusMessage": "Running gigo:review on completed task..."
+          }
+        ]
+      }
+    ]
+  }
+}
+
+## The Hook Script
+
+The hook script (.claude/hooks/gigo-review-gate.sh) should:
+1. Read task info from stdin (JSON with task_id, task_subject, task_description)
+2. Determine the git SHA range for the task's changes
+3. Run gigo:review Stage 1 (spec compliance) and Stage 2 (engineering review)
+4. If all issues are below threshold → exit 0 (pass)
+5. If issues found → write feedback to stderr, exit 2 (block)
+
+NOTE: The exact implementation of this hook script depends on how gigo:review
+is invocable from a shell script. Options:
+- Invoke claude CLI with a review prompt
+- Call gigo:review as a skill from within the hook
+- Run the review checks directly in the script
+
+This is a design decision to finalize during implementation. The hook
+infrastructure is proven — the integration point with gigo:review needs testing.
+
+## For Tier 2 (Subagents)
+
+When using subagents instead of agent teams, there's no TaskCompleted hook.
+The lead (gigo:execute) invokes gigo:review manually after each subagent
+completes. Same review, different trigger mechanism.
+```
+
+- [ ] **Step 6: Commit**
 
 ```bash
 git add skills/execute/
-git commit -m "feat: write gigo:execute — bare worker dispatch with dependency graph and per-task review"
+git commit -m "feat: write gigo:execute — agent teams with TaskCompleted review hook, subagent and inline fallbacks"
 ```
 
 ---

@@ -98,7 +98,7 @@ Operator triggers gigo:snap at session end
 
 **Gates:** Plan approval (operator reviews spec and plan before execution starts). Task-level review (every task reviewed before next starts). Final completion (operator reviews results).
 
-**Context management:** The chain goes deep (plan → execute → review → code-review). Each review invocation must be a clean subagent, not accumulating context from all prior tasks. `gigo:execute` is the controller — it preserves its own context for coordination but dispatches fresh subagents for each worker and each review. This prevents context pollution across tasks.
+**Context management:** With agent teams (preferred), each teammate has its own context window and auto-loads project CLAUDE.md. The lead coordinates via shared task list and messaging. TaskCompleted hook enforces review at the infrastructure level. With subagent fallback, each worker is a fresh subagent — no context accumulation. With inline fallback, sequential execution in the current session.
 
 ### 3.1 `gigo:gigo` — First Assembly
 
@@ -156,30 +156,25 @@ Operator triggers gigo:snap at session end
 
 ### 3.3 `gigo:execute` — Worker Dispatch
 
-**Takes from:** superpowers:subagent-driven-development process + our own Phase 7 findings. MIT.
+**Takes from:** superpowers:subagent-driven-development process (MIT) + our Phase 7 findings + Claude Code agent teams (experimental).
 
-**What we keep from superpowers:subagent-driven-development:**
-- Fresh subagent per task (no context pollution)
-- Implementer prompt template (task description, context, self-review, status reporting)
-- DONE / DONE_WITH_CONCERNS / NEEDS_CONTEXT / BLOCKED status protocol
-- Model selection guidance (mechanical tasks → fast model, integration → standard, architecture → capable)
-- "Never ignore an escalation" principle
-- Review after each task (delegated to `gigo:review`)
+**Primary mechanism: Claude Code Agent Teams.**
 
-**What we change (informed by Phase 7 data):**
-- **Workers run bare.** No assembled context injection. No personas, no rules, no war stories. The spec IS the context. This is the central finding of 8 phases of testing — bare workers rated senior/staff by principal engineer review. superpowers injects project CLAUDE.md into workers; we don't.
-- **Review after EACH task, not at the end.** After each task completes, `gigo:execute` invokes `gigo:review`. Issues are fixed before the next task starts. A bug in task 2 affects tasks 3-5 if you don't catch it. The per-task pipeline: dispatch worker → worker completes → `gigo:review` → fix if needed → next task.
-- **Respect the dependency graph.** superpowers dispatches tasks sequentially by default. `gigo:execute` reads the plan's dependency graph and parallelizes independent tasks automatically. Tasks with blockers wait until blockers complete.
-- **Review is a separate skill.** superpowers:subagent-driven-development includes inline review (spec-reviewer-prompt.md + code-quality-reviewer-prompt.md). We separate review into `gigo:review` for cleaner composition and because the review process is independently valuable.
-- **No TDD mandate in worker prompt.** The plan specifies testing approach per task. If the plan says TDD, the worker does TDD. If not, the worker tests as appropriate. superpowers hardcodes TDD preference.
-- **Implementer prompt is leaner.** Remove the "Code Organization" section that tells workers how to think about file structure — the plan already made those decisions. Remove superpowers-specific integration references.
-- **Inline execution fallback.** If subagent support isn't available, `gigo:execute` falls back to sequential inline execution. When falling back, surface it: "Subagent dispatch isn't available. Running tasks inline — no parallelization, no context isolation between tasks. Consider enabling subagent support for better results." Always suggest the optimal path.
+The lead (gigo:execute) has assembled context. It creates tasks in the shared task list with dependency relationships, spawns bare worker teammates, and coordinates. Agent teams give us:
+- **Shared task list with auto-unblocking** — tasks auto-unblock when dependencies complete. No custom dependency tracking.
+- **Auto-claiming** — teammates claim unblocked tasks automatically. Parallelization is handled by infrastructure.
+- **TaskCompleted hook** — invokes `gigo:review` before any task can be marked done. Per-task review enforced at the infrastructure level.
+- **Inter-agent messaging** — workers communicate directly if they discover something another worker needs.
+- **Model per teammate** — haiku for mechanical tasks, sonnet for integration, opus for architecture.
 
-**Status handling:**
-- **DONE** → invoke `gigo:review`, proceed to next task after review passes
-- **DONE_WITH_CONCERNS** → read concerns, invoke `gigo:review`, address concerns if review doesn't catch them
-- **NEEDS_CONTEXT** → pause execution, ask operator for the missing context, re-dispatch same task with additional context
-- **BLOCKED** → pause the blocked task. If independent tasks exist that don't depend on it, continue with those. If nothing can proceed, escalate to operator: "Task N is blocked: [reason]. Want me to skip it, break it into smaller pieces, or do you have context that unblocks it?" Never silently skip a blocked task.
+**The CLAUDE.md question:** Teammates auto-load project CLAUDE.md. Our Phase 7 data says bare workers perform best. For v1, we accept this — assembled workers still got 3/3 approvals in engineering review, and agent teams' coordination benefits outweigh the theoretical context concern. Test and optimize later with `gigo:eval`.
+
+**Three execution tiers (try in order):**
+1. **Agent teams (optimal)** — requires `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS`. Full parallelization, hook-enforced review, inter-worker messaging.
+2. **Subagents (good)** — fresh subagent per task via Agent tool. Sequential with manual parallelization. Lead invokes review after each task. Surface warning suggesting agent teams.
+3. **Inline (functional)** — sequential in current session. No isolation. Surface warning suggesting subagent support.
+
+**Review is enforced per task.** Via TaskCompleted hook (Tier 1) or manual invocation by the lead (Tier 2/3). Issues are fixed before the next task starts.
 
 **The implementer prompt template (improved):**
 
