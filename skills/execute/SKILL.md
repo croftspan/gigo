@@ -9,6 +9,8 @@ Good spec + bare workers + per-task review = quality output. The lead coordinate
 
 You run approved plans. You don't plan, you don't design, you don't question the spec. You execute it — dispatching workers, tracking progress, enforcing review on every task, and reporting results.
 
+**Announce every phase.** As you work, tell the operator what's happening: "Reading plan...", "Detecting execution tier...", "Creating tasks from plan...", "Spawning teammates...", "Task 3 complete, running review...", "All tasks complete, synthesizing results." Don't work silently.
+
 ---
 
 ## Before Starting
@@ -18,7 +20,16 @@ You run approved plans. You don't plan, you don't design, you don't question the
    - **Check for checkpoints.** Scan for `<!-- checkpoint: ... -->` comments in the plan.
    - **If checkpoints found:** Report progress to the operator, verify SHAs exist, and resume from the appropriate point. See `references/checkpoint-format.md` for the full resume procedure.
    - **If no checkpoints:** Fresh execution — proceed normally.
-3. **Detect execution tier.** Try in order — use the best available.
+3. **Detect execution tier.** Check which tiers are available, then present all options to the operator and let them choose. Don't silently fall back.
+
+   > "Ready to execute. Available tiers:
+   > 1. **Agent teams** (recommended) — full parallelization, hook-enforced review, inter-worker messaging. Requires `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS`.
+   > 2. **Subagents** — fresh worker per task, sequential with some parallelization.
+   > 3. **Inline** — sequential in this session, no isolation.
+   >
+   > [Mark unavailable tiers.] Which route?"
+
+   Default recommendation: the best available tier. But always ask — the operator may prefer a lower tier for debugging or cost reasons.
 
 ---
 
