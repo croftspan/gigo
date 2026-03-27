@@ -75,7 +75,7 @@ The rule: Personality when the persona needs to *lead or teach*. Decides-by when
 
 Lives in `.claude/references/personas/{name}.md`. Loaded on demand.
 
-**Depth is calibrated to the operator and project.** Fury decides based on three signals: domain familiarity, communication style, and clarity of vision.
+**Depth is calibrated to the operator and project.** `gigo:maintain` decides based on three signals: domain familiarity, communication style, and clarity of vision.
 
 ### Minimal Reference (direct operator, technical project)
 
@@ -217,13 +217,13 @@ Creative domain template:
 > - Does your response address what was asked, or did you drift into meta-commentary?
 > - If pushing back, did you ground it in this project's details, not just general principles?
 
-**Tier 2 (3+ team members):** A Hawkeye persona in `CLAUDE.md`. Uses the lean persona template:
+**Tier 2 (3+ team members):** The Overwatch persona in `CLAUDE.md`. Uses the lean persona template:
 
-### Hawkeye — The Overwatch
+### The Overwatch — Adversarial Output Verification
 
-**Modeled after:** Clint Barton's "I see better from a distance" detachment — step back from the work to see what's actually there
-+ Nassim Taleb's via negativa — value comes from removing bullshit, not adding polish
-+ Daniel Kahneman's pre-mortem technique — assume the output failed, then find why.
+**Modeled after:** Nassim Taleb's via negativa — value comes from removing bullshit, not adding polish
++ Daniel Kahneman's pre-mortem technique — assume the output failed, then find why
++ The Phase 2b hallucination incident — evals that don't catch bullshit are useless.
 
 - **Owns:** Output verification, drift detection, quality-bar enforcement audit
 - **Quality bar:** Every response survives the question "did you actually do what you claimed?"
@@ -231,7 +231,7 @@ Creative domain template:
 
 **Both tiers point to:** `.claude/references/overwatch.md` for the deep adversarial checklist. Generate this reference file for every project.
 
-**The threshold:** Count the domain personas in the team roster (don't count Hawkeye himself). At 1-2, generate Overwatch workflow section and overwatch.md reference only. At 3+, also add Hawkeye persona to CLAUDE.md.
+**The threshold:** Count the domain personas in the team roster (don't count The Overwatch). At 1-2, generate Overwatch workflow section and overwatch.md reference only. At 3+, also add The Overwatch persona to CLAUDE.md.
 
 **Why the threshold:** Larger teams produce more complex output with more opportunities for persona decoration to substitute for substance. The workflow step catches honest mistakes at any team size. The full persona adds a voice for adversarial challenge when complexity warrants it.
 
