@@ -24,6 +24,7 @@ var AllStates = []State{
 type Task struct {
 	ID        string
 	Name      string
+	Cmd       string
 	State     State
 	Priority  int
 	DependsOn []string
