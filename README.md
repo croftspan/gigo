@@ -1,26 +1,24 @@
-# Avengers, Assemble
+# GIGO (Garbage In, Garbage Out)
 
-**Tell Claude what you're building. Get a team of domain experts who make every session smarter.**
+**Tell Claude what you're building. Get a team of domain experts who make every session smarter -- and an execution pipeline that puts context where it helps and strips it where it hurts.**
 
-Avengers Assemble is a set of Claude Code skills that researches the best practitioners in any field, blends their philosophies into focused AI personas, and writes lean project files that give Claude real expertise — not generic instructions.
-
-> *"There was an idea... to bring together a group of remarkable people, so when we needed them, they could fight the battles we never could." — Nick Fury*
+GIGO is a set of Claude Code skills that researches the best practitioners in any field, blends their philosophies into focused AI personas, writes lean project files that give Claude real expertise, and orchestrates the proven plan→execute→review pipeline.
 
 ---
 
 ## See it in action
 
-Fury reads the room — your experience, your style, how clear your vision is — and builds a team that meets you where you are.
+GIGO reads the room — your experience, your style, how clear your vision is — and builds a team that meets you where you are.
 
 **You know exactly what you're building:**
 
 ```
-/avengers-assemble
+gigo:gigo
 
 You: "Building a CLI tool for database migrations. Go, targets
      Postgres and MySQL. Rollbacks, dry runs, schema diffing."
 
-Fury: "Three on this one:
+GIGO: "Three on this one:
 
         The Migration Architect
         Andrew Kane's database ops pragmatism + Sandi Metz's
@@ -44,11 +42,11 @@ Fury: "Three on this one:
 **You're still figuring it out:**
 
 ```
-/avengers-assemble
+gigo:gigo
 
 You: "kids books. like mystery ones? idk"
 
-Fury: "I can work with that. Here's who I'd bring in:
+GIGO: "I can work with that. Here's who I'd bring in:
 
         The Story Architect
         I'm pulling from Wendelin Van Draanen — she's the master
@@ -73,28 +71,28 @@ Works for anything: software, fiction, game design, research, music, business.
 
 ---
 
-## The four skills
+## The seven skills
 
 | Skill | What it does |
 |---|---|
-| `/avengers-assemble` | Builds your expert team from scratch. Researches authorities, blends philosophies, writes lean project files. |
-| `/fury` | Ongoing maintenance. Adds expertise when gaps appear, audits for bloat, upgrades older setups. |
-| `/smash` | Restructures bloated projects. Reads everything, measures against line caps, cuts what doesn't earn its keep. |
-| `/cap` | Turns vague ideas into clear, prioritized action plans before anyone starts building. |
+| `gigo:gigo` | Builds your expert team from scratch. Researches authorities, blends philosophies, writes lean project files. |
+| `gigo:maintain` | Ongoing maintenance. Adds expertise when gaps appear, audits for bloat, upgrades older setups. |
+| `gigo:plan` | Turns vague ideas into clear, prioritized action plans before anyone starts building. |
+| `gigo:execute` | Runs the plan with bare workers — no personas, no rules, just a good spec and their training. |
+| `gigo:review` | Two-stage review: plan-aware check (did you build the right thing?) then code-quality check (did you build it well?). |
+| `gigo:snap` | Session-end audit. Enforces line caps, removes derivable rules, captures learnings, protects the project. |
+| `gigo:eval` | Tests how context affects AI output quality. Before/after benchmarking for rules, personas, and prompts. |
 
 ---
 
 ## Install
 
 ```bash
-git clone https://github.com/Eaven/avengers-assemble.git
-cp -r avengers-assemble/skills/avengers-assemble ~/.claude/skills/avengers-assemble
-cp -r avengers-assemble/skills/fury ~/.claude/skills/fury
-cp -r avengers-assemble/skills/smash ~/.claude/skills/smash
-cp -r avengers-assemble/skills/cap ~/.claude/skills/cap
+git clone https://github.com/Eaven/gigo.git
+cp -r gigo/skills/gigo ~/.claude/skills/gigo
 ```
 
-Then open any project and run `/avengers-assemble`.
+Then open any project and run `gigo:gigo`.
 
 ---
 
@@ -106,7 +104,7 @@ Then open any project and run `/avengers-assemble`.
 
 **The non-derivable rule** — The skill only writes what Claude can't figure out by reading your project. Philosophy, quality bars, anti-patterns — yes. Directory structure, code patterns — never. [Research confirms](https://arxiv.org/abs/2602.11988) that bloated context reduces task success rates while increasing cost by 20%+.
 
-**The Snap** — Named after Tony's snap, not Thanos's. A protocol that runs at session end: audits every rule, lets go of what's served its purpose, merges overlaps, enforces line caps. The project gets sharper over time, not bigger.
+**The Snap** — A protocol that runs at session end: audits every rule, lets go of what's served its purpose, merges overlaps, enforces line caps. The project gets sharper over time, not bigger.
 
 ---
 
@@ -130,7 +128,7 @@ But that same worker, left to plan on its own, misses things. A bare brainstorme
 | **Execution** | Team OFF | Workers produce best output with their training alone + a good spec |
 | **Review** | Team ON | Team catches what workers miss, sends back for fixes |
 
-This is what `/avengers-assemble` generates: a team that asks better questions, writes better specs, and catches more problems in review. Not a team that hovers over the worker's shoulder telling them how to do their job.
+This is what `gigo:gigo` generates: a team that asks better questions, writes better specs, and catches more problems in review. Not a team that hovers over the worker's shoulder telling them how to do their job.
 
 ---
 
