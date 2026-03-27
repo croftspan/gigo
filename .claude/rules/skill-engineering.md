@@ -1,4 +1,4 @@
-# Skill Engineering — Avengers Assemble
+# Skill Engineering — GIGO
 
 ## Philosophy
 

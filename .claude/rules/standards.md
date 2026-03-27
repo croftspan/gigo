@@ -1,4 +1,4 @@
-# Standards — Avengers Assemble
+# Standards — GIGO
 
 ## Philosophy
 

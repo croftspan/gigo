@@ -26,7 +26,11 @@ Before saving anything new, audit the existing rules. This runs every time.
 
 **7. Total budget check.** Count total lines across ALL `.claude/rules/` files. If approaching ~300 lines, consolidate or move content to references.
 
-**8. Coverage check.** Has the project grown into areas the team doesn't cover? If yes, suggest: "Consider running `/fury` to add expertise."
+**8. Coverage check.** Has the project grown into areas the team doesn't cover? If yes, offer to invoke `gigo:maintain` to add expertise. If multiple files are over the line cap or the structure has drifted significantly, offer to invoke `gigo:maintain` to restructure.
+
+**9. Overwatch check.** Is the Overwatch section present in `workflow.md`? If the team has 3+ domain personas, is The Overwatch in `CLAUDE.md`? Is `.claude/references/overwatch.md` present? If any are missing, restore them — the overwatch system is not optional.
+
+**10. Pipeline check.** Is the workflow still encoding three phases (plan, execute, review)? Has someone collapsed planning and execution? Merged the review stages? If so, flag it and offer to fix.
 
 ## Saving New Learnings
 
