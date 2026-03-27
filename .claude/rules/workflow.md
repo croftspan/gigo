@@ -1,4 +1,4 @@
-# Workflow — Avengers Assemble
+# Workflow — GIGO
 
 ## The Loop
 
@@ -20,7 +20,7 @@ When modifying or creating skills:
 
 ## Research Pattern
 
-When the operator needs domain research (for `/avengers-assemble` or `/fury`):
+When the operator needs domain research (for `gigo:gigo` or `gigo:maintain`):
 - Start with training knowledge for established domains
 - Use web search for fast-moving domains, unfamiliar territory, or when the operator requests deep research
 - Find 2-3+ authorities per expertise area — not just names, but their specific philosophies
