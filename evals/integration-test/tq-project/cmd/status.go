@@ -3,6 +3,7 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"os"
 
 	"tq/store"
@@ -34,7 +35,10 @@ var statusCmd = &cobra.Command{
 func runStatus(cmd *cobra.Command, args []string) error {
 	s := store.NewMemoryStore()
 	defer s.Close()
+	return runStatusWithStore(s, jsonOutput, os.Stdout)
+}
 
+func runStatusWithStore(s store.Store, jsonOut bool, w io.Writer) error {
 	tasks, err := s.List(store.Filter{})
 	if err != nil {
 		return fmt.Errorf("tq: cannot read queue status: %w", err)
@@ -59,15 +63,15 @@ func runStatus(cmd *cobra.Command, args []string) error {
 		Health:  h,
 	}
 
-	if jsonOutput {
-		return json.NewEncoder(os.Stdout).Encode(out)
+	if jsonOut {
+		return json.NewEncoder(w).Encode(out)
 	}
 
 	for _, state := range store.AllStates {
-		fmt.Fprintf(os.Stdout, "%-10s%d\n", state, counts[state])
+		fmt.Fprintf(w, "%-10s%d\n", state, counts[state])
 	}
-	fmt.Fprintf(os.Stdout, "%-10s%d\n", "total", total)
-	fmt.Fprintf(os.Stdout, "%-10s%s\n", "health", h)
+	fmt.Fprintf(w, "%-10s%d\n", "total", total)
+	fmt.Fprintf(w, "%-10s%s\n", "health", h)
 
 	return nil
 }
