@@ -19,6 +19,12 @@ Read the project's setup and check for these features. Missing ones are upgrade 
 | Cross-file dedup | A rule appears in at most 2 auto-loaded locations (brief in CLAUDE.md persona, full in relevant rules file) | Same rule repeated in 3+ auto-loaded files (CLAUDE.md, standards.md, extension, workflow.md) |
 | Persona retirement | Snap audits include checking if personas are still needed | No guidance on removing outdated personas |
 | Scope rule | Skills only write to `.claude/` and `CLAUDE.md`, never source tree | No scope constraint stated |
+| Persona Calibration | `workflow.md` has a Persona Calibration section (presentation vs content task self-assessment) | No calibration section in workflow.md |
+| Overwatch section | `workflow.md` has a domain-adapted Overwatch self-check section | No Overwatch section in workflow.md |
+| Hawkeye persona | At 3+ domain personas, `CLAUDE.md` includes Hawkeye — The Overwatch | 3+ personas but no Hawkeye |
+| Overwatch reference | `.claude/references/overwatch.md` exists with the deep adversarial checklist | No overwatch.md reference file |
+| Task-specific pointers | "When to Go Deeper" pointers name the observable task AND what to check in the reference | Pointers are generic ("when working on X, read Y") without naming what to look for |
+| Snap Overwatch check | Snap audit includes check 9 (Overwatch presence verification) | Snap has 8 or fewer audit checks |
 
 ## Step 2: Back Up Before Upgrading
 
@@ -52,6 +58,12 @@ Once approved:
 - Tighten personas to 8-10 lines, move detail to `.claude/references/personas/`
 - Audit persona entries for knowledge signal — factual specifics, implementation patterns, and technical details that compete with the model's factual recall when loaded as system context. Move to `.claude/references/personas/` or relevant reference files, keeping only alignment signal (quality bars, approach, constraints) in the lean tier
 - Add total budget check to snap
+- Add Persona Calibration section to `workflow.md` — read `avengers-assemble/references/persona-template.md` → "Task-Type Awareness" for the template, adapt language to the domain
+- Add Overwatch section to `workflow.md` — read `avengers-assemble/references/persona-template.md` → "The Overwatch" for domain-adapted templates (structured vs creative)
+- If 3+ domain personas and no Hawkeye, add Hawkeye persona to `CLAUDE.md` using the template from `avengers-assemble/references/persona-template.md` → "The Overwatch"
+- Create `.claude/references/overwatch.md` with the deep adversarial checklist
+- Upgrade generic "When to Go Deeper" pointers to task-specific: name the observable task, name the reference file, name what to check
+- Add Overwatch audit check (check 9) to `snap.md` if missing
 - Preserve all existing domain knowledge — upgrading the architecture, not the expertise
 
 After upgrading: "Setup is current. Run `/fury` for your next checkup."

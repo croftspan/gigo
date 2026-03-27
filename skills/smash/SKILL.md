@@ -48,6 +48,8 @@ For every rules file, evaluate against six checks:
 
 **6. Persona calibration check.** For each persona in CLAUDE.md: does it contain domain-knowledge content (factual specifics, implementation patterns) that belongs in references? Persona entries should be alignment signal only — quality bars, approach, constraints. Domain knowledge competes with the model's factual recall when loaded as system context (Hu et al., 2026).
 
+**7. Overwatch check.** Does `workflow.md` have a Persona Calibration section and an Overwatch section? If 3+ domain personas, does CLAUDE.md include Hawkeye? Does `.claude/references/overwatch.md` exist? Are "When to Go Deeper" pointers task-specific (naming the observable task and what to check) rather than generic? Read `avengers-assemble/references/persona-template.md` → "The Overwatch" for templates.
+
 ## Phase 3: Triage
 
 Categorize every piece of content:
@@ -105,8 +107,9 @@ Once approved, do the restructuring:
 3. **Write consolidated files** — create the new merged rules files
 4. **Update existing files** — add "When to Go Deeper" pointers, trim over-cap files
 5. **Add The Snap** — if no `snap.md` exists, create one using the template from the avengers-assemble skill's bundled `references/snap-template.md`, customized for this project's domain
-6. **Remove old files** — delete the files that were consolidated or emptied
-7. **Update CLAUDE.md** — if CLAUDE.md references files that moved or merged, update the references
+6. **Add Overwatch** — if missing, add Persona Calibration and domain-adapted Overwatch sections to `workflow.md`, create `.claude/references/overwatch.md`, and add Hawkeye persona to CLAUDE.md if 3+ domain personas. Read `avengers-assemble/references/persona-template.md` → "The Overwatch" for templates.
+7. **Remove old files** — delete the files that were consolidated or emptied
+8. **Update CLAUDE.md** — if CLAUDE.md references files that moved or merged, update the references
 
 After all changes are written:
 
@@ -121,6 +124,7 @@ After the structural cleanup, briefly assess the expertise layer:
 - Are there anti-patterns and banned lists, or only positive rules?
 - Are there reference files with deep authority knowledge, or is everything surface-level?
 - Do persona entries contain only alignment signal (quality bars, approach, constraints), or are they carrying domain knowledge that belongs in references?
+- Does the project have the Overwatch system (Persona Calibration + Overwatch section + overwatch.md reference + Hawkeye at 3+)?
 
 If the expertise layer is weak or generic, suggest next steps:
 
@@ -142,3 +146,4 @@ If the expertise is already strong:
 6. **Structure first, expertise second.** Get the architecture right, then assess the team. Clean house before redecorating.
 7. **Nothing without approval.** Fury presents. The operator approves. Hulk executes.
 8. **Personas shape approach, not recall.** When restructuring personas, keep alignment signal (quality bars, constraints, anti-patterns) in rules. Move domain knowledge (factual specifics, implementation patterns) to references where it loads on demand without competing with the model's factual recall.
+9. **Every team has overwatch.** The restructured project must have the Overwatch system. If it's missing, add it during Phase 5.
