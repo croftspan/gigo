@@ -117,7 +117,7 @@ If a task was partially completed (review found issues, worker is mid-fix):
 |---|---|---|
 | `sha` | Git commit hash (short) | Verify the work still exists on disk |
 | `status` | `done`, `in-review`, `in-progress`, `blocked` | Where the task was when interrupted |
-| `reviewed` | `pass`, `issues-found`, `pending` | Review state at interruption |
+| `reviewed` | `pass`, `issues-found`, `ask-operator-pending`, `pending` | Review state at interruption |
 | `tier` | `1`, `2`, `3` | Which tier was running (for reconciliation) |
 
 ### Resume Detection
@@ -146,6 +146,7 @@ This task may need re-implementation. Proceed or investigate?
 4. **Resume from the right point:**
    - `done` → skip
    - `in-review` with `issues-found` → re-run review on current state, then fix if needed
+   - `in-review` with `ask-operator-pending` → re-surface the ask-operator items to the operator
    - `in-progress` → dispatch worker to continue (provide addendum context from completed deps)
    - `blocked` → re-evaluate the blocker
 
@@ -310,21 +311,32 @@ Implement the operator's decision. Fix any remaining auto-fix items.
 Run tests. Commit. Report back.
 ```
 
+### Blocking Behavior
+
+**Auto-fix items don't block.** The worker fixes them and re-submits. Straightforward.
+
+**Ask-operator items DO block.** The task stays incomplete until the operator weighs in. The worker can move to *independent* tasks (tasks that don't depend on the blocked one per the dependency graph), but the blocked task and everything downstream of it stays blocked. This prevents rework — if the operator reverses an architectural decision, no downstream work has been built on the wrong assumption.
+
+**Accept items don't block.** They go into the addendum.
+
 ### Tier Behavior
 
-| Tier | How auto-fix reaches worker | How ask-operator reaches operator |
+| Tier | Auto-fix | Ask-operator | Accept |
+|---|---|---|---|
+| 1 (Agent Teams) | Hook exits 2 with auto-fix items in stderr. Worker fixes and re-submits. | Hook exits 2 with `[ASK-OPERATOR]` prefixed items in stderr. Task stays incomplete. Lead surfaces to operator, waits for decision, then sends resolution to worker via `SendMessage`. Worker can claim independent tasks while waiting. | Hook exits 0. `[ACCEPT]` items in stderr for lead to capture into addendum. |
+| 2 (Subagents) | Lead dispatches fix subagent with auto-fix items. | Lead surfaces to operator, waits for decision. Dispatches other independent tasks in the meantime. After operator decides, dispatches fix subagent with the resolution. | Lead captures into addendum. No subagent dispatch. |
+| 3 (Inline) | Lead implements fixes directly. | Lead presents to operator, waits. Can work on independent tasks while waiting. After operator decides, implements the resolution. | Lead captures into addendum. |
+
+**Tier 1 hook exit codes:**
+
+| Findings present | Hook exit | Effect |
 |---|---|---|
-| 1 (Agent Teams) | Hook stderr contains only auto-fix items. Ask-operator items are held — hook exits with a special code or the lead intercepts. | Lead surfaces to operator via conversation. |
-| 2 (Subagents) | Lead dispatches fix subagent with auto-fix items only. | Lead surfaces to operator, waits, then dispatches with resolution. |
-| 3 (Inline) | Lead presents auto-fix items, implements fixes. | Lead presents ask-operator items, waits for operator. |
-
-**Tier 1 hook implication:** The review hook currently has two exit codes (0 = pass, 2 = issues). With triage, we need to handle the case where review finds only ask-operator items (no auto-fix). Options:
-- Hook exits 0 (pass) but writes ask-operator items to a sideband file the lead reads. Task completion is not blocked by ask-operator items — the work is done, the question is for the operator.
-- Hook exits 2 only when auto-fix items exist. Ask-operator items don't block the worker.
-
-**Recommended:** Hook exits 2 only for auto-fix items. Ask-operator items are written to stderr as informational (prefixed with `[ASK-OPERATOR]`) but don't block completion. The lead reads them from the task output and surfaces to the operator. Accept items are written with `[ACCEPT]` prefix for the lead to capture into the addendum.
-
-This keeps the hook simple: the worker only gets blocked when there's something for *them* to fix.
+| Auto-fix only | 2 | Worker fixes, re-submits |
+| Ask-operator only | 2 | Task blocked. Worker receives `[ASK-OPERATOR]` feedback, knows to move to another task. Lead handles operator communication. |
+| Auto-fix + ask-operator | 2 | Worker fixes auto-fix items first. Task stays blocked on ask-operator items after auto-fix re-review passes. |
+| Accept only | 0 | Task complete. Accept items in stderr for lead. |
+| Auto-fix + accept | 2 | Worker fixes auto-fix. Accept items captured into addendum after fix passes. |
+| No issues | 0 | Task complete. |
 
 ---
 
@@ -338,8 +350,9 @@ The three enhancements form a reinforcing loop:
 
 The integration points:
 - Review triage's "accept" category feeds directly into the addendum's "Notes for downstream" field
-- Checkpoints record whether a task is in the triage-pending state (status: `in-review`, reviewed: `issues-found`)
+- Checkpoints record whether a task is blocked on ask-operator items (status: `in-review`, reviewed: `ask-operator-pending`)
 - On resume, if a task has `ask-operator` items pending, the lead re-surfaces them — they weren't answered yet
+- Ask-operator blocking respects the dependency graph: independent tasks proceed, dependent tasks stay queued. This means checkpoints may show tasks 1, 3, 4 done while task 2 is blocked on an operator decision and task 5 (which depends on 2) hasn't started
 
 ---
 
