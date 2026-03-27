@@ -83,18 +83,22 @@ gigo:execute runs the plan:
   For each task (respecting dependency order):
     → dispatch bare worker subagent
     → worker completes (DONE/DONE_WITH_CONCERNS/BLOCKED/NEEDS_CONTEXT)
-    → gigo:execute invokes gigo:review
+    → gigo:execute invokes gigo:review (per-task mode)
       → Stage 1: spec review (gigo's own)
-      → Stage 2: engineering review (code-review:code-review)
-    → if issues found: fix, re-review
+      → Stage 2: engineering review (gigo's own, SHA-range based)
+    → if issues found: re-dispatch worker with review feedback, re-review
     → next task
   → all tasks complete
   → gigo:execute reports results to operator
+  → operator creates PR
+  → gigo:review (PR mode) invokes code-review:code-review for final gate
 
 Operator triggers gigo:snap at session end
 ```
 
 **Gates:** Plan approval (operator reviews spec and plan before execution starts). Task-level review (every task reviewed before next starts). Final completion (operator reviews results).
+
+**Context management:** The chain goes deep (plan → execute → review → code-review). Each review invocation must be a clean subagent, not accumulating context from all prior tasks. `gigo:execute` is the controller — it preserves its own context for coordination but dispatches fresh subagents for each worker and each review. This prevents context pollution across tasks.
 
 ### 3.1 `gigo:gigo` — First Assembly
 
@@ -171,6 +175,12 @@ Operator triggers gigo:snap at session end
 - **Implementer prompt is leaner.** Remove the "Code Organization" section that tells workers how to think about file structure — the plan already made those decisions. Remove superpowers-specific integration references.
 - **Inline execution fallback.** If subagent support isn't available, `gigo:execute` falls back to sequential inline execution. When falling back, surface it: "Subagent dispatch isn't available. Running tasks inline — no parallelization, no context isolation between tasks. Consider enabling subagent support for better results." Always suggest the optimal path.
 
+**Status handling:**
+- **DONE** → invoke `gigo:review`, proceed to next task after review passes
+- **DONE_WITH_CONCERNS** → read concerns, invoke `gigo:review`, address concerns if review doesn't catch them
+- **NEEDS_CONTEXT** → pause execution, ask operator for the missing context, re-dispatch same task with additional context
+- **BLOCKED** → pause the blocked task. If independent tasks exist that don't depend on it, continue with those. If nothing can proceed, escalate to operator: "Task N is blocked: [reason]. Want me to skip it, break it into smaller pieces, or do you have context that unblocks it?" Never silently skip a blocked task.
+
 **The implementer prompt template (improved):**
 
 ```
@@ -198,6 +208,26 @@ Status: DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT
 If you're in over your head, say so. Bad work is worse than no work.
 ```
 
+**The fix prompt (re-dispatch after review finds issues):**
+
+```
+You are fixing issues found in Task N: [task name]
+
+## Review Feedback
+[SPECIFIC issues from gigo:review — what's wrong, where, why it matters]
+
+## Original Task Description
+[FULL TEXT of task from plan]
+
+## Your Job
+Fix the issues listed above. Don't change anything else.
+Run tests. Commit. Report back.
+
+Status: DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT
+```
+
+Still bare — no personas, no rules. But the worker gets the specific review feedback as context. This is not "assembled context" — it's task-specific feedback the same way the original task spec is task-specific input.
+
 **Triggering:** Invoked by `gigo:plan` after plan approval. `gigo:execute` runs the full plan, invoking `gigo:review` after each task, and reports results when all tasks complete.
 
 ### 3.4 `gigo:review` — Two-Stage Review Pipeline
@@ -213,12 +243,13 @@ If you're in over your head, say so. Bad work is worse than no work.
 - Checks: missing requirements, extra/unneeded work, misunderstandings, spec deviations
 - Keeps the "do not trust the report" adversarial framing from superpowers
 
-**Stage 2: Engineering Review (code-review:code-review)** — "Is the code production-ready?"
-- Invokes `code-review:code-review` directly — the existing plugin with 5 parallel agents, confidence scoring (0-100), and ≥80 filtering
-- We don't duplicate that work. code-review already does: bug scan, git history context, CLAUDE.md compliance, prior PR patterns, code comment compliance
-- We provide it the git SHA range and let it do its job
+**Stage 2: Engineering Review** — "Is the code production-ready?"
+- **Per-task (during execution):** GIGO's own engineering review — dispatches focused bare subagents on the git SHA range (base SHA before task, head SHA after task). Modeled on code-review's pattern but operates on committed code, not PRs. Checks: bugs, test quality, architecture, CLAUDE.md compliance. Confidence scored, filtered at ≥80.
+- **At PR time (before merge):** Invokes `code-review:code-review` on the actual PR. This is where code-review's full power applies — git history context, prior PR patterns, gh-based commenting. This is a final gate, not a replacement for per-task review.
 
-**Tool-not-installed handling:** If `code-review:code-review` isn't installed, `gigo:review` detects it and tells the operator: "Stage 2 engineering review works best with the code-review plugin. Install it with `claude install @anthropic/code-review`. I can do a basic inline engineering review, but it won't be as thorough as 5 focused parallel agents with confidence scoring." Always suggest installing the real thing, fall back with a warning.
+**Why two modes:** `code-review:code-review` is built around PRs — it uses `gh pr diff`, `gh pr view`, reads prior PR comments. During execution, there's no PR yet, just committed code on a branch. We can't invoke code-review mid-execution. So per-task engineering review is GIGO's own (lightweight, SHA-range based), and the full code-review runs once at PR time.
+
+**Tool-not-installed handling:** If `code-review:code-review` isn't installed when it's time for PR review, `gigo:review` tells the operator: "Final engineering review works best with the code-review plugin. Install it with `claude install @anthropic/code-review`. I can do an inline review, but it won't be as thorough as 5 focused parallel agents with confidence scoring." Always suggest installing the real thing, fall back with a warning.
 
 **What we improve over superpowers:**
 - **Two stages are enforced, never combined.** Phase 8 proved combining averages instead of adding up (11 issues combined vs 10-15 per focused reviewer).
@@ -227,7 +258,13 @@ If you're in over your head, say so. Bad work is worse than no work.
 - **Review works standalone.** Can be invoked on any code, not just code produced by `gigo:execute`. Useful for reviewing existing PRs or manual work.
 - **Verification before completion.** Absorb the core principle from superpowers:verification-before-completion — evidence before claims. No claiming "tests pass" without running them. No "looks good" without checking. This discipline is baked into the review process, not a separate skill.
 
-**Triggering:** Invoked by `gigo:execute` after each task completes. Can also be invoked standalone by the operator on any code (PR review, manual work, etc.).
+**Standalone mode:** When invoked without a plan (operator wants to review a PR or manual work), `gigo:review` adapts:
+- If a plan/spec exists in the project, ask: "Want me to review against the spec, or just engineering quality?"
+- If no plan exists, skip Stage 1 (spec review) and run Stage 2 only (engineering review)
+- If reviewing a PR, invoke `code-review:code-review` directly (PR mode)
+- If reviewing committed code without a PR, run GIGO's own SHA-range engineering review
+
+**Triggering:** Invoked by `gigo:execute` after each task completes (per-task mode). Can also be invoked standalone by the operator on any code (PR review, manual work, etc.). At PR time, invokes `code-review:code-review` for the final gate.
 
 ### 3.5 `gigo:snap` — Session-End Audit
 
@@ -322,20 +359,17 @@ shape the questions, catch architectural gaps, identify edge cases.
 Run /gigo:plan to brainstorm, write a spec, and produce an ordered plan
 with dependencies.
 
-### Execution
+### Execution and Review
 Workers execute the plan. Each task gets a bare subagent — no personas,
-no rules, just the task description from the plan. The plan defines
-ordering and parallelization.
+no rules, just the task description from the plan.
 
-Run /gigo:execute with the plan file.
-
-### Review
-Two passes, two lenses. Never combine into one.
-
+After each task completes, two review passes run automatically:
 1. Spec review — compare output against the plan
 2. Engineering review — evaluate code quality, bugs, test quality
 
-Run /gigo:review after execution completes.
+Issues are fixed before the next task starts.
+
+Run /gigo:execute with the plan file. Review is automatic per task.
 
 ### Session End
 Run /gigo:snap to audit rules and capture learnings.
@@ -440,7 +474,7 @@ The skill reads the current state and auto-detects severity:
 
 4. **Review is compositional.** `gigo:review` works standalone on any code, not just code from `gigo:execute`. Useful for PR review, manual work, etc.
 
-5. **Two review stages enforced.** Phase 8 proved combining averages instead of adding up. Stage 1 is GIGO's own spec reviewer. Stage 2 invokes code-review:code-review directly.
+5. **Two review stages enforced.** Phase 8 proved combining averages instead of adding up. Stage 1 is GIGO's own spec reviewer. Stage 2 has two modes: per-task (GIGO's own SHA-range review during execution) and at-PR-time (code-review:code-review for the final gate).
 
 6. **Auto-gap-detection.** `gigo:plan` detects missing expertise during brainstorming and offers to add it immediately via `gigo:maintain`. superpowers has no equivalent.
 
