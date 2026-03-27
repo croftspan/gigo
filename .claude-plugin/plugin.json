@@ -1,7 +1,7 @@
 {
-  "name": "avengers-assemble",
-  "description": "Five skills for building expert Claude Code projects. /avengers-assemble researches the best practitioners in any domain, blends their philosophies into focused personas, and scaffolds lean project structure. /fury adds expertise as the project grows and audits for bloat. /smash restructures existing legacy setups into the lean two-tier architecture. /cap turns vague ideas into clear, prioritized action plans before the team executes. /snap audits rules and captures learnings — the project protection protocol.",
-  "version": "5.1.0",
+  "name": "gigo",
+  "description": "Seven skills for building expert Claude Code projects with a proven plan→execute→review pipeline. gigo:gigo assembles expert teams from real-world authorities. gigo:plan brainstorms, specs, and produces ordered implementation plans. gigo:execute dispatches bare worker teams with per-task review. gigo:review runs two-stage code review (spec compliance + engineering quality). gigo:maintain adds expertise, audits, or restructures. gigo:snap audits rules and captures learnings. gigo:eval tests whether assembled context actually improves output.",
+  "version": "6.0.0",
   "author": {
     "name": "Eaven"
   },
