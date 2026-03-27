@@ -75,6 +75,21 @@ Save to `docs/gigo/specs/YYYY-MM-DD-<topic>-design.md` and commit.
 
 The spec is the source of truth. A bare worker who reads only this spec should be able to build the right thing.
 
+**Include a Conventions section.** During design, the team's personas surface convention decisions — error message formats, output patterns, naming schemes, exit code discipline, durability patterns. These must be explicit in the spec, not left implicit in the personas. A bare worker won't have the personas; the spec is all they get.
+
+Example conventions section:
+```
+## Conventions
+- Error messages: `tq: cannot add task "<name>": <reason>`
+- Output: only the task ID to stdout on success. Errors to stderr.
+- Commands: wrap shell strings as `["sh", "-c", <cmd>]`
+- Exit codes: return errors from RunE, never call os.Exit in command logic
+- State naming: `State` not `Status`, constants prefixed `State` (StatePending, StateReady)
+- Writes: atomic via temp file + fsync + rename
+```
+
+The personas' job is to *notice* these during planning. The spec's job is to *deliver* them to the worker.
+
 ### Phase 6: Spec Self-Review (Stricter)
 
 After writing the spec, assume a bare worker follows it literally. What goes wrong?
@@ -84,6 +99,7 @@ After writing the spec, assume a bare worker follows it literally. What goes wro
 3. **Scope check:** Is this one spec or should it be decomposed into sub-projects? Each sub-project gets its own spec-plan-execute cycle.
 4. **Ambiguity check:** Could any requirement be read two ways? Pick one.
 5. **Bare worker test:** If a worker gets ONLY this spec — no personas, no context, no ability to ask questions — what would they build wrong? Fix that.
+6. **Convention check:** Does the Conventions section capture every decision the personas surfaced? Error formats, output patterns, naming, exit codes, durability? If a convention is in your head but not in the spec, the worker won't produce it.
 
 Fix issues inline. No re-review needed.
 
