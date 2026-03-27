@@ -273,7 +273,111 @@ Rails prompt 08 ("I need to add a payment system") ties on every run — both ve
 - `evals/results/2026-03-26-170329/` — Hawkeye structured run 2 (91%)
 - `evals/results/2026-03-26-173509/` — Hawkeye domain-adapted (96%)
 
+## Phase 4: The Proficiency Test — Does Assembled Produce Better Work?
+
+The A/B eval (Phases 1-3) proved assembled context *influences* behavior — 96% win rate on style/quality criteria. But influence isn't outcome. The proficiency test asks: when both versions do real work, which output is actually better?
+
+### The Test
+
+Two self-contained tasks, no existing codebase needed:
+- **Rails:** Build a library book reservation API from a complete spec (models, endpoints, business rules, tests)
+- **Novel:** Write a 600-800 word opening scene for a middle-grade mystery from a character brief
+
+Each scored with automated structural checks (does it parse, do files exist) + LLM rubric (specific yes/no questions: did it handle the race condition? did it plant a fair-play clue?). 20 checks per domain.
+
+### Rubric Results
+
+| Domain | Bare | Assembled | Delta |
+|---|---|---|---|
+| Rails | 12/20 | **18/20** | **+6 assembled** |
+| Novel | **19/20** | 18/20 | -1 bare |
+
+Assembled won Rails decisively on the rubric — it passed more specific checks (race condition handling, copies validation, expiry logic, spec coverage, N+1 prevention, error envelope consistency). Novel was essentially tied, both missing only word count.
+
+### The Qualitative Judge — Blind
+
+We dispatched a senior engineer (Rails) and senior editor (Novel) to compare the outputs blind — no knowledge of which had team context.
+
+**Rails blind verdict:** Bare = "Senior." Assembled = "Strong mid-level reaching for senior." The judge penalized assembled for over-commenting ("Business logic stays out of controllers"), including a "quality gate review" section, and having a subtle race condition in cancellation that bare avoided.
+
+**Novel blind verdict:** Bare = "Veteran." Assembled = "Mid-career." The judge penalized assembled for including planning notes in the output, explaining its own clue in a postscript, and showing genre-awareness in the narration ("She knew that much from every mystery she'd ever read").
+
+### The Aha Moment: Showing Work ≠ Weakness
+
+The blind judge penalized assembled for *showing its work*. But assembled was told to show its work — the Overwatch section says "did you apply the quality bars you cited?" The workflow says "audit your output." The personas say "push back, enforce, cite the rules."
+
+Grading a student for following instructions they were given is unfair. We re-ran the judges with the full assembled context visible.
+
+### The Qualitative Judge — Fair (With Context)
+
+**Rails fair verdict:** "Submission A is the stronger engineering outcome... but B's team, with A's instincts. B's standards create a shared vocabulary, testable quality gates, and a self-audit culture that scales across engineers. I'd rather work on B's team."
+
+**Novel fair verdict:** "The rules didn't make B a better *writer*. They made B a better *architect*. For a mystery novel aimed at kids who deserve a fair shot at solving it, that's the more important skill. Which team would I rather work with? B's team. Unambiguously."
+
+### The Finding
+
+**Bare produces higher peak craft. Assembled produces better structural work.**
+
+| What | Bare | Assembled |
+|---|---|---|
+| Individual code quality | Higher — better defensive instincts, more confident | Lower — subtle race condition bug, over-commented |
+| Structural coverage | Lower — missed N+1, pagination caps | Higher — hit every quality gate |
+| Creative peak | Higher — better metaphors, stronger ending hook | Lower — self-conscious, explained its own craft |
+| Mystery architecture | Lower — clues are standalone | Higher — clues are structurally integrated |
+| Test infrastructure | Simpler — inline creates | Better — factories, contexts, organized |
+| Self-audit | None | Present and specific |
+
+The pattern is consistent across both domains: **assembled context makes Claude more thorough but more self-conscious.** It checks more boxes but writes with less confidence. It follows rules but sometimes follows them at the expense of deeper thinking.
+
+### The Architectural Insight
+
+This data points to a clear separation of concerns:
+
+**Assembled context should drive:**
+- Planning — what to build, how to structure it, what traps to watch for
+- Review — does this meet the quality bars, what's missing, what's wrong
+- Pushback — don't do that, here's why
+- Architecture — how do the pieces fit together
+
+**Bare (or minimal) context should drive:**
+- Execution — actually writing the code, actually writing the prose
+- The doing — where training-level instinct produces better peak quality
+
+This maps to the existing superpowers workflow: brainstorm with the team, plan with the team, then dispatch fresh subagents to execute. The subagents don't need personas — they need a clear spec and their own training. The team reviews the output after.
+
+**"B's team, with A's instincts"** — that's not a compromise. That's the architecture. The team plans and reviews. The individual executes.
+
+## What Shipped
+
+### Phase 2 (calibration + pointers):
+- `evals/fixtures/*/workflow.md` — Persona Calibration sections
+- `evals/fixtures/*/standards.md` — task-specific "When to Go Deeper" pointers
+
+### Hawkeye (adversarial output gate):
+- `skills/avengers-assemble/SKILL.md` — Principle 10: every team has overwatch
+- `skills/avengers-assemble/references/persona-template.md` — mandatory calibration directive + The Overwatch section with domain-adapted templates
+- `skills/avengers-assemble/references/output-structure.md` — table updated to require calibration, overwatch, and specific pointers
+- `skills/avengers-assemble/references/extension-file-guide.md` — generic-pointer anti-pattern
+- `skills/avengers-assemble/references/snap-template.md` — Overwatch audit check (check 9)
+- `skills/fury/SKILL.md` — Principle 9: overwatch scales with the team
+- `skills/fury/references/targeted-addition.md` — Hawkeye threshold check on persona addition
+- `skills/fury/references/upgrade-checklist.md` — all new features in upgrade detection
+- `skills/smash/SKILL.md` — Overwatch check in Phase 2, generation in Phase 5, Principle 9
+- Eval fixtures updated with Overwatch, Hawkeye, domain-adapted templates
+
+### Proficiency Test:
+- `evals/proficiency/run-proficiency.sh` — runner for substance-based eval
+- `evals/proficiency/score-proficiency.sh` — automated checks + LLM rubric scorer
+- `evals/proficiency/prompts/` — Rails and Novel task prompts
+- `evals/proficiency/rubrics/` — rubric templates
+
+### Results:
+- A/B eval: `evals/results/2026-03-26-{131429,140313,144111,150537,163452,170329,173509}/`
+- Proficiency: `evals/proficiency/results/2026-03-26-192756/`
+
 ## Open Questions
 
-1. **Eval pipeline adversarial check:** A pre-scoring step that asks "did the model answer the prompt?" would catch aberrations like 2b. Not yet built.
-2. **New domains:** Two fixtures risks overfitting. More domains (game dev, data science, marketing) would strengthen confidence and test domain adaptation further.
+1. **Plan-then-execute architecture:** Assembled context for planning/review, bare for execution. How does this change what `/avengers-assemble` generates? Does the generated workflow need to instruct subagents to run without persona context?
+2. **Eval pipeline adversarial check:** A pre-scoring step that asks "did the model answer the prompt?" would catch aberrations like 2b.
+3. **New domains:** Two fixtures risks overfitting. More domains would test whether the assembled-for-planning insight holds universally.
+4. **Proficiency test variance:** Single run. Need multiple runs to establish baselines, same as the A/B eval.
