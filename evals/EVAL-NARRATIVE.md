@@ -1,6 +1,6 @@
-# The Eval Narrative: From 87% to 99%
+# The Eval Narrative: From 87% to 96%+ with Hawkeye
 
-How we proved assembled context works, found the gaps, closed them, and learned what the numbers can't tell you.
+How we proved assembled context works, found the gaps, closed them, added an adversarial output gate, and learned what the numbers can't tell you.
 
 ## The Question
 
@@ -161,9 +161,119 @@ Some prompts have nothing to push back on. Some tasks are genuinely neutral betw
 - `evals/results/2026-03-26-144111/` — Phase 2b aberrant (91%)
 - `evals/results/2026-03-26-150537/` — Phase 2c confirmation (99%)
 
+## Phase 3: Hawkeye — The Adversarial Output Gate
+
+The 2b hallucination proved the eval can't catch bullshit. But more importantly, it proved that *assembled teams* can produce bullshit too — persona-rich, authority-citing responses that don't actually answer the question. The eval exposed the problem. Hawkeye was built to prevent it.
+
+### The Design
+
+Two tiers, same adversarial brain, different weight:
+
+**Tier 1 — Overwatch workflow step (all teams).** ~5 lines in workflow.md. A self-check that runs on every response: did you actually do what you claimed? Did you drift? Did you name-drop quality bars without enforcing them?
+
+**Tier 2 — Hawkeye persona (3+ team members).** Full persona in CLAUDE.md modeled after Barton's detachment + Taleb's via negativa + Kahneman's pre-mortem. Gives the model a *voice* for adversarial self-challenge.
+
+**Both tiers point to** `.claude/references/overwatch.md` for the deep checklist (substance, drift, quality gate audit, reference check, specificity check). Zero token cost when unused.
+
+### The Domain Adaptation Discovery
+
+First Hawkeye runs used the same structured Overwatch checks for both domains:
+
+| Run | Rails | Novel | Combined | Losses |
+|---|---|---|---|---|
+| Hawkeye (structured) run 1 | 98% | 90% | 94% | 1 |
+| Hawkeye (structured) run 2 | 94% | 88% | 91% | 4 |
+
+**Rails held steady. Novel dropped from 99% to ~89%.** The 4 novel losses on run 2 were all on prompt 01 ("Reveal the villain in chapter 2") — the assembled version gave general-principle pushback instead of grounding it in the manuscript. The structured Overwatch ("did you apply the quality bars you cited?") was pushing the model toward process meta-commentary instead of craft engagement.
+
+### The Aha Moment
+
+**Process-compliance checks work for structured domains but hurt creative domains.** A Rails developer needs to verify "did I actually check for N+1 queries?" A fiction writer needs to verify "did I engage with Maya's actual character arc?" Same adversarial intent, different framing.
+
+### The Fix: Domain-Adapted Overwatch
+
+**Structured domain Overwatch** (software, data, infrastructure):
+> - Did you actually apply the quality bars you cited, or just name-drop them?
+> - Does your response address what was asked, or did you drift?
+> - Would removing the persona language change your answer?
+> - Did you check the references you were told to check?
+
+**Creative domain Overwatch** (fiction, design, music):
+> - Did you reference specific characters, chapters, or project details — or give generic advice?
+> - Does your response address what was asked, or did you drift into meta-commentary?
+> - If pushing back, did you ground it in this project's details, not just general principles?
+
+### Results After Domain Adaptation
+
+| Run | Rails | Novel | Combined | Losses |
+|---|---|---|---|---|
+| Hawkeye (domain-adapted) | 92% | **100%** | **96%** | **0** |
+
+Novel back to 100%. Zero losses. The 4 Rails ties are on prompt 08 ("I need to add a payment system") — the same irreducible open-ended prompt that's been tying since Phase 1.
+
+## The Complete Picture
+
+| Run | Rails | Novel | Combined | Losses | What changed |
+|---|---|---|---|---|---|
+| Phase 1 (baseline) | 88% | 86% | 87% | 2 | — |
+| Phase 2a | 92% | 100% | 96% | 0 | + calibration + specific pointers |
+| Phase 2b (aberrant) | 90% | 92% | 91% | 7 | hallucination on prompt 02 |
+| Phase 2c | 100% | 98% | 99% | 0 | confirmation |
+| Hawkeye (structured) | 98% | 90% | 94% | 1 | + Overwatch (same both domains) |
+| Hawkeye (structured) | 94% | 88% | 91% | 4 | second run |
+| **Hawkeye (adapted)** | **92%** | **100%** | **96%** | **0** | **+ domain-adapted Overwatch** |
+
+## What We Learned
+
+### 1. The Hu et al. tradeoff is real and measurable
+Expert personas help alignment tasks but can degrade knowledge tasks. We saw it at 87% and fixed it with a 6-line calibration heuristic. The fix doesn't remove the persona — it tells the model when to lead with training vs lead with persona.
+
+### 2. "When to Go Deeper" pointers are the highest-leverage change
+Generic pointers ("when working on X, read Y") don't trigger on non-obvious tasks. Specific pointers ("when a reader reports pacing problems, check revelation pacing") do. The children's novel went from 86% to 100% almost entirely from better pointers.
+
+### 3. LLM-as-judge has meaningful variance
+Runs with identical fixtures produced 91-99%. One run had the model hallucinate a classification exercise. The eval needs:
+- **Response validation** before scoring (did it answer the prompt?)
+- **Multiple runs** to average out noise
+- **Aberration detection** (a response that scores 0/5 or 5/5 across all criteria should trigger review)
+
+### 4. The eval can't catch bullshit
+The judge scores quality, not correctness. A beautifully written, persona-rich response that doesn't answer the question can still win on voice and routing criteria. Hawkeye exists because of this — adversarial self-checking at the team level, not the eval level.
+
+### 5. Adversarial checks must be domain-adapted
+Process-compliance Overwatch ("did you apply your quality bars?") works for structured domains but degrades creative domains by pushing the model toward meta-commentary. Creative Overwatch ("did you engage with the actual manuscript?") produces better results. Same adversarial intent, different framing. This is now built into the persona-template.md with structured and creative templates.
+
+### 6. The irreducible floor is ~4%
+Rails prompt 08 ("I need to add a payment system") ties on every run — both versions ask clarifying questions on an open-ended request. Some prompts are genuinely neutral. The practical ceiling is ~96% with current fixtures.
+
+## What Shipped
+
+### Phase 2 (calibration + pointers):
+- `evals/fixtures/*/workflow.md` — Persona Calibration sections
+- `evals/fixtures/*/standards.md` — task-specific "When to Go Deeper" pointers
+
+### Hawkeye (adversarial output gate):
+- `skills/avengers-assemble/SKILL.md` — Principle 10: every team has overwatch
+- `skills/avengers-assemble/references/persona-template.md` — mandatory calibration directive + The Overwatch section with domain-adapted templates
+- `skills/avengers-assemble/references/output-structure.md` — table updated to require calibration, overwatch, and specific pointers
+- `skills/avengers-assemble/references/extension-file-guide.md` — generic-pointer anti-pattern
+- `skills/avengers-assemble/references/snap-template.md` — Overwatch audit check (check 9)
+- `skills/fury/SKILL.md` — Principle 9: overwatch scales with the team
+- `skills/fury/references/targeted-addition.md` — Hawkeye threshold check on persona addition
+- `evals/fixtures/*/workflow.md` — domain-adapted Overwatch sections
+- `evals/fixtures/*/CLAUDE.md` — Hawkeye persona (3+ threshold met)
+- `evals/fixtures/*/.claude/references/overwatch.md` — deep adversarial checklist
+
+### Results:
+- `evals/results/2026-03-26-131429/` — Phase 1 baseline (87%)
+- `evals/results/2026-03-26-140313/` — Phase 2a (96%)
+- `evals/results/2026-03-26-144111/` — Phase 2b aberrant (91%)
+- `evals/results/2026-03-26-150537/` — Phase 2c confirmation (99%)
+- `evals/results/2026-03-26-163452/` — Hawkeye structured (94%)
+- `evals/results/2026-03-26-170329/` — Hawkeye structured run 2 (91%)
+- `evals/results/2026-03-26-173509/` — Hawkeye domain-adapted (96%)
+
 ## Open Questions
 
-1. **The Vince problem:** How do we add adversarial response validation to the eval pipeline? A pre-scoring check that asks "did the model answer the prompt?" would have caught the 2b aberration.
-2. **New domains:** Two fixtures risks overfitting. More domains (game dev, data science, marketing) would strengthen confidence.
-3. **Propagation:** The calibration heuristic and task-specific pointer patterns need to flow into the `/avengers-assemble` output templates so every generated project gets them automatically.
-4. **Adversarial personas in generated teams:** Should assembled teams include a Vince-style QA persona by default?
+1. **Eval pipeline adversarial check:** A pre-scoring step that asks "did the model answer the prompt?" would catch aberrations like 2b. Not yet built.
+2. **New domains:** Two fixtures risks overfitting. More domains (game dev, data science, marketing) would strengthen confidence and test domain adaptation further.
