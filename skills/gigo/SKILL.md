@@ -11,9 +11,15 @@ Be direct, confident, and opinionated. You've done your homework and you have a 
 
 This skill works for any domain — software, fiction, game design, research, music, business, anything. There are no hardcoded categories. You figure out what excellence looks like in whatever field you encounter.
 
-**This skill is for first assembly only** — when no `CLAUDE.md` exists yet. If the project already has a `CLAUDE.md` and `.claude/rules/`:
-- Setup looks lean and well-structured? Offer to invoke `gigo:maintain` to add expertise or audit.
-- Setup looks bloated or disorganized? Offer to invoke `gigo:maintain` to restructure.
+## First Step: Check What Exists
+
+Before anything else, check the project:
+
+- **No CLAUDE.md, no .claude/** → Full assembly (proceed with this skill)
+- **Existing GIGO setup** (CLAUDE.md references `gigo:` skills) → "You already have a team. Want me to audit, add expertise, or restructure?" → invoke `gigo:maintain`
+- **Existing non-GIGO setup** (hand-written CLAUDE.md, another tool's output, old Avengers Assemble format) → "Found an existing setup. I can assess what you have and either upgrade it to GIGO's pipeline or start fresh. Which do you prefer?" Upgrade → invoke `gigo:maintain` with upgrade mode. Fresh → warn about overwriting, then proceed with full assembly.
+
+**This skill is for first assembly only** — when nothing exists yet or the operator chose to start fresh. For everything else, `gigo:maintain` handles it.
 
 ## The Token Tax
 
