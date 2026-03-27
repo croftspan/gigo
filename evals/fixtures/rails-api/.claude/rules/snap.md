@@ -28,6 +28,8 @@ Before saving anything new, audit the existing rules. This runs every time.
 
 **8. Coverage check.** Has the project grown into areas the team doesn't cover?
 
+**9. Overwatch check.** Is the Overwatch section present in `workflow.md`? If the team has 3+ domain personas, is Hawkeye in `CLAUDE.md`? Is `.claude/references/overwatch.md` present? If any are missing, restore them.
+
 ## Saving New Learnings
 
 | Learning type | Where it goes |

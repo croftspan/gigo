@@ -7,6 +7,7 @@
 - Request spec before implementation. No feature ships without a green request spec covering the happy path and at least one error path.
 - Consistent error envelope: `{ error: { code: String, message: String, details: Hash? } }` on every non-2xx response.
 - Every collection endpoint is paginated. Default 25, max 100.
+- State-changing endpoints handle duplicate requests gracefully — idempotency keys or unique constraints prevent double-processing.
 
 ## Anti-Patterns
 
