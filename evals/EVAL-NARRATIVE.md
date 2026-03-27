@@ -464,18 +464,146 @@ The judge noted ~20-30% of persona attributions were "decorative rather than fun
 
 **Personas change how problems are explored, not just how answers are presented.** The assembled brainstormer asks deeper questions, identifies more hard problems, produces more defensible architectures, and writes executable test code. The planning phase is where assembled context earns its keep.
 
+## Phase 7: The Format Doesn't Matter — Workers Just Need Good Specs
+
+We set out to optimize what execution subagents receive. War stories beat rules in Phase 5, so the plan was: generate task-specific war stories at runtime during planning, inject them into workers. Before building that, we tested whether the format actually mattered.
+
+### The Experiment
+
+Same Rails reservation API task. 4 context variants, all using the same CLAUDE.md (personas), workflow.md, and references — only `standards.md` changed:
+
+| Variant | Format | Words | Example |
+|---|---|---|---|
+| **bare** | Nothing | 0 | No context at all |
+| **warstories** | Full narrative | 468 | "Someone shipped a `remove_column` without rollback. Deploy failed halfway..." |
+| **compressed** | Arrow format | 287 | "`remove_column` without rollback → deploy failed halfway, 4h incident → every migration uses `change`" |
+| **fixonly** | Just rules | 229 | "Every migration uses `change`. Test `down` before `up`." |
+
+3 runs, 4 variants each = 12 code generations.
+
+### The Judge Problem (and How We Fixed It)
+
+Our first scoring used **independent judges** — a separate LLM call per variant per rubric check. Results swung wildly (10-20 per variant across runs). We discovered the variance was almost entirely **judge noise, not code quality**.
+
+The fix: **comparative judging.** One judge sees all 4 outputs side by side for each check, randomized order. Same judge, same call, consistent standards. This eliminated the noise — scores converged within 1-2 points.
+
+But the pass/fail rubric was still too coarse. All 4 variants used transactions with locks. All 4 handled duplicates. Pass/fail couldn't distinguish between "has a transaction" and "has a correct transaction."
+
+So we built a **principal engineer review** — one judge, all 4 submissions, grading 6 dimensions (concurrency, data layer, maintainability, test quality, API design, production readiness) with letter grades, PR verdicts, and engineer level assessments. The rubric gave the judge the full task spec, strict criteria, and a persona with 15 years of production Rails experience.
+
+### The Results
+
+**PR Verdicts (3 runs):**
+
+| Variant | Approved | Request Changes |
+|---|---|---|
+| **warstories** | 3/3 | 0/3 |
+| **bare** | 3/3 | 0/3 |
+| **fixonly** | 1/3 | 2/3 |
+| **compressed** | 0/3 | 3/3 |
+
+**Engineer Level Assessments:**
+
+| Variant | Run 1 | Run 2 | Run 3 |
+|---|---|---|---|
+| **bare** | Senior | Senior | Staff |
+| **warstories** | Senior | Mid | Mid |
+| **fixonly** | Mid | Junior | Senior |
+| **compressed** | Mid | Mid | Mid |
+
+**Key findings from the engineering reviews:**
+
+- **Bare** was rated senior or higher every time. The principal engineer review on run 3 called it "staff" — noting check constraints on copies_available, correct lock ordering, and handling of the expired-reservation cancellation edge case that "most submissions miss entirely."
+- **Warstories** produced approvals every time but with slightly less consistent quality — senior on run 1, mid on runs 2-3.
+- **Compressed** was the only variant that got request-changes on every single run. The judge consistently found real bugs: race windows between unlocked checks and locked inserts, fat controllers, spec deviations.
+- **Fixonly** swung wildly (junior to senior) — the format produced unreliable quality.
+
+### Why This Happened
+
+The comparative judging revealed something the per-variant judging hid: **when the same judge looks at all 4 outputs with strict engineering criteria, bare Claude produces code as good or better than any assembled variant.** The assembled context wasn't making the worker write better code — it was making the worker show its homework, which earlier lenient judges rewarded and strict engineering reviewers penalized.
+
+The compressed format consistently produced the worst code because the terse arrow format (`X → Y → Z`) gave the model just enough context to feel obligated to comply, but not enough to actually internalize the lessons. It's the worst of both worlds — context overhead without context benefit.
+
+### What This Means
+
+**The format of execution context doesn't matter because execution context itself doesn't matter for workers.**
+
+This isn't a failure of the experiments. It's the answer. The original Phase 4 finding was correct: "B's team, with A's instincts." But the mechanism is different than we thought:
+
+- **We thought:** The team's knowledge needs to reach the worker in the right format (war stories vs rules vs compressed)
+- **Reality:** The team's knowledge needs to reach the worker as a **good spec.** The worker doesn't need context about migration safety — the worker needs a spec that says "use a partial unique index" because the team already thought about it during planning.
+
+The planning pipeline test (Phase 6) proved the assembled team writes specs that catch partial unique indexes, SKIP LOCKED, pagination, copy conditions. The worker doesn't need to rediscover these — they're in the spec. A bare worker following a good spec produces senior/staff-level code. A bare worker following a bare spec produces good-but-incomplete code (missing pagination, missing the partial unique index). The delta is in the spec, not the worker's context.
+
+## Two Kinds of Leadership
+
+This is the central finding of 7 phases of testing. It's not a technical finding — it's a management philosophy, proven with data.
+
+### "Do your job or I'll fire you"
+
+The intuitive approach to AI context engineering: load the worker up with rules, quality gates, war stories, anti-patterns, and compliance checks. More context, more guardrails, more oversight. The worker knows exactly what's expected and has no excuse to get it wrong.
+
+This is the *"do your job or I'll fire you"* boss. And the data shows exactly what happens with that boss:
+
+1. **Workers perform compliance instead of doing the work.** Phase 4: assembled workers over-commented their code, included planning notes in creative output, and explained their own craft decisions. A blind judge called the output "mid-level reaching for senior" — checking boxes instead of thinking. The worker was so busy proving it followed the rules that it forgot to be good at its job.
+
+2. **The format of the rules doesn't matter.** Phase 7: we tested four different ways to deliver the same knowledge — narrative war stories, compressed bullet points, plain directives, and nothing at all. A principal engineer reviewed all four. The worker who got nothing was rated senior to staff. The worker who got compressed rules produced the worst code every single time, with real bugs a reviewer found. More instructions didn't produce better work. They produced worse work.
+
+3. **Creative work suffers the most.** Phase 5: bare Claude writing fiction scored 19-20/20 on every run. Every assembled format scored lower. Every single one. The model's training is a better writing teacher than any rules file. Loading context on a creative worker is like handing a novelist a style guide mid-sentence.
+
+The "do your job or I'll fire you" boss creates mid-level workers who check boxes. The rules become the ceiling, not the floor.
+
+### "What can I do to help you do your job better?"
+
+The answer is almost always the same: **give me a clear plan and honest feedback.** Not someone standing over my shoulder.
+
+This is harder. It means trusting the worker. It means investing upfront in planning instead of piling on rules after the fact. It means reviewing output with real expertise instead of checking compliance boxes. But the data proves it works:
+
+**Planning — this is where leadership earns its keep:**
+- The assembled brainstormer asks "What's the expected scale? *This determines whether we need to worry about table lock duration on migrations.*" The bare brainstormer asks "What's the expected scale?" Same question. Different depth. (Phase 6)
+- The assembled planner's spec catches a data integrity bug (no partial unique index), unbounded query results (no pagination), and a missing operational requirement (can't withdraw damaged books). The bare planner's spec misses all of these. (Phase 6)
+- The assembled team asks fewer but more targeted questions — 7 vs 10 — because their standards pre-answer some. Every question is connected to a downstream decision. (Phase 6)
+- The output is a spec that embeds the team's expertise as concrete requirements — not rules to comply with, but decisions already made by people who thought about the hard problems.
+
+**Execution — trust the worker:**
+- Worker receives the spec. No personas, no rules, no war stories. Just: here's what to build.
+- Worker writes code or prose using its full training — confident, instinct-driven, no self-narration.
+- A bare worker following a good spec produces senior/staff-level code. The same worker following a bare spec produces good-but-incomplete code. The delta is in the spec, not the worker's context. (Phase 7)
+
+**Review — the honest feedback part:**
+- Team evaluates the output against quality bars with real expertise.
+- The principal engineer review caught race windows between unlocked checks and locked inserts, fat controllers, missing database constraints, and expired-reservation bugs that would corrupt inventory in production. (Phase 7)
+- Sends back for fixes with specific feedback — not "you violated rule 7" but "this race window would manifest under concurrent load."
+
+### Why This Works
+
+It works because the knowledge is in the right place at the right time:
+
+- **Planning:** Knowledge lives in the team's *questions* — "what happens under concurrent load?" is a question only an expert asks. The persona makes Claude ask it.
+- **Execution:** Knowledge lives in the *spec* — "use a partial unique index on (user_id, book_id) WHERE status IN ('pending', 'active')" is a requirement, not a rule. The worker implements it because it's in the spec, not because a rule told it to.
+- **Review:** Knowledge lives in the team's *judgment* — "this race window between the duplicate check and the insert would manifest under load" is a review comment only an expert makes.
+
+Trying to put knowledge into the worker's context is solving the wrong problem. The worker doesn't need to know *why* partial unique indexes matter — it needs a spec that *says to use one.* That's the difference between a boss who trusts the process and a boss who trusts the rules.
+
+### The Numbers
+
+| Phase | Best Context | Proven By |
+|---|---|---|
+| Planning | Assembled ON | Phase 6: assembled catches partial unique index, SKIP LOCKED, copy condition, pagination. Bare misses all. |
+| All execution | Bare | Phase 7: bare rated senior/staff by engineering review. Context format doesn't change quality. |
+| Review | Assembled ON | Phase 7: engineering review catches race windows, fat controllers, missing constraints. |
+
 ## The Complete Architecture (Proven by Data)
 
-| Phase | Context | Format | Why |
-|---|---|---|---|
-| **Brainstorming** | Assembled ON | Standard personas | Personas shape questions, catch architectural gaps |
-| **Spec writing** | Assembled ON | Standard personas | Team standards define quality bars, identify edge cases |
-| **Plan writing** | Assembled ON | Standard personas | Beck drives spec-first, Kane catches migration issues |
-| **Structured execution** | War stories only | Narrative format | Produces instincts, not compliance. 20/20. |
-| **Creative execution** | Bare | Nothing | Training produces best creative output. 19-20/20. |
-| **Review** | Assembled ON | Standard personas | Team evaluates against quality bars |
+| Phase | Context | Why |
+|---|---|---|
+| **Brainstorming** | Assembled ON | Personas shape questions, catch architectural gaps |
+| **Spec writing** | Assembled ON | Team standards define quality bars, identify edge cases |
+| **Plan writing** | Assembled ON | Team expertise becomes spec requirements |
+| **Execution** | Bare | Workers produce best code/prose with training alone + good spec |
+| **Review** | Assembled ON | Team catches what workers miss, sends back for fixes |
 
-This is the product architecture. Assembled context for planning and review. War stories for structured execution. Bare for creative execution. Each phase gets the context format that produces the best output, proven by data.
+This replaces the Phase 5 architecture that had "war stories for structured execution" and "bare for creative execution." The simpler truth: **all execution is bare.** The distinction between structured and creative doesn't matter at the worker level — what matters is that the spec is good.
 
 ## What Shipped (Complete)
 
@@ -492,25 +620,41 @@ This is the product architecture. Assembled context for planning and review. War
 - `evals/proficiency/` — runner, scorer, prompts, rubrics
 - Automated structural checks + LLM rubric scoring
 
-### Instinct Experiments:
+### Instinct Experiments (Phase 5):
 - 5 context format variants tested (war stories, negative examples, first-person, minimal, reference-only)
 - All fixture variants saved as `.original`, `.warstories`, `.negative`, `.firstperson`, `.minimal`, `.refonly`
-- War stories identified as the winning format for structured execution
+- War stories identified as winning format — later overturned by Phase 7
 
-### Planning Pipeline Test:
+### Planning Pipeline Test (Phase 6):
 - `evals/planning-test/` — controlled bare vs assembled comparison
 - 6 documents (3 per variant): brainstorm, spec, plan
 - Judge report confirming assembled wins on planning
+
+### Format Experiment (Phase 7):
+- `evals/proficiency/run-warstory-format-test.sh` — 4-variant runner
+- `evals/proficiency/score-warstory-comparative.sh` — comparative judge (same judge, all variants)
+- `evals/proficiency/score-engineering-review.sh` — principal engineer review
+- `evals/proficiency/rubrics/rails-rubric-comparative.md` — strict comparative rubric
+- `evals/proficiency/rubrics/rails-engineering-review.md` — 6-dimension engineering review
+- Fixture variants: `.compressed`, `.fixonly`
+- 3 runs x 4 variants = 12 code generations + 3 engineering reviews
+
+### Eval Infrastructure Improvements (Phase 7):
+- **Comparative judging** — same judge scores all variants per check, eliminating judge-to-judge variance
+- **Strict rubric** — judge gets the full spec, a senior engineer persona, and explicit criteria for what constitutes a pass
+- **Engineering review** — holistic review replacing pass/fail checklists, catching real architectural issues
 
 ### Results Locations:
 - A/B eval: `evals/results/2026-03-26-*/`
 - Proficiency: `evals/proficiency/results/*/`
 - Planning: `evals/planning-test/`
+- Format experiment: `evals/proficiency/results/2026-03-27-*/`
+- Engineering reviews: `evals/proficiency/results/2026-03-27-*/engineering-review.md`
 - Experiment design: `docs/superpowers/specs/2026-03-26-instinct-experiments-design.md`
 
 ## Open Questions
 
-1. **Product integration:** How does `/avengers-assemble` generate the phase-aware workflow? War stories for execution, personas for planning, bare for creative.
-2. **War stories generation:** Should the planning phase auto-generate task-specific war stories from the spec to hand to execution subagents?
+1. **Product integration:** How does `/avengers-assemble` generate a workflow that implements plan→bare execute→review? The generated output needs to instruct the team to write specs that embed expertise as requirements, dispatch bare workers, and review against quality bars.
+2. **Review loop:** How many review cycles? Does the team send work back once, or iterate until the quality bar is met?
 3. **New domains:** All tests used Rails and children's novel. More domains needed.
-4. **Variance:** Single runs on most experiments. Multiple runs would strengthen confidence.
+4. **Spec quality measurement:** We proved assembled specs are better (Phase 6) and workers don't need context (Phase 7). Can we measure spec quality directly — does a better spec produce better worker output?

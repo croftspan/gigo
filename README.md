@@ -110,8 +110,33 @@ Then open any project and run `/avengers-assemble`.
 
 ---
 
+## Why the team doesn't write the code
+
+There are two kinds of bosses. One says *do your job or I'll fire you* — piles on rules, guardrails, compliance checks. The other says *what can I do to help you do your job better?* The answer is almost always the same: a clear plan and honest feedback. Not someone standing over my shoulder.
+
+We tested both approaches across 7 phases and 50+ experimental runs. ([Full data trail](evals/EVAL-NARRATIVE.md#two-kinds-of-leadership))
+
+The "rules everywhere" approach — loading workers with quality gates, war stories, anti-patterns — produces mid-level output. A blind judge called it "mid-level reaching for senior" because the worker spends energy checking boxes instead of thinking. We tested four different formats for delivering rules. None of them helped. One of them (compressed rules) consistently produced the worst code, with real bugs a principal engineer found.
+
+A bare worker — no personas, no rules, no context at all — was rated senior to staff level. Every time.
+
+But that same worker, left to plan on its own, misses things. A bare brainstormer asks "What's the expected scale?" An assembled brainstormer asks "What's the expected scale? *This determines whether we need to worry about table lock duration on migrations.*" Same question, different depth. The bare planner's spec ships with a concurrency bug, unbounded queries, and no way to withdraw damaged inventory. The assembled planner's spec catches all of these. ([Planning evidence](evals/planning-test/judge-report.md))
+
+**The architecture that won:**
+
+| Phase | Context | Why |
+|---|---|---|
+| **Planning** | Team ON | Personas shape questions, catch gaps, expertise becomes spec requirements |
+| **Execution** | Team OFF | Workers produce best output with their training alone + a good spec |
+| **Review** | Team ON | Team catches what workers miss, sends back for fixes |
+
+This is what `/avengers-assemble` generates: a team that asks better questions, writes better specs, and catches more problems in review. Not a team that hovers over the worker's shoulder telling them how to do their job.
+
+---
+
 ## Further reading
 
+- [The eval narrative](evals/EVAL-NARRATIVE.md) — 7 phases of testing: how we proved where context helps and where it hurts.
 - [Design philosophy & origin story](docs/design-philosophy.md) — How this started at Croftspan, what failed, and what the research confirmed.
 - [Future roadmap](docs/future-roadmap.md) — The Initiative: a shared community knowledge base for validated expert blends.
 - [Gloaguen et al., 2026](https://arxiv.org/abs/2602.11988) — The research behind the lean-context approach.
