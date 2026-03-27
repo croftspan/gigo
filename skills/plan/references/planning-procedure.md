@@ -1,60 +1,153 @@
-# Cap — Planning Procedure
+# Planning Procedure
 
-## Step 2: Ask (sparingly)
+The detailed step-by-step for writing implementation plans. The hub (`SKILL.md`) covers the full arc from idea to plan. This reference covers the mechanics of plan construction — file structure, task format, dependency graphs, and quality checks.
 
-**Two to three questions, max.** One at a time. Each question should meaningfully change the plan — if the answer doesn't affect what you'd recommend, don't ask it.
+---
 
-Good Cap questions:
-- "What does done look like for you?" (scope)
-- "Is this a now thing or a next-week thing?" (priority)
-- "What's the part you're least sure about?" (risk)
-- "Are you trying to fix what's there or build something new?" (direction)
+## 1. Scope Check
 
-Bad Cap questions:
-- Anything the project files already answer
-- Technical details the team personas will figure out
-- Multiple questions at once
-- Questions where all answers lead to the same plan
+Before writing tasks, confirm the spec is appropriately scoped:
+- If it covers multiple independent subsystems, it should have been decomposed during design
+- If it wasn't, suggest breaking into separate plans — one per subsystem
+- Each plan should produce working, testable software on its own
 
-**If the user's intent is already clear enough, skip straight to the plan.** Don't ask questions for the sake of asking.
+## 2. Map File Structure
 
-For worked examples at each scale, read `example-plan.md`.
+Before defining tasks, map out which files will be created or modified and what each one is responsible for. This is where decomposition decisions get locked in.
 
-## Step 3: The Plan
+- Design units with clear boundaries and well-defined interfaces. Each file should have one clear responsibility.
+- Prefer smaller, focused files over large ones that do too much. Claude reasons better about code it can hold in context, and edits are more reliable when files are focused.
+- Files that change together should live together. Split by responsibility, not by technical layer.
+- In existing codebases, follow established patterns. If the codebase uses large files, don't unilaterally restructure — but if a file you're modifying has grown unwieldy, including a split in the plan is reasonable.
 
-Present a clear, prioritized action plan. Scale it to the task:
+This structure informs task decomposition. Each task should produce self-contained changes that make sense independently.
 
-**For small tasks** (bug fix, single feature, quick cleanup):
-- 3-5 bullet points, ordered
-- What to do, what to watch out for
-- Done in one message
+## 3. Plan Document Header
 
-**For medium tasks** (multi-step feature, refactor, new capability):
-- Numbered steps with clear outcomes
-- Dependencies noted (what blocks what)
-- Risk flags where they exist
+Every plan starts with this header:
 
-**For large tasks** (multi-day effort, architectural change, new system):
-- Phases with milestones
-- What can be parallelized vs what's sequential
-- Decision points where the user will need to weigh in
-- What to do first (the thing that unblocks everything else)
+```markdown
+# [Feature Name] Implementation Plan
 
-Every plan should answer:
-1. **What** — the specific things that need to happen
-2. **Order** — which ones first, which ones depend on others
-3. **Risks** — what could go wrong, what to watch for
-4. **Done** — how to know when it's finished
+> **For agentic workers:** Use gigo:execute to implement this plan task-by-task.
+> Steps use checkbox (`- [ ]`) syntax for tracking.
 
-## Step 4: Recommend Next Steps
+**Spec:** `docs/gigo/specs/YYYY-MM-DD-<topic>-design.md`
 
-After the plan, suggest 2-3 logical ways to proceed. These are recommendations, not commands. The user picks.
+**Goal:** [One sentence describing what this builds]
 
-Common patterns:
-- "You could start on step 1 now — the team's got the expertise for this."
-- "This surfaced a gap in your setup. `/fury` could add the expertise you need before you start."
-- "Your rules are going to get in the way here — `/smash` first, then come back to this."
-- "This is big enough that you might want to break it into branches — one per phase."
-- "Honestly, this is straightforward. Just go."
+**Architecture:** [2-3 sentences about approach]
 
-**Cap doesn't auto-route.** He presents options and the user decides.
+**Tech Stack:** [Key technologies/libraries]
+
+---
+```
+
+## 4. Task Format
+
+Each task follows this structure:
+
+````markdown
+### Task N: [Component Name]
+
+**blocks:** [task numbers this unblocks, e.g., 4, 5]
+**blocked-by:** [task numbers that must complete first, e.g., 1, 2]
+**parallelizable:** true/false
+
+**Files:**
+- Create: `exact/path/to/file.py`
+- Modify: `exact/path/to/existing.py:123-145`
+- Test: `tests/exact/path/to/test.py`
+
+- [ ] **Step 1: [Concrete action]**
+
+```python
+# Actual code — not pseudocode, not "implement X"
+def function(input):
+    return expected
+```
+
+- [ ] **Step 2: [Verify]**
+
+Run: `pytest tests/path/test.py::test_name -v`
+Expected: PASS
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add tests/path/test.py src/path/file.py
+git commit -m "feat: add specific feature"
+```
+````
+
+## 5. Dependency Graph Rules
+
+Every task declares its dependencies:
+
+- **blocks:** Which tasks this one unblocks. Empty if nothing depends on it.
+- **blocked-by:** Which tasks must complete before this one starts. Empty if none.
+- **parallelizable:** Can this run alongside other unblocked tasks? `true` if it touches different files and has no shared state.
+
+The dependency graph determines execution order. `gigo:execute` uses it to dispatch tasks — potentially in parallel when tasks are independent.
+
+## 6. Bite-Sized Task Granularity
+
+Each step is one action (2-5 minutes of work):
+
+- "Write the test" — step
+- "Run it to verify it fails" — step
+- "Implement the minimal code" — step
+- "Run tests and verify they pass" — step
+- "Commit" — step
+
+If a step takes longer than 5 minutes, it's too big. Break it down.
+
+## 7. No Placeholders
+
+Every step must contain the actual content a worker needs. These are plan failures — never write them:
+
+- "TBD", "TODO", "implement later", "fill in details"
+- "Add appropriate error handling" / "add validation" / "handle edge cases"
+- "Write tests for the above" (without actual test code)
+- "Similar to Task N" (repeat the content — the worker may read tasks out of order)
+- Steps that describe what to do without showing how (code blocks required for code steps)
+- References to types, functions, or methods not defined in any task
+
+## 8. Plan Self-Review
+
+After writing the complete plan, review it against the spec:
+
+**8a. Spec coverage:** Skim each section/requirement in the spec. Can you point to a task that implements it? If a requirement has no task, add the task.
+
+**8b. Placeholder scan:** Search the plan for any of the patterns from section 7 above. Fix them.
+
+**8c. Type consistency:** Do the types, method signatures, and property names used in later tasks match what you defined in earlier tasks? A function called `clearLayers()` in Task 3 but `clearFullLayers()` in Task 7 is a bug.
+
+Fix issues inline. No need to re-review — just fix and move on.
+
+## 9. Execution Handoff
+
+After saving the plan and getting user approval:
+
+> "Plan ready. Want me to start execution?"
+
+If yes, invoke `gigo:execute`.
+
+## 10. Specs and Plans File Locations
+
+- Specs save to: `docs/gigo/specs/YYYY-MM-DD-<topic>-design.md`
+- Plans save to: `docs/gigo/plans/YYYY-MM-DD-<feature-name>.md`
+
+User preferences for location override these defaults.
+
+## Scale Reference
+
+From the hub — every plan answers these regardless of size:
+
+| Scale | Format | Phases used |
+|---|---|---|
+| Small (bug fix, config) | 3-5 ordered bullets | 1, 2 lightly, then 8 |
+| Medium (feature, refactor) | Numbered tasks with dependencies | Full arc, brief design |
+| Large (architecture, new system) | Phased tasks with milestones and decision points | Full arc with decomposition |
+
+Every plan answers: **What** (specific things that need to happen), **Order** (dependencies and sequencing), **Risks** (what could go wrong), **Done** (how to know it's finished).
