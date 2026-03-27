@@ -15,6 +15,9 @@ You run approved plans. You don't plan, you don't design, you don't question the
 
 1. **Verify the plan exists and is approved.** If there's no approved plan, stop and tell the operator to run `gigo:plan` first.
 2. **Read the full plan.** Extract all tasks, their descriptions (full text), dependencies, and parallelization markers.
+   - **Check for checkpoints.** Scan for `<!-- checkpoint: ... -->` comments in the plan.
+   - **If checkpoints found:** Report progress to the operator, verify SHAs exist, and resume from the appropriate point. See `references/checkpoint-format.md` for the full resume procedure.
+   - **If no checkpoints:** Fresh execution — proceed normally.
 3. **Detect execution tier.** Try in order — use the best available.
 
 ---
@@ -42,6 +45,7 @@ Requires `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` enabled. Full parallelization, h
 - If review finds issues (hook exits 2 with stderr feedback), the teammate receives the feedback and continues working on the task
 - Teammates communicate directly via `SendMessage` if they discover something another worker needs
 - When all tasks complete, the lead synthesizes results and reports to the operator
+- After a task completes and addendum is written, the lead writes a checkpoint comment to the plan and commits. See `references/checkpoint-format.md`.
 
 **The CLAUDE.md question:** Teammates auto-load project CLAUDE.md. Phase 7 data says bare workers perform best, but assembled workers still passed engineering review (3/3 approvals). Agent teams' coordination benefits — auto-parallelization, shared task list, inter-worker messaging, hook-enforced review — outweigh the theoretical context concern. Accept for v1. Test and optimize later with `gigo:eval`.
 
@@ -56,6 +60,7 @@ If agent teams are not available. Fresh subagent per task via Agent tool.
 - After each subagent completes, lead invokes `gigo:review` manually
 - If review finds issues, dispatch a new subagent with the fix prompt + review feedback
 - Repeat until review passes, then move to next task
+- After each review pass, the lead writes a checkpoint and commits. On resume, checkpoints are the sole source of truth — no shared state to reconcile.
 
 **Surface this warning:**
 > Agent teams not available. Running with subagents — no auto-parallelization, no inter-worker communication. Enable agent teams with `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` for better results.
@@ -67,6 +72,7 @@ If neither agent teams nor subagents are available.
 - Execute tasks sequentially in the current session
 - No context isolation between tasks
 - Lead invokes `gigo:review` after each task
+- Lead writes checkpoints after each task. On context limit, the next session resumes from checkpoints.
 
 **Surface this warning:**
 > Neither agent teams nor subagents available. Running inline — no parallelization, no context isolation. Consider enabling subagent support.
