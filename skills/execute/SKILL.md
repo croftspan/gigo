@@ -31,6 +31,16 @@ You run approved plans. You don't plan, you don't design, you don't question the
 
    Default recommendation: the best available tier. But always ask — the operator may prefer a lower tier for debugging or cost reasons.
 
+4. **Set up review hook (Tier 1 only).** If using agent teams, the review hook script must exist BEFORE any tasks are dispatched — it's infrastructure, not a task. The hook gates task completion; if it doesn't exist when a teammate marks a task done, the gate fails silently.
+
+   - Check if `.claude/hooks/gigo-review-gate.sh` exists and is executable
+   - Check if `.claude/settings.local.json` (or `settings.json`) has a `TaskCompleted` hook entry pointing to it
+   - If the hook script is missing: create it now (see `references/review-hook.md` for the template). Use the spec path from the plan.
+   - If the settings entry is missing: create `.claude/settings.local.json` with the `TaskCompleted` hook wired
+   - If the hook is a task in the plan: remove it from the task list — the lead handles it during setup, not a worker
+
+   This runs during setup, not during execution. Workers must never create their own review infrastructure.
+
 ---
 
 ## Three Execution Tiers

@@ -1,8 +1,10 @@
 # GIGO (Garbage In, Garbage Out)
 
-**Tell Claude what you're building. Get a team of domain experts who make every session smarter -- and an execution pipeline that puts context where it helps and strips it where it hurts.**
+**Only give them the information they need for the job.**
 
-GIGO is a set of Claude Code skills that researches the best practitioners in any field, blends their philosophies into focused AI personas, writes lean project files that give Claude real expertise, and orchestrates the proven plan→execute→review pipeline.
+Personas for planning. Specs with conventions for workers. Quality bar checklists for reviewers. Every layer gets exactly what it needs — nothing more.
+
+GIGO is a set of Claude Code skills that researches domain experts, blends their philosophies into focused personas, and orchestrates a plan→execute→review pipeline where the right context reaches the right agent at the right time. 9 phases of eval data prove it works.
 
 ---
 
@@ -13,7 +15,7 @@ GIGO reads the room — your experience, your style, how clear your vision is �
 **You know exactly what you're building:**
 
 ```
-gigo:gigo
+gigo
 
 You: "Building a CLI tool for database migrations. Go, targets
      Postgres and MySQL. Rollbacks, dry runs, schema diffing."
@@ -42,7 +44,7 @@ GIGO: "Three on this one:
 **You're still figuring it out:**
 
 ```
-gigo:gigo
+gigo
 
 You: "kids books. like mystery ones? idk"
 
@@ -75,68 +77,89 @@ Works for anything: software, fiction, game design, research, music, business.
 
 | Skill | What it does |
 |---|---|
-| `gigo:gigo` | Builds your expert team from scratch. Researches authorities, blends philosophies, writes lean project files. |
+| `gigo` | Builds your expert team from scratch. Researches authorities, blends philosophies, writes lean project files. |
 | `gigo:maintain` | Ongoing maintenance. Adds expertise when gaps appear, audits for bloat, upgrades older setups. |
-| `gigo:plan` | Turns vague ideas into clear, prioritized action plans before anyone starts building. |
-| `gigo:execute` | Runs the plan with bare workers — no personas, no rules, just a good spec and their training. |
-| `gigo:review` | Two-stage review: plan-aware check (did you build the right thing?) then code-quality check (did you build it well?). |
-| `gigo:snap` | Session-end audit. Enforces line caps, removes derivable rules, captures learnings, protects the project. |
-| `gigo:eval` | Tests how context affects AI output quality. Before/after benchmarking for rules, personas, and prompts. |
+| `gigo:plan` | Turns vague ideas into clear specs and prioritized plans. Brainstorms with you first, then structures. |
+| `gigo:execute` | Runs the plan with agent teams or subagents — bare workers get the spec, not the personas. |
+| `gigo:review` | Two-stage review: spec compliance (did you build the right thing?) then engineering quality (did you build it well?). |
+| `gigo:snap` | Session-end audit. Enforces line caps, removes stale rules, captures learnings, protects the project. |
+| `gigo:eval` | Tests whether your assembled context actually improves output. Pipeline eval with comparative judging. |
 
 ---
 
 ## Install
 
 ```bash
-git clone https://github.com/Eaven/gigo.git
-cp -r gigo/skills/gigo ~/.claude/skills/gigo
+claude install @eaven/gigo
 ```
 
-Then open any project and run `gigo:gigo`.
+Or manually:
+
+```bash
+git clone https://github.com/Eaven/gigo.git
+cp -r gigo/skills/ ~/.claude/skills/
+```
+
+Then open any project and say `gigo`.
 
 ---
 
-## How it works
+## Why this works
 
-**Blended expert philosophies** — Not "you are a senior developer." Instead: *"you work in the tradition of DHH's convention-over-configuration, with Kent Beck's testing discipline and Sandi Metz's object design sensibility."* Each authority brings something specific. The blend has opinions.
+### The core principle
 
-**Two-tier architecture** — Rules (auto-loaded, lean) vs. references (on-demand, deep). Your rules files stay under ~60 lines. Deep-dives, pattern libraries, and technique catalogs live in references and load only when relevant. Every conversation pays only for what it uses.
+We tested where context helps and where it hurts across 9 experimental phases and 50+ runs. The finding:
 
-**The non-derivable rule** — The skill only writes what Claude can't figure out by reading your project. Philosophy, quality bars, anti-patterns — yes. Directory structure, code patterns — never. [Research confirms](https://arxiv.org/abs/2602.11988) that bloated context reduces task success rates while increasing cost by 20%+.
+**Context helps when it shapes the questions. Context hurts when it shapes the answers.**
 
-**The Snap** — A protocol that runs at session end: audits every rule, lets go of what's served its purpose, merges overlaps, enforces line caps. The project gets sharper over time, not bigger.
+A planner with personas asks "What's the expected scale? *This determines whether we need to worry about table lock duration on migrations.*" A planner without personas asks "What's the expected scale?" Same question, different depth. The persona catches the architectural gap.
 
----
+But a worker with personas writes self-conscious code — checking boxes, explaining craft decisions, over-commenting. A bare worker following a good spec produces senior-to-staff-level code. Every time.
 
-## Why the team doesn't write the code
-
-There are two kinds of bosses. One says *do your job or I'll fire you* — piles on rules, guardrails, compliance checks. The other says *what can I do to help you do your job better?* The answer is almost always the same: a clear plan and honest feedback. Not someone standing over my shoulder.
-
-We tested both approaches across 7 phases and 50+ experimental runs. ([Full data trail](evals/EVAL-NARRATIVE.md#two-kinds-of-leadership))
-
-The "rules everywhere" approach — loading workers with quality gates, war stories, anti-patterns — produces mid-level output. A blind judge called it "mid-level reaching for senior" because the worker spends energy checking boxes instead of thinking. We tested four different formats for delivering rules. None of them helped. One of them (compressed rules) consistently produced the worst code, with real bugs a principal engineer found.
-
-A bare worker — no personas, no rules, no context at all — was rated senior to staff level. Every time.
-
-But that same worker, left to plan on its own, misses things. A bare brainstormer asks "What's the expected scale?" An assembled brainstormer asks "What's the expected scale? *This determines whether we need to worry about table lock duration on migrations.*" Same question, different depth. The bare planner's spec ships with a concurrency bug, unbounded queries, and no way to withdraw damaged inventory. The assembled planner's spec catches all of these. ([Planning evidence](evals/planning-test/judge-report.md))
-
-**The architecture that won:**
+### The architecture that won
 
 | Phase | Context | Why |
 |---|---|---|
-| **Planning** | Team ON | Personas shape questions, catch gaps, expertise becomes spec requirements |
-| **Execution** | Team OFF | Workers produce best output with their training alone + a good spec |
-| **Review** | Team ON | Team catches what workers miss, sends back for fixes |
+| **Planning** | Personas ON | Personas shape questions, catch conventions, surface quality bars |
+| **Spec** | Conventions embedded | Personas noticed them; the spec delivers them to the worker |
+| **Execution** | Personas OFF | Bare workers + good spec = senior/staff code. Every time. |
+| **Review** | Quality bar checklists | Extracted from personas, not the personas themselves |
 
-This is what `gigo:gigo` generates: a team that asks better questions, writes better specs, and catches more problems in review. Not a team that hovers over the worker's shoulder telling them how to do their job.
+### The data
+
+**Pipeline coherence test** — three chains built the same feature:
+
+| Chain | What the worker got | Score |
+|---|---|---|
+| Full context | Architecture + personas + rules | 29/30 |
+| Architecture only | Same architecture, no personas | 20/30 |
+| Bare | Nothing | 14/30 |
+
+Architecture alone gets you from 14 to 20 — types match, interfaces match, error patterns match. Conventions embedded in the spec get you from 20 to 29 — error message formats, output discipline, durability patterns. The personas' job is to *notice* these conventions during planning. The spec's job is to *deliver* them to the worker.
+
+**Convention compliance** — bare workers following specs with explicit conventions sections:
+
+- Tier 1 (agent teams): 20/20 conventions matched, first pass
+- Tier 2 (subagents): 10/10 conventions matched, first pass
+- Zero review fixes needed in either tier
+
+The execution mechanism doesn't matter. The spec is what matters.
+
+### What the project files look like
+
+**Two-tier architecture** — Rules (auto-loaded, lean) vs. references (on-demand, deep). Rules files stay under ~60 lines. Deep-dives, pattern libraries, and technique catalogs load only when relevant. Every conversation pays only for what it uses.
+
+**The non-derivable rule** — Only write what Claude can't figure out by reading your project. Philosophy, quality bars, anti-patterns — yes. Directory structure, code patterns — never. [Research confirms](https://arxiv.org/abs/2602.11988) that bloated context reduces task success rates while increasing cost by 20%+.
+
+**The Snap** — Runs at session end: audits every rule, lets go of what's served its purpose, merges overlaps, enforces line caps. The project gets sharper over time, not bigger.
 
 ---
 
 ## Further reading
 
-- [The eval narrative](evals/EVAL-NARRATIVE.md) — 7 phases of testing: how we proved where context helps and where it hurts.
-- [Design philosophy & origin story](docs/design-philosophy.md) — How this started at Croftspan, what failed, and what the research confirmed.
-- [Future roadmap](docs/future-roadmap.md) — The Initiative: a shared community knowledge base for validated expert blends.
+- [The eval narrative](evals/EVAL-NARRATIVE.md) — 9 phases of testing: how we proved where context helps and where it hurts.
+- [Phase 9 integration test](evals/integration-test/) — End-to-end pipeline test with convention compliance data.
+- [Design philosophy & origin story](docs/design-philosophy.md) — How this started, what failed, and what the research confirmed.
 - [Gloaguen et al., 2026](https://arxiv.org/abs/2602.11988) — The research behind the lean-context approach.
 
 ---
