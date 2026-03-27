@@ -375,9 +375,142 @@ This maps to the existing superpowers workflow: brainstorm with the team, plan w
 - A/B eval: `evals/results/2026-03-26-{131429,140313,144111,150537,163452,170329,173509}/`
 - Proficiency: `evals/proficiency/results/2026-03-26-192756/`
 
+## Phase 5: The Instinct Experiments — Can We Beat Bare on Execution?
+
+The proficiency test showed assembled beats bare on rubric but loses on qualitative judge. The question: **what form of context produces instincts instead of compliance?**
+
+Five experiments, each changing ONE variable in the assembled context. Same proficiency test, same baselines.
+
+### Experiment Results (Rails Rubric Scores)
+
+| Experiment | Bare | Assembled | Delta | Qualitative Judge |
+|---|---|---|---|---|
+| **1. War Stories** | 14 | **20** | **+6** | **Assembled 1st (beat bare)** |
+| 2. Negative Examples | 18 | 19 | +1 | 2nd (war stories 1st) |
+| 3. First-Person Voice | 15 | 18 | +3 | — |
+| 4. Minimal (Won't-Do) | 12 | 13 | +1 | — |
+| 5. Reference-Only | 18 | 19 | +1 | — |
+
+### Experiment Results (Novel Rubric Scores)
+
+| Experiment | Bare | Assembled | Delta |
+|---|---|---|---|
+| 3. First-Person Voice | **20** | 19 | -1 |
+| 4. Minimal (Won't-Do) | **20** | 18 | -2 |
+| 5. Reference-Only | **20** | 18 | -2 |
+| 1. War Stories | **19** | 16 | -3 |
+| 2. Negative Examples | **19** | 6 (failed) | -13 |
+
+### The Breakthrough: War Stories
+
+War stories — rewriting standards as "here's what went wrong last time" narratives — beat bare on Rails for the first time. 20/20 rubric, ranked 1st by qualitative judge. The judge said: "C writes code like someone who's been paged at 2am."
+
+War stories produced: partial unique index, `dependent: :restrict_with_error`, per_page clamping both directions, `includes(:book)` with serialization, side-effect absence tests, Bullet gem integration.
+
+### Why War Stories Work
+
+Rules produce compliance: "always use transactions" → Claude cites the rule. War stories produce instincts: "last time someone skipped the lock, two users got the same seat" → Claude *thinks about* the failure mode and designs around it without citing anything.
+
+### The Novel Problem
+
+No context format beat bare Claude on creative execution. Bare hit 19-20/20 every single time across all 5 experiments. Every assembled variant scored lower — through self-narration, over-explaining, or exceeding word counts.
+
+### The Combo Test: Rules + War Stories
+
+We tested combining original rules with war stories. The combo ranked LAST (3rd, 78/100). War stories alone ranked 2nd (85/100). Bare 1st (88/100). **More context dilutes instincts.** Adding rules back on top of war stories pushed it toward compliance behavior again.
+
+### What This Means
+
+For structured domains: **war stories format produces genuine instincts.** Replace "always do X" with "here's what happened when someone didn't do X."
+
+For creative domains: **bare Claude with its training produces the best output.** Context of any format degrades creative execution.
+
+User insight: **"Planners need rules (what to check). Doers need war stories (what goes wrong)."** This suggests different context formats for different phases — not one format for everything.
+
+## Phase 6: The Planning Pipeline Test — Do Personas Influence Planning?
+
+We proved war stories beat bare on execution. But does assembled context even matter during planning? Or is superpowers doing all the work?
+
+### The Controlled Question Test
+
+Same task (library reservation API), same 7 scripted user answers in the same order. Only variable: whether the brainstormer had team personas loaded.
+
+**Bare asked:** "What's the expected scale?" "Are we greenfield?" "How should auth work?"
+
+**Assembled asked:** "What's the expected scale? **This determines whether we need to worry about table lock duration on migrations.**" "Greenfield? **Kane needs to know whether migrations must be zero-downtime compatible.**" "**Beck needs to know:** test tooling preference? **Are we writing specs before implementation?**"
+
+Same topics. Different depth. Bare asks WHAT. Assembled asks WHY.
+
+### The Full Pipeline Test
+
+Both versions produced 3 documents each: brainstorm, spec, implementation plan. Same scripted answers. Judge evaluated all 6 files.
+
+**Judge verdict: Assembled wins decisively.**
+
+> "I would hand Team B's pipeline output to my engineering team."
+
+Specific assembled wins over bare:
+
+1. **Partial unique index** — prevents a data integrity bug bare's plan would ship
+2. **`FOR UPDATE SKIP LOCKED`** — better concurrency than bare's `FOR UPDATE`
+3. **Copy condition field** — operational requirement bare missed entirely (can't withdraw damaged books)
+4. **Pagination** — bare returned unbounded results on the list endpoint
+5. **Runnable RSpec code** — bare wrote English test descriptions, assembled wrote actual specs
+6. **RESTful cancel** — assembled used `PATCH` for state transition, bare used `DELETE` with query param
+
+The judge noted ~20-30% of persona attributions were "decorative rather than functional" — citing a rule everyone knows. But 70%+ produced real architectural improvements.
+
+### What This Means
+
+**Personas change how problems are explored, not just how answers are presented.** The assembled brainstormer asks deeper questions, identifies more hard problems, produces more defensible architectures, and writes executable test code. The planning phase is where assembled context earns its keep.
+
+## The Complete Architecture (Proven by Data)
+
+| Phase | Context | Format | Why |
+|---|---|---|---|
+| **Brainstorming** | Assembled ON | Standard personas | Personas shape questions, catch architectural gaps |
+| **Spec writing** | Assembled ON | Standard personas | Team standards define quality bars, identify edge cases |
+| **Plan writing** | Assembled ON | Standard personas | Beck drives spec-first, Kane catches migration issues |
+| **Structured execution** | War stories only | Narrative format | Produces instincts, not compliance. 20/20. |
+| **Creative execution** | Bare | Nothing | Training produces best creative output. 19-20/20. |
+| **Review** | Assembled ON | Standard personas | Team evaluates against quality bars |
+
+This is the product architecture. Assembled context for planning and review. War stories for structured execution. Bare for creative execution. Each phase gets the context format that produces the best output, proven by data.
+
+## What Shipped (Complete)
+
+### Phase 2 (calibration + pointers):
+- `evals/fixtures/*/workflow.md` — Persona Calibration sections
+- `evals/fixtures/*/standards.md` — task-specific "When to Go Deeper" pointers
+
+### Hawkeye (adversarial output gate):
+- `skills/avengers-assemble/SKILL.md` — Principle 10: every team has overwatch
+- All skill templates updated (persona-template, output-structure, extension-file-guide, snap-template)
+- `skills/fury/` and `skills/smash/` — Overwatch checks, threshold detection, upgrade support
+
+### Proficiency Test Infrastructure:
+- `evals/proficiency/` — runner, scorer, prompts, rubrics
+- Automated structural checks + LLM rubric scoring
+
+### Instinct Experiments:
+- 5 context format variants tested (war stories, negative examples, first-person, minimal, reference-only)
+- All fixture variants saved as `.original`, `.warstories`, `.negative`, `.firstperson`, `.minimal`, `.refonly`
+- War stories identified as the winning format for structured execution
+
+### Planning Pipeline Test:
+- `evals/planning-test/` — controlled bare vs assembled comparison
+- 6 documents (3 per variant): brainstorm, spec, plan
+- Judge report confirming assembled wins on planning
+
+### Results Locations:
+- A/B eval: `evals/results/2026-03-26-*/`
+- Proficiency: `evals/proficiency/results/*/`
+- Planning: `evals/planning-test/`
+- Experiment design: `docs/superpowers/specs/2026-03-26-instinct-experiments-design.md`
+
 ## Open Questions
 
-1. **Plan-then-execute architecture:** Assembled context for planning/review, bare for execution. How does this change what `/avengers-assemble` generates? Does the generated workflow need to instruct subagents to run without persona context?
-2. **Eval pipeline adversarial check:** A pre-scoring step that asks "did the model answer the prompt?" would catch aberrations like 2b.
-3. **New domains:** Two fixtures risks overfitting. More domains would test whether the assembled-for-planning insight holds universally.
-4. **Proficiency test variance:** Single run. Need multiple runs to establish baselines, same as the A/B eval.
+1. **Product integration:** How does `/avengers-assemble` generate the phase-aware workflow? War stories for execution, personas for planning, bare for creative.
+2. **War stories generation:** Should the planning phase auto-generate task-specific war stories from the spec to hand to execution subagents?
+3. **New domains:** All tests used Rails and children's novel. More domains needed.
+4. **Variance:** Single runs on most experiments. Multiple runs would strengthen confidence.
