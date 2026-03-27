@@ -77,7 +77,7 @@ If neither agent teams nor subagents are available.
 
 Workers report one of four statuses. Handle each appropriately:
 
-**DONE** — Proceed to review (via TaskCompleted hook in Tier 1, manual invocation in Tier 2/3).
+**DONE** — Proceed to review (via TaskCompleted hook in Tier 1, manual invocation in Tier 2/3). After review, handle triage categories: auto-fix items go back to the worker, ask-operator items block the task until the operator decides, accept items go into the addendum. See `gigo:review` Triage section.
 
 **DONE_WITH_CONCERNS** — Worker completed the task but flagged doubts. Read the concerns before proceeding. If concerns are about correctness or scope, address them before review. If they're observations (e.g., "this file is getting large"), note them and proceed to review.
 
@@ -95,10 +95,36 @@ Never silently skip a blocker. Never force the same model to retry without chang
 
 ---
 
+## After Review Passes
+
+After a task passes both review stages, update the plan document before moving to the next task:
+
+1. **Mark steps complete.** Update checkboxes: `- [ ]` → `- [x]`.
+2. **Write the "What Was Built" addendum** under the task:
+
+```markdown
+#### What Was Built
+- **Deviations:** None | [brief description of what changed from plan and why]
+- **Review changes:** None | [what the review cycle changed]
+- **Notes for downstream:** None | [interface changes, renamed exports, constraint additions — anything the next worker needs to know]
+```
+
+3. **Include "accept" observations** from review triage in the "Notes for downstream" field.
+4. **Check downstream impact.** If the implementation deviated in ways that affect dependent tasks, check whether those task descriptions need updating before a worker claims them.
+5. **Write checkpoint** (see `references/checkpoint-format.md`).
+6. **Commit the plan update.**
+
+**Rules:**
+- Always write an addendum, even when nothing deviated. "No deviations" confirms the plan was accurate.
+- Keep it brief — 1-3 bullets per field. This is a breadcrumb trail, not a post-mortem.
+- Focus on what downstream workers need. A renamed export belongs here. A refactored internal helper doesn't.
+
+---
+
 ## When All Tasks Complete
 
-1. Synthesize results — what was built, what was reviewed, any concerns raised
-2. Report to operator with a summary of completed work
+1. Synthesize results — read the "What Was Built" addendums across all tasks for a complete picture of deviations, review changes, and observations
+2. Report to operator with a summary: what was built, what deviated from plan, what the review cycle caught, and any "accept" observations worth noting
 3. Suggest: "Ready for a PR? I can invoke `gigo:review` in PR mode for the final gate."
 
 ---
@@ -124,3 +150,4 @@ Never silently skip a blocker. Never force the same model to retry without chang
 - `references/teammate-prompts.md` — Implementation and fix prompt templates
 - `references/model-selection.md` — When to use which model tier
 - `references/review-hook.md` — TaskCompleted hook configuration and flow
+- `references/checkpoint-format.md` — Checkpoint syntax, resume procedure, edge cases

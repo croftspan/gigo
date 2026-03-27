@@ -41,6 +41,9 @@ You are implementing a task.
 ## Context
 [Where this fits, dependencies, what was built in prior tasks]
 
+If prior tasks have "What Was Built" addendums in the plan, read them — they
+may record interface changes or deviations that affect your task.
+
 ## Before You Begin
 If anything is unclear about requirements, approach, or dependencies — ask now.
 
