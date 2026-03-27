@@ -57,6 +57,15 @@ Score each issue 0-100:
 **Only report issues scoring ≥80.** This is critical — noisy reviews waste
 everyone's time. If you're not confident it's a real issue, don't report it.
 
+## Triage Suggestion
+
+For each issue, suggest a triage category:
+- **auto-fix** — minor issue with an obvious fix (formatting, naming, missing import). No architectural implications.
+- **ask-operator** — fix would change the interface, involves a trade-off, or requires a scope/architecture decision.
+- **accept** — observation worth noting but doesn't need a fix. Future consideration, strength, informational.
+
+Your suggestion is a hint — the final triage decision is made by gigo:review, not you.
+
 ## Output Format
 
 ### Strengths
@@ -75,6 +84,7 @@ everyone's time. If you're not confident it's a real issue, don't report it.
 - **What's wrong** — concrete description
 - **Why it matters** — impact on production, maintainability, or correctness
 - **Confidence** — score 0-100
+- **Suggested triage:** auto-fix | ask-operator | accept
 
 ### Assessment
 **Ready to proceed** or **Needs fixes**

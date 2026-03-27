@@ -80,15 +80,51 @@ When invoked without a plan context (not called from gigo:execute):
 
 ---
 
+## Triage
+
+After both stages complete, categorize each finding before returning feedback.
+
+| Category | Criteria | Action |
+|---|---|---|
+| **auto-fix** | Minor, obvious fix, no architectural implications | Return to worker: "Fix these, no discussion needed." |
+| **ask-operator** | Architectural, scope, ambiguous, or interface-changing | Surface to operator. Task stays blocked until operator decides. |
+| **accept** | Informational, future consideration, strength | Record in addendum, don't send as fix items |
+
+**Default rules:**
+- Spec review findings → ask-operator (unless fix is unambiguous)
+- Engineering review findings → auto-fix (unless interface-changing or architectural)
+- Critical issues (confidence 90+) → never accept. Must be auto-fix or ask-operator.
+- When in doubt → ask-operator. False escalation costs a question. False auto-fix can cost a wrong decision.
+
+**Output the categorized summary:**
+
+### Auto-Fix (worker handles)
+[numbered list with file:line references]
+
+### Ask Operator
+[numbered list — these block the task]
+
+### Accept (noted, no action)
+[numbered list — goes into the addendum]
+
+**In execution context** (called from gigo:execute): send auto-fix to worker, surface ask-operator to operator and wait, pass accept to lead for the addendum.
+
+**In standalone mode:** present all three categories to the operator.
+
+---
+
 ## Send-Back-and-Fix Loop
 
 When issues are found:
-1. Return feedback to the caller (gigo:execute or the operator)
-2. Issues get fixed
-3. Re-review the fix commits
-4. Repeat until both stages pass
 
-During execution, this loop is automatic — gigo:execute handles it. In standalone mode, present findings to the operator and wait for them to fix or push back.
+1. **Triage first.** Categorize all findings (see Triage section above).
+2. **Auto-fix items** → return to the caller with "Fix these, no discussion needed."
+3. **Ask-operator items** → surface to the operator. Task stays blocked until operator decides. Worker can move to independent tasks.
+4. **Accept items** → pass to the lead for the "What Was Built" addendum. No fix needed.
+5. After fixes are applied, re-review the fix commits.
+6. Repeat until both stages pass with no auto-fix or ask-operator items remaining.
+
+During execution, gigo:execute handles the routing. In standalone mode, present all categories to the operator and wait for direction.
 
 ---
 

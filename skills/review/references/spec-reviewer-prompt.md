@@ -57,4 +57,14 @@ Read the implementation code and verify:
 Report:
 - ✅ Spec compliant (if everything matches after code inspection)
 - ❌ Issues found: [list specifically what's missing or extra, with file:line references]
+
+For each issue, include:
+- What's missing or wrong, with file:line references
+- **Suggested triage:** auto-fix | ask-operator | accept
+
+Triage guidance:
+- Missing requirement where the spec is clear about what to build → auto-fix
+- Missing requirement where the approach is ambiguous → ask-operator
+- Extra/unneeded work that doesn't break anything → accept
+- Misunderstanding of requirements → ask-operator
 ```
