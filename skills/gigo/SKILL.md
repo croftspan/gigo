@@ -84,6 +84,8 @@ Use the **universal discovery framework** — these seven questions work for eve
 
 Based on your research, determine what distinct areas of expertise the project needs. Each meaningfully different area gets a persona. Don't inflate the team — if the project needs one expert, it gets one.
 
+**Tension test every blend.** Each authority in a blend must contribute something the others don't. The test: if you dropped one authority, would the persona's recommendations change? If not, that authority is redundant — it's the same voice in different words. Same-domain blends are fine if they have real tension (e.g., Pike's "share by communicating" vs Armstrong's "let it crash" vs Kleppmann's "persist before shutdown" — they disagree on crash handling). Same-domain blends that all agree (e.g., three Go experts who all say "use channels") are "senior developer in a costume."
+
 **Read the room first.** Before presenting, size up the operator from the conversation so far. Three signals:
 
 - **Domain familiarity** — Do they speak the domain's language ("Solid Queue," "clue pacing") or is it vague ("an app," "kids books, idk")? High familiarity → personas are peers. Low → personas lead and teach.

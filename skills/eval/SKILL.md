@@ -14,17 +14,25 @@ Test whether assembled context actually improves output. Not part of the automat
 - When adding new personas — did they improve planning?
 - When debugging — is the Persona Calibration heuristic working?
 
-## The Process
+## Two Modes
 
-1. **Get task prompts.** Operator provides representative task prompts, or eval suggests them based on the project's CLAUDE.md and domain.
+### Pipeline Eval (default)
 
-2. **Run bare vs assembled.** Execute each prompt twice:
-   - Bare: no CLAUDE.md, no `.claude/` rules loaded
-   - Assembled: full project context loaded
+Run a multi-stage pipeline — architecture → implementation → review — as parallel chains with different context levels. This tests whether assembled context improves the *cumulative* output, not just isolated tasks.
 
-3. **Comparative judge.** Same judge sees both outputs side by side, randomized labels (A/B not bare/assembled), strict senior engineer persona. See `references/comparative-judging.md`.
+1. **Define the pipeline.** Typically: design/architecture → implementation → code review. Each stage's output feeds the next.
+2. **Run parallel chains.** At minimum two chains:
+   - Bare: no CLAUDE.md, no `.claude/` rules at any stage
+   - Assembled: full project context at every stage
+   - Optional third chain: architecture-only (assembled architecture, bare implementation/review) — isolates whether the spec or the personas carry the signal
+3. **Comparative judge.** Same judge sees all chains' complete output. Randomized labels (X/Y/Z not bare/assembled). Strict senior engineer persona. Judge scores pipeline consistency — do the stages form a coherent chain, or feel disconnected? See `references/comparative-judging.md`.
+4. **Report the delta.** See `references/report-format.md`. Focus on where value enters the pipeline.
 
-4. **Report the delta.** See `references/report-format.md` for output structure. Actionable, not academic.
+**Why pipeline, not isolated prompts:** Phase 9 proved isolated A/B testing misses the chain effect. Assembled context's primary value is pipeline coherence — the architecture informs the implementation which informs the review. Isolated prompts test each stage independently and miss this.
+
+### Isolated Eval (quick check)
+
+For fast checks — did adding a persona help a specific task type? — run single prompts bare vs assembled with comparative judging. Useful for debugging, not for comprehensive assessment.
 
 ## Methodology
 
@@ -32,7 +40,9 @@ Read `references/comparative-judging.md` for the full judging protocol. Key poin
 - Same judge, all variants — eliminates judge-to-judge variance
 - Randomized labels — prevents bias toward "assembled"
 - Strict persona — lenient judges pass everything
+- Blinding instruction: "You do NOT know which had project context. Judge the work, not the method."
 - Multiple runs — single runs have meaningful variance (91%-99% in our tests)
+- Pipeline consistency as a scoring criterion — does each stage build on the previous?
 
 ## Scope
 
