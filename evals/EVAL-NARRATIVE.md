@@ -644,17 +644,88 @@ This replaces the Phase 5 architecture that had "war stories for structured exec
 - **Strict rubric** — judge gets the full spec, a senior engineer persona, and explicit criteria for what constitutes a pass
 - **Engineering review** — holistic review replacing pass/fail checklists, catching real architectural issues
 
+## Phase 8: The Review Pipeline — Two Reviewers Find Different Things
+
+Phase 7 proved workers should run bare and the team reviews after. But how should review work? We tested three approaches on the same code.
+
+### The Experiment
+
+Three review types, run against all 4 Phase 7 code variants (bare, warstories, compressed, fixonly):
+
+- **Plan-aware** — reviewer gets the task spec, checks whether the implementation meets requirements
+- **Code-quality** — reviewer gets only the code, checks engineering merit (bugs, race conditions, maintainability)
+- **Combined** — reviewer gets both spec and code
+
+### The Results
+
+| Variant | Plan-Aware | Code-Quality | Combined |
+|---|---|---|---|
+| bare | 10 (1C, 6I, 2m) | 14 (3C, 7I, 4m) | 11 (3C, 4I, 3m) |
+| warstories | 10 (3C, 3I, 3m) | 12 (3C, 6I, 3m) | 11 (3C, 4I, 3m) |
+| compressed | 13 (2C, 7I, 3m) | 14 (3C, 7I, 4m) | 13 (3C, 6I, 3m) |
+| fixonly | 10 (2C, 4I, 3m) | 15 (2C, 7I, 4m) | 12 (3C, 6I, 3m) |
+
+### What Each Reviewer Caught (bare variant, the "staff" code)
+
+**Plan-aware found spec compliance issues:**
+- Destroy action cancels expired reservations, inflating copies_available beyond actual inventory
+- No mechanism to transition reservations to 'expired' — the 48-hour expiry is written but never enforced
+- Duplicate reservation check runs outside the transaction, producing 500 errors on race instead of clean 409
+
+**Code-quality found engineering issues:**
+- Transaction-return footgun: `return` inside `transaction` block commits instead of rolling back (currently safe by accident — no writes before returns — but a maintenance landmine)
+- Concurrency test uses threads with `use_transactional_fixtures = true` — tests nothing, gives false confidence
+- Deadlock risk from inconsistent lock ordering between ReserveBook (locks book first) and CancelReservation (locks reservation first)
+- Non-atomic `decrement!`/`increment!` — does the math in Ruby, not SQL
+- `{CODE}` placeholders in test file — syntax error that silently skips all tests
+
+**Combined averaged instead of adding up** — 11 issues, between the other two. One judge can't hold both lenses simultaneously.
+
+### What This Means
+
+**Plan-aware and code-quality are complementary, not redundant.** They find different categories of issues. Plan-aware catches "you built the wrong thing" (spec violations, missing behavior). Code-quality catches "you built it wrong" (race conditions, test quality, lock ordering).
+
+Putting both lenses in one reviewer doesn't work — combined found fewer issues than code-quality alone. The judge picks one focus or averages. Two focused reviewers each doing their job beats one reviewer trying to do both.
+
+### The Pipeline
+
+This validates a two-stage review:
+
+1. **`superpowers:requesting-code-review`** — has the spec, checks "did you build what the plan said?" Assembled context ON because the team wrote the plan and understands its intent.
+2. **`code-review:code-review`** — focused workers check engineering quality. 5 parallel Sonnet agents, each with a specific job (bugs, CLAUDE.md compliance, git history, prior PR patterns, code comments). Confidence-scored, filtered at ≥80. No assembled context — workers have their own review expertise.
+3. **Operator reviews, tests, approves.** Two clean automated passes, then human judgment.
+
+This maps to the two-bosses finding: stage 1 is the planning boss checking "did the spec get followed?" Stage 2 is the engineering boss checking "is this production-ready?" Two focused reviewers, each doing one job well.
+
+### What Shipped (Phase 8)
+
+- `evals/proficiency/run-review-pipeline-test.sh` — 3-approach review runner
+- `evals/proficiency/rubrics/review-pipeline-test.md` — review rubric template
+- Results: `evals/proficiency/results/2026-03-27-111808/`
+
 ### Results Locations:
 - A/B eval: `evals/results/2026-03-26-*/`
 - Proficiency: `evals/proficiency/results/*/`
 - Planning: `evals/planning-test/`
-- Format experiment: `evals/proficiency/results/2026-03-27-*/`
-- Engineering reviews: `evals/proficiency/results/2026-03-27-*/engineering-review.md`
+- Format experiment: `evals/proficiency/results/2026-03-27-08*/`
+- Engineering reviews: `evals/proficiency/results/2026-03-27-08*/engineering-review.md`
+- Review pipeline test: `evals/proficiency/results/2026-03-27-111808/`
 - Experiment design: `docs/superpowers/specs/2026-03-26-instinct-experiments-design.md`
+
+## The Complete Architecture (Proven by 8 Phases)
+
+| Phase | Context | Tool | What it does |
+|---|---|---|---|
+| **Brainstorming** | Assembled ON | superpowers:brainstorming | Personas shape questions, catch architectural gaps |
+| **Spec writing** | Assembled ON | superpowers:writing-plans | Team expertise becomes concrete requirements |
+| **Execution** | Bare | superpowers:subagent-driven-development | Workers produce best output with training alone + good spec |
+| **Review 1: Spec compliance** | Assembled ON | superpowers:requesting-code-review | Did the worker build what the plan said? |
+| **Review 2: Code quality** | Bare workers | code-review:code-review | Is the code production-ready? 5 focused reviewers. |
+| **Operator approval** | Human | PR review | Human tests, reviews summary, approves |
 
 ## Open Questions
 
-1. **Product integration:** How does `/avengers-assemble` generate a workflow that implements plan→bare execute→review? The generated output needs to instruct the team to write specs that embed expertise as requirements, dispatch bare workers, and review against quality bars.
-2. **Review loop:** How many review cycles? Does the team send work back once, or iterate until the quality bar is met?
+1. **Product integration:** How does the generated project output instruct this pipeline? The workflow needs to describe when to trigger each review stage.
+2. **Auto-team-growth:** Should the team detect expertise gaps during planning and propose new teammates?
 3. **New domains:** All tests used Rails and children's novel. More domains needed.
-4. **Spec quality measurement:** We proved assembled specs are better (Phase 6) and workers don't need context (Phase 7). Can we measure spec quality directly — does a better spec produce better worker output?
+4. **Naming:** Project needs a public-ready name. Leading candidate: GIGO (Garbage In, Garbage Out).
