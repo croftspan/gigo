@@ -85,6 +85,29 @@ Run tests. Commit. Report back.
 Status: DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT
 ```
 
+### Tier 2: Operator-Resolved Re-dispatch
+
+When ask-operator items have been decided by the operator, dispatch with the resolution:
+
+```
+You are implementing a decision made by the project operator.
+
+## Operator Decision
+[What the operator decided on the architectural/scope question]
+
+## Additional Fixes
+[AUTO-FIX items, if any remain]
+
+## Original Task
+[FULL TEXT of task from plan]
+
+## Your Job
+Implement the operator's decision. Fix any additional items listed above.
+Don't change anything else. Run tests. Commit. Report back.
+
+Status: DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT
+```
+
 ---
 
 ## Prompt Design Rationale
