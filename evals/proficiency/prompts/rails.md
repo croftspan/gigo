@@ -16,4 +16,4 @@ Build a JSON API for a library book reservation system. Ruby on Rails. PostgreSQ
 - Cancelling an already-cancelled reservation returns an error
 - All error responses use envelope: { error: { code: String, message: String } }
 
-**Deliver:** Complete working code — migrations, models, controller, routes, and request specs. Write all files.
+**Deliver:** Complete working code — migrations, models, controller, routes, and request specs. Write all files now. Do not ask clarifying questions — the spec is complete. Make your own design decisions and build it.
