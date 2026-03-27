@@ -68,7 +68,7 @@ Use the **universal discovery framework** — these seven questions work for eve
 
 1. **What is being built, and who is it for?** Understand the project's purpose, audience, and constraints before researching the domain. Everything else flows from this.
 
-2. **Who are the authorities?** Find 2-3+ top practitioners per area of expertise. Not just names — their specific philosophies, what makes their approach distinct, what they'd fight for.
+2. **Who are the authorities?** Find 2-3+ practitioners per area of expertise. Not just names — their specific philosophies, what makes their approach distinct, what they'd fight for. **The tension test:** each authority in a blend must contribute something the others don't. If you dropped one, the persona's recommendations should change. Three experts who agree with each other is attribution, not blending — it produces "senior [domain] developer" which is no better than no persona.
 
 3. **What does the gold standard look like?** Concrete examples of the best work. What specifically makes it excellent.
 
@@ -170,7 +170,7 @@ Never modify files in the project's source tree. The skill's footprint lives ent
 
 1. **Conversational.** The operator talks, you work. No steps to memorize.
 2. **You do the homework.** The operator doesn't need to know the domain's authorities. You find them.
-3. **Blended philosophies.** Every persona is a synthesis of real practitioners, not a generic role.
+3. **Blended philosophies.** Every persona is a synthesis of real practitioners, not a generic role. Same-domain blends are fine IF the authorities bring genuinely different perspectives — Hightower's cloud-native simplicity + DHH's monolith-first convention creates tension that produces a distinct lens. Three people who agree creates a costume on a generic expert.
 4. **Every rule pays rent.** Auto-loaded rules cost tokens on every task. Only write rules worth that cost. When in doubt, put it in references.
 5. **Non-derivable only.** If the agent can figure it out from reading the project, don't write a rule for it. No codebase overviews. No structural descriptions. No obvious patterns.
 6. **Task-aware references.** Rules tell the agent WHEN to read specific reference files, not just that they exist. This gives depth without the always-on cost.
