@@ -6,18 +6,18 @@
 
 **Architecture:** Template-driven propagation — strengthen existing template files so the assembler generates these sections automatically. Hawkeye has two tiers: Overwatch workflow step (all teams) and Hawkeye persona (3+ team members), both pointing to an on-demand reference file.
 
-**Tech Stack:** Markdown template files in the avengers-assemble and fury skill directories.
+**Tech Stack:** Markdown template files in the gigo and fury skill directories.
 
 ---
 
 ### Task 1: Strengthen persona calibration directive in persona-template.md
 
 **Files:**
-- Modify: `skills/avengers-assemble/references/persona-template.md:173-187`
+- Modify: `skills/gigo/references/persona-template.md:173-187`
 
 - [ ] **Step 1: Change the Task-Type Awareness directive from suggestive to mandatory**
 
-In `skills/avengers-assemble/references/persona-template.md`, replace lines 175-177:
+In `skills/gigo/references/persona-template.md`, replace lines 175-177:
 
 ```
 Personas should know when to lead and when to step back. Not every task benefits from persona framing — factual lookup, debugging, and knowledge retrieval are degraded by persona context competing with the model's training (Hu et al., 2026).
@@ -40,7 +40,7 @@ Read the modified file. Confirm the heuristic blockquote (lines 179-185) is unch
 - [ ] **Step 3: Commit**
 
 ```bash
-git add skills/avengers-assemble/references/persona-template.md
+git add skills/gigo/references/persona-template.md
 git commit -m "Make persona calibration heuristic mandatory in generated workflow.md"
 ```
 
@@ -49,11 +49,11 @@ git commit -m "Make persona calibration heuristic mandatory in generated workflo
 ### Task 2: Add generic-pointer anti-pattern to extension-file-guide.md
 
 **Files:**
-- Modify: `skills/avengers-assemble/references/extension-file-guide.md:30-36`
+- Modify: `skills/gigo/references/extension-file-guide.md:30-36`
 
 - [ ] **Step 1: Add the anti-pattern after the "When to Go Deeper" explanation**
 
-In `skills/avengers-assemble/references/extension-file-guide.md`, after line 36 (the paragraph ending "not when editing plot structure."), add:
+In `skills/gigo/references/extension-file-guide.md`, after line 36 (the paragraph ending "not when editing plot structure."), add:
 
 ```markdown
 
@@ -67,7 +67,7 @@ Read the three examples (Rails stack.md lines 80-83, Fiction voice-guide.md line
 - [ ] **Step 3: Commit**
 
 ```bash
-git add skills/avengers-assemble/references/extension-file-guide.md
+git add skills/gigo/references/extension-file-guide.md
 git commit -m "Add generic-pointer anti-pattern to extension file guide"
 ```
 
@@ -76,11 +76,11 @@ git commit -m "Add generic-pointer anti-pattern to extension file guide"
 ### Task 3: Update "Always create these" table in output-structure.md
 
 **Files:**
-- Modify: `skills/avengers-assemble/references/output-structure.md:29-36`
+- Modify: `skills/gigo/references/output-structure.md:29-36`
 
 - [ ] **Step 1: Update the table descriptions for workflow.md and standards.md**
 
-In `skills/avengers-assemble/references/output-structure.md`, replace lines 29-36:
+In `skills/gigo/references/output-structure.md`, replace lines 29-36:
 
 ```markdown
 **Always create these:**
@@ -113,7 +113,7 @@ Read the file. Confirm it's still under 86 lines (current length). The table cha
 - [ ] **Step 3: Commit**
 
 ```bash
-git add skills/avengers-assemble/references/output-structure.md
+git add skills/gigo/references/output-structure.md
 git commit -m "Update output-structure table to require calibration, overwatch, and specific pointers"
 ```
 
@@ -122,11 +122,11 @@ git commit -m "Update output-structure table to require calibration, overwatch, 
 ### Task 4: Add The Overwatch section to persona-template.md
 
 **Files:**
-- Modify: `skills/avengers-assemble/references/persona-template.md:189-204`
+- Modify: `skills/gigo/references/persona-template.md:189-204`
 
 - [ ] **Step 1: Add The Overwatch section after Team Sizing**
 
-In `skills/avengers-assemble/references/persona-template.md`, after line 195 ("Never inflate for the sake of having a team. Never cap artificially."), add:
+In `skills/gigo/references/persona-template.md`, after line 195 ("Never inflate for the sake of having a team. Never cap artificially."), add:
 
 ```markdown
 
@@ -172,7 +172,7 @@ Read the full file. Confirm it flows: ... → Team Sizing → The Overwatch → 
 - [ ] **Step 3: Commit**
 
 ```bash
-git add skills/avengers-assemble/references/persona-template.md
+git add skills/gigo/references/persona-template.md
 git commit -m "Add The Overwatch section: Hawkeye adversarial output gate"
 ```
 
@@ -181,11 +181,11 @@ git commit -m "Add The Overwatch section: Hawkeye adversarial output gate"
 ### Task 5: Add Overwatch audit check to snap-template.md
 
 **Files:**
-- Modify: `skills/avengers-assemble/references/snap-template.md:42-43`
+- Modify: `skills/gigo/references/snap-template.md:42-43`
 
 - [ ] **Step 1: Add check 9 after check 8 in the template's audit section**
 
-In `skills/avengers-assemble/references/snap-template.md`, after line 42 (the line ending with `"Consider running `/smash` to restructure."`), add:
+In `skills/gigo/references/snap-template.md`, after line 42 (the line ending with `"Consider running `/smash` to restructure."`), add:
 
 ```markdown
 
@@ -199,7 +199,7 @@ Read the file. Confirm the 9 audit checks flow logically (1-5 are content checks
 - [ ] **Step 3: Commit**
 
 ```bash
-git add skills/avengers-assemble/references/snap-template.md
+git add skills/gigo/references/snap-template.md
 git commit -m "Add Overwatch audit check to Snap template"
 ```
 
@@ -208,11 +208,11 @@ git commit -m "Add Overwatch audit check to Snap template"
 ### Task 6: Add Principle 10 to SKILL.md
 
 **Files:**
-- Modify: `skills/avengers-assemble/SKILL.md:173-174`
+- Modify: `skills/gigo/SKILL.md:173-174`
 
 - [ ] **Step 1: Add Principle 10 after Principle 9**
 
-In `skills/avengers-assemble/SKILL.md`, after line 173 (Principle 9, ending with "Load domain knowledge on demand from references."), add:
+In `skills/gigo/SKILL.md`, after line 173 (Principle 9, ending with "Load domain knowledge on demand from references."), add:
 
 ```markdown
 10. **Every team has overwatch.** Assembled teams include adversarial self-verification — the Overwatch section in `workflow.md` (all teams) and the Hawkeye persona in `CLAUDE.md` (3+ team members). Both point to `.claude/references/overwatch.md` for depth.
@@ -225,7 +225,7 @@ Read the file. Current length is 174 lines. Adding 1 line keeps it well within b
 - [ ] **Step 3: Commit**
 
 ```bash
-git add skills/avengers-assemble/SKILL.md
+git add skills/gigo/SKILL.md
 git commit -m "Add Principle 10: every team has overwatch"
 ```
 
@@ -242,15 +242,15 @@ git commit -m "Add Principle 10: every team has overwatch"
 In `skills/fury/references/targeted-addition.md`, after line 49 ("Add new reference files to `.claude/references/`"), add:
 
 ```markdown
-- **Check Hawkeye threshold.** After adding, count domain personas in CLAUDE.md (don't count Hawkeye). If now at 3+ and Hawkeye isn't present, add the Hawkeye persona to CLAUDE.md. Read `avengers-assemble/references/persona-template.md` → "The Overwatch" for the template. The Overwatch section in workflow.md and overwatch.md reference should already exist from initial assembly — verify they're present.
+- **Check Hawkeye threshold.** After adding, count domain personas in CLAUDE.md (don't count Hawkeye). If now at 3+ and Hawkeye isn't present, add the Hawkeye persona to CLAUDE.md. Read `gigo/references/persona-template.md` → "The Overwatch" for the template. The Overwatch section in workflow.md and overwatch.md reference should already exist from initial assembly — verify they're present.
 ```
 
 - [ ] **Step 2: Add Principle 9 to Fury's SKILL.md**
 
-In `skills/fury/SKILL.md`, after line 65 (Principle 8, ending with "Read `avengers-assemble/references/persona-template.md` for the full standard."), add:
+In `skills/fury/SKILL.md`, after line 65 (Principle 8, ending with "Read `gigo/references/persona-template.md` for the full standard."), add:
 
 ```markdown
-9. **Overwatch scales with the team.** When adding a persona crosses the 3+ threshold, add Hawkeye. Read `avengers-assemble/references/persona-template.md` → The Overwatch.
+9. **Overwatch scales with the team.** When adding a persona crosses the 3+ threshold, add Hawkeye. Read `gigo/references/persona-template.md` → The Overwatch.
 ```
 
 - [ ] **Step 3: Commit**

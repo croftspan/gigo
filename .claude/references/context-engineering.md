@@ -74,7 +74,7 @@ Claude Code supports rules with `paths` frontmatter that only load when matching
 ```yaml
 ---
 paths:
-  - "skills/avengers-assemble/**"
+  - "skills/gigo/**"
 ---
 ```
 

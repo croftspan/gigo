@@ -67,7 +67,7 @@ split and task-type awareness requirements."
 ### Task 2: Add alignment-vs-knowledge split to persona template
 
 **Files:**
-- Modify: `skills/avengers-assemble/references/persona-template.md:137-169` (Blending Authorities section onward)
+- Modify: `skills/gigo/references/persona-template.md:137-169` (Blending Authorities section onward)
 
 This task adds a new section to the persona template that teaches the assembler how to separate alignment signal from knowledge signal during persona design. This is the structural (Option B) component.
 
@@ -97,7 +97,7 @@ When blending authorities, distinguish two types of persona content:
 
 - [ ] **Step 2: Verify template stays under reasonable length and reads well**
 
-Run: Read `skills/avengers-assemble/references/persona-template.md` in full and confirm:
+Run: Read `skills/gigo/references/persona-template.md` in full and confirm:
 - New section sits naturally between Blending Authorities and Team Sizing
 - No overlap with existing content in the template
 - The example is concrete and follows the template's existing example style (database migration persona already exists as an example above)
@@ -105,7 +105,7 @@ Run: Read `skills/avengers-assemble/references/persona-template.md` in full and 
 - [ ] **Step 3: Commit**
 
 ```bash
-git add skills/avengers-assemble/references/persona-template.md
+git add skills/gigo/references/persona-template.md
 git commit -m "Add alignment-vs-knowledge signal split to persona template
 
 Teaches assemblers to separate how-to-approach-work content (alignment,
@@ -118,7 +118,7 @@ Based on Hu et al. finding that persona context competes with factual recall."
 ### Task 3: Add task-type assessment heuristic to persona template
 
 **Files:**
-- Modify: `skills/avengers-assemble/references/persona-template.md` (after the new section from Task 2)
+- Modify: `skills/gigo/references/persona-template.md` (after the new section from Task 2)
 
 This task adds the dynamic determination framework — the runtime (Option C) component. Instead of hardcoding task lists, it gives the persona a self-assessment heuristic that Claude applies in the moment.
 
@@ -148,7 +148,7 @@ This is not a rigid gate — it's a lightweight metacognitive check. The model s
 
 - [ ] **Step 2: Verify the section reads as actionable guidance**
 
-Run: Read `skills/avengers-assemble/references/persona-template.md` in full and confirm:
+Run: Read `skills/gigo/references/persona-template.md` in full and confirm:
 - The heuristic is concrete enough to include in a generated workflow/standards file
 - The code block within the section is clearly marked as "include this in the generated project"
 - No overlap with the alignment-vs-knowledge section from Task 2 (that one is about design time; this one is about runtime)
@@ -156,7 +156,7 @@ Run: Read `skills/avengers-assemble/references/persona-template.md` in full and 
 - [ ] **Step 3: Commit**
 
 ```bash
-git add skills/avengers-assemble/references/persona-template.md
+git add skills/gigo/references/persona-template.md
 git commit -m "Add task-type awareness heuristic to persona template
 
 Gives assembled personas a self-assessment: presentation tasks get full
@@ -169,7 +169,7 @@ check instead of hardcoded task lists."
 ### Task 4: Add context-placement awareness to output-structure.md
 
 **Files:**
-- Modify: `skills/avengers-assemble/references/output-structure.md:69-77` (Persona Structure section)
+- Modify: `skills/gigo/references/output-structure.md:69-77` (Persona Structure section)
 
 This task captures the paper's finding that system-prompt placement amplifies both persona gains and losses. Knowledge-heavy persona content should load mid-task from references (user-context) rather than at session start from rules (system-context). Our two-tier architecture already supports this — we just need to make the *intent* explicit.
 
@@ -193,7 +193,7 @@ Never inflate. Never cap.
 
 - [ ] **Step 2: Verify the change is consistent with persona-template.md**
 
-Run: Read both `skills/avengers-assemble/references/output-structure.md` and `skills/avengers-assemble/references/persona-template.md` and confirm:
+Run: Read both `skills/gigo/references/output-structure.md` and `skills/gigo/references/persona-template.md` and confirm:
 - The output-structure section points to persona-template for details (it already does)
 - The new "Alignment vs knowledge placement" paragraph doesn't duplicate the fuller treatment in persona-template — it summarizes the architectural implication
 - Language is consistent between the two files
@@ -201,7 +201,7 @@ Run: Read both `skills/avengers-assemble/references/output-structure.md` and `sk
 - [ ] **Step 3: Commit**
 
 ```bash
-git add skills/avengers-assemble/references/output-structure.md
+git add skills/gigo/references/output-structure.md
 git commit -m "Add context-placement awareness to persona output structure
 
 System-prompt placement amplifies both persona gains and damage. Alignment
@@ -211,10 +211,10 @@ signal stays in rules (lean tier). Domain knowledge goes to references
 
 ---
 
-### Task 5: Update the avengers-assemble SKILL.md principles
+### Task 5: Update the gigo SKILL.md principles
 
 **Files:**
-- Modify: `skills/avengers-assemble/SKILL.md:163-172` (Principles section)
+- Modify: `skills/gigo/SKILL.md:163-172` (Principles section)
 
 The SKILL.md principles section is the top-level guidance for the assembler. It should reflect the new understanding without duplicating the detail in the reference files.
 
@@ -228,13 +228,13 @@ Add as principle 9 (before the closing of the Principles section), after princip
 
 - [ ] **Step 2: Verify SKILL.md stays under 500 lines**
 
-Run: Count lines in `skills/avengers-assemble/SKILL.md`
+Run: Count lines in `skills/gigo/SKILL.md`
 Expected: Under 500 lines (currently ~173, well within budget)
 
 - [ ] **Step 3: Commit**
 
 ```bash
-git add skills/avengers-assemble/SKILL.md
+git add skills/gigo/SKILL.md
 git commit -m "Add persona-awareness principle to assembly skill
 
 Principle 9: personas shape approach, not recall. Alignment content in
@@ -246,7 +246,7 @@ rules, knowledge content in references."
 ### Task 6: Update the snap template with persona-calibration audit step
 
 **Files:**
-- Modify: `skills/avengers-assemble/references/snap-template.md:28-39` (The Audit section)
+- Modify: `skills/gigo/references/snap-template.md:28-39` (The Audit section)
 
 The Snap audits rules every session. It should also check whether persona content in rules contains knowledge signal that should be in references.
 
@@ -264,7 +264,7 @@ Current step 6 "Total budget check" becomes step 7. Current step 7 "Coverage che
 
 - [ ] **Step 3: Verify the template reads coherently**
 
-Run: Read `skills/avengers-assemble/references/snap-template.md` in full and confirm:
+Run: Read `skills/gigo/references/snap-template.md` in full and confirm:
 - The new step fits the audit's progression (line check → derivability → overlap → staleness → cost → persona calibration → total budget → coverage)
 - The language matches the existing audit tone
 - The template stays under reasonable length
@@ -272,7 +272,7 @@ Run: Read `skills/avengers-assemble/references/snap-template.md` in full and con
 - [ ] **Step 4: Commit**
 
 ```bash
-git add skills/avengers-assemble/references/snap-template.md
+git add skills/gigo/references/snap-template.md
 git commit -m "Add persona-calibration audit step to Snap template
 
 Snap now checks whether persona entries contain knowledge signal that

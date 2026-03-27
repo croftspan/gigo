@@ -10,7 +10,7 @@ The Croftspan executive team (the origin of blended personas) proves the format 
 
 ### 1. Operator-Reading Logic
 
-During the `/avengers-assemble` kickoff conversation (Step 4 specifically), Fury sizes up the operator — never asks directly, just reads the room. Three signals:
+During the `/gigo` kickoff conversation (Step 4 specifically), Fury sizes up the operator — never asks directly, just reads the room. Three signals:
 
 **Domain familiarity**
 - High: "I'm building a Rails API with Solid Queue" — personas are peers who challenge and refine
@@ -238,7 +238,7 @@ Replace the board game example with two contrasting exchanges that show Fury rea
 
 **Example A — experienced, direct operator:**
 ```
-/avengers-assemble
+/gigo
 
 You: "Building a CLI tool for database migrations. Go, targets Postgres
      and MySQL. Should handle rollbacks, dry runs, and schema diffing."
@@ -265,7 +265,7 @@ Fury: "Three on this one:
 
 **Example B — casual, less experienced operator:**
 ```
-/avengers-assemble
+/gigo
 
 You: "kids books. like mystery ones? idk"
 
@@ -300,9 +300,9 @@ Then the existing "Works for anything: software, fiction, game design..." line s
 
 | File | Change |
 |---|---|
-| `skills/avengers-assemble/SKILL.md` | Update Step 4 with pitch-first presentation, add operator-reading guidance |
-| `skills/avengers-assemble/references/persona-template.md` | Replace with new two-tier format + calibration guidance |
-| `skills/avengers-assemble/references/output-structure.md` | Update persona section to reference new format, add `.claude/references/personas/` directory |
+| `skills/gigo/SKILL.md` | Update Step 4 with pitch-first presentation, add operator-reading guidance |
+| `skills/gigo/references/persona-template.md` | Replace with new two-tier format + calibration guidance |
+| `skills/gigo/references/output-structure.md` | Update persona section to reference new format, add `.claude/references/personas/` directory |
 | `skills/fury/references/upgrade-checklist.md` | Add row for new persona format — detect old `Philosophy/Expertise/Quality standard/Anti-patterns` labels, offer to reformat to `Modeled after/Owns/Quality bar/Won't do` |
 | `README.md` | Replace board game example with two contrasting examples + bridge paragraph |
 | `CLAUDE.md` | Reformat Sage, Forge, Mirror, Scribe, Voice using new lean format |

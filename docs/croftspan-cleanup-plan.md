@@ -94,7 +94,7 @@ Save learnings scoped correctly: agency-wide -> governance docs, client-specific
 
 ## New: Add The Snap
 
-Add `.claude/rules/snap.md` using the snap template from avengers-assemble, customized for Croftspan's routing table:
+Add `.claude/rules/snap.md` using the snap template from gigo, customized for Croftspan's routing table:
 
 | Learning type | Where it goes |
 |---|---|

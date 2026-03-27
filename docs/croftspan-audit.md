@@ -2,7 +2,7 @@
 
 Date: 2026-03-24
 
-Croftspan is a real agency built on Claude Code over 24 PRs and months of accumulated institutional knowledge. This audit examines what worked, what didn't, and what the avengers-assemble skill should learn from it.
+Croftspan is a real agency built on Claude Code over 24 PRs and months of accumulated institutional knowledge. This audit examines what worked, what didn't, and what the gigo skill should learn from it.
 
 ---
 
@@ -14,7 +14,7 @@ Croftspan is a real agency built on Claude Code over 24 PRs and months of accumu
 - **Client-scoped:** `vault/clients/meridian-health/client-notes.md` — preferences, decisions, industry learnings per client
 - **Service-scoped dev kits:** `vault/services/development/ruby-rails/` — 5 files per language (identity, stack, code-standards, testing, agent)
 
-Each dev kit is a blended-philosophy pattern made concrete. The Ruby kit draws from DHH, 37signals, Sandi Metz, Kent Beck. This IS the avengers-assemble methodology, just built by hand before the skill existed.
+Each dev kit is a blended-philosophy pattern made concrete. The Ruby kit draws from DHH, 37signals, Sandi Metz, Kent Beck. This IS the gigo methodology, just built by hand before the skill existed.
 
 **Skill lesson:** The reference tier should explicitly support client/project-scoped knowledge and reusable kits per domain. The vault pattern (context that accumulates per engagement) is a dimension the skill doesn't currently model.
 
@@ -136,7 +136,7 @@ Before writing any code in a language, Bruno loads 5 files:
 4. `testing.md` — testing philosophy and approach
 5. `agent.md` — how to operate (autonomy model, session behavior)
 
-"New language arrives with no kit? The kit is the first deliverable, not the code." This is avengers-assemble in miniature — research the domain, build the expertise framework, THEN start working.
+"New language arrives with no kit? The kit is the first deliverable, not the code." This is gigo in miniature — research the domain, build the expertise framework, THEN start working.
 
 ### The Persona Promotion Pipeline
 
@@ -177,13 +177,13 @@ What `/fury` walking into this would need to do:
 6. Acknowledge what's working — governance pointer pattern, vault, persona depth
 7. Propose concrete changes without losing institutional knowledge
 
-But this project wasn't built by `/avengers-assemble`. It grew organically. A truly new "existing project" mode needs to handle projects that have their own structure, conventions, and history — and improve them without destroying what works.
+But this project wasn't built by `/gigo`. It grew organically. A truly new "existing project" mode needs to handle projects that have their own structure, conventions, and history — and improve them without destroying what works.
 
 ---
 
 ## Next Steps
 
 1. Plan the croftspan-app cleanup using audit findings
-2. Design the "existing project" mode for avengers-assemble based on what we learn
+2. Design the "existing project" mode for gigo based on what we learn
 3. Build the mode into the skill files
 4. Run `/fury` (or the new mode) on croftspan-app as the test case

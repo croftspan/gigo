@@ -2,13 +2,13 @@
 
 ## Overview
 
-An eval suite that measures whether the output of `/avengers-assemble` (CLAUDE.md, .claude/rules/, .claude/references/) actually changes Claude Code's behavior compared to a bare project. Phase 1 of a two-phase plan — Phase 2 (on ice) builds an active routing layer if Phase 1 shows the context is passive/underused.
+An eval suite that measures whether the output of `/gigo` (CLAUDE.md, .claude/rules/, .claude/references/) actually changes Claude Code's behavior compared to a bare project. Phase 1 of a two-phase plan — Phase 2 (on ice) builds an active routing layer if Phase 1 shows the context is passive/underused.
 
 This becomes a permanent quality gate for the skill ecosystem. Re-run it after any change to the assembly skill to verify the product still works.
 
 ## The Question
 
-When `/avengers-assemble` sets up a project, it generates personas with quality bars, anti-patterns, blended authorities, and domain-specific rules. But does Claude actually *use* this context during a regular work session? Or is it decorative — loaded but ignored?
+When `/gigo` sets up a project, it generates personas with quality bars, anti-patterns, blended authorities, and domain-specific rules. But does Claude actually *use* this context during a regular work session? Or is it decorative — loaded but ignored?
 
 ## What We Measure
 
@@ -38,7 +38,7 @@ Pre-assembled projects committed to the repo. Two domains:
 - Assembled variant: CLAUDE.md with personas (story architect, prose stylist, young reader advocate), .claude/rules/, .claude/references/
 - Bare variant: same source files, no assembled context
 
-Fixtures are static — generated once by running `/avengers-assemble`, then committed. This isolates what we're measuring (does the *product* change behavior?) from whether the assembly process works.
+Fixtures are static — generated once by running `/gigo`, then committed. This isolates what we're measuring (does the *product* change behavior?) from whether the assembly process works.
 
 ### Layer 2: Test Runner (`run-eval.sh`)
 
@@ -186,7 +186,7 @@ One-time process, not part of the eval run:
 
 1. Create a minimal Rails API project skeleton in `fixtures/rails-api/bare/`
 2. Copy to `fixtures/rails-api/assembled/`
-3. Run `/avengers-assemble` in the assembled directory
+3. Run `/gigo` in the assembled directory
 4. Verify the generated context looks right (personas, quality bars, anti-patterns)
 5. Repeat for children's novel domain
 6. Commit all fixtures
@@ -207,7 +207,7 @@ Phase 2 design depends entirely on Phase 1 results. Don't design the fix before 
 
 ## Relationship to Existing Work
 
-- **iteration-1 evals:** Measured whether `/avengers-assemble` produces good output. This eval measures whether that output changes behavior. Different question.
+- **iteration-1 evals:** Measured whether `/gigo` produces good output. This eval measures whether that output changes behavior. Different question.
 - **Mirror's audit skill:** Scores structural quality (30-point checklist). This eval scores behavioral impact. Complementary.
 - **The Snap:** Audits rules for bloat. This eval audits rules for effectiveness. The Snap asks "is this worth loading?" This eval answers that question with data.
 - **Hu et al. persona-awareness:** The scoring framework can detect the alignment-vs-knowledge tradeoff in practice. If assembled context helps on Axis A/B but hurts on knowledge-heavy prompts in Axis C, that's the Hu et al. finding showing up in our data.

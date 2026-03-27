@@ -14,8 +14,8 @@ All Marvel references go. The project becomes GIGO.
 
 | Old | New | Notes |
 |---|---|---|
-| `avengers-assemble` | `gigo` | Repo, skill directories, all references |
-| `/avengers-assemble` → `gigo:gigo` | First assembly | |
+| `gigo` | `gigo` | Repo, skill directories, all references |
+| `/gigo` → `gigo:gigo` | First assembly | |
 | `/fury` + `/smash` → `gigo:maintain` | Merged — severity auto-detected | |
 | `/cap` → `gigo:plan` | Absorbs superpowers planning process | |
 | `/snap` → `gigo:snap` | Name survives — it's not Marvel-specific | |
@@ -102,7 +102,7 @@ Operator triggers gigo:snap at session end
 
 ### 3.1 `gigo:gigo` — First Assembly
 
-**Takes from:** Current `avengers-assemble` skill (our own code).
+**Takes from:** Current `gigo` skill (our own code).
 
 **What stays the same:**
 - Universal discovery framework (7 questions)
@@ -552,7 +552,7 @@ skills/
 
 ### What Existing Users See
 
-If someone ran `/avengers-assemble` on their project before the rename, their generated files still work — they reference `.claude/rules/` and `.claude/references/` which don't change structure. The workflow.md they have won't reference GIGO skills (it references the old generic loop), but it still functions.
+If someone ran `/gigo` on their project before the rename, their generated files still work — they reference `.claude/rules/` and `.claude/references/` which don't change structure. The workflow.md they have won't reference GIGO skills (it references the old generic loop), but it still functions.
 
 When they next interact with the tool (now GIGO), `gigo:maintain` can detect the old-format workflow and offer to upgrade it to the pipeline-aware version.
 

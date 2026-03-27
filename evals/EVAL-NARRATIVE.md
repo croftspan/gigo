@@ -4,7 +4,7 @@ How we proved assembled context works, found the gaps, closed them, added an adv
 
 ## The Question
 
-Does the output of `/avengers-assemble` — the personas, quality gates, workflow loops, and reference files — actually change Claude's behavior? Or is it just expensive token decoration?
+Does the output of `/gigo` — the personas, quality gates, workflow loops, and reference files — actually change Claude's behavior? Or is it just expensive token decoration?
 
 ## The Setup
 
@@ -253,11 +253,11 @@ Rails prompt 08 ("I need to add a payment system") ties on every run — both ve
 - `evals/fixtures/*/standards.md` — task-specific "When to Go Deeper" pointers
 
 ### Hawkeye (adversarial output gate):
-- `skills/avengers-assemble/SKILL.md` — Principle 10: every team has overwatch
-- `skills/avengers-assemble/references/persona-template.md` — mandatory calibration directive + The Overwatch section with domain-adapted templates
-- `skills/avengers-assemble/references/output-structure.md` — table updated to require calibration, overwatch, and specific pointers
-- `skills/avengers-assemble/references/extension-file-guide.md` — generic-pointer anti-pattern
-- `skills/avengers-assemble/references/snap-template.md` — Overwatch audit check (check 9)
+- `skills/gigo/SKILL.md` — Principle 10: every team has overwatch
+- `skills/gigo/references/persona-template.md` — mandatory calibration directive + The Overwatch section with domain-adapted templates
+- `skills/gigo/references/output-structure.md` — table updated to require calibration, overwatch, and specific pointers
+- `skills/gigo/references/extension-file-guide.md` — generic-pointer anti-pattern
+- `skills/gigo/references/snap-template.md` — Overwatch audit check (check 9)
 - `skills/fury/SKILL.md` — Principle 9: overwatch scales with the team
 - `skills/fury/references/targeted-addition.md` — Hawkeye threshold check on persona addition
 - `evals/fixtures/*/workflow.md` — domain-adapted Overwatch sections
@@ -354,11 +354,11 @@ This maps to the existing superpowers workflow: brainstorm with the team, plan w
 - `evals/fixtures/*/standards.md` — task-specific "When to Go Deeper" pointers
 
 ### Hawkeye (adversarial output gate):
-- `skills/avengers-assemble/SKILL.md` — Principle 10: every team has overwatch
-- `skills/avengers-assemble/references/persona-template.md` — mandatory calibration directive + The Overwatch section with domain-adapted templates
-- `skills/avengers-assemble/references/output-structure.md` — table updated to require calibration, overwatch, and specific pointers
-- `skills/avengers-assemble/references/extension-file-guide.md` — generic-pointer anti-pattern
-- `skills/avengers-assemble/references/snap-template.md` — Overwatch audit check (check 9)
+- `skills/gigo/SKILL.md` — Principle 10: every team has overwatch
+- `skills/gigo/references/persona-template.md` — mandatory calibration directive + The Overwatch section with domain-adapted templates
+- `skills/gigo/references/output-structure.md` — table updated to require calibration, overwatch, and specific pointers
+- `skills/gigo/references/extension-file-guide.md` — generic-pointer anti-pattern
+- `skills/gigo/references/snap-template.md` — Overwatch audit check (check 9)
 - `skills/fury/SKILL.md` — Principle 9: overwatch scales with the team
 - `skills/fury/references/targeted-addition.md` — Hawkeye threshold check on persona addition
 - `skills/fury/references/upgrade-checklist.md` — all new features in upgrade detection
@@ -612,7 +612,7 @@ This replaces the Phase 5 architecture that had "war stories for structured exec
 - `evals/fixtures/*/standards.md` — task-specific "When to Go Deeper" pointers
 
 ### Hawkeye (adversarial output gate):
-- `skills/avengers-assemble/SKILL.md` — Principle 10: every team has overwatch
+- `skills/gigo/SKILL.md` — Principle 10: every team has overwatch
 - All skill templates updated (persona-template, output-structure, extension-file-guide, snap-template)
 - `skills/fury/` and `skills/smash/` — Overwatch checks, threshold detection, upgrade support
 

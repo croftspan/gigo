@@ -29,7 +29,7 @@ for domain in "${DOMAINS[@]}"; do
   fi
 
   if [ ! -f "$DOMAIN_DIR/CLAUDE.md" ]; then
-    echo "ERROR: No CLAUDE.md in fixture — run /avengers-assemble first: $DOMAIN_DIR"
+    echo "ERROR: No CLAUDE.md in fixture — run /gigo first: $DOMAIN_DIR"
     exit 1
   fi
 

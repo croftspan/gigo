@@ -20,7 +20,7 @@
 Add after principle 7 ("Whatever it takes." on line 65):
 
 ```markdown
-8. **Personas shape approach, not recall.** When adding or auditing personas, keep alignment signal (quality bars, approach, constraints) in rules. Move domain knowledge (factual specifics, implementation patterns) to references. Read `avengers-assemble/references/persona-template.md` for the full standard.
+8. **Personas shape approach, not recall.** When adding or auditing personas, keep alignment signal (quality bars, approach, constraints) in rules. Move domain knowledge (factual specifics, implementation patterns) to references. Read `gigo/references/persona-template.md` for the full standard.
 ```
 
 - [ ] **Step 2: Verify file reads well**
@@ -63,7 +63,7 @@ In Step 5 "Merge", add after the line about reading templates (line 50):
 
 ```markdown
 
-When designing the new persona, separate alignment signal from knowledge signal. The lean tier entry in CLAUDE.md should contain only alignment content — quality bars, approach, constraints, what to push back on. Domain-specific knowledge (factual details, implementation patterns, technical specifics) belongs in `.claude/references/personas/` or a reference file, loaded on demand. See `avengers-assemble/references/persona-template.md` for the "Alignment vs Knowledge Signal" section.
+When designing the new persona, separate alignment signal from knowledge signal. The lean tier entry in CLAUDE.md should contain only alignment content — quality bars, approach, constraints, what to push back on. Domain-specific knowledge (factual details, implementation patterns, technical specifics) belongs in `.claude/references/personas/` or a reference file, loaded on demand. See `gigo/references/persona-template.md` for the "Alignment vs Knowledge Signal" section.
 ```
 
 - [ ] **Step 3: Verify the file reads coherently**

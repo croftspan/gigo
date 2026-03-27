@@ -48,7 +48,7 @@ Task 15: Final verification and commit
 ### Task 1: Rename Skill Directories
 
 **Files:**
-- Move: `skills/avengers-assemble/` → `skills/gigo/`
+- Move: `skills/gigo/` → `skills/gigo/`
 - Move: `skills/cap/` → `skills/plan/`
 - Move: `skills/fury/` → merge into `skills/maintain/` (new)
 - Move: `skills/smash/` → merge into `skills/maintain/` (new)
@@ -68,14 +68,14 @@ mkdir -p skills/eval/references
 mkdir -p skills/maintain/references
 ```
 
-- [ ] **Step 2: Move avengers-assemble to gigo**
+- [ ] **Step 2: Move gigo to gigo**
 
 ```bash
-cp skills/avengers-assemble/SKILL.md skills/gigo/SKILL.md
-cp skills/avengers-assemble/references/output-structure.md skills/gigo/references/output-structure.md
-cp skills/avengers-assemble/references/persona-template.md skills/gigo/references/persona-template.md
-cp skills/avengers-assemble/references/snap-template.md skills/gigo/references/snap-template.md
-cp skills/avengers-assemble/references/extension-file-guide.md skills/gigo/references/extension-file-guide.md
+cp skills/gigo/SKILL.md skills/gigo/SKILL.md
+cp skills/gigo/references/output-structure.md skills/gigo/references/output-structure.md
+cp skills/gigo/references/persona-template.md skills/gigo/references/persona-template.md
+cp skills/gigo/references/snap-template.md skills/gigo/references/snap-template.md
+cp skills/gigo/references/extension-file-guide.md skills/gigo/references/extension-file-guide.md
 ```
 
 - [ ] **Step 3: Copy cap files to plan (will be rewritten in Task 7)**
@@ -125,7 +125,7 @@ Replace the entire `CLAUDE.md` with updated content. Changes:
 2. Update description to reflect team-assembly + execution pipeline
 3. Add Conductor persona to The Team section
 4. Rename Hawkeye to "The Overwatch" (functional name, no Marvel)
-5. Update all skill references: `/avengers-assemble` → `gigo:gigo`, `/fury` → `gigo:maintain`, `/smash` → `gigo:maintain`, `/cap` → `gigo:plan`, `/snap` → `gigo:snap`
+5. Update all skill references: `/gigo` → `gigo:gigo`, `/fury` → `gigo:maintain`, `/smash` → `gigo:maintain`, `/cap` → `gigo:plan`, `/snap` → `gigo:snap`
 6. Add `gigo:execute`, `gigo:review`, `gigo:eval` to Quick Reference
 7. Update skill count from 5 to 7
 8. Drop "Avengers" from the name throughout — the project is now GIGO
@@ -164,7 +164,7 @@ Read `README.md`. Rename the project from "Avengers Assemble" to "GIGO (Garbage 
 1. Title and tagline — drop the Fury quote, lead with what GIGO does
 2. Skill list — update from 5 to 7 with new names
 3. Remove all Marvel references (Fury, Hulk, Avengers, etc.)
-4. Update any `/avengers-assemble` command references to `gigo:gigo`
+4. Update any `/gigo` command references to `gigo:gigo`
 5. Keep the content structure The Voice designed — just rename and update
 
 - [ ] **Step 4: Commit**
@@ -194,7 +194,7 @@ Read each file to see current content.
 
 Replace all references:
 - "Avengers Assemble" → "GIGO"
-- `/avengers-assemble` → `gigo:gigo`
+- `/gigo` → `gigo:gigo`
 - `/fury` → `gigo:maintain`
 - `/smash` → `gigo:maintain`
 - `/cap` → `gigo:plan`
@@ -222,7 +222,7 @@ Replace all references:
 - "Avengers Assemble" → "GIGO"
 - `/fury` → `gigo:maintain`
 - `/smash` → `gigo:maintain`
-- `/avengers-assemble` → `gigo:gigo`
+- `/gigo` → `gigo:gigo`
 - "Hawkeye" → "The Overwatch"
 - Add pipeline health check as audit step 10:
   ```
@@ -254,7 +254,7 @@ Read `spec.md` to see current content.
 Changes:
 1. Rename "Avengers Assemble" → "GIGO" throughout
 2. Update skill roster from 5 to 7 (add execute, review, eval)
-3. Update skill names: `/avengers-assemble` → `gigo:gigo`, `/fury` → `gigo:maintain`, `/smash` → `gigo:maintain`, `/cap` → `gigo:plan`, `/snap` → `gigo:snap`
+3. Update skill names: `/gigo` → `gigo:gigo`, `/fury` → `gigo:maintain`, `/smash` → `gigo:maintain`, `/cap` → `gigo:plan`, `/snap` → `gigo:snap`
 4. Add pipeline architecture section describing the plan→execute→review flow
 5. Update trigger conditions for new skill names
 6. Add Conductor to the team roster section
@@ -352,18 +352,18 @@ git commit -m "feat: add pipeline architecture reference — Conductor's why-it-
 
 - [ ] **Step 1: Read current skills/gigo/SKILL.md**
 
-This was copied from avengers-assemble in Task 1. Read it.
+This was copied from gigo in Task 1. Read it.
 
 - [ ] **Step 2: Rewrite SKILL.md**
 
-Take the current avengers-assemble SKILL.md and apply these changes:
+Take the current gigo SKILL.md and apply these changes:
 
 1. **Frontmatter:** Update name to `gigo`, update description to reference GIGO not Avengers Assemble. Update trigger conditions: "Use this skill when the user wants to start a new project, set up Claude Code for a project, kick off work in an unfamiliar field, or says 'gigo.'"
 
 2. **Drop Nick Fury voice.** Replace "You are Nick Fury" with neutral skill voice: "You're assembling the best team in the field for this project. Your job is to research the domain, find the authorities, blend their philosophies into focused expert personas, and scaffold a Claude Code project." Direct, opinionated, but not a character.
 
 3. **Update all skill references:**
-   - `/avengers-assemble` → `gigo:gigo`
+   - `/gigo` → `gigo:gigo`
    - `/fury` → `gigo:maintain`
    - `/smash` → `gigo:maintain`
    - `/cap` → `gigo:plan`
@@ -1124,7 +1124,7 @@ description: "Ongoing maintenance for your assembled expert team. Add expertise,
 
 - [ ] **Step 3: Update references/targeted-addition.md**
 
-Update all references from fury/avengers-assemble to GIGO naming. Replace Hawkeye with The Overwatch. Replace "Fury" voice. Update persona-template reference to `gigo/references/persona-template.md`.
+Update all references from fury/gigo to GIGO naming. Replace Hawkeye with The Overwatch. Replace "Fury" voice. Update persona-template reference to `gigo/references/persona-template.md`.
 
 - [ ] **Step 4: Update references/health-check.md**
 
@@ -1132,7 +1132,7 @@ Update all references. Add pipeline health to the three-axis check (coverage, fr
 
 - [ ] **Step 5: Create references/restructure.md**
 
-Extract smash's Phase 1-6 process into this reference file. Update all references from smash/avengers-assemble to GIGO naming. Replace Fury/Hulk voice. Update persona-template and output-structure references. Add pipeline check to Phase 2 (measure) and Phase 5 (execute — ensure pipeline workflow is generated).
+Extract smash's Phase 1-6 process into this reference file. Update all references from smash/gigo to GIGO naming. Replace Fury/Hulk voice. Update persona-template and output-structure references. Add pipeline check to Phase 2 (measure) and Phase 5 (execute — ensure pipeline workflow is generated).
 
 - [ ] **Step 6: Update references/upgrade-checklist.md**
 
@@ -1258,7 +1258,7 @@ Read each to see current content.
 - [ ] **Step 2: Update output-structure.md**
 
 Changes:
-1. Replace all "Avengers Assemble" / "avengers-assemble" references with "GIGO" / "gigo"
+1. Replace all "Avengers Assemble" / "gigo" references with "GIGO" / "gigo"
 2. Update generated workflow.md template to encode the pipeline (from spec Section 4.2):
    - Planning section pointing to `gigo:plan`
    - Execution and Review section pointing to `gigo:execute` (review is automatic per task)
@@ -1303,7 +1303,7 @@ git commit -m "feat: update gigo:gigo references — pipeline workflow template,
 ### Task 14: Clean Up Old Skill Directories
 
 **Files:**
-- Delete: `skills/avengers-assemble/` (copied to skills/gigo/ in Task 1)
+- Delete: `skills/gigo/` (copied to skills/gigo/ in Task 1)
 - Delete: `skills/cap/` (absorbed into skills/plan/ in Task 7)
 - Delete: `skills/fury/` (merged into skills/maintain/ in Task 11)
 - Delete: `skills/smash/` (merged into skills/maintain/ in Task 11)
@@ -1323,7 +1323,7 @@ All 7 should exist.
 - [ ] **Step 2: Remove old directories**
 
 ```bash
-rm -rf skills/avengers-assemble/
+rm -rf skills/gigo/
 rm -rf skills/cap/
 rm -rf skills/fury/
 rm -rf skills/smash/
@@ -1334,7 +1334,7 @@ rm -rf skills/smash/
 Search for any remaining references to old skill names in the codebase:
 
 ```bash
-grep -r "avengers-assemble\|/fury\|/smash\|/cap\b\|Hawkeye" skills/ CLAUDE.md README.md .claude/rules/ spec.md --include="*.md" -l
+grep -r "gigo\|/fury\|/smash\|/cap\b\|Hawkeye" skills/ CLAUDE.md README.md .claude/rules/ spec.md --include="*.md" -l
 ```
 
 If any files still reference old names, fix them.
@@ -1343,7 +1343,7 @@ If any files still reference old names, fix them.
 
 ```bash
 git add -A
-git commit -m "feat: remove old skill directories — avengers-assemble, cap, fury, smash"
+git commit -m "feat: remove old skill directories — gigo, cap, fury, smash"
 ```
 
 ---

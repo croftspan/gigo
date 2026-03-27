@@ -7,13 +7,13 @@
 
 ### The Problem
 
-Every `/avengers-assemble` run starts from zero. The skill researches authorities, blends philosophies, builds personas — and throws all of that work away when it's done. The next person building a Rails app does the same research, discovers the same authorities, makes similar blends. Thousands of hours of redundant research across the community.
+Every `/gigo` run starts from zero. The skill researches authorities, blends philosophies, builds personas — and throws all of that work away when it's done. The next person building a Rails app does the same research, discovers the same authorities, makes similar blends. Thousands of hours of redundant research across the community.
 
 Meanwhile, the most valuable thing the skill produces — validated blends refined by real users over real projects — has no way to persist or spread.
 
 ### The Proposal
 
-A shared, community-driven registry that every avengers-assemble skill can pull from and contribute back to. Not a database of generic templates — a living knowledge base of battle-tested expertise refined by real usage.
+A shared, community-driven registry that every gigo skill can pull from and contribute back to. Not a database of generic templates — a living knowledge base of battle-tested expertise refined by real usage.
 
 ### What Lives in the Registry
 
@@ -42,7 +42,7 @@ A shared, community-driven registry that every avengers-assemble skill can pull 
 
 ### How It Works
 
-**Discovery (built into `/avengers-assemble` Step 3: Research)**
+**Discovery (built into `/gigo` Step 3: Research)**
 
 Before researching from scratch, the skill checks the Initiative:
 
@@ -58,7 +58,7 @@ Options:
 - **Start from, customize** — use as a foundation, swap/add/remove personas
 - **Build fresh** — ignore the Initiative, research from scratch (current behavior)
 
-**Contribution (built into `/avengers-assemble` Step 6: Write Files)**
+**Contribution (built into `/gigo` Step 6: Write Files)**
 
 After writing files, opt-in contribution:
 
@@ -93,7 +93,7 @@ Usage data flows back: which blends survive health checks, which get cut, which 
 
 ### The Flywheel
 
-1. Early adopters contribute blends from `/avengers-assemble` runs
+1. Early adopters contribute blends from `/gigo` runs
 2. New users discover validated blends instead of starting from zero
 3. `/fury` health checks and `/smash` restructures generate refinement signal
 4. Popular blends rise, stale ones fade, domain coverage grows organically
@@ -101,7 +101,7 @@ Usage data flows back: which blends survive health checks, which get cut, which 
 
 ### The Social Angle
 
-- "I just ran `/avengers-assemble` for a Roblox game and it already knew about Quenty's NevermoreEngine patterns because someone contributed that blend last month"
+- "I just ran `/gigo` for a Roblox game and it already knew about Quenty's NevermoreEngine patterns because someone contributed that blend last month"
 - Leaderboard of top contributors by domain
 - "Used in X projects" badges on blends
 - Domain experts become recognized authorities in the Initiative itself
@@ -109,7 +109,7 @@ Usage data flows back: which blends survive health checks, which get cut, which 
 ### Implementation Phases
 
 **Phase 1: Structured Logging (no infrastructure)**
-- Every `/avengers-assemble` run appends to a local structured log (JSON)
+- Every `/gigo` run appends to a local structured log (JSON)
 - Authority names, blends, domain tags, what the user kept/cut
 - No sharing yet — just building the data model from real usage
 - Ship this first. Learn what patterns emerge from 20-30 runs.
