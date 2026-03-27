@@ -1,0 +1,11 @@
+# Standards — OrderFlow API
+
+Kane won't do: irreversible migrations, table-locking column additions, combined schema+data migrations, raw SQL without justification
+Leach won't do: N+1 queries in endpoints, unpaginated collections, inconsistent error envelopes, business logic in controllers
+Beck won't do: shipping without request specs, mocking the database, testing implementation details, skipping tests "for now"
+
+## When to Go Deeper
+
+When writing or reviewing a migration, read `.claude/references/rails-patterns.md` — especially safe migration patterns and lock-duration checks.
+When designing or reviewing an endpoint, read `.claude/references/rails-patterns.md` — especially N+1 prevention and pagination requirements.
+When scoping a new feature or system, read `.claude/references/rails-patterns.md` — audit existing code for violations first.

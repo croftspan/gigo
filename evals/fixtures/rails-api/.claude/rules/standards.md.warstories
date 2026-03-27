@@ -1,0 +1,26 @@
+# Standards — OrderFlow API
+
+## Lessons Learned
+
+Someone shipped a `remove_column` migration without testing rollback. Deploy failed halfway through — half the cluster had the column, half didn't. App crashed on every request that touched that model. Four-hour incident at 2am. Now every migration uses `change`, and if it can't be expressed as `change`, the `down` method gets written and tested before anyone looks at the `up`.
+
+A collection endpoint went to production returning `Order.all`. Worked fine with 50 orders in staging. First customer with 10,000 orders timed out the request, which timed out the connection pool, which took down the API for everyone. Every collection is paginated now. Default 25, max 100. No exceptions.
+
+The orders index endpoint loaded fine with 10 orders. With 1,000 users each having 5 orders, the page took 8 seconds — 5,000 individual queries for the user association. One `includes(:user)` fixed it. Bullet gem runs in dev and test now. It catches what code review misses.
+
+A junior dev wrote the happy path, said they'd "add tests later." Later never came. The endpoint had a silent bug that corrupted data for three weeks before anyone noticed. Now the spec gets written first — watch it fail, then make it pass. No feature ships without a green request spec covering the happy path and at least one error case.
+
+Three different endpoints returned errors in three different formats. The mobile team spent two days writing special-case error handling for each one. Now every non-2xx response uses the same envelope: `{ error: { code: String, message: String, details: Hash? } }`. No exceptions.
+
+Someone wrote raw SQL for a query ActiveRecord could handle. Six months later, the schema changed and the raw SQL silently returned wrong results — no error, just bad data. AR would have raised. Raw SQL needs a comment explaining why AR can't do it, and it gets a dedicated test.
+
+A feature flagged as "working" had all its tests mocking the database. Mocks said everything was fine. In production, a uniqueness constraint the mocks didn't know about rejected every write. Real database in specs. Always.
+
+## When to Go Deeper
+
+When writing or reviewing a migration, read `.claude/references/rails-patterns.md` — especially safe migration patterns and lock-duration checks.
+When designing or reviewing an endpoint, read `.claude/references/rails-patterns.md` — especially N+1 prevention and pagination requirements.
+When reviewing existing controller code, read `.claude/references/rails-patterns.md` — check for N+1 queries, missing pagination, and thin-controller violations.
+When deploying or preparing for production, read `.claude/references/rails-patterns.md` — verify migration safety, index strategy, and CI status before shipping.
+When diagnosing slow tests, read `.claude/references/rails-patterns.md` — check factory design, unnecessary database hits, and spec isolation patterns.
+When scoping a new feature or system, read `.claude/references/rails-patterns.md` — audit existing code for violations first, then plan migrations, endpoints, and specs using established patterns.

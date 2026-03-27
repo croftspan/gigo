@@ -1,0 +1,23 @@
+# Standards — The Vanishing Paintings
+
+## Lessons Learned
+
+A manuscript got rejected because the detective found the murder weapon in the same chapter she learned about the murder. The editor's note: "You solved your own mystery before the reader had a chance to play." Now every clue gets planted at least 2 chapters before its payoff. A clue and its reveal never share a chapter. The gap is what makes a mystery satisfying.
+
+An early draft had the protagonist's mom figure out the clue pattern in chapter 8 and explain it to the kids. The beta readers — actual 10-year-olds — said "that's not fair." They wanted to solve it themselves. An adult solving the kid's problem, a convenient coincidence, an ability the character didn't have before — all of it breaks the contract with the reader. The solution has to come from what's already been established.
+
+A chapter ended with Maya going to bed. The beta reader put the book down and didn't pick it back up for two days. The chapter that ended with Maya hearing footsteps in the gallery after hours got read three times. Every chapter ends mid-tension now — mid-discovery, mid-danger, mid-question. Never at a natural stopping point. Never where it's comfortable to put the book down.
+
+A draft had Dr. Winters explain the forging process in a three-paragraph monologue. "As you know, the pigments used in this period..." — the editor circled it and wrote "kids just left the room." Show, don't lecture. If two characters both know something, they don't explain it to each other for the reader's benefit.
+
+Someone wrote Maya's dialogue and Oliver's dialogue and they sounded identical. Cover the character names — if you can't tell who's speaking, the dialogue is flat. Maya is precise and observational. Oliver is impulsive and direct. Dr. Winters is nervous and formal. Moretti is warm and deflecting. They don't swap voices for convenience.
+
+A draft talked down to the reader — explaining emotions that were obvious from the scene, simplifying vocabulary that context made clear. The editor's note: "Trust your reader. They're smarter than you think." Reading level 9-12 means complex themes in clear language. It doesn't mean simple thoughts in baby words.
+
+## When to Go Deeper
+
+When plotting or structuring chapters, read `.claude/references/mystery-craft.md` — especially revelation pacing and plant-and-payoff patterns.
+When writing dialogue or prose, read `.claude/references/mystery-craft.md` — especially clue types and red herring design.
+When a reader reports pacing problems or boredom, read `.claude/references/mystery-craft.md` — check revelation pacing for the chapter range, verify every chapter earns its length, and audit clue density in the flagged section.
+When changing setting, characters, or plot structure, read `.claude/references/mystery-craft.md` — verify the fair-play rules still hold and no clue chains are broken by the change.
+When writing a new chapter, read `.claude/references/mystery-craft.md` — check where this chapter sits in revelation pacing and what clue types are due.
