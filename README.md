@@ -28,9 +28,11 @@ Open any project in Claude Code. Type `gigo`.
 
 4. **Review with real standards** — Two focused reviewers catch different bugs than one reviewer trying to do everything. The team knows what to look for.
 
-We proved this works with [9 phases of experiments](site/research/) across two completely different domains (a Rails API and a children's mystery novel), built on research from [Gloaguen et al.](https://arxiv.org/abs/2602.11988) and [Hu et al.](https://arxiv.org/abs/2603.18507)
+Most AI tools are vibe coded — ship it, hope it works, iterate on feelings. We took a different approach: published research, controlled experiments, real methodology.
 
-The results: **97% on the first pass. Zero fixes needed.** 70M+ Claude tokens burned proving it.
+9 phases. Hundreds of eval runs. Blinded judging. Principal engineer reviews. Two completely different domains — a Rails API and a children's mystery novel. Built on [Gloaguen et al.](https://arxiv.org/abs/2602.11988) and [Hu et al.](https://arxiv.org/abs/2603.18507) 70M+ Claude tokens burned proving it.
+
+The results: **97% on the first pass. Zero fixes needed.**
 
 ---
 
