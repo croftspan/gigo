@@ -3,6 +3,9 @@
 (function () {
   'use strict';
 
+  /* --- Prevent transition flash on load --- */
+  document.body.classList.add('no-transition');
+
   /* --- Dark/Light Theme Toggle --- */
   var toggle = document.getElementById('theme-toggle');
   var root = document.documentElement;
@@ -15,6 +18,13 @@
 
   var saved = localStorage.getItem('gigo-theme');
   applyTheme(saved || 'dark');
+
+  /* Re-enable transitions after first paint */
+  requestAnimationFrame(function () {
+    requestAnimationFrame(function () {
+      document.body.classList.remove('no-transition');
+    });
+  });
 
   if (toggle) {
     toggle.addEventListener('click', function () {
@@ -29,7 +39,8 @@
 
   if (navToggle && navMenu) {
     navToggle.addEventListener('click', function () {
-      navMenu.classList.toggle('open');
+      var isOpen = navMenu.classList.toggle('open');
+      navToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
     });
   }
 })();

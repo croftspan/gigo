@@ -25,11 +25,12 @@
   <!-- article-body styles in shared style.css -->
 </head>
 <body>
+  <a href="#main-content" class="skip-link">Skip to content</a>
 
   <nav class="site-nav">
     <div class="container">
       <a href="../" class="brand"><span class="brand-kanji">義剛</span> GIGO</a>
-      <button id="nav-toggle" aria-label="Toggle navigation">
+      <button id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
         <span></span><span></span><span></span>
       </button>
       <ul id="nav-menu" class="nav-links">
@@ -42,10 +43,10 @@
     </div>
   </nav>
 
-  <main>
+  <main id="main-content">
     <div class="article-body">
 
-      <header class="section" style="padding-bottom: 0;">
+      <header class="section section--flush">
         <h1>Design Philosophy</h1>
       </header>
 

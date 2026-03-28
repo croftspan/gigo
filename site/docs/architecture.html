@@ -25,11 +25,12 @@
   <!-- article-body styles in shared style.css -->
 </head>
 <body>
+  <a href="#main-content" class="skip-link">Skip to content</a>
 
   <nav class="site-nav">
     <div class="container">
       <a href="../" class="brand"><span class="brand-kanji">義剛</span> GIGO</a>
-      <button id="nav-toggle" aria-label="Toggle navigation">
+      <button id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
         <span></span><span></span><span></span>
       </button>
       <ul id="nav-menu" class="nav-links">
@@ -42,10 +43,10 @@
     </div>
   </nav>
 
-  <main>
+  <main id="main-content">
     <div class="article-body">
 
-      <header class="section" style="padding-bottom: 0;">
+      <header class="section section--flush">
         <h1>Architecture</h1>
       </header>
 
@@ -60,7 +61,8 @@
       <!-- Two Tiers -->
       <section class="section" id="two-tiers">
         <h2>Two Tiers</h2>
-        <table>
+        <div class="table-wrapper">
+        <div class="table-wrapper"><table>
           <thead><tr><th></th><th>Rules</th><th>References</th></tr></thead>
           <tbody>
             <tr><td><strong>Location</strong></td><td><code>.claude/rules/</code></td><td><code>.claude/references/</code></td></tr>
@@ -69,7 +71,8 @@
             <tr><td><strong>Content</strong></td><td>Philosophy, quality bars, workflow, universal patterns</td><td>Deep knowledge, technique catalogs, authority profiles</td></tr>
             <tr><td><strong>Cap</strong></td><td>~60 lines per file, ~300 total</td><td>No cap</td></tr>
           </tbody>
-        </table>
+        </table></div>
+        </div>
         <p>The key innovation: <strong>&ldquo;When to Go Deeper&rdquo; pointers.</strong> Rules files don&rsquo;t just point to references &mdash; they tell the agent <em>when</em> to read them. Not generic &ldquo;see also&rdquo; links but task-specific triggers:</p>
         <blockquote><p>&ldquo;When tuning cooperative balance, read <code>.claude/references/cooperative-balance.md</code>.&rdquo;</p></blockquote>
         <p>This makes the system task-aware: deep context loads only when relevant. Phase 2a proved it &mdash; task-specific pointers took the children&rsquo;s novel from 86% to 100%.</p>

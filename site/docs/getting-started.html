@@ -25,11 +25,12 @@
   <!-- article-body styles in shared style.css -->
 </head>
 <body>
+  <a href="#main-content" class="skip-link">Skip to content</a>
 
   <nav class="site-nav">
     <div class="container">
       <a href="../" class="brand"><span class="brand-kanji">義剛</span> GIGO</a>
-      <button id="nav-toggle" aria-label="Toggle navigation">
+      <button id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
         <span></span><span></span><span></span>
       </button>
       <ul id="nav-menu" class="nav-links">
@@ -42,10 +43,10 @@
     </div>
   </nav>
 
-  <main>
+  <main id="main-content">
     <div class="article-body">
 
-      <header class="section" style="padding-bottom: 0;">
+      <header class="section section--flush">
         <h1>Getting Started</h1>
       </header>
 
@@ -84,7 +85,8 @@ cp -r gigo/skills/ ~/.claude/skills/</code></pre>
       <!-- What Gets Created -->
       <section class="section" id="what-gets-created">
         <h2>What Gets Created</h2>
-        <table>
+        <div class="table-wrapper">
+        <div class="table-wrapper"><table>
           <thead><tr><th>File</th><th>What it does</th><th>Token cost</th></tr></thead>
           <tbody>
             <tr>
@@ -103,16 +105,16 @@ cp -r gigo/skills/ ~/.claude/skills/</code></pre>
               <td>Zero cost when unused. Loaded on demand via &ldquo;When to Go Deeper&rdquo; pointers</td>
             </tr>
           </tbody>
-        </table>
+        </table></div>
+        </div>
         <p>The two-tier architecture keeps always-on context lean and loads depth only when relevant. This is based on <a href="https://arxiv.org/abs/2602.11988" target="_blank" rel="noopener">Gloaguen et al. (2026)</a>, which found that bloated context reduces task success rates while increasing cost by 20%+.</p>
       </section>
 
       <!-- Next Steps -->
       <section class="section" id="next-steps">
         <h2>Next Steps</h2>
-        <table>
-          <thead><tr><th>Skill</th><th>When to use it</th></tr></thead>
-          <tbody>
+        <div class="table-wrapper">
+        <div class="table-wrapper"><table>
             <tr>
               <td><code>gigo:plan</code></td>
               <td>Turn your first task into a spec and implementation plan. Brainstorms first, then structures.</td>
@@ -130,7 +132,8 @@ cp -r gigo/skills/ ~/.claude/skills/</code></pre>
               <td>Run at session end to audit rules and protect the project from context bloat.</td>
             </tr>
           </tbody>
-        </table>
+        </table></div>
+        </div>
         <p>See <a href="skills.html">all seven skills</a> for full documentation.</p>
       </section>
 

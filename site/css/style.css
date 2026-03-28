@@ -85,6 +85,11 @@ body {
   flex-direction: column;
 }
 
+body.no-transition,
+body.no-transition * {
+  transition: none !important;
+}
+
 a {
   color: var(--accent);
   text-decoration: none;
@@ -99,6 +104,42 @@ a:hover {
 img {
   max-width: 100%;
   height: auto;
+}
+
+/* --- Focus — keyboard navigation (WCAG 2.4.7) --- */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* --- Skip to Content (WCAG 2.4.1) --- */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--accent);
+  color: var(--bg);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  border-radius: 0 0 6px 6px;
+  z-index: 200;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* --- Utility --- */
+.text-secondary {
+  color: var(--text-secondary);
 }
 
 /* --- Typography --- */
@@ -216,7 +257,8 @@ p {
   background: none;
   border: 1px solid var(--border);
   border-radius: 4px;
-  padding: var(--space-xs) var(--space-sm);
+  padding: 0.5em 0.75em;
+  min-height: 44px;
   color: var(--text-secondary);
   cursor: pointer;
   font-size: var(--text-sm);
@@ -236,7 +278,9 @@ p {
   border: none;
   color: var(--text);
   cursor: pointer;
-  padding: var(--space-xs);
+  padding: var(--space-sm);
+  min-width: 44px;
+  min-height: 44px;
   font-size: var(--text-lg);
   line-height: 1;
 }
@@ -338,6 +382,15 @@ table {
   border-collapse: collapse;
   margin-bottom: var(--space-lg);
   font-size: var(--text-sm);
+}
+
+caption {
+  caption-side: top;
+  text-align: left;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-sm);
+  font-style: italic;
 }
 
 th, td {
@@ -472,6 +525,10 @@ blockquote cite,
 /* --- Section Modifiers --- */
 .section--flush {
   padding-bottom: 0;
+}
+
+.section--flush-top {
+  padding-top: 0;
 }
 
 /* --- Finding List (landing page data points) --- */

@@ -29,11 +29,12 @@
   </style>
 </head>
 <body>
+  <a href="#main-content" class="skip-link">Skip to content</a>
 
   <nav class="site-nav">
     <div class="container">
       <a href="../" class="brand"><span class="brand-kanji">義剛</span> GIGO</a>
-      <button id="nav-toggle" aria-label="Toggle navigation">
+      <button id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
         <span></span><span></span><span></span>
       </button>
       <ul id="nav-menu" class="nav-links">
@@ -46,16 +47,16 @@
     </div>
   </nav>
 
-  <main>
+  <main id="main-content">
     <div class="article-body">
 
-      <header class="section" style="padding-bottom: 0;">
+      <header class="section section--flush">
         <h1>The Seven Skills</h1>
         <p class="text-secondary">Each skill has a distinct job in the pipeline. Listed in workflow order.</p>
       </header>
 
       <!-- Pipeline -->
-      <section class="section" style="padding-bottom: var(--space-lg);">
+      <section class="section">
         <div class="pipeline">
           <div class="pipeline-step">gigo</div>
           <span class="pipeline-arrow">&rarr;</span>
@@ -73,7 +74,7 @@
         </div>
       </section>
 
-      <section class="section" style="padding-top: 0;">
+      <section class="section section--flush-top">
 
         <!-- gigo -->
         <div class="skill-card" id="gigo">

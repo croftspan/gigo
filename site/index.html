@@ -27,12 +27,13 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+  <a href="#main-content" class="skip-link">Skip to content</a>
 
   <!-- Nav -->
   <nav class="site-nav">
     <div class="container">
       <a href="./" class="brand"><span class="brand-kanji">義剛</span> GIGO</a>
-      <button id="nav-toggle" aria-label="Toggle navigation">
+      <button id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
         <span></span><span></span><span></span>
       </button>
       <ul id="nav-menu" class="nav-links">
@@ -45,7 +46,7 @@
     </div>
   </nav>
 
-  <main>
+  <main id="main-content">
 
     <!-- 1. Hero -->
     <section class="hero">
@@ -156,7 +157,7 @@
     <section class="section">
       <div class="container">
         <h2>The Seven Skills</h2>
-        <table>
+        <div class="table-wrapper"><table>
           <thead>
             <tr>
               <th>Skill</th>
@@ -193,7 +194,7 @@
               <td>Tests whether assembled context actually improves output.</td>
             </tr>
           </tbody>
-        </table>
+        </table></div>
         <p><a href="docs/skills.html">Full skill documentation &rarr;</a></p>
       </div>
     </section>
