@@ -33,7 +33,7 @@
   --text-2xl:  1.5rem;
   --text-3xl:  2rem;
   --text-4xl:  2.5rem;
-  --text-5xl:  clamp(2.5rem, 5vw, 4rem);
+  --text-5xl:  clamp(3rem, 6vw, 5rem);
 
   /* Spacing */
   --space-xs:  0.25rem;
@@ -179,6 +179,12 @@ p, li, td, blockquote p {
 
 .section {
   padding: var(--space-2xl) 0;
+  border-top: 1px solid var(--border);
+}
+
+.section:first-child,
+.hero + .section {
+  border-top: none;
 }
 
 .section--flush { padding-bottom: 0; }
@@ -542,20 +548,21 @@ blockquote cite,
   overflow: hidden;
 }
 
-/* Giant kanji watermark */
+/* Giant kanji watermark — the brand's signature */
 .hero::before {
   content: '義剛';
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: clamp(12rem, 30vw, 24rem);
+  font-size: clamp(14rem, 35vw, 28rem);
   font-weight: 700;
-  color: var(--accent-glow);
+  color: var(--accent-dim);
   pointer-events: none;
   white-space: nowrap;
   z-index: 0;
   line-height: 1;
+  opacity: 0.4;
 }
 
 .hero > .container {
@@ -649,24 +656,18 @@ blockquote cite,
 }
 
 .how-it-works-step .step-number {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: var(--radius-full);
-  background-color: var(--accent-dim);
-  color: var(--accent);
+  display: block;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: var(--text-base);
+  font-size: var(--text-3xl);
+  color: var(--accent);
   margin-bottom: var(--space-sm);
-  border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+  letter-spacing: -0.02em;
 }
 
 .how-it-works-step .step-label {
   font-family: var(--font-display);
-  font-size: var(--text-base);
+  font-size: var(--text-lg);
   font-weight: 600;
   color: var(--text);
   margin-bottom: var(--space-xs);
@@ -686,31 +687,46 @@ blockquote cite,
    RESULTS — Achievement style, not report style
    ============================================================ */
 .results-highlight {
-  background: linear-gradient(135deg, var(--accent-glow), transparent 60%);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: var(--space-xl);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-md);
   margin: var(--space-xl) 0;
 }
 
 .results-stat {
-  display: flex;
-  align-items: baseline;
-  gap: var(--space-sm);
-  margin-bottom: var(--space-md);
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg) var(--space-xl);
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.results-stat:hover {
+  border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+  background-color: var(--bg-elevated);
 }
 
 .results-stat .stat-number {
+  display: block;
   font-family: var(--font-display);
-  font-size: var(--text-3xl);
+  font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 700;
   color: var(--accent);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin-bottom: var(--space-xs);
 }
 
 .results-stat .stat-label {
-  font-size: var(--text-base);
+  font-size: var(--text-sm);
   color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+  .results-highlight {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ============================================================
