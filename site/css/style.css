@@ -181,6 +181,10 @@ p, li, td, blockquote p {
   padding: var(--space-xl) 0;
 }
 
+.section:last-child {
+  padding-bottom: var(--space-3xl);
+}
+
 .section--flush { padding-bottom: 0; }
 .section--flush-top { padding-top: 0; }
 .section--center { text-align: center; }
@@ -588,7 +592,7 @@ blockquote cite,
 .hero .hero-desc {
   font-size: var(--text-lg);
   color: var(--text-secondary);
-  max-width: 540px;
+  max-width: 680px;
   margin: 0 auto var(--space-xl);
   line-height: 1.7;
 }
