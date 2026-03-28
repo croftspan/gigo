@@ -4,7 +4,7 @@ GIGO is a skill ecosystem for Claude Code — contributions are skill improvemen
 
 ## Reporting Issues
 
-Use the [issue templates](https://github.com/Eaven/gigo/issues/new/choose):
+Use the [issue templates](https://github.com/croftspan/gigo/issues/new/choose):
 - **Bug Report** — something isn't working as expected
 - **Feature Request** — suggest an improvement
 
