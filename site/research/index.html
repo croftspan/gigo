@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0a0a">
+  <title>Two Kinds of Leadership — GIGO</title>
+  <meta name="description" content="What 9 experimental phases taught us about AI context engineering. 50+ eval runs across two domains prove where context helps and where it hurts.">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Two Kinds of Leadership — What 9 experimental phases taught us about AI context engineering">
+  <meta property="og:description" content="50+ eval runs across two domains prove where context helps and where it hurts. The finding changes how you build with AI agents.">
+  <meta property="og:image" content="../assets/social-preview.png">
+  <meta property="og:url" content="https://eaven.github.io/gigo/research/">
+  <meta property="og:type" content="article">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Two Kinds of Leadership — What 9 experimental phases taught us about AI context engineering">
+  <meta name="twitter:description" content="50+ eval runs across two domains prove where context helps and where it hurts.">
+  <meta name="twitter:image" content="../assets/social-preview.png">
+
+  <link rel="icon" href="/site/assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/site/css/style.css">
+  <style>
+    .article-body { max-width: 680px; margin: 0 auto; padding: 0 var(--space-lg); }
+    .article-body .section { border-top: 1px solid var(--border); }
+    .article-body .section:first-child { border-top: none; }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav class="site-nav">
+    <div class="container">
+      <a href="/" class="brand"><span class="brand-kanji">義剛</span> GIGO</a>
+      <button id="nav-toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul id="nav-menu" class="nav-links">
+        <li><a href="/research/">Research</a></li>
+        <li><a href="/docs/getting-started.html">Get Started</a></li>
+        <li><a href="/docs/skills.html">Skills</a></li>
+        <li><a href="https://github.com/Eaven/gigo">GitHub</a></li>
+        <li><button id="theme-toggle">Light</button></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="article-body">
+
+    <!-- Title -->
+    <section class="section" style="text-align:center; padding-top:var(--space-3xl);">
+      <h1>Two Kinds of Leadership</h1>
+      <p style="font-size:var(--text-xl); color:var(--text-secondary);">What 9 experimental phases taught us about AI context engineering</p>
+    </section>
+
+    <!-- The Question -->
+    <section class="section">
+      <h2>The Question</h2>
+      <p>Does assembled context — personas, quality gates, workflow loops, reference files — actually change AI behavior? Or is it expensive token decoration?</p>
+      <p>The conventional wisdom says more context is better. Give the model everything it might need. But <a href="https://arxiv.org/abs/2602.11988">Gloaguen et al. (2026)</a> found that bloated context files reduce task success rates while increasing cost by 20%+. Irrelevant rules dilute the model's focus on rules that actually matter.</p>
+      <p>We decided to measure it. Not with intuition, not with "this feels better" — with controlled experiments, blinded judging, and real engineering review.</p>
+    </section>
+
+    <!-- The Setup -->
+    <section class="section">
+      <h2>The Setup</h2>
+      <p>Two fixture domains, chosen to test the full range of AI work:</p>
+      <p><strong>OrderFlow</strong> — a Ruby on Rails API with three personas covering migration safety, API design, and test-driven development. Quality gates, anti-patterns, reference patterns. The kind of structured engineering work most teams build with AI.</p>
+      <p><strong>The Vanishing Paintings</strong> — a children's mystery novel with three personas covering plot structure, prose craft, and young reader advocacy. Mystery craft rules, clue-pacing standards. Creative work where the rules of good output are harder to define.</p>
+      <p>20 prompts across 3 axes: quality bar enforcement (prompts that invite mistakes), persona voice (open questions), and routing (complex multi-step tasks). Each prompt ran twice — bare (source files only, no context) vs assembled (full team context). A blinded LLM judge with randomized A/B ordering scored 5 criteria per prompt.</p>
+      <p>20 prompts &times; 5 criteria = 100 evaluations per run.</p>
+    </section>
+
+    <!-- Phase 1 -->
+    <section class="section">
+      <h2>Phase 1: The Baseline</h2>
+      <table>
+        <thead><tr><th>Domain</th><th>Win %</th><th>Ties</th><th>Losses</th></tr></thead>
+        <tbody>
+          <tr><td>Rails API</td><td>88%</td><td>5</td><td>1</td></tr>
+          <tr><td>Children's Novel</td><td>86%</td><td>6</td><td>1</td></tr>
+          <tr><td><strong>Combined</strong></td><td><strong>87%</strong></td><td><strong>11</strong></td><td><strong>2</strong></td></tr>
+        </tbody>
+      </table>
+      <p>The 13% non-wins clustered into a pattern that matched published research: <strong>Hu et al. (2026)</strong> found that expert personas help alignment but hurt knowledge retrieval. Presentation tasks — quality bars, style, structure — assembled won almost every time. Content tasks — factual recall, deployment steps, diagnostics — tied. The persona overhead was neutral or slightly negative.</p>
+      <p>We were seeing the fundamental tradeoff the research predicts, measured in our own data.</p>
+    </section>
+
+    <!-- The Calibration -->
+    <section class="section">
+      <h2>The Calibration</h2>
+      <p>Two levers, both small. The first: a persona calibration heuristic — 6 lines added to each domain's workflow. On presentation tasks, lean into the persona. On content tasks, lead with training, use the persona for framing only.</p>
+      <p>The second: task-specific "When to Go Deeper" pointers replacing generic ones. Instead of "when working on migrations, read the patterns file," the pointer now says "when deploying or preparing for production, verify migration safety, index strategy, and CI status." Specific pointers trigger on non-obvious tasks that generic ones miss.</p>
+
+      <table>
+        <thead><tr><th>Run</th><th>Rails</th><th>Novel</th><th>Combined</th><th>Losses</th></tr></thead>
+        <tbody>
+          <tr><td>Phase 1 (baseline)</td><td>88%</td><td>86%</td><td>87%</td><td>2</td></tr>
+          <tr><td>Phase 2a</td><td>92%</td><td>100%</td><td>96%</td><td>0</td></tr>
+          <tr><td>Phase 2c (confirmation)</td><td>100%</td><td>98%</td><td>99%</td><td>0</td></tr>
+        </tbody>
+      </table>
+
+      <blockquote>
+        <p>Six lines of code. Nine percentage points.</p>
+      </blockquote>
+
+      <p>The children's novel went from 86% to 100%. Every previously tied prompt converted. The task-specific pointers gave the assembled version concrete ammunition — revelation pacing, clue chain audits, chapter-specific diagnosis — that bare versions didn't have.</p>
+    </section>
+
+    <!-- The Hallucination Problem -->
+    <section class="section">
+      <h2>The Hallucination Problem</h2>
+      <p>Between those runs, Phase 2b happened. The assembled version on a Rails prompt hallucinated a classification exercise — instead of writing an endpoint, it categorized all 10 prompts into groups and analyzed the persona calibration system. A response that didn't answer the question at all.</p>
+      <p>The judge scored it without blinking. The eval asks "which response is better on these criteria" — it doesn't ask "did the response actually answer the question?" A persona-rich, authority-citing response that doesn't address the prompt can still score well on voice and routing.</p>
+      <blockquote>
+        <p>The judge scores quality, not correctness.</p>
+      </blockquote>
+      <p>We excluded the run but documented it. This led directly to the Overwatch adversarial system — a self-check that asks "did you actually do what you claimed?" before the quality assessment runs. Honest reporting of failures is how the methodology improved.</p>
+    </section>
+
+    <!-- The Proficiency Test -->
+    <section class="section">
+      <h2>The Proficiency Test</h2>
+      <p>The A/B eval proved assembled context influences behavior. But influence isn't outcome. We gave both versions a real task — build a library book reservation API from a complete spec — and scored the actual output.</p>
+
+      <table>
+        <thead><tr><th>Domain</th><th>Bare</th><th>Assembled</th><th>Delta</th></tr></thead>
+        <tbody>
+          <tr><td>Rails (rubric)</td><td>12/20</td><td><strong>18/20</strong></td><td>+6 assembled</td></tr>
+          <tr><td>Novel (rubric)</td><td><strong>19/20</strong></td><td>18/20</td><td>-1 bare</td></tr>
+        </tbody>
+      </table>
+
+      <p>Then we sent both outputs to a blind judge — a senior engineer who didn't know which had team context.</p>
+      <p>The verdict was unexpected. Bare: "Senior." Assembled: "Strong mid-level reaching for senior." The judge penalized assembled for over-commenting, including planning notes in the output, and having a subtle race condition that bare avoided. Assembled was following its instructions — the Overwatch says "audit your output," the personas say "cite the rules" — and getting graded down for it.</p>
+      <p>We re-ran with context visible.</p>
+
+      <blockquote>
+        <p>"B's team, with A's instincts. B's standards create a shared vocabulary, testable quality gates, and a self-audit culture that scales across engineers. I'd rather work on B's team."</p>
+      </blockquote>
+
+      <p>For the novel, the fair judge said the rules didn't make the writer better — they made the writer a better <em>architect</em>. "For a mystery novel aimed at kids who deserve a fair shot at solving it, that's the more important skill."</p>
+      <p>The pattern was clear: <strong>bare produces higher peak craft. Assembled produces better structural work.</strong> This pointed to a separation of concerns that would take three more phases to prove.</p>
+    </section>
+
+    <!-- The Instinct Experiments -->
+    <section class="section">
+      <h2>The Instinct Experiments</h2>
+      <p>Five experiments, each changing one variable in the assembled context. Same task, same baselines.</p>
+      <p>War stories — rewriting standards as "here's what went wrong last time" narratives — beat bare on Rails for the first time. 20/20 rubric, ranked 1st by qualitative judge.</p>
+
+      <blockquote>
+        <p>"C writes code like someone who's been paged at 2am."</p>
+      </blockquote>
+
+      <p>War stories produced a partial unique index, <code>dependent: :restrict_with_error</code>, per-page clamping both directions, <code>includes(:book)</code> with serialization, side-effect absence tests. Rules produce compliance — "always use transactions" and Claude cites the rule. War stories produce instincts — "last time someone skipped the lock, two users got the same seat" and Claude <em>thinks about</em> the failure mode.</p>
+      <p>But no context format beat bare Claude on creative work. Bare hit 19-20/20 every single time across all 5 experiments. Every assembled variant scored lower.</p>
+      <p>Then we tested combining rules with war stories. The combo ranked <em>last</em>. War stories alone ranked 2nd. Bare 1st.</p>
+
+      <blockquote>
+        <p>More context dilutes instincts.</p>
+      </blockquote>
+    </section>
+
+    <!-- The Planning Pipeline -->
+    <section class="section">
+      <h2>The Planning Pipeline</h2>
+      <p>Same task, scripted answers, only variable: whether the brainstormer had personas loaded.</p>
+      <p>Bare asked: "What's the expected scale?"</p>
+      <p>Assembled asked: "What's the expected scale? <em>This determines whether we need to worry about table lock duration on migrations.</em>"</p>
+      <p>Same topics. Different depth. Bare asks <strong>what</strong>. Assembled asks <strong>why</strong>.</p>
+      <p>Both versions produced brainstorm, spec, and implementation plan. The judge was unambiguous: assembled wins.</p>
+      <p>Six specific wins over bare:</p>
+      <ol>
+        <li><strong>Partial unique index</strong> — prevents a data integrity bug bare's plan would ship</li>
+        <li><strong><code>FOR UPDATE SKIP LOCKED</code></strong> — better concurrency than bare's <code>FOR UPDATE</code></li>
+        <li><strong>Copy condition field</strong> — operational requirement bare missed entirely (can't withdraw damaged books)</li>
+        <li><strong>Pagination</strong> — bare returned unbounded results on the list endpoint</li>
+        <li><strong>Runnable RSpec code</strong> — bare wrote English test descriptions, assembled wrote actual specs</li>
+        <li><strong>RESTful cancel</strong> — assembled used <code>PATCH</code> for state transition, bare used <code>DELETE</code> with query param</li>
+      </ol>
+      <p>Personas change how problems are explored, not just how answers are presented.</p>
+    </section>
+
+    <!-- The Format Doesn't Matter -->
+    <section class="section">
+      <h2>The Format Doesn't Matter</h2>
+      <p>Four context variants — bare (nothing), war stories (full narrative), compressed (arrow format), fix-only (just rules). Three runs each, reviewed by a principal engineer persona with 15 years of production Rails experience.</p>
+
+      <table>
+        <thead><tr><th>Variant</th><th>Run 1</th><th>Run 2</th><th>Run 3</th></tr></thead>
+        <tbody>
+          <tr><td><strong>bare</strong></td><td>Senior</td><td>Senior</td><td>Staff</td></tr>
+          <tr><td>warstories</td><td>Senior</td><td>Mid</td><td>Mid</td></tr>
+          <tr><td>fixonly</td><td>Mid</td><td>Junior</td><td>Senior</td></tr>
+          <tr><td>compressed</td><td>Mid</td><td>Mid</td><td>Mid</td></tr>
+        </tbody>
+      </table>
+
+      <p>Bare was rated senior or higher every time. On run 3, the reviewer called it "staff" — noting check constraints, correct lock ordering, and handling of an expired-reservation edge case "most submissions miss entirely."</p>
+      <p>Compressed got request-changes on every single run. Real bugs: race windows between unlocked checks and locked inserts, fat controllers, spec deviations.</p>
+
+      <blockquote>
+        <p>We thought the team's knowledge needs to reach the worker in the right format. Reality: the team's knowledge needs to reach the worker as a good spec.</p>
+      </blockquote>
+
+      <p>The worker doesn't need to know <em>why</em> partial unique indexes matter. The worker needs a spec that says to use one — because the team already thought about it during planning. A bare worker following a good spec produces senior/staff code. A bare worker following a bare spec produces good-but-incomplete code. The delta is in the spec, not the worker's context.</p>
+    </section>
+
+    <!-- Two Kinds of Leadership -->
+    <section class="section">
+      <h2>Two Kinds of Leadership</h2>
+      <p>This is the central finding. It's not a technical finding — it's a management philosophy, proven with data.</p>
+
+      <h3>"Do your job or I'll fire you"</h3>
+      <p>The intuitive approach: load the worker with rules, quality gates, war stories, anti-patterns, compliance checks. More context, more guardrails, more oversight. The worker knows exactly what's expected.</p>
+      <p>The data shows what happens:</p>
+      <ol>
+        <li><strong>Workers perform compliance instead of doing the work.</strong> Phase 4: assembled workers over-commented their code, included planning notes in creative output, explained their own craft decisions. A blind judge called it "mid-level reaching for senior" — checking boxes instead of thinking.</li>
+        <li><strong>The format of the rules doesn't matter.</strong> Phase 7: four different ways to deliver the same knowledge. The worker who got nothing was rated senior to staff. The worker who got compressed rules produced the worst code every time, with real bugs. More instructions produced worse work.</li>
+        <li><strong>Creative work suffers the most.</strong> Phase 5: bare Claude writing fiction scored 19-20/20 on every run. Every assembled format scored lower. Every single one.</li>
+      </ol>
+      <p>The "do your job or I'll fire you" boss creates mid-level workers who check boxes. The rules become the ceiling, not the floor.</p>
+
+      <h3>"What can I do to help you do your job better?"</h3>
+      <p>The answer is almost always the same: give me a clear plan and honest feedback. Not someone standing over my shoulder.</p>
+
+      <p><strong>Planning — where leadership earns its keep:</strong></p>
+      <ul>
+        <li>The assembled brainstormer asks "What's the expected scale? <em>This determines whether we need to worry about table lock duration on migrations.</em>" The bare brainstormer asks "What's the expected scale?" Same question. Different depth.</li>
+        <li>The assembled planner's spec catches a data integrity bug, unbounded queries, and a missing operational requirement. The bare planner misses all of these.</li>
+        <li>The output is a spec that embeds the team's expertise as concrete requirements — not rules to comply with, but decisions already made by people who thought about the hard problems.</li>
+      </ul>
+
+      <p><strong>Execution — trust the worker:</strong></p>
+      <ul>
+        <li>Worker receives the spec. No personas, no rules, no war stories. Just: here's what to build.</li>
+        <li>Worker writes code using full training — confident, instinct-driven, no self-narration.</li>
+        <li>A bare worker following a good spec produces senior/staff code. The same worker following a bare spec produces good-but-incomplete code. The delta is in the spec.</li>
+      </ul>
+
+      <p><strong>Review — the honest feedback part:</strong></p>
+      <ul>
+        <li>Two focused reviewers, each doing one job. Spec reviewer checks "did you build what the plan said?" Engineering reviewer checks "is the code production-ready?"</li>
+        <li>The engineering review caught race windows, fat controllers, missing database constraints, and expired-reservation bugs that would corrupt inventory in production.</li>
+        <li>Two focused reviewers found more issues than one combined reviewer. Putting both lenses in a single pass averaged instead of adding up.</li>
+      </ul>
+
+      <blockquote>
+        <p>The team plans and reviews. The individual executes. That's not a compromise. That's the architecture.</p>
+      </blockquote>
+    </section>
+
+    <!-- The Complete Architecture -->
+    <section class="section">
+      <h2>The Complete Architecture</h2>
+
+      <div class="pipeline">
+        <div class="pipeline-step">Plan with experts</div>
+        <span class="pipeline-arrow" aria-hidden="true">&rarr;</span>
+        <div class="pipeline-step">Embed in spec</div>
+        <span class="pipeline-arrow" aria-hidden="true">&rarr;</span>
+        <div class="pipeline-step">Execute bare</div>
+        <span class="pipeline-arrow" aria-hidden="true">&rarr;</span>
+        <div class="pipeline-step">Review with quality bars</div>
+      </div>
+
+      <table>
+        <thead><tr><th>Phase</th><th>Context</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td>Brainstorming</td><td>Assembled ON</td><td>Personas shape questions, catch architectural gaps</td></tr>
+          <tr><td>Spec writing</td><td>Assembled ON</td><td>Team standards define quality bars, identify edge cases</td></tr>
+          <tr><td>Plan writing</td><td>Assembled ON</td><td>Team expertise becomes spec requirements</td></tr>
+          <tr><td>Execution</td><td>Bare</td><td>Workers produce best code/prose with training alone + good spec</td></tr>
+          <tr><td>Review</td><td>Assembled ON</td><td>Team catches what workers miss, sends back for fixes</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- The Research Foundation -->
+    <section class="section">
+      <h2>The Research Foundation</h2>
+      <p>This work builds on and extends published research.</p>
+      <ul class="research-list">
+        <li><strong><a href="https://arxiv.org/abs/2602.11988">Gloaguen et al. (2026)</a></strong> — "Evaluating AGENTS.md: Are Repository-Level Context Files Helpful for Coding Agents?" Validated our lean-context approach. Our finding extends it: context <em>quality</em> matters more than quantity, and context in the right <em>phase</em> matters more than context everywhere.</li>
+        <li><strong>Hu et al. (2026)</strong> — "Expert Personas Improve LLM Alignment but Damage Accuracy." Predicted the tradeoff we measured at the 87% baseline. Our 6-line calibration heuristic addresses it: lead with training on content tasks, lean into persona on alignment tasks.</li>
+        <li><strong>Kong et al.</strong> — Role-play activates domain knowledge when personas are specific. <strong>Xu et al.</strong> — Task-specific persona descriptions outperform generic ones. Together these informed our blended-persona design. Our data confirms: specific, multi-authority personas outperform generic roles.</li>
+        <li><strong>Shinn et al.</strong> — Reflection agents (Reflexion) make dramatically better decisions. Inspired the Overwatch adversarial system after the Phase 2b hallucination: agents that self-check before the quality assessment.</li>
+        <li><strong>Yang et al.</strong> — Interface design between agent and tools matters more than the prompt (SWE-agent). Shaped our skill architecture: how context reaches the model matters as much as what the context says.</li>
+      </ul>
+      <p>These papers gave us the theoretical foundation. Nine phases of original experiments — 50+ eval runs across two domains — gave us the data to prove it works.</p>
+    </section>
+
+    <!-- What This Means -->
+    <section class="section">
+      <h2>What This Means</h2>
+      <p>The principle is general. Not just for GIGO users, not just for Claude Code — for anyone building with AI agents.</p>
+      <p><strong>Context shapes questions (good).</strong> During planning, expert context makes AI ask deeper questions, identify harder problems, and produce more defensible architectures. This is where assembled context earns its keep.</p>
+      <p><strong>Context shapes answers (bad).</strong> During execution, context makes AI perform compliance instead of thinking. It checks boxes, shows its homework, narrates its process. A bare worker with a good spec produces better output than a loaded worker with the same spec.</p>
+      <p>The architecture is transferable: plan with experts, embed expertise in the spec, execute bare, review with quality bars. It works for Rails APIs and children's novels. It works for any domain where the planning is hard and the execution benefits from confidence.</p>
+      <p><a href="#">Back to top &uarr;</a></p>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <span>Built at <a href="https://croftspan.com">Croftspan</a>. MIT License.</span>
+      <ul class="footer-links">
+        <li><a href="https://github.com/Eaven/gigo">GitHub</a></li>
+        <li><a href="/docs/getting-started.html">Docs</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script src="/site/js/main.js"></script>
+</body>
+</html>
