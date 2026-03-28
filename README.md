@@ -54,7 +54,6 @@ The results: gets it right **the first time, 97%** of the time. **Zero fixes nee
 
 In computer science, GIGO means "Garbage In, Garbage Out."
 
-Both meanings apply.
 
 ---
 
