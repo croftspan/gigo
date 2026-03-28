@@ -5,11 +5,13 @@
 
 </div>
 
-# 義剛 GIGO
+# GIGO
 
-**Only give them what they need for the job.**
+**Research the experts. Build the team. Ship better work.**
 
-A Claude Code skill that researches domain experts, blends their philosophies into focused personas, and runs a plan→execute→review pipeline backed by [published research](https://arxiv.org/abs/2602.11988) and [9 phases of original experiments](site/research/).
+You describe what you're building. GIGO researches the best practitioners in that field — real people with real philosophies — and builds you an expert team. Your AI plans smarter, writes better code, catches more bugs.
+
+We tested it across 9 experiments. It works.
 
 ---
 
@@ -85,21 +87,19 @@ Open any project in Claude Code. Type `gigo`.
 
 ---
 
-## The Results
+## How It Works
 
-97% convention compliance on first pass. Zero review fixes needed. Principal engineers rated the output senior to staff level — every run.
+1. **Plan with your expert team** — GIGO's personas ask the hard questions. They catch the architectural gaps, the missing edge cases, the things you'd only think of at 2am.
 
-Built on two published papers — [Gloaguen et al. (2026)](https://arxiv.org/abs/2602.11988) on context bloat and [Hu et al. (2026)](https://arxiv.org/abs/2603.18507) on the persona tradeoff — then validated with 9 phases of original experiments across two domains.
+2. **Write a spec that carries the expertise** — The team's knowledge gets baked into the spec as concrete requirements. Not vague rules — specific decisions.
 
-The core finding: **personas help planning. Bare workers + good specs produce the best code.** The architecture that won:
+3. **Let the AI do its thing** — Workers get the spec, not the rules. No hand-holding. We tested this: bare workers with good specs were rated senior to staff level by principal engineers. Every run.
 
-| Phase | Context | Result |
-|---|---|---|
-| Planning | Assembled (personas ON) | Catches architectural gaps bare misses |
-| Execution | Bare (personas OFF) | Senior/staff-level code every run |
-| Review | Assembled (quality bars) | Two focused reviewers > one combined |
+4. **Review with real standards** — Two focused reviewers catch different bugs than one reviewer trying to do everything. The team knows what to look for.
 
-[Read the full research →](site/research/)
+We proved this works with [9 phases of experiments](site/research/) across two completely different domains (a Rails API and a children's mystery novel), built on research from [Gloaguen et al.](https://arxiv.org/abs/2602.11988) and [Hu et al.](https://arxiv.org/abs/2603.18507)
+
+The results: gets it right the first time, 97% of the time. Zero fixes needed.
 
 ---
 
