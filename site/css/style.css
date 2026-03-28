@@ -16,13 +16,14 @@
   --accent-hover:#b8d0e8;
   --border:      #2a2a2a;
   --border-code: #333;
-  --quote-border:#9bb8d3;
+  --border-quote:#9bb8d3;
 
   /* Typography */
   --font-display: 'Space Grotesk', system-ui, sans-serif;
   --font-body:    system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --font-mono:    'SF Mono', SFMono-Regular, ui-monospace, 'Cascadia Code', Consolas, 'Liberation Mono', Menlo, monospace;
 
+  --text-xs:   0.75rem;
   --text-sm:   0.875rem;
   --text-base: 1rem;
   --text-lg:   1.125rem;
@@ -41,8 +42,14 @@
   --space-2xl: 3rem;
   --space-3xl: 4rem;
 
+  /* Radii */
+  --radius-sm:   3px;
+  --radius-md:   6px;
+  --radius-full: 999px;
+
   /* Layout */
   --max-width: 720px;
+  --article-width: 680px;
   --nav-height: 3.5rem;
 }
 
@@ -57,7 +64,7 @@
   --accent-hover:#2d5577;
   --border:      #ddd;
   --border-code: #ccc;
-  --quote-border:#3a6b96;
+  --border-quote:#3a6b96;
 }
 
 /* --- Reset & Base --- */
@@ -101,11 +108,6 @@ a:hover {
   text-decoration: underline;
 }
 
-img {
-  max-width: 100%;
-  height: auto;
-}
-
 /* --- Focus — keyboard navigation (WCAG 2.4.7) --- */
 a:focus-visible,
 button:focus-visible {
@@ -146,7 +148,7 @@ button:focus-visible {
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
   font-weight: 600;
-  line-height: 1.3;
+  line-height: 1.35;
   margin-bottom: var(--space-md);
 }
 
@@ -256,13 +258,13 @@ p {
 #theme-toggle {
   background: none;
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: var(--radius-md);
   padding: 0.5em 0.75em;
   min-height: 44px;
   color: var(--text-secondary);
   cursor: pointer;
   font-size: var(--text-sm);
-  font-family: var(--font-body);
+  font-family: var(--font-display);
   transition: color 0.15s ease, border-color 0.15s ease;
 }
 
@@ -357,14 +359,14 @@ pre, code {
 
 code {
   background-color: var(--bg-code);
-  padding: 0.15em 0.4em;
-  border-radius: 3px;
+  padding: 0.1em 0.4em;
+  border-radius: var(--radius-sm);
 }
 
 pre {
   background-color: var(--bg-code);
   border: 1px solid var(--border-code);
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   padding: var(--space-md) var(--space-lg);
   overflow-x: auto;
   margin-bottom: var(--space-lg);
@@ -420,11 +422,11 @@ tr:nth-child(even) {
 .badge {
   display: inline-block;
   font-family: var(--font-display);
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   font-weight: 500;
   padding: 0.2em 0.6em;
   border: 1px solid var(--border);
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   color: var(--text-secondary);
   white-space: nowrap;
 }
@@ -436,7 +438,7 @@ tr:nth-child(even) {
   font-size: var(--text-sm);
   font-weight: 600;
   padding: 0.6em 1.4em;
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   cursor: pointer;
   text-decoration: none;
   transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
@@ -472,7 +474,7 @@ tr:nth-child(even) {
 /* --- Pull Quotes --- */
 blockquote,
 .pull-quote {
-  border-left: 3px solid var(--quote-border);
+  border-left: 3px solid var(--border-quote);
   padding: var(--space-md) var(--space-lg);
   margin: var(--space-xl) 0;
   font-size: var(--text-lg);
@@ -498,7 +500,7 @@ blockquote cite,
 
 /* --- Article Body (shared across all article pages) --- */
 .article-body {
-  max-width: 680px;
+  max-width: var(--article-width);
   margin: 0 auto;
   padding: 0 var(--space-lg);
 }
@@ -509,6 +511,11 @@ blockquote cite,
 
 .article-body h3 {
   margin-top: var(--space-2xl);
+}
+
+.article-body blockquote,
+.article-body .pull-quote {
+  margin: var(--space-2xl) 0;
 }
 
 /* --- Table Wrapper (mobile scroll) --- */
@@ -548,7 +555,7 @@ blockquote cite,
 }
 
 .finding-list li {
-  margin-bottom: var(--space-sm);
+  margin-bottom: var(--space-md);
 }
 
 /* --- Pipeline Diagram --- */
@@ -564,7 +571,7 @@ blockquote cite,
   flex: 0 0 auto;
   background-color: var(--bg-subtle);
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   padding: var(--space-sm) var(--space-md);
   font-family: var(--font-display);
   font-size: var(--text-sm);
@@ -627,8 +634,9 @@ blockquote cite,
   display: inline-block;
   background-color: var(--bg-code);
   border: 1px solid var(--border-code);
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   padding: 0.6em 1.2em;
+  margin-top: var(--space-md);
 }
 
 .install-cmd code {
@@ -650,7 +658,7 @@ blockquote cite,
 
 @media (max-width: 768px) {
   .hero h1 {
-    font-size: 2.5rem;
+    font-size: var(--text-4xl);
   }
 
   .hero .subtitle {

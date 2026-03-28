@@ -25,7 +25,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
-  <!-- article-body styles in shared style.css -->
+
 </head>
 <body>
   <a href="#main-content" class="skip-link">Skip to content</a>
@@ -138,6 +138,8 @@
         <p>But the first version used the same checks for both domains. Results:</p>
 
                 <div class="table-wrapper"><table>
+          <thead><tr><th>Run</th><th>Rails</th><th>Novel</th><th>Combined</th><th>Losses</th></tr></thead>
+          <tbody>
             <tr><td>Hawkeye (structured)</td><td>98%</td><td>90%</td><td>94%</td><td>1</td></tr>
             <tr><td>Hawkeye (structured) run 2</td><td>94%</td><td>88%</td><td>91%</td><td>4</td></tr>
           </tbody>
@@ -152,6 +154,8 @@
         <p>The fix: domain-adapted Overwatch. Structured domains get process checks. Creative domains get engagement checks (&ldquo;did you reference specific characters, or give generic advice?&rdquo;).</p>
 
                 <div class="table-wrapper"><table>
+          <thead><tr><th>Run</th><th>Rails</th><th>Novel</th><th>Combined</th><th>Losses</th></tr></thead>
+          <tbody>
             <tr><td>Hawkeye (domain-adapted)</td><td>92%</td><td><strong>100%</strong></td><td><strong>96%</strong></td><td><strong>0</strong></td></tr>
           </tbody>
         </table></div>
@@ -166,6 +170,8 @@
         <p>Two self-contained tasks: build a library reservation API from a complete spec, and write a mystery novel opening scene from a character brief. Automated structural checks plus LLM rubric scoring, 20 checks per domain.</p>
 
                 <div class="table-wrapper"><table>
+          <thead><tr><th>Domain</th><th>Bare</th><th>Assembled</th><th>Delta</th></tr></thead>
+          <tbody>
             <tr><td>Rails</td><td>12/20</td><td><strong>18/20</strong></td><td>+6 assembled</td></tr>
             <tr><td>Novel</td><td><strong>19/20</strong></td><td>18/20</td><td>-1 bare</td></tr>
           </tbody>
@@ -306,6 +312,8 @@
       <section class="section" id="architecture">
         <h2>The Complete Architecture</h2>
                 <div class="table-wrapper"><table>
+          <thead><tr><th>Phase</th><th>Context</th><th>Why</th></tr></thead>
+          <tbody>
             <tr><td><strong>Brainstorming</strong></td><td>Assembled ON</td><td>Personas shape questions, catch architectural gaps</td></tr>
             <tr><td><strong>Spec writing</strong></td><td>Assembled ON</td><td>Standards define quality bars, identify edge cases</td></tr>
             <tr><td><strong>Plan writing</strong></td><td>Assembled ON</td><td>Expertise becomes spec requirements</td></tr>
@@ -320,6 +328,8 @@
         <h2>The Research Foundation</h2>
         <p>Every design decision traces back to published research, then validated with original experiments.</p>
                 <div class="table-wrapper"><table>
+          <thead><tr><th>Paper</th><th>What it told us</th><th>How we used it</th></tr></thead>
+          <tbody>
             <tr>
               <td><a href="https://arxiv.org/abs/2602.11988" target="_blank" rel="noopener">Gloaguen et al. (2026)</a></td>
               <td>Bloated context reduces success, increases cost 20%+</td>
@@ -363,6 +373,8 @@
         <h3>Pipeline Coherence</h3>
         <p>Three chains built the same feature with different context levels:</p>
                 <div class="table-wrapper"><table>
+          <thead><tr><th>Pipeline</th><th>Context</th><th>Score (out of 30)</th></tr></thead>
+          <tbody>
             <tr><td>Assembled</td><td>Architecture + personas + rules</td><td><strong>29/30</strong></td></tr>
             <tr><td>Architecture only</td><td>Same architecture, no personas/rules</td><td>20/30</td></tr>
             <tr><td>Bare</td><td>Nothing</td><td>14/30</td></tr>
@@ -373,6 +385,8 @@
         <h3>Convention Compliance</h3>
         <p>Bare workers following specs with explicit conventions sections, tested across two execution mechanisms:</p>
                 <div class="table-wrapper"><table>
+          <thead><tr><th>Tier</th><th>Conventions matched</th><th>Review fixes needed</th></tr></thead>
+          <tbody>
             <tr><td>Agent teams (parallel)</td><td>20/20</td><td>0</td></tr>
             <tr><td>Subagents (sequential)</td><td>10/10</td><td>0</td></tr>
             <tr><td><strong>Total</strong></td><td><strong>30/30</strong></td><td><strong>0</strong></td></tr>
@@ -393,6 +407,12 @@
         <p>The architecture is transferable: plan with experts, embed expertise in the spec, execute bare, review with quality bars. It works because knowledge is in the right place at the right time &mdash; in the team&rsquo;s <em>questions</em> during planning, in the <em>spec</em> during execution, in the team&rsquo;s <em>judgment</em> during review.</p>
       </section>
 
+      <section class="section section--center" id="try-it">
+        <h2>Try it yourself</h2>
+        <div class="install-cmd"><code>claude install @eaven/gigo</code></div>
+        <p style="margin-top: var(--space-md);"><a href="../docs/getting-started.html">Get started in 30 seconds &rarr;</a></p>
+      </section>
+
       <p class="back-to-top"><a href="#top">&uarr; Back to top</a></p>
 
     </article>
@@ -404,7 +424,7 @@
       <span>Built at <a href="https://croftspan.com" target="_blank" rel="noopener">Croftspan</a>. MIT License.</span>
       <ul class="footer-links">
         <li><a href="https://github.com/Eaven/gigo" target="_blank" rel="noopener">GitHub</a></li>
-        <li><a href="../docs/getting-started.html">Docs</a></li>
+        <li><a href="../docs/getting-started.html">Get Started</a></li>
         <li><a href="eval-data.html">Eval Data</a></li>
       </ul>
     </div>
