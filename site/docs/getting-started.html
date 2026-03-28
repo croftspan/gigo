@@ -4,23 +4,22 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0a0a0a">
-  <title>Getting Started — GIGO</title>
-  <meta name="description" content="Install GIGO and assemble your first expert team in under 5 minutes. Two install paths, conversational setup, no configuration needed.">
+  <title>Getting Started — GIGO Docs</title>
+  <meta name="description" content="Install GIGO and run it on your first project. Two commands, one conversation, a complete expert team.">
 
   <meta property="og:title" content="Getting Started — GIGO">
-  <meta property="og:description" content="Install GIGO and assemble your first expert team in under 5 minutes.">
+  <meta property="og:description" content="Install GIGO and run it on your first project. Two commands, one conversation, a complete expert team.">
   <meta property="og:image" content="../assets/social-preview.png">
-  <meta property="og:type" content="article">
-
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Getting Started — GIGO">
-  <meta name="twitter:description" content="Install GIGO and assemble your first expert team in under 5 minutes.">
+  <meta name="twitter:card" content="summary_large_image">
 
   <link rel="icon" href="/site/assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/site/css/style.css">
+  <style>
+    .article-body { max-width: 680px; margin: 0 auto; padding: 0 var(--space-lg); }
+  </style>
 </head>
 <body>
 
@@ -40,95 +39,99 @@
     </div>
   </nav>
 
-  <main class="container">
+  <main>
+    <div class="article-body">
 
-    <section class="section">
-      <h1>Getting Started</h1>
-    </section>
+      <header class="section" style="padding-bottom: 0;">
+        <h1>Getting Started</h1>
+      </header>
 
-    <!-- Requirements -->
-    <section class="section" style="border-top:1px solid var(--border);">
-      <h2>Requirements</h2>
-      <p>Claude Code CLI installed. That's it.</p>
-    </section>
+      <!-- Requirements -->
+      <section class="section" id="requirements">
+        <h2>Requirements</h2>
+        <p><a href="https://docs.anthropic.com/en/docs/build-with-claude/claude-code/overview">Claude Code CLI</a> installed. That&rsquo;s it.</p>
+      </section>
 
-    <!-- Install -->
-    <section class="section" style="border-top:1px solid var(--border);">
-      <h2>Install</h2>
+      <!-- Install -->
+      <section class="section" id="install">
+        <h2>Install</h2>
 
-      <h3>From marketplace</h3>
-      <pre><code>claude install @eaven/gigo</code></pre>
+        <h3>From the marketplace</h3>
+        <pre><code>claude install @eaven/gigo</code></pre>
 
-      <h3>Manual</h3>
-      <pre><code>git clone https://github.com/Eaven/gigo.git
+        <h3>Manual install</h3>
+        <pre><code>git clone https://github.com/Eaven/gigo.git
 cp -r gigo/skills/ ~/.claude/skills/</code></pre>
-    </section>
+      </section>
 
-    <!-- First Run -->
-    <section class="section" style="border-top:1px solid var(--border);">
-      <h2>First Run</h2>
-      <p>Open any project and say <code>gigo</code>. Here's what happens:</p>
-      <ol>
-        <li><strong>Check.</strong> GIGO looks for an existing <code>CLAUDE.md</code> and <code>.claude/</code> directory.</li>
-        <li><strong>Kickoff.</strong> If nothing exists, a conversational brainstorm starts. You describe what you're building.</li>
-        <li><strong>Research.</strong> GIGO finds authorities in the domain and proposes blended personas — 2-3+ real practitioners per persona, each with a specific contribution.</li>
-        <li><strong>Refine.</strong> You react. "Drop that one." "Add a testing expert." "Who would they fight with?" The team takes shape through conversation, not forms.</li>
-        <li><strong>Lock in.</strong> GIGO writes <code>CLAUDE.md</code>, <code>.claude/rules/</code>, and <code>.claude/references/</code>.</li>
-      </ol>
-    </section>
+      <!-- First Run -->
+      <section class="section" id="first-run">
+        <h2>First Run</h2>
+        <p>Open any project and say <strong>&ldquo;gigo.&rdquo;</strong></p>
+        <p>Here&rsquo;s what happens:</p>
+        <ol>
+          <li><strong>GIGO checks your project.</strong> It looks for an existing <code>CLAUDE.md</code> and <code>.claude/</code> directory. If nothing exists, it starts a conversational kickoff.</li>
+          <li><strong>You describe what you&rsquo;re building.</strong> Be as vague or specific as you want &mdash; &ldquo;a Rails API for library reservations&rdquo; or &ldquo;kids books idk.&rdquo;</li>
+          <li><strong>GIGO researches authorities.</strong> It finds the best practitioners in the domain, identifies their specific philosophies, and proposes blended personas &mdash; 2-3+ real practitioners per persona.</li>
+          <li><strong>You react and refine.</strong> &ldquo;Drop that one.&rdquo; &ldquo;Add a testing expert.&rdquo; &ldquo;Who would they disagree with?&rdquo; The skill adjusts.</li>
+          <li><strong>Lock it in.</strong> GIGO writes your project files &mdash; a complete expert team, ready to work.</li>
+        </ol>
+      </section>
 
-    <!-- What Gets Created -->
-    <section class="section" style="border-top:1px solid var(--border);">
-      <h2>What Gets Created</h2>
-      <table>
-        <thead><tr><th>File</th><th>Purpose</th><th>Token cost</th></tr></thead>
-        <tbody>
-          <tr>
-            <td><code>CLAUDE.md</code></td>
-            <td>Team roster and autonomy model. Auto-loaded every conversation.</td>
-            <td>Always loaded</td>
-          </tr>
-          <tr>
-            <td><code>.claude/rules/</code></td>
-            <td>Standards, workflow, domain extensions. ~60 line cap per file, research-informed.</td>
-            <td>Always loaded</td>
-          </tr>
-          <tr>
-            <td><code>.claude/references/</code></td>
-            <td>Deep knowledge — authority profiles, technique catalogs, checklists. Loaded on demand via "When to Go Deeper" pointers.</td>
-            <td>Zero when unused</td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
+      <!-- What Gets Created -->
+      <section class="section" id="what-gets-created">
+        <h2>What Gets Created</h2>
+        <table>
+          <thead><tr><th>File</th><th>What it does</th><th>Token cost</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><code>CLAUDE.md</code></td>
+              <td>Team roster &mdash; personas with blended authorities, autonomy model, quick reference</td>
+              <td>Auto-loaded every conversation</td>
+            </tr>
+            <tr>
+              <td><code>.claude/rules/</code></td>
+              <td>Standards, workflow, domain extensions. ~60 line cap per file (research-informed)</td>
+              <td>Auto-loaded every conversation</td>
+            </tr>
+            <tr>
+              <td><code>.claude/references/</code></td>
+              <td>Deep knowledge &mdash; authority profiles, technique catalogs, domain deep-dives</td>
+              <td>Zero cost when unused. Loaded on demand via &ldquo;When to Go Deeper&rdquo; pointers</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>The two-tier architecture keeps always-on context lean and loads depth only when relevant. This is based on <a href="https://arxiv.org/abs/2602.11988">Gloaguen et al. (2026)</a>, which found that bloated context reduces task success rates while increasing cost by 20%+.</p>
+      </section>
 
-    <!-- Next Steps -->
-    <section class="section" style="border-top:1px solid var(--border);">
-      <h2>Next Steps</h2>
-      <table>
-        <thead><tr><th>Skill</th><th>When to use</th></tr></thead>
-        <tbody>
-          <tr>
-            <td><code>gigo:plan</code></td>
-            <td>Turn your first task into a spec and implementation plan. Brainstorms first, then structures.</td>
-          </tr>
-          <tr>
-            <td><code>gigo:execute</code></td>
-            <td>Run the plan with agent teams or subagents. Workers get the spec, not the personas.</td>
-          </tr>
-          <tr>
-            <td><code>gigo:review</code></td>
-            <td>Two-stage code review — spec compliance first, then engineering quality.</td>
-          </tr>
-          <tr>
-            <td><code>gigo:snap</code></td>
-            <td>Run at session end. Audits rules for bloat and staleness, captures learnings.</td>
-          </tr>
-        </tbody>
-      </table>
-      <p>See <a href="/docs/skills.html">full skill documentation</a> for details on all seven skills.</p>
-    </section>
+      <!-- Next Steps -->
+      <section class="section" id="next-steps">
+        <h2>Next Steps</h2>
+        <table>
+          <thead><tr><th>Skill</th><th>When to use it</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><code>gigo:plan</code></td>
+              <td>Turn your first task into a spec and implementation plan. Brainstorms first, then structures.</td>
+            </tr>
+            <tr>
+              <td><code>gigo:execute</code></td>
+              <td>Run the plan with agent teams or subagents. Workers get the spec, not the personas.</td>
+            </tr>
+            <tr>
+              <td><code>gigo:review</code></td>
+              <td>Two-stage code review &mdash; spec compliance first, then engineering quality.</td>
+            </tr>
+            <tr>
+              <td><code>gigo:snap</code></td>
+              <td>Run at session end to audit rules and protect the project from context bloat.</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>See <a href="/docs/skills.html">all seven skills</a> for full documentation.</p>
+      </section>
 
+    </div>
   </main>
 
   <footer class="site-footer">
@@ -137,6 +140,7 @@ cp -r gigo/skills/ ~/.claude/skills/</code></pre>
       <ul class="footer-links">
         <li><a href="https://github.com/Eaven/gigo">GitHub</a></li>
         <li><a href="/docs/skills.html">Skills</a></li>
+        <li><a href="/research/">Research</a></li>
       </ul>
     </div>
   </footer>
