@@ -38,6 +38,16 @@ The results: **97% of requirements met on the first pass. Zero fixes needed.**
 
 ---
 
+## Your Project Stays Lean
+
+Most AI setups grow out of control. Every session adds rules, nothing gets removed. Within weeks your context files are hundreds of lines of overlapping, outdated guidance that makes output worse, not better.
+
+GIGO uses a two-tier system. Rules that apply to every conversation stay lean (under 60 lines each). Deep knowledge loads only when relevant. Zero cost when unused.
+
+At the end of every session, The Snap audits your project: removes what's stale, merges what overlaps, enforces line budgets. Your project gets sharper over time, not bigger.
+
+---
+
 ## The Seven Skills
 
 | Skill | What it does |
