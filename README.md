@@ -2,9 +2,9 @@
 
 **Research the experts. Build the team. Ship better work.**
 
-Describe what you're building. GIGO researches the best practitioners in that field — real people with real philosophies — and builds you an expert team.
+Describe what you're building. GIGO researches the best practitioners in that field, real people with real philosophies, and builds you an expert team.
 
-Your AI plans smarter, produces better output, and catches more problems before they ship.
+Better plans. Better output. Fewer problems that make it to production.
 
 ---
 
@@ -20,17 +20,17 @@ Open any project in Claude Code. Type `gigo`.
 
 ## How It Works
 
-1. **Plan with your expert team** — GIGO's personas ask the hard questions. They catch the architectural gaps, the missing edge cases, the things you'd only think of at 2am.
+1. **Plan with your expert team.** GIGO's personas ask the hard questions. They catch the architectural gaps, the missing edge cases, the things you'd only think of at 2am.
 
-2. **Write a spec that carries the expertise** — The team's knowledge gets baked into the spec as concrete requirements. Not vague rules — specific decisions.
+2. **Write a spec that carries the expertise.** The team's knowledge gets baked into the spec as concrete requirements. Not vague rules. Specific decisions.
 
-3. **Let the AI do its thing** — Workers get the spec, not the rules. No hand-holding. We tested this: bare workers with good specs were rated senior to staff level by principal engineers. Every run.
+3. **Let the AI do its thing.** Workers get the spec, not the rules. No hand-holding. We tested this: bare workers with good specs were rated senior to staff level by principal engineers. Every run.
 
-4. **Review with real standards** — Two focused reviewers catch different bugs than one reviewer trying to do everything. The team knows what to look for.
+4. **Review with real standards.** Two focused reviewers catch different bugs than one reviewer trying to do everything. The team knows what to look for.
 
-Most AI tools are vibe coded — ship it, hope it works, iterate on feelings. We took a different approach: published research, controlled experiments, real methodology.
+Most AI tools are vibe coded. Ship it, hope it works, iterate on feelings. We took a different approach: published research, controlled experiments, real methodology.
 
-9 phases. Hundreds of eval runs. Blinded judging. Principal engineer reviews. Two completely different domains — a Rails API and a children's mystery novel. Built on [Gloaguen et al.](https://arxiv.org/abs/2602.11988) and [Hu et al.](https://arxiv.org/abs/2603.18507) 70M+ Claude tokens burned proving it.
+9 phases. Hundreds of eval runs. Blinded judging. Principal engineer reviews. Two completely different domains, a Rails API and a children's mystery novel. Built on [Gloaguen et al.](https://arxiv.org/abs/2602.11988) and [Hu et al.](https://arxiv.org/abs/2603.18507) 70M+ Claude tokens burned proving it.
 
 The results: **97% on the first pass. Zero fixes needed.**
 
@@ -43,16 +43,16 @@ The results: **97% on the first pass. Zero fixes needed.**
 | `gigo` | Builds your expert team from scratch |
 | `gigo:maintain` | Adds expertise, audits for bloat, upgrades setups |
 | `gigo:plan` | Turns ideas into specs and implementation plans |
-| `gigo:execute` | Runs plans with agent teams — workers get the spec, not the personas |
+| `gigo:execute` | Runs plans with agent teams. Workers get the spec, not the personas |
 | `gigo:review` | Two-stage review: spec compliance + engineering quality |
-| `gigo:snap` | Session-end audit — projects get sharper, not bigger |
+| `gigo:snap` | Session-end audit. Projects get sharper, not bigger |
 | `gigo:eval` | Proves the assembled context actually improves output |
 
 ---
 
 ## The Name
 
-義剛 (Gigo) — pronounced *ghee-goh* (義 *gi*, righteousness + 剛 *gō*, strong).
+義剛 (Gigo), pronounced *ghee-goh* (義 *gi*, righteousness + 剛 *gō*, strong).
 
 In computer science, GIGO means "Garbage In, Garbage Out."
 
@@ -79,11 +79,11 @@ GIGO: "Three on this one:
 
         The CLI Designer
         Steve Francia's cobra/viper patterns + Rob Pike's Go
-        proverbs. Owns the interface — flags, output formatting,
+        proverbs. Owns the interface. Flags, output formatting,
         error messages that actually help.
 
         The Test Strategist
-        Mitchell Hashimoto's infrastructure testing philosophy —
+        Mitchell Hashimoto's infrastructure testing philosophy.
         if you can't test it against a real database, the test
         is lying. Owns integration tests and CI reliability.
 
@@ -101,7 +101,7 @@ You: "I'm thinking about writing kids' mystery books.
 GIGO: "I can work with that. Here's who I'd bring in:
 
         The Story Architect
-        Wendelin Van Draanen — she's the master of clues kids
+        Wendelin Van Draanen. She's the master of clues kids
         can actually follow. Mixed with Lemony Snicket's
         philosophy that kids are smarter than adults give them
         credit for. Owns your plot and makes sure the mystery
@@ -109,7 +109,7 @@ GIGO: "I can work with that. Here's who I'd bring in:
 
         The Voice Coach
         Kate DiCamillo writes sentences that sound simple but
-        hit you right in the chest. Mixed with Mo Willems —
+        hit you right in the chest. Mixed with Mo Willems.
         nobody alive is better at making kids laugh with fewer
         words. Owns how your book sounds and feels.
 
@@ -117,7 +117,7 @@ GIGO: "I can work with that. Here's who I'd bring in:
        or does this feel right?"
 ```
 
-Same skill, different calibration. Works for anything — software, fiction, game design, research, music, business.
+Same skill, different calibration. Works for anything: software, fiction, game design, research, music, business.
 
 ---
 
