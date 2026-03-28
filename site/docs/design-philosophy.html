@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0a0a">
+  <title>Design Philosophy — GIGO</title>
+  <meta name="description" content="The thinking behind GIGO's design decisions — what we tried, what failed, and what the research confirmed.">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Design Philosophy — GIGO">
+  <meta property="og:description" content="The thinking behind GIGO's design decisions — what we tried, what failed, and what the research confirmed.">
+  <meta property="og:image" content="../assets/social-preview.png">
+  <meta property="og:type" content="article">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Design Philosophy — GIGO">
+  <meta name="twitter:description" content="The thinking behind GIGO's design decisions — what we tried, what failed, and what the research confirmed.">
+  <meta name="twitter:image" content="../assets/social-preview.png">
+
+  <link rel="icon" href="/site/assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/site/css/style.css">
+  <style>
+    .article-body { max-width: 680px; margin: 0 auto; padding: 0 var(--space-lg); }
+    .article-body h2 { margin-top: var(--space-3xl); }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav class="site-nav">
+    <div class="container">
+      <a href="/" class="brand"><span class="brand-kanji">義剛</span> GIGO</a>
+      <button id="nav-toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul id="nav-menu" class="nav-links">
+        <li><a href="/research/">Research</a></li>
+        <li><a href="/docs/getting-started.html">Get Started</a></li>
+        <li><a href="/docs/skills.html">Skills</a></li>
+        <li><a href="https://github.com/Eaven/gigo">GitHub</a></li>
+        <li><button id="theme-toggle">Light</button></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+
+    <section class="section">
+      <div class="container" style="text-align: center;">
+        <h1>Behind the Design</h1>
+        <p class="subtitle" style="color: var(--text-secondary); font-size: var(--text-lg); max-width: 36rem; margin: 0 auto;">This skill didn't start as a skill. It started as a problem we kept hitting at <a href="https://croftspan.com">Croftspan</a>.</p>
+      </div>
+    </section>
+
+    <div class="article-body">
+
+      <!-- 1. THE ORIGIN -->
+      <h2>The Origin: Dev Kits That Worked Too Well</h2>
+
+      <p>Every <a href="https://croftspan.com">Croftspan</a> project begins with a "dev kit" — a set of files that give Claude the brain of a domain expert before any work starts. The first kit was for Ruby on Rails: DHH's philosophy, 37signals' practices, Rails 8's patterns, all distilled into lean rules files.</p>
+
+      <p>It worked immediately. Sessions with the rules produced better code, caught more edge cases, and needed fewer corrections than sessions without them. It wasn't just context — it was opinionated expertise that shaped every decision.</p>
+
+      <p>The question became: can this work for anything? Not just Rails, but children's novels, Roblox games, research papers, brand strategy? The answer turned out to be yes — the pattern is universal. Every domain has authorities, best practices, quality gates, and common mistakes. The skill just needed a framework for finding them in any field.</p>
+
+      <!-- 2. BLENDED PHILOSOPHIES -->
+      <h2>Why Blended Philosophies, Not Single Authorities</h2>
+
+      <p>Early setups said things like "you are a senior Rails developer." Generic. No personality, no opinions, no specific approach to fight for. The breakthrough was modeling personas after Croftspan's C-suite — each executive is a blend of real practitioners.</p>
+
+      <p>The CTO isn't "a CTO" — she works in the tradition of DHH's monolith philosophy with Sandi Metz's object design and Kent Beck's testing discipline. She has opinions. She pushes back. She catches things a generic role wouldn't.</p>
+
+      <p>Blending multiple authorities creates something better than any single authority alone. Each practitioner brings a specific strength, and the combination covers blind spots that any one person would have. It also prevents the persona from being a shallow impersonation — it's a synthesis with its own coherent worldview.</p>
+
+      <!-- 3. THE BLOAT PROBLEM -->
+      <h2>The Bloat Problem</h2>
+
+      <p>The first projects grew out of control. Every session discovered something worth remembering, so rules files grew monotonically — adding, never removing. Within weeks, context files were hundreds of lines long, full of overlapping rules, outdated guidance, and reference-depth detail that didn't need to load on every conversation.</p>
+
+      <p>We noticed performance degrading. Sessions took longer, made more mistakes, and sometimes ignored rules entirely — there was too much to attend to. We started pruning manually and saw immediate improvement.</p>
+
+      <p>Then <a href="https://arxiv.org/abs/2602.11988">Gloaguen et al. (2026)</a> published the first rigorous study of how context files affect agent performance. Their findings confirmed exactly what we'd experienced:</p>
+
+      <ul>
+        <li><strong>Context files help, but only when lean and relevant.</strong> Well-crafted files improve task success rates. Bloated ones reduce them.</li>
+        <li><strong>The cost isn't just tokens — it's attention.</strong> Irrelevant rules dilute the model's focus on rules that actually matter.</li>
+        <li><strong>More requirements can hurt.</strong> Adding unnecessary constraints makes tasks harder, not easier.</li>
+        <li><strong>20%+ cost increase</strong> from bloated context, with <em>lower</em> success rates.</li>
+      </ul>
+
+      <p>This research shaped three core decisions:</p>
+
+      <p><strong>The ~60 line cap.</strong> Rules files must be ruthlessly lean. If it's approaching 60 lines, move detail to references. A 30-line file that nails the essentials outperforms a 100-line file that's thorough but dilutes attention.</p>
+
+      <p><strong>The non-derivable rule.</strong> Only write rules for things the agent can't figure out by reading the project files. Philosophy, quality bars, blended authorities — write those, they're not discoverable. Directory structure, code patterns, file organization — never write those, the agent navigates codebases on its own.</p>
+
+      <p><strong>The Snap.</strong> Every project gets <code>snap.md</code> — named after Tony's snap, not Thanos's. It's not about indiscriminate wiping — it's about sacrificing what has to go so everything that matters survives. The project gets sharper over time, not bigger.</p>
+
+      <!-- 4. TWO TIERS -->
+      <h2>Why Two Tiers Instead of One</h2>
+
+      <p>The obvious approach is one tier: put everything in <code>.claude/rules/</code> and let it load. Simpler. No decisions about what goes where.</p>
+
+      <p>The problem: every line in <code>rules/</code> loads on every conversation. A deep-dive on solo AI opponent design is invaluable when you're building the Automa system — and pure noise when you're writing card flavor text. Loading it every time wastes tokens and dilutes attention on whatever the agent is actually doing.</p>
+
+      <p>The two-tier architecture solves this. Tier 1 (rules) contains only what applies to <em>all</em> work — philosophy, quality gates, universal patterns. Tier 2 (references) contains everything else — extended examples, deep-dives, technique catalogs.</p>
+
+      <p>The key innovation is <strong>"When to Go Deeper"</strong> — rules files don't just point to references, they tell the agent <em>when</em> to read them. "When tuning cooperative balance, read <code>.claude/references/cooperative-balance.md</code>." This makes the system task-aware: the agent loads deep context only when it's relevant. And everything stays inside <code>.claude/</code> — non-destructive by design.</p>
+
+      <!-- 5. CONVERSATIONAL -->
+      <h2>Why Conversational, Not Procedural</h2>
+
+      <p>Early versions used a phased approach: fill out this form, answer these questions, review this output. It felt like a wizard. Users didn't know the answers to half the questions (especially in unfamiliar domains), and the rigid structure prevented the natural back-and-forth that surfaces the best ideas.</p>
+
+      <p>The current design is a conversation. You say what you want to build. The skill does the research, proposes a team, and presents it. You react — "drop the production lead, add a worldbuilder," "I don't need a separate testing persona," "what about solo mode?" The skill adjusts. When it feels right, you lock it in.</p>
+
+      <p>This works better because the skill does the homework. You don't need to know who the best deck-builder designers are — the skill finds Vaccarino, Leacock, and Stegmaier and explains why each matters. Your job is taste and direction, not domain expertise.</p>
+
+      <!-- 6. OPEN QUESTIONS -->
+      <h2>What We'd Still Like to Figure Out</h2>
+
+      <p><strong>Persona interaction.</strong> The assembled team currently lives as static rules. We think there's value in being able to consult individual personas in a conversational way — "What would The Systems Architect think about adding a fifth resource type?" — without bloating the always-on context. The architecture supports this (deep persona profiles in references, loaded on demand), but we haven't nailed the UX yet.</p>
+
+      <p><strong>Cross-project learning.</strong> Right now each project's rules are independent. A pattern discovered in one Rails project could benefit another, but there's no mechanism for that. The Snap prevents bloat, but it doesn't help projects learn from siblings.</p>
+
+      <p><strong>Automated health checks.</strong> The Snap can audit a project when you run it, but it'd be better if it could flag "your rules are getting stale" based on actual usage patterns rather than a generic periodic reminder.</p>
+
+      <hr>
+
+      <h2>Further Reading</h2>
+
+      <ul>
+        <li><a href="https://arxiv.org/abs/2602.11988">Gloaguen et al., 2026</a> — "Evaluating AGENTS.md: Are Repository-Level Context Files Helpful for Coding Agents?" The research that validated and quantified the lean-context approach.</li>
+        <li><a href="https://croftspan.com">Croftspan</a> — The agency where this methodology was developed and battle-tested.</li>
+        <li><a href="/research/">Two Kinds of Leadership</a> — The research narrative: 9 phases of experiments proving where context helps and where it hurts.</li>
+      </ul>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <span>Built at <a href="https://croftspan.com">Croftspan</a>. MIT License.</span>
+      <ul class="footer-links">
+        <li><a href="https://github.com/Eaven/gigo">GitHub</a></li>
+        <li><a href="/docs/getting-started.html">Docs</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script src="/site/js/main.js"></script>
+</body>
+</html>
