@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0a0a0a">
   <title>義剛 GIGO — Only give them what they need for the job</title>
-  <meta name="description" content="Research-backed context engineering for Claude Code. 9 phases of experiments proved where context helps and where it hurts — then we automated the findings.">
+  <meta name="description" content="Research-backed context engineering for Claude Code. 9 phases of experiments prove where AI context helps and where it hurts.">
 
   <!-- Open Graph -->
   <meta property="og:title" content="義剛 GIGO — Only give them what they need for the job">
-  <meta property="og:description" content="Research-backed context engineering for Claude Code. 9 phases of experiments proved where context helps and where it hurts.">
+  <meta property="og:description" content="Assembles expert AI teams for any domain. 9 phases of eval data prove where context helps and where it hurts.">
   <meta property="og:image" content="assets/social-preview.png">
   <meta property="og:url" content="https://eaven.github.io/gigo/">
   <meta property="og:type" content="website">
@@ -17,7 +17,7 @@
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="義剛 GIGO — Only give them what they need for the job">
-  <meta name="twitter:description" content="Research-backed context engineering for Claude Code. 9 phases of experiments proved where context helps and where it hurts.">
+  <meta name="twitter:description" content="Assembles expert AI teams for any domain. 9 phases of eval data prove where context helps and where it hurts.">
   <meta name="twitter:image" content="assets/social-preview.png">
 
   <link rel="icon" href="/site/assets/favicon.svg" type="image/svg+xml">
@@ -48,14 +48,12 @@
   <main>
 
     <!-- 1. Hero -->
-    <section class="section hero">
+    <section class="section" style="text-align: center; padding-top: 6rem; padding-bottom: var(--space-3xl);">
       <div class="container">
         <h1 class="brand-large"><span class="brand-kanji">義剛</span> GIGO</h1>
-        <p class="subtitle">Only give them what they need for the job.</p>
-        <div class="cta-group">
-          <div class="install-cmd">
-            <code>claude install @eaven/gigo</code>
-          </div>
+        <p style="font-size: var(--text-xl); color: var(--text-secondary); margin-bottom: var(--space-2xl);">Only give them what they need for the job.</p>
+        <div style="display: flex; justify-content: center; gap: var(--space-md); flex-wrap: wrap; align-items: center;">
+          <pre style="margin: 0; padding: var(--space-sm) var(--space-lg); font-size: var(--text-base); border-radius: 6px; display: inline-block;"><code>claude install @eaven/gigo</code></pre>
           <a href="https://github.com/Eaven/gigo" class="btn btn-secondary">View on GitHub</a>
         </div>
       </div>
@@ -75,20 +73,22 @@
     <section class="section">
       <div class="container">
         <h2>The Finding</h2>
+
         <div class="pipeline">
           <div class="pipeline-step">Plan with experts</div>
-          <span class="pipeline-arrow" aria-hidden="true">→</span>
+          <span class="pipeline-arrow">&rarr;</span>
           <div class="pipeline-step">Embed in spec</div>
-          <span class="pipeline-arrow" aria-hidden="true">→</span>
+          <span class="pipeline-arrow">&rarr;</span>
           <div class="pipeline-step">Execute bare</div>
-          <span class="pipeline-arrow" aria-hidden="true">→</span>
+          <span class="pipeline-arrow">&rarr;</span>
           <div class="pipeline-step">Review with quality bars</div>
         </div>
-        <div class="finding-numbers">
-          <p><strong>Architecture carries coherence:</strong> 14 → 20 out of 30</p>
-          <p><strong>Personas add conventions:</strong> 20 → 29</p>
-          <p><strong>30/30 conventions matched. Zero review fixes.</strong></p>
-        </div>
+
+        <ul style="list-style: none; padding: 0; margin-top: var(--space-xl);">
+          <li style="margin-bottom: var(--space-sm);"><strong>Architecture carries coherence:</strong> 14&rarr;20 out of 30</li>
+          <li style="margin-bottom: var(--space-sm);"><strong>Personas add conventions:</strong> 20&rarr;29</li>
+          <li><strong>30/30 conventions matched.</strong> Zero review fixes.</li>
+        </ul>
       </div>
     </section>
 
@@ -97,14 +97,42 @@
       <div class="container">
         <h2>Research Foundation</h2>
         <p>Built on published research — not intuition.</p>
-        <ul class="research-list">
-          <li><strong>Gloaguen et al. (2026)</strong> — bloated context reduces success rates, costs 20%+ more. <a href="https://arxiv.org/abs/2602.11988">arXiv:2602.11988</a></li>
-          <li><strong>Hu et al. (2026)</strong> — personas help alignment but hurt knowledge retrieval</li>
-          <li><strong>Kong et al.</strong> — role-play activates domain knowledge when personas are specific</li>
-          <li><strong>Xu et al.</strong> — task-specific persona descriptions outperform generic ones</li>
-          <li><strong>Shinn et al.</strong> — reflection agents make dramatically better decisions</li>
-          <li><strong>Yang et al.</strong> — interface design between agent and tools matters more than the prompt</li>
-        </ul>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Paper</th>
+              <th>Key finding</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><a href="https://arxiv.org/abs/2602.11988">Gloaguen et al. (2026)</a></td>
+              <td>Bloated context reduces success rates, costs 20%+ more</td>
+            </tr>
+            <tr>
+              <td>Hu et al. (2026)</td>
+              <td>Personas help alignment but hurt knowledge retrieval</td>
+            </tr>
+            <tr>
+              <td>Kong et al.</td>
+              <td>Role-play activates domain knowledge when personas are specific</td>
+            </tr>
+            <tr>
+              <td>Xu et al.</td>
+              <td>Task-specific persona descriptions outperform generic ones</td>
+            </tr>
+            <tr>
+              <td>Shinn et al.</td>
+              <td>Reflection agents make dramatically better decisions</td>
+            </tr>
+            <tr>
+              <td>Yang et al.</td>
+              <td>Interface design between agent and tools matters more than the prompt</td>
+            </tr>
+          </tbody>
+        </table>
+
         <p>Then validated with 9 phases of original experiments.</p>
       </div>
     </section>
@@ -113,10 +141,10 @@
     <section class="section">
       <div class="container">
         <h2>Quick Start</h2>
-        <ol class="quick-start-steps">
+        <ol style="font-size: var(--text-lg); line-height: 2;">
           <li>Install: <code>claude install @eaven/gigo</code></li>
-          <li>Open any project</li>
-          <li>Say <code>gigo</code></li>
+          <li>Open any project.</li>
+          <li>Say <strong>"gigo."</strong></li>
         </ol>
       </div>
     </section>
@@ -124,7 +152,7 @@
     <!-- 6. Skills Overview -->
     <section class="section">
       <div class="container">
-        <h2>Skills</h2>
+        <h2>The Seven Skills</h2>
         <table>
           <thead>
             <tr>
@@ -163,7 +191,7 @@
             </tr>
           </tbody>
         </table>
-        <p><a href="/docs/skills.html">Full skill documentation →</a></p>
+        <p><a href="/docs/skills.html">Full skill documentation &rarr;</a></p>
       </div>
     </section>
 
@@ -184,6 +212,7 @@
       <ul class="footer-links">
         <li><a href="https://github.com/Eaven/gigo">GitHub</a></li>
         <li><a href="/docs/getting-started.html">Docs</a></li>
+        <li><a href="/research/">Research</a></li>
       </ul>
     </div>
   </footer>
