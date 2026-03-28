@@ -163,6 +163,12 @@ h4 { font-size: var(--text-xl); }
 
 p { margin-bottom: var(--space-md); }
 
+/* Prevent em-dashes from breaking onto their own line */
+p, li, td, blockquote p {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
 /* --- Layout --- */
 .container {
   width: 100%;
@@ -490,8 +496,8 @@ blockquote cite,
   padding: 0 var(--space-lg);
 }
 
-.article-body h2 { margin-top: var(--space-3xl); }
-.article-body h3 { margin-top: var(--space-2xl); }
+.article-body h2 { margin-top: var(--space-2xl); }
+.article-body h3 { margin-top: var(--space-xl); }
 
 .article-body blockquote,
 .article-body .pull-quote {
