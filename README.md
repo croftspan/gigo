@@ -116,6 +116,6 @@ Same skill, different calibration. Works for anything — software, fiction, gam
 
 ---
 
-Built at [Croftspan](https://croftspan.com). Apache 2.0 License.
+Built at [Croftspan](https://croftspan.com). apache 2.0.
 
 [Research](site/research/) · [Get Started](site/docs/getting-started.html) · [Skills](site/docs/skills.html) · [Architecture](site/docs/architecture.html)
