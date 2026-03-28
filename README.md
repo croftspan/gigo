@@ -2,6 +2,8 @@
 
 **Research the experts. Build the team. Ship better work.**
 
+[croftspan.github.io/gigo](https://croftspan.github.io/gigo/)
+
 Describe what you're building. GIGO researches the best practitioners in that field, real people with real philosophies, and builds you an expert team.
 
 Better plans. Better output. Fewer problems that make it to production.
