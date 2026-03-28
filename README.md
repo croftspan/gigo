@@ -37,7 +37,7 @@ Open any project in Claude Code. Type `gigo`.
 
 We proved this works with [9 phases of experiments](site/research/) across two completely different domains (a Rails API and a children's mystery novel), built on research from [Gloaguen et al.](https://arxiv.org/abs/2602.11988) and [Hu et al.](https://arxiv.org/abs/2603.18507)
 
-The results: gets it right **the first time, 97%** of the time. **Zero fixes needed.**
+The results: gets it right **the first time, 97%** of the time. **Zero fixes needed.** 70M+ Claude tokens burned across 9 experimental phases to bring you this.
 
 ---
 
