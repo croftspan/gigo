@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0a0a">
+  <title>Architecture — GIGO</title>
+  <meta name="description" content="Two-tier context architecture, the ~60 line cap, non-derivable rules, The Snap audit, persona design, and the plan-execute-review pipeline.">
+
+  <meta property="og:title" content="Architecture — GIGO">
+  <meta property="og:description" content="Two-tier context architecture: lean rules that load every conversation, deep references that load on demand.">
+  <meta property="og:image" content="../assets/social-preview.png">
+  <meta property="og:type" content="article">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Architecture — GIGO">
+  <meta name="twitter:description" content="Two-tier context architecture for AI agents.">
+
+  <link rel="icon" href="/site/assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/site/css/style.css">
+  <style>
+    .article-body { max-width: 680px; margin: 0 auto; padding: 0 var(--space-lg); }
+    .article-body h2 { margin-top: var(--space-3xl); }
+  </style>
+</head>
+<body>
+
+  <nav class="site-nav">
+    <div class="container">
+      <a href="/" class="brand"><span class="brand-kanji">義剛</span> GIGO</a>
+      <button id="nav-toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul id="nav-menu" class="nav-links">
+        <li><a href="/research/">Research</a></li>
+        <li><a href="/docs/getting-started.html">Get Started</a></li>
+        <li><a href="/docs/skills.html">Skills</a></li>
+        <li><a href="https://github.com/Eaven/gigo">GitHub</a></li>
+        <li><button id="theme-toggle">Light</button></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="article-body">
+
+      <header class="section" style="padding-bottom:0;">
+        <h1>Architecture</h1>
+      </header>
+
+      <!-- The Problem -->
+      <section class="section">
+        <h2>The Problem</h2>
+        <p>Context files grow monotonically. Every session discovers something worth remembering, so rules files grow — adding, never removing. Within weeks: 200+ lines of overlapping rules, outdated guidance, reference-depth detail loading on every conversation.</p>
+        <p>Performance degrades. Sessions take longer, make more mistakes, sometimes ignore rules entirely — there's too much to attend to.</p>
+        <p><a href="https://arxiv.org/abs/2602.11988">Gloaguen et al. (2026)</a> published the first rigorous study confirming what we'd experienced: bloated context reduces task success rates while increasing cost by 20%+. Irrelevant rules dilute the model's focus on rules that actually matter. More requirements can make tasks harder, not easier.</p>
+      </section>
+
+      <!-- Two Tiers -->
+      <section class="section">
+        <h2>Two Tiers</h2>
+        <table>
+          <thead><tr><th></th><th>Rules</th><th>References</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Location</strong></td><td><code>.claude/rules/</code></td><td><code>.claude/references/</code></td></tr>
+            <tr><td><strong>Loading</strong></td><td>Auto-loaded every conversation</td><td>On-demand, via pointers</td></tr>
+            <tr><td><strong>Token cost</strong></td><td>Always paid</td><td>Zero when unused</td></tr>
+            <tr><td><strong>Content</strong></td><td>Applies to all work — philosophy, quality bars, workflow</td><td>Task-specific depth — technique catalogs, authority deep-dives, checklists</td></tr>
+            <tr><td><strong>Cap</strong></td><td>~60 lines per file, ~300 total</td><td>No hard limit</td></tr>
+          </tbody>
+        </table>
+        <p>The key innovation: <strong>"When to Go Deeper" pointers</strong> in rules files tell the agent <em>when</em> to read a reference. Not generic "see also" links — task-specific triggers:</p>
+        <blockquote><p>"When tuning cooperative balance, read <code>.claude/references/cooperative-balance.md</code>."</p></blockquote>
+        <p>This makes the system task-aware. The agent loads deep context only when it's relevant to the current work.</p>
+      </section>
+
+      <!-- The ~60 Line Cap -->
+      <section class="section">
+        <h2>The ~60 Line Cap</h2>
+        <p>Not arbitrary. Research-informed.</p>
+        <p>A 30-line file that nails the essentials outperforms a 100-line file that's thorough but dilutes attention. When a rules file approaches ~60 lines, it triggers a move: keep the essential rule in <code>rules/</code>, move the depth to <code>references/</code>.</p>
+        <p>Total budget across all rules files: ~300 lines. Fewer is better.</p>
+      </section>
+
+      <!-- The Non-Derivable Rule -->
+      <section class="section">
+        <h2>The Non-Derivable Rule</h2>
+        <p>Only write what Claude can't figure out by reading the project files.</p>
+        <p><strong>Write:</strong> Philosophy, quality bars, anti-patterns, blended authorities — these aren't discoverable from the code.</p>
+        <p><strong>Don't write:</strong> Directory structure, code patterns, file organization — the agent navigates codebases on its own. Codebase overviews are actively harmful because they waste attention on information the agent would have found anyway.</p>
+      </section>
+
+      <!-- The Snap -->
+      <section class="section">
+        <h2>The Snap</h2>
+        <p>Named after Tony's snap, not Thanos's. Not indiscriminate wiping — sacrificing what has to go so what matters survives.</p>
+        <p>A 10-point audit runs every session end:</p>
+        <ol>
+          <li><strong>Line check</strong> — any rules file approaching ~60 lines?</li>
+          <li><strong>Derivability check</strong> — can the agent figure this out from the code?</li>
+          <li><strong>Overlap check</strong> — rules saying the same thing in different words?</li>
+          <li><strong>Staleness check</strong> — early-project rules that no longer apply?</li>
+          <li><strong>Cost check</strong> — worth loading on every conversation?</li>
+          <li><strong>Persona calibration check</strong> — knowledge content in personas that belongs in references?</li>
+          <li><strong>Total budget check</strong> — approaching ~300 lines across all rules?</li>
+          <li><strong>Coverage check</strong> — has the project grown into areas the team doesn't cover?</li>
+          <li><strong>Overwatch check</strong> — adversarial self-check system present?</li>
+          <li><strong>Pipeline check</strong> — three phases (plan, execute, review) still intact?</li>
+        </ol>
+        <p>Projects get sharper over time, not bigger.</p>
+      </section>
+
+      <!-- Persona Architecture -->
+      <section class="section">
+        <h2>Persona Architecture</h2>
+        <p>Blended philosophies: 2-3+ real authorities per persona, each bringing a specific contribution. Not "a senior developer" — "Andrew Kane's database ops pragmatism + Sandi Metz's 'small objects that talk to each other' + DHH's convention-over-configuration."</p>
+        <p><strong>Alignment signal</strong> (quality bars, approach, constraints) stays in rules. <strong>Knowledge signal</strong> (factual specifics, implementation patterns) goes in references.</p>
+        <p>The Hu et al. tradeoff: personas help alignment but hurt knowledge retrieval. Addressed by the <strong>persona calibration heuristic</strong> — 6 lines that tell the model when to lead with training vs lean into persona. On presentation tasks, persona leads. On content tasks, training leads, persona frames.</p>
+      </section>
+
+      <!-- The Pipeline -->
+      <section class="section">
+        <h2>The Pipeline</h2>
+        <div class="pipeline">
+          <div class="pipeline-step">Plan (assembled)</div>
+          <span class="pipeline-arrow" aria-hidden="true">&rarr;</span>
+          <div class="pipeline-step">Execute (bare)</div>
+          <span class="pipeline-arrow" aria-hidden="true">&rarr;</span>
+          <div class="pipeline-step">Review (assembled)</div>
+        </div>
+        <p><strong>Planning:</strong> The team's expertise shapes questions. <a href="/research/">Phase 6</a> showed assembled catches partial unique index, pagination, copy condition — architectural improvements bare misses. Expertise gets embedded as requirements in the spec.</p>
+        <p><strong>Execution:</strong> Bare workers follow the spec and produce senior/staff-level code. <a href="/research/">Phase 7</a> proved the format of execution context doesn't matter — the spec quality determines output.</p>
+        <p><strong>Review:</strong> Two focused reviewers: spec compliance ("did you build the right thing?") then engineering quality ("is the code good?"). <a href="/research/">Phase 8</a> proved two focused reviewers find more issues than one combined reviewer.</p>
+        <p>Read <a href="/research/">Two Kinds of Leadership</a> for the full research narrative.</p>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>Built at <a href="https://croftspan.com">Croftspan</a>. MIT License.</span>
+      <ul class="footer-links">
+        <li><a href="https://github.com/Eaven/gigo">GitHub</a></li>
+        <li><a href="/docs/getting-started.html">Get Started</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script src="/site/js/main.js"></script>
+</body>
+</html>
