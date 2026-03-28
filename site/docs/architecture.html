@@ -4,17 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0a0a0a">
-  <title>Architecture — GIGO</title>
-  <meta name="description" content="Two-tier context architecture, the ~60 line cap, non-derivable rules, The Snap audit, persona design, and the plan-execute-review pipeline.">
+  <title>Architecture — GIGO Docs</title>
+  <meta name="description" content="The two-tier context system, the ~60 line cap, the non-derivable rule, The Snap, and the plan-execute-review pipeline. Why less context produces better output.">
 
   <meta property="og:title" content="Architecture — GIGO">
-  <meta property="og:description" content="Two-tier context architecture: lean rules that load every conversation, deep references that load on demand.">
+  <meta property="og:description" content="Two-tier context, line caps, The Snap audit, and the pipeline. Research-backed architecture for AI context engineering.">
   <meta property="og:image" content="../assets/social-preview.png">
-  <meta property="og:type" content="article">
-
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Architecture — GIGO">
-  <meta name="twitter:description" content="Two-tier context architecture for AI agents.">
+  <meta name="twitter:card" content="summary_large_image">
 
   <link rel="icon" href="/site/assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,7 +19,6 @@
   <link rel="stylesheet" href="/site/css/style.css">
   <style>
     .article-body { max-width: 680px; margin: 0 auto; padding: 0 var(--space-lg); }
-    .article-body h2 { margin-top: var(--space-3xl); }
   </style>
 </head>
 <body>
@@ -47,94 +42,93 @@
   <main>
     <div class="article-body">
 
-      <header class="section" style="padding-bottom:0;">
+      <header class="section" style="padding-bottom: 0;">
         <h1>Architecture</h1>
       </header>
 
       <!-- The Problem -->
-      <section class="section">
+      <section class="section" id="the-problem">
         <h2>The Problem</h2>
-        <p>Context files grow monotonically. Every session discovers something worth remembering, so rules files grow — adding, never removing. Within weeks: 200+ lines of overlapping rules, outdated guidance, reference-depth detail loading on every conversation.</p>
-        <p>Performance degrades. Sessions take longer, make more mistakes, sometimes ignore rules entirely — there's too much to attend to.</p>
-        <p><a href="https://arxiv.org/abs/2602.11988">Gloaguen et al. (2026)</a> published the first rigorous study confirming what we'd experienced: bloated context reduces task success rates while increasing cost by 20%+. Irrelevant rules dilute the model's focus on rules that actually matter. More requirements can make tasks harder, not easier.</p>
+        <p>Context files grow monotonically. Every session discovers something worth remembering, so rules files grow &mdash; adding, never removing. Within weeks: 200+ lines of overlapping rules, outdated guidance, reference-depth detail loading on every conversation.</p>
+        <p>Performance degrades. Sessions take longer, make more mistakes, sometimes ignore rules entirely. There&rsquo;s too much to attend to.</p>
+        <p>Then <a href="https://arxiv.org/abs/2602.11988">Gloaguen et al. (2026)</a> published the first rigorous study confirming it: bloated context files <em>reduce</em> task success rates while increasing cost by 20%+. You pay more and get worse results.</p>
       </section>
 
       <!-- Two Tiers -->
-      <section class="section">
+      <section class="section" id="two-tiers">
         <h2>Two Tiers</h2>
         <table>
           <thead><tr><th></th><th>Rules</th><th>References</th></tr></thead>
           <tbody>
             <tr><td><strong>Location</strong></td><td><code>.claude/rules/</code></td><td><code>.claude/references/</code></td></tr>
-            <tr><td><strong>Loading</strong></td><td>Auto-loaded every conversation</td><td>On-demand, via pointers</td></tr>
-            <tr><td><strong>Token cost</strong></td><td>Always paid</td><td>Zero when unused</td></tr>
-            <tr><td><strong>Content</strong></td><td>Applies to all work — philosophy, quality bars, workflow</td><td>Task-specific depth — technique catalogs, authority deep-dives, checklists</td></tr>
-            <tr><td><strong>Cap</strong></td><td>~60 lines per file, ~300 total</td><td>No hard limit</td></tr>
+            <tr><td><strong>Loading</strong></td><td>Auto-loaded every conversation</td><td>On-demand only</td></tr>
+            <tr><td><strong>Token cost</strong></td><td>Paid every time</td><td>Zero when unused</td></tr>
+            <tr><td><strong>Content</strong></td><td>Philosophy, quality bars, workflow, universal patterns</td><td>Deep knowledge, technique catalogs, authority profiles</td></tr>
+            <tr><td><strong>Cap</strong></td><td>~60 lines per file, ~300 total</td><td>No cap</td></tr>
           </tbody>
         </table>
-        <p>The key innovation: <strong>"When to Go Deeper" pointers</strong> in rules files tell the agent <em>when</em> to read a reference. Not generic "see also" links — task-specific triggers:</p>
-        <blockquote><p>"When tuning cooperative balance, read <code>.claude/references/cooperative-balance.md</code>."</p></blockquote>
-        <p>This makes the system task-aware. The agent loads deep context only when it's relevant to the current work.</p>
+        <p>The key innovation: <strong>&ldquo;When to Go Deeper&rdquo; pointers.</strong> Rules files don&rsquo;t just point to references &mdash; they tell the agent <em>when</em> to read them. Not generic &ldquo;see also&rdquo; links but task-specific triggers:</p>
+        <blockquote><p>&ldquo;When tuning cooperative balance, read <code>.claude/references/cooperative-balance.md</code>.&rdquo;</p></blockquote>
+        <p>This makes the system task-aware: deep context loads only when relevant. Phase 2a proved it &mdash; task-specific pointers took the children&rsquo;s novel from 86% to 100%.</p>
       </section>
 
-      <!-- The ~60 Line Cap -->
-      <section class="section">
+      <!-- Line Cap -->
+      <section class="section" id="line-cap">
         <h2>The ~60 Line Cap</h2>
-        <p>Not arbitrary. Research-informed.</p>
-        <p>A 30-line file that nails the essentials outperforms a 100-line file that's thorough but dilutes attention. When a rules file approaches ~60 lines, it triggers a move: keep the essential rule in <code>rules/</code>, move the depth to <code>references/</code>.</p>
-        <p>Total budget across all rules files: ~300 lines. Fewer is better.</p>
+        <p>Not arbitrary. Research-informed. A 30-line file that nails the essentials outperforms a 100-line file that&rsquo;s thorough but dilutes attention.</p>
+        <p>Approaching ~60 lines triggers a move: keep the essential rule in <code>rules/</code>, move the depth to <code>references/</code>. Total budget across all rules files: ~300 lines.</p>
       </section>
 
-      <!-- The Non-Derivable Rule -->
-      <section class="section">
+      <!-- Non-Derivable Rule -->
+      <section class="section" id="non-derivable">
         <h2>The Non-Derivable Rule</h2>
-        <p>Only write what Claude can't figure out by reading the project files.</p>
-        <p><strong>Write:</strong> Philosophy, quality bars, anti-patterns, blended authorities — these aren't discoverable from the code.</p>
-        <p><strong>Don't write:</strong> Directory structure, code patterns, file organization — the agent navigates codebases on its own. Codebase overviews are actively harmful because they waste attention on information the agent would have found anyway.</p>
+        <p>Only write what Claude can&rsquo;t figure out by reading the project files.</p>
+        <p><strong>Write these</strong> &mdash; philosophy, quality bars, anti-patterns, blended authorities. They&rsquo;re not discoverable from the code.</p>
+        <p><strong>Never write these</strong> &mdash; directory structure, code patterns, file organization. The agent navigates codebases on its own. Codebase overviews are actively harmful: they waste attention on information the agent would have found anyway.</p>
       </section>
 
       <!-- The Snap -->
-      <section class="section">
+      <section class="section" id="the-snap">
         <h2>The Snap</h2>
-        <p>Named after Tony's snap, not Thanos's. Not indiscriminate wiping — sacrificing what has to go so what matters survives.</p>
-        <p>A 10-point audit runs every session end:</p>
+        <p>Named after Tony&rsquo;s snap, not Thanos&rsquo;s. Not indiscriminate wiping &mdash; sacrificing what has to go so what matters survives.</p>
+        <p>The 10-point audit runs every session end:</p>
         <ol>
-          <li><strong>Line check</strong> — any rules file approaching ~60 lines?</li>
-          <li><strong>Derivability check</strong> — can the agent figure this out from the code?</li>
-          <li><strong>Overlap check</strong> — rules saying the same thing in different words?</li>
-          <li><strong>Staleness check</strong> — early-project rules that no longer apply?</li>
-          <li><strong>Cost check</strong> — worth loading on every conversation?</li>
-          <li><strong>Persona calibration check</strong> — knowledge content in personas that belongs in references?</li>
-          <li><strong>Total budget check</strong> — approaching ~300 lines across all rules?</li>
-          <li><strong>Coverage check</strong> — has the project grown into areas the team doesn't cover?</li>
-          <li><strong>Overwatch check</strong> — adversarial self-check system present?</li>
-          <li><strong>Pipeline check</strong> — three phases (plan, execute, review) still intact?</li>
+          <li><strong>Line check</strong> &mdash; any file approaching ~60 lines?</li>
+          <li><strong>Derivability check</strong> &mdash; can the agent figure this out from the code?</li>
+          <li><strong>Overlap check</strong> &mdash; rules saying the same thing in different words?</li>
+          <li><strong>Staleness check</strong> &mdash; rules that no longer apply?</li>
+          <li><strong>Cost check</strong> &mdash; worth loading on every conversation?</li>
+          <li><strong>Persona calibration check</strong> &mdash; domain knowledge in rules that belongs in references?</li>
+          <li><strong>Total budget check</strong> &mdash; approaching ~300 lines across all files?</li>
+          <li><strong>Coverage check</strong> &mdash; project outgrown the team?</li>
+          <li><strong>Overwatch check</strong> &mdash; adversarial self-check system present?</li>
+          <li><strong>Pipeline check</strong> &mdash; three phases (plan, execute, review) still intact?</li>
         </ol>
         <p>Projects get sharper over time, not bigger.</p>
       </section>
 
       <!-- Persona Architecture -->
-      <section class="section">
+      <section class="section" id="personas">
         <h2>Persona Architecture</h2>
-        <p>Blended philosophies: 2-3+ real authorities per persona, each bringing a specific contribution. Not "a senior developer" — "Andrew Kane's database ops pragmatism + Sandi Metz's 'small objects that talk to each other' + DHH's convention-over-configuration."</p>
+        <p>Blended philosophies: 2-3+ real authorities per persona, each bringing a specific contribution. Not &ldquo;a senior developer&rdquo; but &ldquo;Andrew Kane&rsquo;s database ops pragmatism + Sandi Metz&rsquo;s &lsquo;small objects that talk to each other&rsquo; + DHH&rsquo;s convention-over-configuration.&rdquo;</p>
         <p><strong>Alignment signal</strong> (quality bars, approach, constraints) stays in rules. <strong>Knowledge signal</strong> (factual specifics, implementation patterns) goes in references.</p>
-        <p>The Hu et al. tradeoff: personas help alignment but hurt knowledge retrieval. Addressed by the <strong>persona calibration heuristic</strong> — 6 lines that tell the model when to lead with training vs lean into persona. On presentation tasks, persona leads. On content tasks, training leads, persona frames.</p>
+        <p>The Hu et al. tradeoff: personas help alignment but hurt knowledge retrieval. Addressed by the persona calibration heuristic &mdash; tells the model when to lead with training vs persona. Phase 2a: this added 9 percentage points.</p>
       </section>
 
       <!-- The Pipeline -->
-      <section class="section">
+      <section class="section" id="pipeline">
         <h2>The Pipeline</h2>
         <div class="pipeline">
           <div class="pipeline-step">Plan (assembled)</div>
-          <span class="pipeline-arrow" aria-hidden="true">&rarr;</span>
+          <span class="pipeline-arrow">&rarr;</span>
           <div class="pipeline-step">Execute (bare)</div>
-          <span class="pipeline-arrow" aria-hidden="true">&rarr;</span>
+          <span class="pipeline-arrow">&rarr;</span>
           <div class="pipeline-step">Review (assembled)</div>
         </div>
-        <p><strong>Planning:</strong> The team's expertise shapes questions. <a href="/research/">Phase 6</a> showed assembled catches partial unique index, pagination, copy condition — architectural improvements bare misses. Expertise gets embedded as requirements in the spec.</p>
-        <p><strong>Execution:</strong> Bare workers follow the spec and produce senior/staff-level code. <a href="/research/">Phase 7</a> proved the format of execution context doesn't matter — the spec quality determines output.</p>
-        <p><strong>Review:</strong> Two focused reviewers: spec compliance ("did you build the right thing?") then engineering quality ("is the code good?"). <a href="/research/">Phase 8</a> proved two focused reviewers find more issues than one combined reviewer.</p>
-        <p>Read <a href="/research/">Two Kinds of Leadership</a> for the full research narrative.</p>
+        <p>The team&rsquo;s expertise shapes questions during planning. Phase 6: assembled catches partial unique index, pagination, copy condition that bare misses. Expertise gets embedded as requirements in the spec.</p>
+        <p>Bare workers follow the spec and produce senior/staff-level code. Phase 7: bare rated senior or staff every time by a principal engineer review.</p>
+        <p>The team reviews output against quality bars. Phase 8: two focused reviewers (spec compliance + engineering quality) find more issues than one combined reviewer.</p>
+        <p>For the full data and narrative, read <a href="/research/">Two Kinds of Leadership</a>.</p>
       </section>
 
     </div>
@@ -146,6 +140,7 @@
       <ul class="footer-links">
         <li><a href="https://github.com/Eaven/gigo">GitHub</a></li>
         <li><a href="/docs/getting-started.html">Get Started</a></li>
+        <li><a href="/docs/skills.html">Skills</a></li>
       </ul>
     </div>
   </footer>
