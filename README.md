@@ -50,7 +50,7 @@ The results: gets it right **the first time, 97%** of the time. **Zero fixes nee
 
 ## The Name
 
-義剛 (Gigo) — pronounced *gee-goh* (義 *gi*, righteousness + 剛 *gō*, strong). In computer science, GIGO means "Garbage In, Garbage Out." Both meanings apply.
+義剛 (Gigo) — pronounced *ghee-goh* (義 *gi*, righteousness + 剛 *gō*, strong). In computer science, GIGO means "Garbage In, Garbage Out." Both meanings apply.
 
 ---
 
