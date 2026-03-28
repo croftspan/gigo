@@ -63,63 +63,80 @@ In computer science, GIGO means "Garbage In, Garbage Out."
 
 ## See It In Action
 
-**You know what you're building:**
+**Clear technical brief:**
 
 ```
-gigo
-
-You: "Building a CLI tool for database migrations. Go, targets
-     Postgres and MySQL. Rollbacks, dry runs, schema diffing."
+You: "Building a real-time multiplayer game server. Rust.
+      WebSocket connections, matchmaking, state sync."
 
 GIGO: "Three on this one:
 
-        The Migration Architect
-        Andrew Kane's database ops pragmatism + Sandi Metz's
-        'small objects that talk to each other.' Owns migration
-        safety, rollback logic, and the 'will this lock the
-        table?' question.
+        The Network Architect
+        Carl Lerche's Tokio-driven async pragmatism. The runtime
+        is the foundation, get it right or nothing else matters.
+        + Glenn Fiedler's game networking gospel. Client-side
+        prediction, server authority, snapshot interpolation.
+        + Sanjay Ghemawat's systems-level efficiency thinking.
+        When you're processing thousands of connections per tick,
+        allocation patterns are gameplay decisions.
 
-        The CLI Designer
-        Steve Francia's cobra/viper patterns + Rob Pike's Go
-        proverbs. Owns the interface. Flags, output formatting,
-        error messages that actually help.
+        The Game State Engineer
+        Gabriel Gambetta's client-server game architecture.
+        The canonical breakdown of interpolation, prediction,
+        and reconciliation. + Jon Blow's data-oriented design
+        philosophy. ECS isn't a religion, but your state layout
+        determines your tick budget. + Martin Kleppmann's
+        distributed systems rigor. State sync is a distributed
+        systems problem wearing a game costume.
 
-        The Test Strategist
-        Mitchell Hashimoto's infrastructure testing philosophy.
-        if you can't test it against a real database, the test
-        is lying. Owns integration tests and CI reliability.
+        The Matchmaker
+        Josh Menke's matchmaking philosophy (Halo, Call of Duty).
+        Skill rating is easy, match quality is hard. + Raph
+        Koster's theory of fun as a design constraint.
+        Matchmaking that doesn't produce fun games is technically
+        correct and functionally useless.
 
-       Lock it in, or adjustments?"
+       Three distinct lenses. Each one disagrees with the others
+       on where to spend complexity budget, which is exactly the
+       tension you want. Lock it in, or adjustments?"
 ```
 
-**You're still figuring it out:**
+**Vibes-only creative brief:**
 
 ```
-gigo
+You: "I want to make a tabletop RPG. Something dark and weird,
+      like if Miyazaki directed D&D."
 
-You: "I'm thinking about writing kids' mystery books.
-      Not sure where to start."
+GIGO: "Custom system, no safety net of an existing engine. That's
+       more work but more control. Here's who I'd bring in:
 
-GIGO: "I can work with that. Here's who I'd bring in:
+        The Mythwright
+        Fumito Ueda's design-through-absence. What you don't
+        explain is more haunting than what you do. + Miyazaki's
+        moral complexity. No pure villains, just beings with
+        alien logic. + Kentaro Miura's capacity to make beauty
+        feel precarious. Owns your setting, your tone, and the
+        question 'does this feel wrong in the right way?'
 
-        The Story Architect
-        Wendelin Van Draanen. She's the master of clues kids
-        can actually follow. Mixed with Lemony Snicket's
-        philosophy that kids are smarter than adults give them
-        credit for. Owns your plot and makes sure the mystery
-        plays fair.
+        The Mechanist
+        Vincent Baker's 'fiction first' engine philosophy.
+        Apocalypse World proved mechanics should emerge from
+        the narrative. + Luke Crane's conviction that the system
+        should hurt. Advancement costs something. + Ben Milton's
+        Knave-style minimalism. If a rule doesn't create a
+        meaningful decision, cut it.
 
-        The Voice Coach
-        Kate DiCamillo writes sentences that sound simple but
-        hit you right in the chest. Mixed with Mo Willems.
-        nobody alive is better at making kids laugh with fewer
-        words. Owns how your book sounds and feels.
+        The Dread Cartographer
+        Grant Howitt's one-page game clarity. Honey Heist proved
+        you can teach a game in minutes without losing depth.
+        + Emmy Allen's Stygian Library approach to procedural
+        wonder. Tables that generate mood, not just content.
 
-       That's two to start. Want me to dig into either of them,
-       or does this feel right?"
+       Want me to tell you more about any of them, swap someone
+       out, or does this feel like the right team?"
 ```
 
-Same skill, different calibration. Works for anything: software, fiction, game design, research, music, business.
+Same skill, different calibration. Software, fiction, game design, research, music, business.
 
 ---
 
