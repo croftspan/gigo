@@ -51,7 +51,7 @@
     <article class="article-body">
 
       <!-- Title -->
-      <header class="section section--flush" style="text-align: center;">
+      <header class="section section--flush section--center">
         <h1>Two Kinds of Leadership</h1>
         <p class="subtitle">What 9 experimental phases taught us about AI context engineering</p>
       </header>
@@ -80,8 +80,7 @@
       <!-- Phase 1 -->
       <section class="section" id="baseline">
         <h2>Phase 1: The Baseline (87%)</h2>
-        <div class="table-wrapper">
-        <div class="table-wrapper"><table>
+                <div class="table-wrapper"><table>
           <caption>The 11 ties and 2 losses tell the real story &mdash; they cluster by task type.</caption>
           <thead><tr><th>Domain</th><th>Win %</th><th>Ties</th><th>Losses</th></tr></thead>
           <tbody>
@@ -90,7 +89,6 @@
             <tr><td><strong>Combined</strong></td><td><strong>87%</strong></td><td><strong>11</strong></td><td><strong>2</strong></td></tr>
           </tbody>
         </table></div>
-        </div>
         <p>The 13 non-wins clustered into a pattern that matched a paper we&rsquo;d already integrated: Hu et al. (2026) &mdash; &ldquo;Expert Personas Improve LLM Alignment but Damage Accuracy.&rdquo;</p>
         <p>Presentation tasks (quality bars, style, structure) &mdash; assembled won almost every time. Content tasks (factual recall, deployment steps, diagnostics) &mdash; tied. The persona overhead was neutral or slightly negative. This wasn&rsquo;t a failure. It was the fundamental tradeoff the research predicts: personas help alignment, hurt knowledge retrieval. We were seeing it in our own data.</p>
       </section>
@@ -107,15 +105,13 @@
         <p>The original pointers were generic: &ldquo;When working on migrations, read rails-patterns.md.&rdquo; The new pointers name the task and what to look for: &ldquo;When deploying or preparing for production, read rails-patterns.md &mdash; verify migration safety, index strategy, and CI status before shipping.&rdquo;</p>
         <p>The tied prompts involved tasks where domain knowledge lived in reference files that didn&rsquo;t load. Generic pointers don&rsquo;t trigger on &ldquo;deploy to production.&rdquo; Specific pointers do.</p>
 
-        <div class="table-wrapper">
-        <div class="table-wrapper"><table>
+                <div class="table-wrapper"><table>
           <thead><tr><th>Run</th><th>Rails</th><th>Novel</th><th>Combined</th><th>Losses</th></tr></thead>
           <tbody>
             <tr><td>Phase 2a</td><td>92%</td><td>100%</td><td><strong>96%</strong></td><td>0</td></tr>
             <tr><td>Phase 2c (confirmation)</td><td>100%</td><td>98%</td><td><strong>99%</strong></td><td>0</td></tr>
           </tbody>
         </table></div>
-        </div>
 
         <div class="pull-quote">
           <p>Children&rsquo;s novel went from 86% to 100%. Every previously tied prompt converted. The task-specific pointers gave concrete ammunition: revelation pacing, clue chain audits, chapter-specific diagnosis.</p>
@@ -141,13 +137,11 @@
         <p>The hallucination problem demanded a fix. We built a two-tier adversarial system: a lightweight self-check in every project&rsquo;s workflow (&ldquo;did you actually do what you claimed?&rdquo;), and a full Overwatch persona for teams with 3+ members.</p>
         <p>But the first version used the same checks for both domains. Results:</p>
 
-        <div class="table-wrapper">
-        <div class="table-wrapper"><table>
+                <div class="table-wrapper"><table>
             <tr><td>Hawkeye (structured)</td><td>98%</td><td>90%</td><td>94%</td><td>1</td></tr>
             <tr><td>Hawkeye (structured) run 2</td><td>94%</td><td>88%</td><td>91%</td><td>4</td></tr>
           </tbody>
         </table></div>
-        </div>
 
         <p>Rails held steady. Novel dropped from 99% to ~89%. The structured Overwatch (&ldquo;did you apply the quality bars you cited?&rdquo;) pushed the model toward process meta-commentary instead of craft engagement.</p>
 
@@ -157,12 +151,10 @@
 
         <p>The fix: domain-adapted Overwatch. Structured domains get process checks. Creative domains get engagement checks (&ldquo;did you reference specific characters, or give generic advice?&rdquo;).</p>
 
-        <div class="table-wrapper">
-        <div class="table-wrapper"><table>
+                <div class="table-wrapper"><table>
             <tr><td>Hawkeye (domain-adapted)</td><td>92%</td><td><strong>100%</strong></td><td><strong>96%</strong></td><td><strong>0</strong></td></tr>
           </tbody>
         </table></div>
-        </div>
 
         <p>Novel back to 100%. Zero losses. Adversarial checks must be domain-adapted.</p>
       </section>
@@ -173,13 +165,11 @@
         <p>The A/B eval proved assembled context <em>influences</em> behavior. But influence isn&rsquo;t outcome. The proficiency test asks: when both versions do real work, which output is actually better?</p>
         <p>Two self-contained tasks: build a library reservation API from a complete spec, and write a mystery novel opening scene from a character brief. Automated structural checks plus LLM rubric scoring, 20 checks per domain.</p>
 
-        <div class="table-wrapper">
-        <div class="table-wrapper"><table>
+                <div class="table-wrapper"><table>
             <tr><td>Rails</td><td>12/20</td><td><strong>18/20</strong></td><td>+6 assembled</td></tr>
             <tr><td>Novel</td><td><strong>19/20</strong></td><td>18/20</td><td>-1 bare</td></tr>
           </tbody>
         </table></div>
-        </div>
 
         <p>Then we dispatched blind qualitative judges &mdash; a senior engineer and senior editor who didn&rsquo;t know which version had context.</p>
         <p>The blind engineer rated bare &ldquo;senior&rdquo; and assembled &ldquo;strong mid-level reaching for senior.&rdquo; Assembled was penalized for over-commenting, including planning notes in output, and showing a subtle race condition that bare avoided. The blind editor rated bare &ldquo;veteran&rdquo; and assembled &ldquo;mid-career&rdquo; &mdash; penalized for explaining its own clues in a postscript.</p>
@@ -248,8 +238,7 @@
         <h2>The Format Doesn&rsquo;t Matter (For Workers)</h2>
         <p>Four context variants for execution workers: bare (nothing), war stories (full narrative), compressed (arrow format), and fix-only (plain rules). 3 runs each. Principal engineer reviews with 15 years of production Rails experience.</p>
 
-        <div class="table-wrapper">
-        <div class="table-wrapper"><table>
+                <div class="table-wrapper"><table>
           <caption>Bare workers were rated senior or higher on every run.</caption>
           <thead><tr><th>Variant</th><th>Run 1</th><th>Run 2</th><th>Run 3</th></tr></thead>
           <tbody>
@@ -259,7 +248,6 @@
             <tr><td>compressed</td><td>Mid</td><td>Mid</td><td>Mid</td></tr>
           </tbody>
         </table></div>
-        </div>
 
         <p>Bare was rated senior or staff every time. The run 3 review called it &ldquo;staff&rdquo; &mdash; noting check constraints on copies_available, correct lock ordering, and handling of an expired-reservation edge case that &ldquo;most submissions miss entirely.&rdquo; Compressed was the only variant that got request-changes on every run, with real bugs: race windows, fat controllers, spec deviations.</p>
 
@@ -317,8 +305,7 @@
       <!-- Complete Architecture -->
       <section class="section" id="architecture">
         <h2>The Complete Architecture</h2>
-        <div class="table-wrapper">
-        <div class="table-wrapper"><table>
+                <div class="table-wrapper"><table>
             <tr><td><strong>Brainstorming</strong></td><td>Assembled ON</td><td>Personas shape questions, catch architectural gaps</td></tr>
             <tr><td><strong>Spec writing</strong></td><td>Assembled ON</td><td>Standards define quality bars, identify edge cases</td></tr>
             <tr><td><strong>Plan writing</strong></td><td>Assembled ON</td><td>Expertise becomes spec requirements</td></tr>
@@ -326,15 +313,13 @@
             <tr><td><strong>Review</strong></td><td>Assembled ON</td><td>Team catches what workers miss</td></tr>
           </tbody>
         </table></div>
-        </div>
       </section>
 
       <!-- Research Foundation -->
       <section class="section" id="research-foundation">
         <h2>The Research Foundation</h2>
         <p>Every design decision traces back to published research, then validated with original experiments.</p>
-        <div class="table-wrapper">
-        <div class="table-wrapper"><table>
+                <div class="table-wrapper"><table>
             <tr>
               <td><a href="https://arxiv.org/abs/2602.11988" target="_blank" rel="noopener">Gloaguen et al. (2026)</a></td>
               <td>Bloated context reduces success, increases cost 20%+</td>
@@ -367,7 +352,6 @@
             </tr>
           </tbody>
         </table></div>
-        </div>
         <p>Our findings extend the published work in two directions: (1) the calibration heuristic addresses the Hu et al. tradeoff directly, and (2) the planning/execution separation shows that <em>where</em> in the pipeline context applies matters as much as the context itself.</p>
       </section>
 
@@ -378,26 +362,22 @@
 
         <h3>Pipeline Coherence</h3>
         <p>Three chains built the same feature with different context levels:</p>
-        <div class="table-wrapper">
-        <div class="table-wrapper"><table>
+                <div class="table-wrapper"><table>
             <tr><td>Assembled</td><td>Architecture + personas + rules</td><td><strong>29/30</strong></td></tr>
             <tr><td>Architecture only</td><td>Same architecture, no personas/rules</td><td>20/30</td></tr>
             <tr><td>Bare</td><td>Nothing</td><td>14/30</td></tr>
           </tbody>
         </table></div>
-        </div>
         <p>Architecture alone gets you from 14 to 20 &mdash; types match, interfaces match, error patterns match. Conventions embedded in the spec get you from 20 to 29 &mdash; error message formats, output discipline, durability patterns.</p>
 
         <h3>Convention Compliance</h3>
         <p>Bare workers following specs with explicit conventions sections, tested across two execution mechanisms:</p>
-        <div class="table-wrapper">
-        <div class="table-wrapper"><table>
+                <div class="table-wrapper"><table>
             <tr><td>Agent teams (parallel)</td><td>20/20</td><td>0</td></tr>
             <tr><td>Subagents (sequential)</td><td>10/10</td><td>0</td></tr>
             <tr><td><strong>Total</strong></td><td><strong>30/30</strong></td><td><strong>0</strong></td></tr>
           </tbody>
         </table></div>
-        </div>
 
         <div class="pull-quote">
           <p>The execution mechanism doesn&rsquo;t matter. The spec determines quality. 30/30 conventions matched on first pass across both tiers. Zero review fixes needed.</p>
@@ -413,7 +393,7 @@
         <p>The architecture is transferable: plan with experts, embed expertise in the spec, execute bare, review with quality bars. It works because knowledge is in the right place at the right time &mdash; in the team&rsquo;s <em>questions</em> during planning, in the <em>spec</em> during execution, in the team&rsquo;s <em>judgment</em> during review.</p>
       </section>
 
-      <p style="text-align: center; margin-top: var(--space-3xl);"><a href="#top">&uarr; Back to top</a></p>
+      <p class="back-to-top"><a href="#top">&uarr; Back to top</a></p>
 
     </article>
   </main>
