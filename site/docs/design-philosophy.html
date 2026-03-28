@@ -10,13 +10,18 @@
   <meta property="og:title" content="Design Philosophy — GIGO">
   <meta property="og:description" content="The origin story, design decisions, and open questions behind research-backed context engineering.">
   <meta property="og:image" content="../assets/social-preview.png">
+  <meta property="og:url" content="https://eaven.github.io/gigo/docs/design-philosophy.html">
+  <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Design Philosophy — GIGO">
+  <meta name="twitter:description" content="The origin story, design decisions, and open questions behind research-backed context engineering.">
+  <meta name="twitter:image" content="../assets/social-preview.png">
 
-  <link rel="icon" href="/site/assets/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/site/css/style.css">
+  <link rel="stylesheet" href="../css/style.css">
   <style>
     .article-body { max-width: 680px; margin: 0 auto; padding: 0 var(--space-lg); }
   </style>
@@ -25,15 +30,15 @@
 
   <nav class="site-nav">
     <div class="container">
-      <a href="/" class="brand"><span class="brand-kanji">義剛</span> GIGO</a>
+      <a href="../" class="brand"><span class="brand-kanji">義剛</span> GIGO</a>
       <button id="nav-toggle" aria-label="Toggle navigation">
         <span></span><span></span><span></span>
       </button>
       <ul id="nav-menu" class="nav-links">
-        <li><a href="/research/">Research</a></li>
-        <li><a href="/docs/getting-started.html">Get Started</a></li>
-        <li><a href="/docs/skills.html">Skills</a></li>
-        <li><a href="https://github.com/Eaven/gigo">GitHub</a></li>
+        <li><a href="../research/">Research</a></li>
+        <li><a href="getting-started.html">Get Started</a></li>
+        <li><a href="skills.html">Skills</a></li>
+        <li><a href="https://github.com/Eaven/gigo" target="_blank" rel="noopener">GitHub</a></li>
         <li><button id="theme-toggle">Light</button></li>
       </ul>
     </div>
@@ -49,7 +54,7 @@
       <!-- Origin -->
       <section class="section" id="origin">
         <h2>The origin: dev kits that worked too well</h2>
-        <p>This skill didn&rsquo;t start as a skill. It started as a problem we kept hitting at <a href="https://croftspan.com">Croftspan</a> &mdash; an AI-native agency where every project runs on Claude Code.</p>
+        <p>This skill didn&rsquo;t start as a skill. It started as a problem we kept hitting at <a href="https://croftspan.com" target="_blank" rel="noopener">Croftspan</a> &mdash; an AI-native agency where every project runs on Claude Code.</p>
         <p>Every Croftspan project begins with a &ldquo;dev kit&rdquo; &mdash; a set of files that give Claude the brain of a domain expert before any work starts. The first kit was for Ruby on Rails: DHH&rsquo;s philosophy, 37signals&rsquo; practices, Rails 8&rsquo;s patterns, all distilled into lean rules files.</p>
         <p>It worked immediately. Sessions with the rules produced better code, caught more edge cases, and needed fewer corrections than sessions without them. It wasn&rsquo;t just context &mdash; it was opinionated expertise that shaped every decision.</p>
         <p>The question became: can this work for anything? Not just Rails, but children&rsquo;s novels, Roblox games, research papers, brand strategy? The answer turned out to be yes &mdash; the pattern is universal. Every domain has authorities, best practices, quality gates, and common mistakes. The skill just needed a framework for finding them in any field.</p>
@@ -68,7 +73,7 @@
         <h2>The bloat problem</h2>
         <p>The first projects grew out of control. Every session discovered something worth remembering, so rules files grew monotonically &mdash; adding, never removing. Within weeks, context files were hundreds of lines long, full of overlapping rules, outdated guidance, and reference-depth detail that didn&rsquo;t need to load on every conversation.</p>
         <p>We noticed performance degrading. Sessions took longer, made more mistakes, and sometimes ignored rules entirely &mdash; there was too much to attend to. We started pruning manually and saw immediate improvement.</p>
-        <p>Then <a href="https://arxiv.org/abs/2602.11988">Gloaguen et al. (2026)</a> published the first rigorous study of how context files affect agent performance. Their findings confirmed exactly what we&rsquo;d experienced: well-crafted files improve task success rates, bloated ones reduce them. Irrelevant rules dilute the model&rsquo;s focus. More requirements can hurt. 20%+ cost increase with <em>lower</em> success rates.</p>
+        <p>Then <a href="https://arxiv.org/abs/2602.11988" target="_blank" rel="noopener">Gloaguen et al. (2026)</a> published the first rigorous study of how context files affect agent performance. Their findings confirmed exactly what we&rsquo;d experienced: well-crafted files improve task success rates, bloated ones reduce them. Irrelevant rules dilute the model&rsquo;s focus. More requirements can hurt. 20%+ cost increase with <em>lower</em> success rates.</p>
         <p>This shaped three core decisions:</p>
         <ul>
           <li><strong>The ~60 line cap.</strong> Rules files must be ruthlessly lean. A 30-line file that nails the essentials outperforms a 100-line file that dilutes attention.</li>
@@ -105,9 +110,9 @@
       <section class="section" id="further-reading">
         <h2>Further reading</h2>
         <ul>
-          <li><a href="https://arxiv.org/abs/2602.11988">Gloaguen et al., 2026</a> &mdash; &ldquo;Evaluating AGENTS.md: Are Repository-Level Context Files Helpful for Coding Agents?&rdquo; The research that validated the lean-context approach.</li>
-          <li><a href="https://croftspan.com">Croftspan</a> &mdash; The agency where this methodology was developed and battle-tested.</li>
-          <li><a href="/research/">Two Kinds of Leadership</a> &mdash; The full research narrative from 9 experimental phases.</li>
+          <li><a href="https://arxiv.org/abs/2602.11988" target="_blank" rel="noopener">Gloaguen et al., 2026</a> &mdash; &ldquo;Evaluating AGENTS.md: Are Repository-Level Context Files Helpful for Coding Agents?&rdquo; The research that validated the lean-context approach.</li>
+          <li><a href="https://croftspan.com" target="_blank" rel="noopener">Croftspan</a> &mdash; The agency where this methodology was developed and battle-tested.</li>
+          <li><a href="../research/">Two Kinds of Leadership</a> &mdash; The full research narrative from 9 experimental phases.</li>
         </ul>
       </section>
 
@@ -116,15 +121,15 @@
 
   <footer class="site-footer">
     <div class="container">
-      <span>Built at <a href="https://croftspan.com">Croftspan</a>. MIT License.</span>
+      <span>Built at <a href="https://croftspan.com" target="_blank" rel="noopener">Croftspan</a>. MIT License.</span>
       <ul class="footer-links">
-        <li><a href="https://github.com/Eaven/gigo">GitHub</a></li>
-        <li><a href="/docs/getting-started.html">Get Started</a></li>
-        <li><a href="/docs/skills.html">Skills</a></li>
+        <li><a href="https://github.com/Eaven/gigo" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="getting-started.html">Get Started</a></li>
+        <li><a href="skills.html">Skills</a></li>
       </ul>
     </div>
   </footer>
 
-  <script src="/site/js/main.js"></script>
+  <script src="../js/main.js"></script>
 </body>
 </html>

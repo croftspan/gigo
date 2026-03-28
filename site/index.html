@@ -20,26 +20,26 @@
   <meta name="twitter:description" content="Assembles expert AI teams for any domain. 9 phases of eval data prove where context helps and where it hurts.">
   <meta name="twitter:image" content="assets/social-preview.png">
 
-  <link rel="icon" href="/site/assets/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/site/css/style.css">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
   <!-- Nav -->
   <nav class="site-nav">
     <div class="container">
-      <a href="/" class="brand"><span class="brand-kanji">義剛</span> GIGO</a>
+      <a href="./" class="brand"><span class="brand-kanji">義剛</span> GIGO</a>
       <button id="nav-toggle" aria-label="Toggle navigation">
         <span></span><span></span><span></span>
       </button>
       <ul id="nav-menu" class="nav-links">
-        <li><a href="/research/">Research</a></li>
-        <li><a href="/docs/getting-started.html">Get Started</a></li>
-        <li><a href="/docs/skills.html">Skills</a></li>
-        <li><a href="https://github.com/Eaven/gigo">GitHub</a></li>
+        <li><a href="research/">Research</a></li>
+        <li><a href="docs/getting-started.html">Get Started</a></li>
+        <li><a href="docs/skills.html">Skills</a></li>
+        <li><a href="https://github.com/Eaven/gigo" target="_blank" rel="noopener">GitHub</a></li>
         <li><button id="theme-toggle">Light</button></li>
       </ul>
     </div>
@@ -53,9 +53,10 @@
         <h1 class="brand-large"><span class="brand-kanji">義剛</span> GIGO</h1>
         <p style="font-size: var(--text-xl); color: var(--text-secondary); margin-bottom: var(--space-2xl);">Only give them what they need for the job.</p>
         <div style="display: flex; justify-content: center; gap: var(--space-md); flex-wrap: wrap; align-items: center;">
-          <pre style="margin: 0; padding: var(--space-sm) var(--space-lg); font-size: var(--text-base); border-radius: 6px; display: inline-block;"><code>claude install @eaven/gigo</code></pre>
+          <a href="docs/getting-started.html" class="btn btn-primary">Install</a>
           <a href="https://github.com/Eaven/gigo" class="btn btn-secondary">View on GitHub</a>
         </div>
+        <pre style="margin: var(--space-lg) auto 0; padding: var(--space-sm) var(--space-lg); font-size: var(--text-base); border-radius: 6px; display: inline-block;"><code>claude install @eaven/gigo</code></pre>
       </div>
     </section>
 
@@ -107,7 +108,7 @@
           </thead>
           <tbody>
             <tr>
-              <td><a href="https://arxiv.org/abs/2602.11988">Gloaguen et al. (2026)</a></td>
+              <td><a href="https://arxiv.org/abs/2602.11988" target="_blank" rel="noopener">Gloaguen et al. (2026)</a></td>
               <td>Bloated context reduces success rates, costs 20%+ more</td>
             </tr>
             <tr>
@@ -191,11 +192,22 @@
             </tr>
           </tbody>
         </table>
-        <p><a href="/docs/skills.html">Full skill documentation &rarr;</a></p>
+        <p><a href="docs/skills.html">Full skill documentation &rarr;</a></p>
       </div>
     </section>
 
-    <!-- 7. The Name -->
+    <!-- 7. Two Kinds of Leadership -->
+    <section class="section">
+      <div class="container">
+        <h2>Two Kinds of Leadership</h2>
+        <p>The intuitive approach — load workers with rules, quality gates, and compliance checks — produces mid-level output that checks boxes instead of thinking.</p>
+        <p>The counterintuitive finding: plan with the full team, then send bare workers a clear spec. They produce senior/staff-level code because the team's expertise is baked into the spec as requirements, not loaded as rules the worker has to perform against.</p>
+        <p>We tested four different context formats across three runs with principal engineer reviews. Bare workers were rated senior to staff every time. The format doesn't matter. The spec matters.</p>
+        <p><a href="research/">Read the full research narrative &rarr;</a></p>
+      </div>
+    </section>
+
+    <!-- 8. The Name -->
     <section class="section">
       <div class="container">
         <h2>The Name</h2>
@@ -208,15 +220,15 @@
   <!-- Footer -->
   <footer class="site-footer">
     <div class="container">
-      <span>Built at <a href="https://croftspan.com">Croftspan</a>. MIT License.</span>
+      <span>Built at <a href="https://croftspan.com" target="_blank" rel="noopener">Croftspan</a>. MIT License.</span>
       <ul class="footer-links">
-        <li><a href="https://github.com/Eaven/gigo">GitHub</a></li>
-        <li><a href="/docs/getting-started.html">Docs</a></li>
-        <li><a href="/research/">Research</a></li>
+        <li><a href="https://github.com/Eaven/gigo" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="docs/getting-started.html">Docs</a></li>
+        <li><a href="research/">Research</a></li>
       </ul>
     </div>
   </footer>
 
-  <script src="/site/js/main.js"></script>
+  <script src="js/main.js"></script>
 </body>
 </html>

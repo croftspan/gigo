@@ -110,7 +110,7 @@ Built on published research — not intuition:
 - **Shinn et al.:** reflection agents make better decisions
 - **Yang et al.:** interface design matters more than the prompt
 
-Then validated with 9 phases of original experiments across two domains, 50+ eval runs, comparative judging, and principal engineer reviews.
+Then validated with 9 phases of original experiments across two domains, 50+ eval runs, comparative judging, and principal engineer reviews. A/B win rate: 87% baseline → 96% after calibration, zero losses.
 
 ### Convention compliance
 

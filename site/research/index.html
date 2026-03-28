@@ -20,11 +20,11 @@
   <meta name="twitter:description" content="We ran 9 phases of controlled experiments to prove where AI context helps and where it hurts.">
   <meta name="twitter:image" content="../assets/social-preview.png">
 
-  <link rel="icon" href="/site/assets/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/site/css/style.css">
+  <link rel="stylesheet" href="../css/style.css">
   <style>
     .article-body { max-width: 680px; margin: 0 auto; padding: 0 var(--space-lg); }
     .article-body h2 { margin-top: var(--space-3xl); }
@@ -36,15 +36,15 @@
   <!-- Nav -->
   <nav class="site-nav">
     <div class="container">
-      <a href="/" class="brand"><span class="brand-kanji">義剛</span> GIGO</a>
+      <a href="../" class="brand"><span class="brand-kanji">義剛</span> GIGO</a>
       <button id="nav-toggle" aria-label="Toggle navigation">
         <span></span><span></span><span></span>
       </button>
       <ul id="nav-menu" class="nav-links">
-        <li><a href="/research/">Research</a></li>
-        <li><a href="/docs/getting-started.html">Get Started</a></li>
-        <li><a href="/docs/skills.html">Skills</a></li>
-        <li><a href="https://github.com/Eaven/gigo">GitHub</a></li>
+        <li><a href="./">Research</a></li>
+        <li><a href="../docs/getting-started.html">Get Started</a></li>
+        <li><a href="../docs/skills.html">Skills</a></li>
+        <li><a href="https://github.com/Eaven/gigo" target="_blank" rel="noopener">GitHub</a></li>
         <li><button id="theme-toggle">Light</button></li>
       </ul>
     </div>
@@ -64,7 +64,7 @@
         <h2>The Question</h2>
         <p>Does assembled context &mdash; the personas, quality gates, workflow rules, and reference files &mdash; actually change AI behavior? Or is it just expensive token decoration?</p>
         <p>Conventional wisdom says more context means better output. Load the AI with rules, examples, and expertise. Give it everything.</p>
-        <p>But <a href="https://arxiv.org/abs/2602.11988">Gloaguen et al. (2026)</a> found the opposite: bloated context files <em>reduce</em> task success rates while increasing cost by 20% or more. The model spends reasoning effort on compliance with rules that don&rsquo;t apply. Irrelevant context dilutes focus on context that matters.</p>
+        <p>But <a href="https://arxiv.org/abs/2602.11988" target="_blank" rel="noopener">Gloaguen et al. (2026)</a> found the opposite: bloated context files <em>reduce</em> task success rates while increasing cost by 20% or more. The model spends reasoning effort on compliance with rules that don&rsquo;t apply. Irrelevant context dilutes focus on context that matters.</p>
         <p>We set out to measure this directly. Not with opinion or intuition &mdash; with controlled experiments.</p>
       </section>
 
@@ -131,6 +131,38 @@
         </div>
 
         <p>This is honest reporting: assembled context can produce hallucinations too. The eval exposed it. We excluded this run from the final analysis but documented it as a critical learning about eval design. It led directly to the Overwatch adversarial system &mdash; a self-check that catches drift before the judge wastes tokens scoring it.</p>
+      </section>
+
+      <!-- Hawkeye -->
+      <section class="section" id="hawkeye">
+        <h2>The Overwatch System</h2>
+        <p>The hallucination problem demanded a fix. We built a two-tier adversarial system: a lightweight self-check in every project&rsquo;s workflow (&ldquo;did you actually do what you claimed?&rdquo;), and a full Overwatch persona for teams with 3+ members.</p>
+        <p>But the first version used the same checks for both domains. Results:</p>
+
+        <table>
+          <thead><tr><th>Run</th><th>Rails</th><th>Novel</th><th>Combined</th><th>Losses</th></tr></thead>
+          <tbody>
+            <tr><td>Hawkeye (structured)</td><td>98%</td><td>90%</td><td>94%</td><td>1</td></tr>
+            <tr><td>Hawkeye (structured) run 2</td><td>94%</td><td>88%</td><td>91%</td><td>4</td></tr>
+          </tbody>
+        </table>
+
+        <p>Rails held steady. Novel dropped from 99% to ~89%. The structured Overwatch (&ldquo;did you apply the quality bars you cited?&rdquo;) pushed the model toward process meta-commentary instead of craft engagement.</p>
+
+        <div class="pull-quote">
+          <p>Process-compliance checks work for structured domains but hurt creative domains. Same adversarial intent, different framing.</p>
+        </div>
+
+        <p>The fix: domain-adapted Overwatch. Structured domains get process checks. Creative domains get engagement checks (&ldquo;did you reference specific characters, or give generic advice?&rdquo;).</p>
+
+        <table>
+          <thead><tr><th>Run</th><th>Rails</th><th>Novel</th><th>Combined</th><th>Losses</th></tr></thead>
+          <tbody>
+            <tr><td>Hawkeye (domain-adapted)</td><td>92%</td><td><strong>100%</strong></td><td><strong>96%</strong></td><td><strong>0</strong></td></tr>
+          </tbody>
+        </table>
+
+        <p>Novel back to 100%. Zero losses. Adversarial checks must be domain-adapted.</p>
       </section>
 
       <!-- Proficiency -->
@@ -301,7 +333,7 @@
           <thead><tr><th>Paper</th><th>What it told us</th><th>How we used it</th></tr></thead>
           <tbody>
             <tr>
-              <td><a href="https://arxiv.org/abs/2602.11988">Gloaguen et al. (2026)</a></td>
+              <td><a href="https://arxiv.org/abs/2602.11988" target="_blank" rel="noopener">Gloaguen et al. (2026)</a></td>
               <td>Bloated context reduces success, increases cost 20%+</td>
               <td>~60 line caps on rules files, two-tier architecture, The Snap audit system</td>
             </tr>
@@ -335,6 +367,39 @@
         <p>Our findings extend the published work in two directions: (1) the calibration heuristic addresses the Hu et al. tradeoff directly, and (2) the planning/execution separation shows that <em>where</em> in the pipeline context applies matters as much as the context itself.</p>
       </section>
 
+      <!-- Phase 9: Integration Test -->
+      <section class="section" id="integration">
+        <h2>The Integration Test</h2>
+        <p>Every finding above was isolated: planning tested separately from execution, execution from review. Phase 9 tested the full pipeline end-to-end on a real project &mdash; a Go task queue CLI.</p>
+
+        <h3>Pipeline Coherence</h3>
+        <p>Three chains built the same feature with different context levels:</p>
+        <table>
+          <thead><tr><th>Pipeline</th><th>Context</th><th>Score</th></tr></thead>
+          <tbody>
+            <tr><td>Assembled</td><td>Architecture + personas + rules</td><td><strong>29/30</strong></td></tr>
+            <tr><td>Architecture only</td><td>Same architecture, no personas/rules</td><td>20/30</td></tr>
+            <tr><td>Bare</td><td>Nothing</td><td>14/30</td></tr>
+          </tbody>
+        </table>
+        <p>Architecture alone gets you from 14 to 20 &mdash; types match, interfaces match, error patterns match. Conventions embedded in the spec get you from 20 to 29 &mdash; error message formats, output discipline, durability patterns.</p>
+
+        <h3>Convention Compliance</h3>
+        <p>Bare workers following specs with explicit conventions sections, tested across two execution mechanisms:</p>
+        <table>
+          <thead><tr><th>Tier</th><th>Conventions matched</th><th>Review fixes needed</th></tr></thead>
+          <tbody>
+            <tr><td>Agent teams (parallel)</td><td>20/20</td><td>0</td></tr>
+            <tr><td>Subagents (sequential)</td><td>10/10</td><td>0</td></tr>
+            <tr><td><strong>Total</strong></td><td><strong>30/30</strong></td><td><strong>0</strong></td></tr>
+          </tbody>
+        </table>
+
+        <div class="pull-quote">
+          <p>The execution mechanism doesn&rsquo;t matter. The spec determines quality. 30/30 conventions matched on first pass across both tiers. Zero review fixes needed.</p>
+        </div>
+      </section>
+
       <!-- What This Means -->
       <section class="section" id="implications">
         <h2>What This Means</h2>
@@ -352,15 +417,15 @@
   <!-- Footer -->
   <footer class="site-footer">
     <div class="container">
-      <span>Built at <a href="https://croftspan.com">Croftspan</a>. MIT License.</span>
+      <span>Built at <a href="https://croftspan.com" target="_blank" rel="noopener">Croftspan</a>. MIT License.</span>
       <ul class="footer-links">
-        <li><a href="https://github.com/Eaven/gigo">GitHub</a></li>
-        <li><a href="/docs/getting-started.html">Docs</a></li>
-        <li><a href="/research/eval-data.html">Eval Data</a></li>
+        <li><a href="https://github.com/Eaven/gigo" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="../docs/getting-started.html">Docs</a></li>
+        <li><a href="eval-data.html">Eval Data</a></li>
       </ul>
     </div>
   </footer>
 
-  <script src="/site/js/main.js"></script>
+  <script src="../js/main.js"></script>
 </body>
 </html>
