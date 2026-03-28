@@ -52,7 +52,7 @@
   --radius-full: 999px;
 
   /* Layout */
-  --max-width: 760px;
+  --max-width: 900px;
   --article-width: 680px;
   --nav-height: 3.5rem;
 }
@@ -181,7 +181,8 @@ p, li, td, blockquote p {
   padding: var(--space-xl) 0;
 }
 
-.section:last-child {
+main > .section:last-child,
+main > section:last-child {
   padding-bottom: var(--space-3xl);
 }
 
