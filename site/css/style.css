@@ -178,13 +178,7 @@ p, li, td, blockquote p {
 }
 
 .section {
-  padding: var(--space-2xl) 0;
-  border-top: 1px solid var(--border);
-}
-
-.section:first-child,
-.hero + .section {
-  border-top: none;
+  padding: var(--space-xl) 0;
 }
 
 .section--flush { padding-bottom: 0; }
@@ -502,8 +496,8 @@ blockquote cite,
   padding: 0 var(--space-lg);
 }
 
-.article-body h2 { margin-top: var(--space-2xl); }
-.article-body h3 { margin-top: var(--space-xl); }
+.article-body h2 { margin-top: var(--space-xl); }
+.article-body h3 { margin-top: var(--space-lg); }
 
 .article-body blockquote,
 .article-body .pull-quote {
