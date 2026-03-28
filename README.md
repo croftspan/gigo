@@ -1,10 +1,3 @@
-<div align="center">
-
-[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Claude Code](https://img.shields.io/badge/Claude_Code-skills-blueviolet.svg)](https://github.com/Eaven/gigo)
-
-</div>
-
 # 義剛 GIGO
 
 **Research the experts. Build the team. Ship better work.**
@@ -123,6 +116,6 @@ Same skill, different calibration. Works for anything — software, fiction, gam
 
 ---
 
-Built at [Croftspan](https://croftspan.com). MIT License.
+Built at [Croftspan](https://croftspan.com). Apache 2.0 License.
 
 [Research](site/research/) · [Get Started](site/docs/getting-started.html) · [Skills](site/docs/skills.html) · [Architecture](site/docs/architecture.html)
