@@ -9,7 +9,9 @@
 
 **Research the experts. Build the team. Ship better work.**
 
-You describe what you're building. GIGO researches the best practitioners in that field — real people with real philosophies — and builds you an expert team. Your AI plans smarter, produces better output, and catches more problems before they ship.
+Describe what you're building. GIGO researches the best practitioners in that field — real people with real philosophies — and builds you an expert team.
+
+Your AI plans smarter, produces better output, and catches more problems before they ship.
 
 We tested it across 9 experiments. It works.
 
