@@ -13,8 +13,6 @@ Describe what you're building. GIGO researches the best practitioners in that fi
 
 Your AI plans smarter, produces better output, and catches more problems before they ship.
 
-We tested it across 9 experiments. It works.
-
 ---
 
 ## Quick Start
