@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0a0a0a">
   <title>Two Kinds of Leadership — GIGO Research</title>
-  <meta name="description" content="What 9 experimental phases taught us about AI context engineering. 50+ eval runs, two domains, comparative judging. The data on when context helps and when it hurts.">
+  <meta name="description" content="We proved that loading AI workers with rules makes them worse. The fix is a management philosophy, not a technical one. 9 phases of experiments, 50+ eval runs, two domains.">
 
   <!-- Open Graph -->
   <meta property="og:title" content="Two Kinds of Leadership — What 9 experimental phases taught us about AI context engineering">
@@ -25,11 +25,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
-  <style>
-    .article-body { max-width: 680px; margin: 0 auto; padding: 0 var(--space-lg); }
-    .article-body h2 { margin-top: var(--space-3xl); }
-    .article-body h3 { margin-top: var(--space-2xl); }
-  </style>
+  <!-- article-body styles in shared style.css -->
 </head>
 <body>
 
@@ -54,9 +50,9 @@
     <article class="article-body">
 
       <!-- Title -->
-      <header class="section" style="text-align: center; padding-bottom: 0;">
-        <h1 style="margin-bottom: var(--space-sm);">Two Kinds of Leadership</h1>
-        <p style="font-size: var(--text-xl); color: var(--text-secondary);">What 9 experimental phases taught us about AI context engineering</p>
+      <header class="section section--flush" style="text-align: center;">
+        <h1>Two Kinds of Leadership</h1>
+        <p class="subtitle">What 9 experimental phases taught us about AI context engineering</p>
       </header>
 
       <!-- The Question -->
@@ -83,7 +79,9 @@
       <!-- Phase 1 -->
       <section class="section" id="baseline">
         <h2>Phase 1: The Baseline (87%)</h2>
+        <div class="table-wrapper">
         <table>
+          <caption>The 11 ties and 2 losses tell the real story &mdash; they cluster by task type.</caption>
           <thead><tr><th>Domain</th><th>Win %</th><th>Ties</th><th>Losses</th></tr></thead>
           <tbody>
             <tr><td>Rails API</td><td>88%</td><td>5</td><td>1</td></tr>
@@ -91,6 +89,7 @@
             <tr><td><strong>Combined</strong></td><td><strong>87%</strong></td><td><strong>11</strong></td><td><strong>2</strong></td></tr>
           </tbody>
         </table>
+        </div>
         <p>The 13 non-wins clustered into a pattern that matched a paper we&rsquo;d already integrated: Hu et al. (2026) &mdash; &ldquo;Expert Personas Improve LLM Alignment but Damage Accuracy.&rdquo;</p>
         <p>Presentation tasks (quality bars, style, structure) &mdash; assembled won almost every time. Content tasks (factual recall, deployment steps, diagnostics) &mdash; tied. The persona overhead was neutral or slightly negative. This wasn&rsquo;t a failure. It was the fundamental tradeoff the research predicts: personas help alignment, hurt knowledge retrieval. We were seeing it in our own data.</p>
       </section>
@@ -130,7 +129,7 @@
           <p>The judge scores quality, not correctness. A beautifully written, persona-rich response that doesn&rsquo;t answer the question can still win on voice and routing criteria.</p>
         </div>
 
-        <p>This is honest reporting: assembled context can produce hallucinations too. The eval exposed it. We excluded this run from the final analysis but documented it as a critical learning about eval design. It led directly to the Overwatch adversarial system &mdash; a self-check that catches drift before the judge wastes tokens scoring it.</p>
+        <p>Assembled context can produce hallucinations too. The eval exposed it. We excluded this run from the final analysis but documented it as a critical learning: eval design must check correctness, not just quality. This led directly to the Overwatch adversarial system.</p>
       </section>
 
       <!-- Hawkeye -->
@@ -188,10 +187,7 @@
           <cite>Principal engineer review, Rails domain</cite>
         </div>
 
-        <div class="pull-quote">
-          <p>&ldquo;The rules didn&rsquo;t make B a better <em>writer</em>. They made B a better <em>architect</em>. For a mystery novel aimed at kids who deserve a fair shot at solving it, that&rsquo;s the more important skill.&rdquo;</p>
-          <cite>Senior editor review, Novel domain</cite>
-        </div>
+        <p>The senior editor reviewing the novel domain reached the same conclusion from a different angle: &ldquo;The rules didn&rsquo;t make B a better <em>writer</em>. They made B a better <em>architect</em>.&rdquo;</p>
 
         <p><strong>Bare produces higher peak craft. Assembled produces better structural work.</strong> The pattern held across both domains: assembled makes Claude more thorough but more self-conscious. It checks more boxes but writes with less confidence.</p>
       </section>
@@ -221,6 +217,7 @@
       <!-- Planning -->
       <section class="section" id="planning">
         <h2>The Planning Pipeline</h2>
+        <p>Context hurts execution. But what about the work that happens <em>before</em> execution?</p>
         <p>Same task. Same 7 scripted user answers in the same order. Only variable: whether the brainstormer had team personas loaded.</p>
 
         <p>Bare asked: &ldquo;What&rsquo;s the expected scale?&rdquo;</p>
@@ -245,18 +242,21 @@
 
       <!-- Format -->
       <section class="section" id="format">
-        <h2>The Format Doesn&rsquo;t Matter</h2>
+        <h2>The Format Doesn&rsquo;t Matter (For Workers)</h2>
         <p>Four context variants for execution workers: bare (nothing), war stories (full narrative), compressed (arrow format), and fix-only (plain rules). 3 runs each. Principal engineer reviews with 15 years of production Rails experience.</p>
 
+        <div class="table-wrapper">
         <table>
+          <caption>Bare workers were rated senior or higher on every run.</caption>
           <thead><tr><th>Variant</th><th>Run 1</th><th>Run 2</th><th>Run 3</th></tr></thead>
           <tbody>
-            <tr><td><strong>bare</strong></td><td>Senior</td><td>Senior</td><td>Staff</td></tr>
+            <tr><td><strong>bare</strong></td><td><strong>Senior</strong></td><td><strong>Senior</strong></td><td><strong>Staff</strong></td></tr>
             <tr><td>warstories</td><td>Senior</td><td>Mid</td><td>Mid</td></tr>
             <tr><td>fixonly</td><td>Mid</td><td>Junior</td><td>Senior</td></tr>
             <tr><td>compressed</td><td>Mid</td><td>Mid</td><td>Mid</td></tr>
           </tbody>
         </table>
+        </div>
 
         <p>Bare was rated senior or staff every time. The run 3 review called it &ldquo;staff&rdquo; &mdash; noting check constraints on copies_available, correct lock ordering, and handling of an expired-reservation edge case that &ldquo;most submissions miss entirely.&rdquo; Compressed was the only variant that got request-changes on every run, with real bugs: race windows, fat controllers, spec deviations.</p>
 
@@ -270,6 +270,11 @@
       <!-- Two Kinds of Leadership -->
       <section class="section" id="two-kinds">
         <h2>Two Kinds of Leadership</h2>
+
+        <div class="pull-quote">
+          <p>The team plans and reviews. The individual executes. That&rsquo;s not a compromise. That&rsquo;s the architecture.</p>
+        </div>
+
         <p>This is the central finding. It&rsquo;s not a technical finding &mdash; it&rsquo;s a management philosophy, proven with data.</p>
 
         <h3>&ldquo;Do your job or I&rsquo;ll fire you&rdquo;</h3>
@@ -304,10 +309,6 @@
           <li>The principal engineer review caught race windows between unlocked checks and locked inserts, fat controllers, missing database constraints, and expired-reservation bugs. (Phase 7)</li>
           <li>Two focused reviewers each doing their job beats one reviewer trying to do both. Plan-aware review catches &ldquo;you built the wrong thing.&rdquo; Code-quality review catches &ldquo;you built it wrong.&rdquo; (Phase 8)</li>
         </ul>
-
-        <div class="pull-quote">
-          <p>The team plans and reviews. The individual executes. That&rsquo;s not a compromise. That&rsquo;s the architecture.</p>
-        </div>
       </section>
 
       <!-- Complete Architecture -->
@@ -375,7 +376,7 @@
         <h3>Pipeline Coherence</h3>
         <p>Three chains built the same feature with different context levels:</p>
         <table>
-          <thead><tr><th>Pipeline</th><th>Context</th><th>Score</th></tr></thead>
+          <thead><tr><th>Pipeline</th><th>Context</th><th>Score (out of 30)</th></tr></thead>
           <tbody>
             <tr><td>Assembled</td><td>Architecture + personas + rules</td><td><strong>29/30</strong></td></tr>
             <tr><td>Architecture only</td><td>Same architecture, no personas/rules</td><td>20/30</td></tr>

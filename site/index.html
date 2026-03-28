@@ -48,15 +48,15 @@
   <main>
 
     <!-- 1. Hero -->
-    <section class="section" style="text-align: center; padding-top: 6rem; padding-bottom: var(--space-3xl);">
+    <section class="hero">
       <div class="container">
         <h1 class="brand-large"><span class="brand-kanji">義剛</span> GIGO</h1>
-        <p style="font-size: var(--text-xl); color: var(--text-secondary); margin-bottom: var(--space-2xl);">Only give them what they need for the job.</p>
-        <div style="display: flex; justify-content: center; gap: var(--space-md); flex-wrap: wrap; align-items: center;">
+        <p class="subtitle">Only give them what they need for the job.</p>
+        <div class="cta-group">
           <a href="docs/getting-started.html" class="btn btn-primary">Install</a>
-          <a href="https://github.com/Eaven/gigo" class="btn btn-secondary">View on GitHub</a>
+          <a href="https://github.com/Eaven/gigo" target="_blank" rel="noopener" class="btn btn-secondary">View on GitHub</a>
         </div>
-        <pre style="margin: var(--space-lg) auto 0; padding: var(--space-sm) var(--space-lg); font-size: var(--text-base); border-radius: 6px; display: inline-block;"><code>claude install @eaven/gigo</code></pre>
+        <div class="install-cmd"><code>claude install @eaven/gigo</code></div>
       </div>
     </section>
 
@@ -85,9 +85,9 @@
           <div class="pipeline-step">Review with quality bars</div>
         </div>
 
-        <ul style="list-style: none; padding: 0; margin-top: var(--space-xl);">
-          <li style="margin-bottom: var(--space-sm);"><strong>Architecture carries coherence:</strong> 14&rarr;20 out of 30</li>
-          <li style="margin-bottom: var(--space-sm);"><strong>Personas add conventions:</strong> 20&rarr;29</li>
+        <ul class="finding-list">
+          <li><strong>Architecture carries coherence:</strong> 14&rarr;20 out of 30</li>
+          <li><strong>Personas add conventions:</strong> 20&rarr;29 out of 30</li>
           <li><strong>30/30 conventions matched.</strong> Zero review fixes.</li>
         </ul>
       </div>
@@ -97,8 +97,9 @@
     <section class="section">
       <div class="container">
         <h2>Research Foundation</h2>
-        <p>Built on published research — not intuition.</p>
+        <p>Six published papers predicted what we&rsquo;d find. Our experiments confirmed — and extended — their predictions.</p>
 
+        <div class="table-wrapper">
         <table>
           <thead>
             <tr>
@@ -133,8 +134,9 @@
             </tr>
           </tbody>
         </table>
+        </div>
 
-        <p>Then validated with 9 phases of original experiments.</p>
+        <p>Then validated with 9 phases of original experiments across two domains, 50+ eval runs, and principal engineer reviews.</p>
       </div>
     </section>
 
@@ -142,7 +144,7 @@
     <section class="section">
       <div class="container">
         <h2>Quick Start</h2>
-        <ol style="font-size: var(--text-lg); line-height: 2;">
+        <ol class="quick-start-steps">
           <li>Install: <code>claude install @eaven/gigo</code></li>
           <li>Open any project.</li>
           <li>Say <strong>"gigo."</strong></li>
@@ -202,7 +204,10 @@
         <h2>Two Kinds of Leadership</h2>
         <p>The intuitive approach — load workers with rules, quality gates, and compliance checks — produces mid-level output that checks boxes instead of thinking.</p>
         <p>The counterintuitive finding: plan with the full team, then send bare workers a clear spec. They produce senior/staff-level code because the team's expertise is baked into the spec as requirements, not loaded as rules the worker has to perform against.</p>
-        <p>We tested four different context formats across three runs with principal engineer reviews. Bare workers were rated senior to staff every time. The format doesn't matter. The spec matters.</p>
+        <blockquote>
+          <p>&ldquo;C writes code like someone who&rsquo;s been paged at 2am.&rdquo;</p>
+          <cite>Principal engineer review on a bare worker following a good spec</cite>
+        </blockquote>
         <p><a href="research/">Read the full research narrative &rarr;</a></p>
       </div>
     </section>

@@ -9,7 +9,7 @@
   /* Colors — dark theme (default) */
   --bg:          #0a0a0a;
   --bg-subtle:   #141414;
-  --bg-code:     #1a1a1a;
+  --bg-code:     #1e1e1e;
   --text:        #e5e5e5;
   --text-secondary: #888;
   --accent:      #9bb8d3;
@@ -30,6 +30,7 @@
   --text-2xl:  1.5rem;
   --text-3xl:  2rem;
   --text-4xl:  2.5rem;
+  --text-5xl:  3.5rem;
 
   /* Spacing */
   --space-xs:  0.25rem;
@@ -433,6 +434,57 @@ blockquote p:last-child,
   margin-bottom: 0;
 }
 
+blockquote cite,
+.pull-quote cite {
+  display: block;
+  font-size: var(--text-sm);
+  font-style: normal;
+  color: var(--text-secondary);
+  margin-top: var(--space-sm);
+}
+
+/* --- Article Body (shared across all article pages) --- */
+.article-body {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+}
+
+.article-body h2 {
+  margin-top: var(--space-3xl);
+}
+
+.article-body h3 {
+  margin-top: var(--space-2xl);
+}
+
+/* --- Table Wrapper (mobile scroll) --- */
+.table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: var(--space-lg) 0;
+}
+
+.table-wrapper table {
+  margin: 0;
+}
+
+/* --- Section Modifiers --- */
+.section--flush {
+  padding-bottom: 0;
+}
+
+/* --- Finding List (landing page data points) --- */
+.finding-list {
+  list-style: none;
+  padding: 0;
+  margin-top: var(--space-xl);
+}
+
+.finding-list li {
+  margin-bottom: var(--space-sm);
+}
+
 /* --- Pipeline Diagram --- */
 .pipeline {
   display: flex;
@@ -484,7 +536,7 @@ blockquote p:last-child,
 }
 
 .hero h1 {
-  font-size: 3.5rem;
+  font-size: var(--text-5xl);
   margin-bottom: var(--space-sm);
 }
 
@@ -518,27 +570,6 @@ blockquote p:last-child,
   padding: 0;
   font-size: var(--text-sm);
   font-weight: 500;
-}
-
-/* --- Finding Numbers --- */
-.finding-numbers p {
-  font-size: var(--text-lg);
-  margin-bottom: var(--space-sm);
-}
-
-/* --- Research List --- */
-.research-list {
-  list-style: none;
-  padding-left: 0;
-}
-
-.research-list li {
-  padding: var(--space-sm) 0;
-  border-bottom: 1px solid var(--border);
-}
-
-.research-list li:last-child {
-  border-bottom: none;
 }
 
 /* --- Quick Start --- */

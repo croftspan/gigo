@@ -9,6 +9,8 @@
 
 **Only give them what they need for the job.**
 
+A Claude Code skill that researches domain experts, blends their philosophies into focused personas, and orchestrates a research-backed plan→execute→review pipeline.
+
 ## The Problem
 
 Claude Code is powerful out of the box. But most projects get context engineering wrong — they either give Claude nothing (and get generic output) or give it everything (and get worse output that costs more). We spent 9 experimental phases proving exactly where context helps and where it hurts. Then we built a system that applies the findings automatically.
@@ -76,7 +78,7 @@ Same skill, different calibration. Works for anything — software, fiction, gam
 claude install @eaven/gigo
 ```
 
-Open any project. Say `gigo`.
+Open any project. Say `gigo`. (Requires [Claude Code](https://claude.ai/claude-code).)
 
 ## The Seven Skills
 
