@@ -13,7 +13,7 @@
   function applyTheme(theme) {
     root.setAttribute('data-theme', theme);
     localStorage.setItem('gigo-theme', theme);
-    if (toggle) toggle.textContent = theme === 'dark' ? 'Light' : 'Dark';
+    if (toggle) toggle.textContent = theme === 'dark' ? '\u2600\uFE0F' : '\uD83C\uDF19';
   }
 
   var saved = localStorage.getItem('gigo-theme');
