@@ -170,7 +170,7 @@ p {
 }
 
 .section {
-  padding: var(--space-3xl) 0;
+  padding: var(--space-2xl) 0;
 }
 
 .visually-hidden {
@@ -481,7 +481,7 @@ blockquote,
   font-style: italic;
   color: var(--text-secondary);
   background-color: var(--bg-subtle);
-  border-radius: 0 6px 6px 0;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
 }
 
 blockquote p:last-child,
@@ -565,10 +565,12 @@ blockquote cite,
   gap: var(--space-sm);
   margin: var(--space-xl) 0;
   overflow-x: auto;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .pipeline-step {
-  flex: 0 0 auto;
+  flex: 0 1 auto;
   background-color: var(--bg-subtle);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);

@@ -61,20 +61,10 @@
       </div>
     </section>
 
-    <!-- 2. The Problem -->
+    <!-- 2. The Results -->
     <section class="section">
       <div class="container">
-        <h2>The Problem: Most AI Context is Vibes-Based</h2>
-        <p>Most AI context engineering is vibes-based. "This prompt feels better." No measurement, no methodology.</p>
-        <p>We ran 9 phases of controlled experiments — 50+ eval runs across two domains — to prove exactly where context helps and where it hurts.</p>
-        <p>Then we built a system that applies the findings automatically.</p>
-      </div>
-    </section>
-
-    <!-- 3. The Finding -->
-    <section class="section">
-      <div class="container">
-        <h2>The Finding: Plan with Experts, Execute Bare</h2>
+        <h2>The Results</h2>
 
         <div class="pipeline">
           <div class="pipeline-step">Plan with experts</div>
@@ -86,60 +76,11 @@
           <div class="pipeline-step">Review with quality bars</div>
         </div>
 
-        <p>When we measured assembled context (the personas, rules, and references GIGO creates) against bare Claude across the full pipeline:</p>
-        <p>Convention compliance scores across the full pipeline:</p>
-        <ul class="finding-list">
-          <li><strong>Architecture carries coherence:</strong> 14&rarr;20 out of 30</li>
-          <li><strong>Personas add conventions:</strong> 20&rarr;29 out of 30</li>
-          <li><strong>30/30 conventions matched.</strong> Zero review fixes.</li>
-        </ul>
-      </div>
-    </section>
+        <p>97% convention compliance. First pass. Zero review fixes. Principal engineers rated bare workers senior to staff &mdash; every run. Architecture alone improved coherence by 43%. Full pipeline: near-perfect.</p>
 
-    <!-- 4. Research Foundation -->
-    <section class="section">
-      <div class="container">
-        <h2>Research Foundation</h2>
-        <p>Six published papers predicted what we&rsquo;d find. Our experiments confirmed — and extended — their predictions.</p>
+        <p>Built on published research &mdash; <a href="https://arxiv.org/abs/2602.11988" target="_blank" rel="noopener">Gloaguen et al. (2026)</a> on context bloat and <a href="https://arxiv.org/abs/2603.18507" target="_blank" rel="noopener">Hu et al. (2026)</a> on the persona tradeoff &mdash; then validated with 9 phases of original experiments.</p>
 
-        <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th>Paper</th>
-              <th>Key finding</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><a href="https://arxiv.org/abs/2602.11988" target="_blank" rel="noopener">Gloaguen et al. (2026)</a></td>
-              <td>Bloated context reduces success rates, costs 20%+ more</td>
-            </tr>
-            <tr>
-              <td>Hu et al. (2026)</td>
-              <td>Personas help alignment but hurt knowledge retrieval</td>
-            </tr>
-            <tr>
-              <td>Kong et al.</td>
-              <td>Role-play activates domain knowledge when personas are specific</td>
-            </tr>
-            <tr>
-              <td>Xu et al.</td>
-              <td>Task-specific persona descriptions outperform generic ones</td>
-            </tr>
-            <tr>
-              <td>Shinn et al.</td>
-              <td>Reflection agents make dramatically better decisions</td>
-            </tr>
-            <tr>
-              <td>Yang et al.</td>
-              <td>Interface design between agent and tools matters more than the prompt</td>
-            </tr>
-          </tbody>
-        </table>
-        </div>
-
-        <p>Then validated with 9 phases of original experiments across two domains, 50+ eval runs, and principal engineer reviews.</p>
+        <p><a href="research/">Read the full research &rarr;</a></p>
       </div>
     </section>
 
@@ -201,21 +142,7 @@
       </div>
     </section>
 
-    <!-- 7. Two Kinds of Leadership -->
-    <section class="section">
-      <div class="container">
-        <h2>Two Kinds of Leadership</h2>
-        <p>The intuitive approach — load workers with rules, quality gates, and compliance checks — produces mid-level output that checks boxes instead of thinking.</p>
-        <p>The counterintuitive finding: plan with the full team, then send bare workers a clear spec. They produce senior/staff-level code because the team's expertise is baked into the spec as requirements, not loaded as rules the worker has to perform against.</p>
-        <blockquote>
-          <p>&ldquo;C writes code like someone who&rsquo;s been paged at 2am.&rdquo;</p>
-          <cite>Principal engineer review on a bare worker following a good spec</cite>
-        </blockquote>
-        <p><a href="research/">Read the full research narrative &rarr;</a></p>
-      </div>
-    </section>
-
-    <!-- 8. The Name -->
+    <!-- 7. The Name -->
     <section class="section">
       <div class="container">
         <h2>Why "GIGO"?</h2>
