@@ -477,6 +477,90 @@ blockquote p:last-child,
   }
 }
 
+/* --- Hero --- */
+.hero {
+  padding: var(--space-3xl) 0 var(--space-xl);
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 3.5rem;
+  margin-bottom: var(--space-sm);
+}
+
+.hero .subtitle {
+  font-size: var(--text-xl);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-xl);
+  max-width: 36rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cta-group {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.install-cmd {
+  display: inline-block;
+  background-color: var(--bg-code);
+  border: 1px solid var(--border-code);
+  border-radius: 6px;
+  padding: 0.6em 1.2em;
+}
+
+.install-cmd code {
+  background: none;
+  padding: 0;
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+
+/* --- Finding Numbers --- */
+.finding-numbers p {
+  font-size: var(--text-lg);
+  margin-bottom: var(--space-sm);
+}
+
+/* --- Research List --- */
+.research-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.research-list li {
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.research-list li:last-child {
+  border-bottom: none;
+}
+
+/* --- Quick Start --- */
+.quick-start-steps {
+  font-size: var(--text-lg);
+  padding-left: var(--space-xl);
+}
+
+.quick-start-steps li {
+  margin-bottom: var(--space-md);
+}
+
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+
+  .hero .subtitle {
+    font-size: var(--text-lg);
+  }
+}
+
 /* --- 404 Page --- */
 .page-404 {
   display: flex;
