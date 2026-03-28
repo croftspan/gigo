@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0a0a">
+  <title>義剛 GIGO — Only give them what they need for the job</title>
+  <meta name="description" content="Research-backed context engineering for Claude Code. 9 phases of experiments proved where context helps and where it hurts — then we automated the findings.">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="義剛 GIGO — Only give them what they need for the job">
+  <meta property="og:description" content="Research-backed context engineering for Claude Code. 9 phases of experiments proved where context helps and where it hurts.">
+  <meta property="og:image" content="assets/social-preview.png">
+  <meta property="og:url" content="https://eaven.github.io/gigo/">
+  <meta property="og:type" content="website">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="義剛 GIGO — Only give them what they need for the job">
+  <meta name="twitter:description" content="Research-backed context engineering for Claude Code. 9 phases of experiments proved where context helps and where it hurts.">
+  <meta name="twitter:image" content="assets/social-preview.png">
+
+  <link rel="icon" href="/site/assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/site/css/style.css">
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav class="site-nav">
+    <div class="container">
+      <a href="/" class="brand"><span class="brand-kanji">義剛</span> GIGO</a>
+      <button id="nav-toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul id="nav-menu" class="nav-links">
+        <li><a href="/research/">Research</a></li>
+        <li><a href="/docs/getting-started.html">Get Started</a></li>
+        <li><a href="/docs/skills.html">Skills</a></li>
+        <li><a href="https://github.com/Eaven/gigo">GitHub</a></li>
+        <li><button id="theme-toggle">Light</button></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- 1. Hero -->
+    <section class="section hero">
+      <div class="container">
+        <h1 class="brand-large"><span class="brand-kanji">義剛</span> GIGO</h1>
+        <p class="subtitle">Only give them what they need for the job.</p>
+        <div class="cta-group">
+          <div class="install-cmd">
+            <code>claude install @eaven/gigo</code>
+          </div>
+          <a href="https://github.com/Eaven/gigo" class="btn btn-secondary">View on GitHub</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. The Problem -->
+    <section class="section">
+      <div class="container">
+        <h2>The Problem</h2>
+        <p>Most AI context engineering is vibes-based. "This prompt feels better." No measurement, no methodology.</p>
+        <p>We ran 9 phases of controlled experiments — 50+ eval runs across two domains — to prove exactly where context helps and where it hurts.</p>
+        <p>Then we built a system that applies the findings automatically.</p>
+      </div>
+    </section>
+
+    <!-- 3. The Finding -->
+    <section class="section">
+      <div class="container">
+        <h2>The Finding</h2>
+        <div class="pipeline">
+          <div class="pipeline-step">Plan with experts</div>
+          <span class="pipeline-arrow" aria-hidden="true">→</span>
+          <div class="pipeline-step">Embed in spec</div>
+          <span class="pipeline-arrow" aria-hidden="true">→</span>
+          <div class="pipeline-step">Execute bare</div>
+          <span class="pipeline-arrow" aria-hidden="true">→</span>
+          <div class="pipeline-step">Review with quality bars</div>
+        </div>
+        <div class="finding-numbers">
+          <p><strong>Architecture carries coherence:</strong> 14 → 20 out of 30</p>
+          <p><strong>Personas add conventions:</strong> 20 → 29</p>
+          <p><strong>30/30 conventions matched. Zero review fixes.</strong></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Research Foundation -->
+    <section class="section">
+      <div class="container">
+        <h2>Research Foundation</h2>
+        <p>Built on published research — not intuition.</p>
+        <ul class="research-list">
+          <li><strong>Gloaguen et al. (2026)</strong> — bloated context reduces success rates, costs 20%+ more. <a href="https://arxiv.org/abs/2602.11988">arXiv:2602.11988</a></li>
+          <li><strong>Hu et al. (2026)</strong> — personas help alignment but hurt knowledge retrieval</li>
+          <li><strong>Kong et al.</strong> — role-play activates domain knowledge when personas are specific</li>
+          <li><strong>Xu et al.</strong> — task-specific persona descriptions outperform generic ones</li>
+          <li><strong>Shinn et al.</strong> — reflection agents make dramatically better decisions</li>
+          <li><strong>Yang et al.</strong> — interface design between agent and tools matters more than the prompt</li>
+        </ul>
+        <p>Then validated with 9 phases of original experiments.</p>
+      </div>
+    </section>
+
+    <!-- 5. Quick Start -->
+    <section class="section">
+      <div class="container">
+        <h2>Quick Start</h2>
+        <ol class="quick-start-steps">
+          <li>Install: <code>claude install @eaven/gigo</code></li>
+          <li>Open any project</li>
+          <li>Say <code>gigo</code></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- 6. Skills Overview -->
+    <section class="section">
+      <div class="container">
+        <h2>Skills</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Skill</th>
+              <th>What it does</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>gigo</code></td>
+              <td>Builds your expert team from scratch. Researches authorities, blends philosophies.</td>
+            </tr>
+            <tr>
+              <td><code>gigo:maintain</code></td>
+              <td>Ongoing maintenance. Adds expertise, audits for bloat, upgrades older setups.</td>
+            </tr>
+            <tr>
+              <td><code>gigo:plan</code></td>
+              <td>Turns ideas into specs and prioritized plans. Brainstorms first, then structures.</td>
+            </tr>
+            <tr>
+              <td><code>gigo:execute</code></td>
+              <td>Runs plans with agent teams or subagents. Workers get the spec, not the personas.</td>
+            </tr>
+            <tr>
+              <td><code>gigo:review</code></td>
+              <td>Two-stage review: spec compliance, then engineering quality.</td>
+            </tr>
+            <tr>
+              <td><code>gigo:snap</code></td>
+              <td>Session-end audit. Enforces caps, removes stale rules, captures learnings.</td>
+            </tr>
+            <tr>
+              <td><code>gigo:eval</code></td>
+              <td>Tests whether assembled context actually improves output.</td>
+            </tr>
+          </tbody>
+        </table>
+        <p><a href="/docs/skills.html">Full skill documentation →</a></p>
+      </div>
+    </section>
+
+    <!-- 7. The Name -->
+    <section class="section">
+      <div class="container">
+        <h2>The Name</h2>
+        <p>義剛 (Gigo) — "righteousness" and "strong." In computer science, GIGO means "Garbage In, Garbage Out." Both meanings apply. The project exists because garbage context produces garbage output, and it solves that problem with discipline.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <span>Built at <a href="https://croftspan.com">Croftspan</a>. MIT License.</span>
+      <ul class="footer-links">
+        <li><a href="https://github.com/Eaven/gigo">GitHub</a></li>
+        <li><a href="/docs/getting-started.html">Docs</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script src="/site/js/main.js"></script>
+</body>
+</html>
