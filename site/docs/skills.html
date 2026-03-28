@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0a0a">
+  <title>Skills — GIGO</title>
+  <meta name="description" content="Seven skills covering the full lifecycle: assemble, maintain, plan, execute, review, audit, and evaluate. Reference documentation with triggers, descriptions, and examples.">
+
+  <meta property="og:title" content="Skills — GIGO">
+  <meta property="og:description" content="Seven skills covering the full lifecycle: assemble, maintain, plan, execute, review, audit, and evaluate.">
+  <meta property="og:image" content="../assets/social-preview.png">
+  <meta property="og:type" content="article">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Skills — GIGO">
+  <meta name="twitter:description" content="Seven skills covering the full lifecycle.">
+
+  <link rel="icon" href="/site/assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/site/css/style.css">
+  <style>
+    .skill-card { border-top: 1px solid var(--border); padding-top: var(--space-xl); margin-top: var(--space-xl); }
+    .skill-card:first-of-type { border-top: none; margin-top: 0; }
+    .skill-name { font-family: var(--font-mono); font-size: var(--text-2xl); margin-bottom: var(--space-xs); }
+    .skill-trigger { font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-md); }
+    .skill-example { background: var(--bg-code); border: 1px solid var(--border-code); border-radius: 6px; padding: var(--space-md); margin-top: var(--space-md); font-size: var(--text-sm); }
+    .skill-example strong { color: var(--text); }
+  </style>
+</head>
+<body>
+
+  <nav class="site-nav">
+    <div class="container">
+      <a href="/" class="brand"><span class="brand-kanji">義剛</span> GIGO</a>
+      <button id="nav-toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul id="nav-menu" class="nav-links">
+        <li><a href="/research/">Research</a></li>
+        <li><a href="/docs/getting-started.html">Get Started</a></li>
+        <li><a href="/docs/skills.html">Skills</a></li>
+        <li><a href="https://github.com/Eaven/gigo">GitHub</a></li>
+        <li><button id="theme-toggle">Light</button></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="container">
+
+    <section class="section">
+      <h1>Skills</h1>
+      <p>Seven skills covering the full lifecycle. Listed in pipeline order.</p>
+
+      <div class="pipeline">
+        <div class="pipeline-step">gigo</div>
+        <span class="pipeline-arrow" aria-hidden="true">&rarr;</span>
+        <div class="pipeline-step">plan</div>
+        <span class="pipeline-arrow" aria-hidden="true">&rarr;</span>
+        <div class="pipeline-step">execute</div>
+        <span class="pipeline-arrow" aria-hidden="true">&rarr;</span>
+        <div class="pipeline-step">review</div>
+        <span class="pipeline-arrow" aria-hidden="true">&rarr;</span>
+        <div class="pipeline-step">snap</div>
+      </div>
+    </section>
+
+    <section class="section" style="border-top:1px solid var(--border);">
+
+      <!-- gigo -->
+      <div class="skill-card">
+        <h2 class="skill-name">gigo</h2>
+        <p class="skill-trigger">Trigger: new project, no CLAUDE.md exists</p>
+        <p>Builds your expert team from scratch. Researches domain authorities, blends their philosophies into focused personas (2-3+ real practitioners per persona), and scaffolds lean project files. This is where it all starts — describe your project and GIGO does the research.</p>
+        <p>Creates <code>CLAUDE.md</code> (team roster), <code>.claude/rules/</code> (standards, workflow), and <code>.claude/references/</code> (deep knowledge, loaded on demand).</p>
+        <div class="skill-example">
+          <strong>You:</strong> "Building a CLI tool for database migrations. Go, targets Postgres and MySQL."<br><br>
+          <strong>GIGO proposes:</strong> The Migration Architect (Andrew Kane + Sandi Metz), The CLI Designer (Steve Francia + Rob Pike), The Test Strategist (Mitchell Hashimoto). You refine, lock in, and the team is assembled.
+        </div>
+      </div>
+
+      <!-- gigo:maintain -->
+      <div class="skill-card">
+        <h2 class="skill-name">gigo:maintain</h2>
+        <p class="skill-trigger">Trigger: need new expertise, want a checkup, project has grown</p>
+        <p>Ongoing team maintenance. Four modes: targeted addition (fill a specific expertise gap), health check (assess coverage and freshness), restructure (fix bloat and structural drift), upgrade (modernize older setups with latest patterns). Auto-detects severity.</p>
+        <p>Invoked automatically by <code>gigo:plan</code> when it detects expertise gaps during planning.</p>
+      </div>
+
+      <!-- gigo:plan -->
+      <div class="skill-card">
+        <h2 class="skill-name">gigo:plan</h2>
+        <p class="skill-trigger">Trigger: you have a task, feature, or idea that needs planning</p>
+        <p>Full planning arc: explore project context, ask 2-3 clarifying questions, propose 2-3 approaches, design, write spec (with a Conventions section embedding team standards), write implementation plan with ordered tasks and dependencies.</p>
+        <p>Hard gate: no execution without an approved plan. The spec embeds the team's expertise as concrete requirements — not rules for the worker to comply with, but decisions already made by experts who thought about the hard problems.</p>
+      </div>
+
+      <!-- gigo:execute -->
+      <div class="skill-card">
+        <h2 class="skill-name">gigo:execute</h2>
+        <p class="skill-trigger">Trigger: plan exists and is approved</p>
+        <p>Runs approved plans. Three tiers: agent teams (full parallelization with hook-enforced review), subagents (sequential with some parallelization), inline (sequential, no isolation). Detects available tools and picks the best tier.</p>
+        <p>Key principle: <strong>workers run bare.</strong> They get the spec with embedded conventions, not the personas. <a href="/research/">Phase 7 proved</a> this produces senior/staff-level code — the delta is in the spec quality, not the worker's context.</p>
+      </div>
+
+      <!-- gigo:review -->
+      <div class="skill-card">
+        <h2 class="skill-name">gigo:review</h2>
+        <p class="skill-trigger">Trigger: task completed, code ready for review</p>
+        <p>Two-stage code review. Stage 1: spec compliance — "did you build the right thing?" Checks implementation against plan requirements. Stage 2: engineering quality — "is the code good?" Checks for bugs, race conditions, test quality, maintainability.</p>
+        <p><a href="/research/">Phase 8 proved</a> two focused reviewers find more issues than one combined reviewer. Issues are triaged: auto-fix (worker handles), ask-operator (blocks for human decision), accept (noted but not blocking).</p>
+      </div>
+
+      <!-- gigo:snap -->
+      <div class="skill-card">
+        <h2 class="skill-name">gigo:snap</h2>
+        <p class="skill-trigger">Trigger: wrapping up, saving progress, end of session</p>
+        <p>Session-end audit. Two jobs in order: (1) protect the project — a 10-point audit checking line caps, derivability, overlap, staleness, cost, persona calibration, total budget, coverage, overwatch presence, and pipeline integrity. (2) Capture learnings — route new knowledge to the correct file.</p>
+        <p>"Whatever it takes to protect the project." Job 1 is more important. A lean project with missing knowledge outperforms a bloated one with everything.</p>
+      </div>
+
+      <!-- gigo:eval -->
+      <div class="skill-card">
+        <h2 class="skill-name">gigo:eval</h2>
+        <p class="skill-trigger">Trigger: want to prove assembled context actually improves output</p>
+        <p>Context effectiveness testing. Pipeline eval (default): multi-stage chains with different context levels, comparative judging. Isolated eval: quick A/B checks on single tasks. Methodology: same judge sees all variants, randomized labels, evidence-required scoring.</p>
+        <p>"Evidence over vibes." Use this when you want to prove your setup works or debug why it doesn't.</p>
+      </div>
+
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>Built at <a href="https://croftspan.com">Croftspan</a>. MIT License.</span>
+      <ul class="footer-links">
+        <li><a href="https://github.com/Eaven/gigo">GitHub</a></li>
+        <li><a href="/docs/getting-started.html">Get Started</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script src="/site/js/main.js"></script>
+</body>
+</html>
