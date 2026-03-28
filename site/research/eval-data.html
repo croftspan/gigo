@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0a0a">
+  <title>Eval Data — GIGO</title>
+  <meta name="description" content="Phase-by-phase experimental results from 9 phases of AI context engineering research. Raw numbers, tables, and key findings.">
+
+  <meta property="og:title" content="Eval Data — GIGO Research">
+  <meta property="og:description" content="Phase-by-phase experimental results from 9 phases of AI context engineering research.">
+  <meta property="og:image" content="../assets/social-preview.png">
+  <meta property="og:type" content="article">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Eval Data — GIGO Research">
+  <meta name="twitter:description" content="Phase-by-phase experimental results from 9 phases of AI context engineering research.">
+  <meta name="twitter:image" content="../assets/social-preview.png">
+
+  <link rel="icon" href="/site/assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/site/css/style.css">
+</head>
+<body>
+
+  <nav class="site-nav">
+    <div class="container">
+      <a href="/" class="brand"><span class="brand-kanji">義剛</span> GIGO</a>
+      <button id="nav-toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul id="nav-menu" class="nav-links">
+        <li><a href="/research/">Research</a></li>
+        <li><a href="/docs/getting-started.html">Get Started</a></li>
+        <li><a href="/docs/skills.html">Skills</a></li>
+        <li><a href="https://github.com/Eaven/gigo">GitHub</a></li>
+        <li><button id="theme-toggle">Light</button></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="container">
+
+    <section class="section">
+      <h1>Eval Data</h1>
+      <p>Phase-by-phase experimental results. For the narrative version, see <a href="/research/">Two Kinds of Leadership</a>.</p>
+    </section>
+
+    <!-- Methodology -->
+    <section class="section" style="border-top:1px solid var(--border);">
+      <h2>Methodology</h2>
+      <ul>
+        <li><strong>Domains:</strong> Rails API (OrderFlow) and Children's Novel (The Vanishing Paintings)</li>
+        <li><strong>Prompts:</strong> 10 per domain across 3 axes — quality bars (A), persona voice (B), routing (C)</li>
+        <li><strong>Protocol:</strong> Each prompt run twice: bare (source files only) vs assembled (full context)</li>
+        <li><strong>Judging:</strong> Blinded A/B with randomized ordering, LLM-as-judge</li>
+        <li><strong>Criteria:</strong> Quality bar enforcement, persona voice, expertise routing, specificity, pushback quality</li>
+        <li><strong>Scale:</strong> 20 prompts &times; 5 criteria = 100 evaluations per run</li>
+      </ul>
+    </section>
+
+    <!-- Phase 1 -->
+    <section class="section" style="border-top:1px solid var(--border);">
+      <h3>Phase 1: Baseline <span style="color:var(--text-secondary);">(2026-03-26)</span></h3>
+      <p><strong>Variable:</strong> Assembled vs bare, no optimizations.</p>
+      <table>
+        <thead><tr><th>Domain</th><th>Win %</th><th>Ties</th><th>Losses</th></tr></thead>
+        <tbody>
+          <tr><td>Rails API</td><td>88%</td><td>5</td><td>1</td></tr>
+          <tr><td>Children's Novel</td><td>86%</td><td>6</td><td>1</td></tr>
+          <tr><td><strong>Combined</strong></td><td><strong>87%</strong></td><td><strong>11</strong></td><td><strong>2</strong></td></tr>
+        </tbody>
+      </table>
+      <p><strong>Finding:</strong> Assembled wins on presentation tasks, ties on content tasks — matches Hu et al. prediction.</p>
+    </section>
+
+    <!-- Phase 2a -->
+    <section class="section" style="border-top:1px solid var(--border);">
+      <h3>Phase 2a: Calibration <span style="color:var(--text-secondary);">(2026-03-26)</span></h3>
+      <p><strong>Variable:</strong> + persona calibration heuristic + task-specific "When to Go Deeper" pointers.</p>
+      <table>
+        <thead><tr><th>Domain</th><th>Win %</th><th>Ties</th><th>Losses</th></tr></thead>
+        <tbody>
+          <tr><td>Rails API</td><td>92%</td><td>4</td><td>0</td></tr>
+          <tr><td>Children's Novel</td><td>100%</td><td>0</td><td>0</td></tr>
+          <tr><td><strong>Combined</strong></td><td><strong>96%</strong></td><td><strong>4</strong></td><td><strong>0</strong></td></tr>
+        </tbody>
+      </table>
+      <p><strong>Finding:</strong> 6 lines of calibration code + specific pointers = 9 percentage points.</p>
+    </section>
+
+    <!-- Phase 2b -->
+    <section class="section" style="border-top:1px solid var(--border);">
+      <h3>Phase 2b: Aberrant Run <span style="color:var(--text-secondary);">(2026-03-26)</span></h3>
+      <p><strong>Variable:</strong> Minor tweak to workflow.</p>
+      <table>
+        <thead><tr><th>Domain</th><th>Win %</th><th>Ties</th><th>Losses</th></tr></thead>
+        <tbody>
+          <tr><td>Rails API</td><td>90%</td><td>—</td><td>5</td></tr>
+          <tr><td>Children's Novel</td><td>92%</td><td>—</td><td>2</td></tr>
+          <tr><td><strong>Combined</strong></td><td><strong>91%</strong></td><td>—</td><td><strong>7</strong></td></tr>
+        </tbody>
+      </table>
+      <p><strong>Finding:</strong> Assembled hallucinated on prompt 02 — eval scored it without catching the error. Led to Overwatch.</p>
+    </section>
+
+    <!-- Phase 2c -->
+    <section class="section" style="border-top:1px solid var(--border);">
+      <h3>Phase 2c: Confirmation <span style="color:var(--text-secondary);">(2026-03-26)</span></h3>
+      <p><strong>Variable:</strong> Same as 2a, rerun.</p>
+      <table>
+        <thead><tr><th>Domain</th><th>Win %</th><th>Ties</th><th>Losses</th></tr></thead>
+        <tbody>
+          <tr><td>Rails API</td><td>100%</td><td>0</td><td>0</td></tr>
+          <tr><td>Children's Novel</td><td>98%</td><td>1</td><td>0</td></tr>
+          <tr><td><strong>Combined</strong></td><td><strong>99%</strong></td><td><strong>1</strong></td><td><strong>0</strong></td></tr>
+        </tbody>
+      </table>
+      <p><strong>Finding:</strong> One irreducible tie on open-ended creative prompt.</p>
+    </section>
+
+    <!-- Phase 3a -->
+    <section class="section" style="border-top:1px solid var(--border);">
+      <h3>Phase 3a: Hawkeye Structured <span style="color:var(--text-secondary);">(2026-03-26)</span></h3>
+      <p><strong>Variable:</strong> + Overwatch adversarial checks (same for both domains).</p>
+      <table>
+        <thead><tr><th>Run</th><th>Rails</th><th>Novel</th><th>Combined</th><th>Losses</th></tr></thead>
+        <tbody>
+          <tr><td>Run 1</td><td>98%</td><td>90%</td><td>94%</td><td>1</td></tr>
+          <tr><td>Run 2</td><td>94%</td><td>88%</td><td>91%</td><td>4</td></tr>
+        </tbody>
+      </table>
+      <p><strong>Finding:</strong> Process-compliance Overwatch works for structured domains, hurts creative domains.</p>
+    </section>
+
+    <!-- Phase 3b -->
+    <section class="section" style="border-top:1px solid var(--border);">
+      <h3>Phase 3b: Hawkeye Domain-Adapted <span style="color:var(--text-secondary);">(2026-03-26)</span></h3>
+      <p><strong>Variable:</strong> Domain-specific Overwatch (process checks for Rails, manuscript engagement for Novel).</p>
+      <table>
+        <thead><tr><th>Domain</th><th>Win %</th><th>Ties</th><th>Losses</th></tr></thead>
+        <tbody>
+          <tr><td>Rails API</td><td>92%</td><td>4</td><td>0</td></tr>
+          <tr><td>Children's Novel</td><td>100%</td><td>0</td><td>0</td></tr>
+          <tr><td><strong>Combined</strong></td><td><strong>96%</strong></td><td><strong>4</strong></td><td><strong>0</strong></td></tr>
+        </tbody>
+      </table>
+      <p><strong>Finding:</strong> Adversarial checks must be domain-adapted.</p>
+    </section>
+
+    <!-- Phase 4 -->
+    <section class="section" style="border-top:1px solid var(--border);">
+      <h3>Phase 4: Proficiency Test <span style="color:var(--text-secondary);">(2026-03-26)</span></h3>
+      <p><strong>Variable:</strong> Real work output, not just style comparison.</p>
+      <table>
+        <thead><tr><th>Domain</th><th>Bare</th><th>Assembled</th><th>Delta</th></tr></thead>
+        <tbody>
+          <tr><td>Rails (rubric)</td><td>12/20</td><td>18/20</td><td>+6 assembled</td></tr>
+          <tr><td>Novel (rubric)</td><td>19/20</td><td>18/20</td><td>-1 bare</td></tr>
+        </tbody>
+      </table>
+      <p><strong>Qualitative (blind):</strong> Bare rated "senior"/"veteran". Assembled rated "mid-level"/"mid-career".</p>
+      <p><strong>Qualitative (fair):</strong> "B's team, with A's instincts."</p>
+      <p><strong>Finding:</strong> Assembled produces better structural work; bare produces higher peak craft.</p>
+    </section>
+
+    <!-- Phase 5 -->
+    <section class="section" style="border-top:1px solid var(--border);">
+      <h3>Phase 5: Instinct Experiments <span style="color:var(--text-secondary);">(2026-03-26)</span></h3>
+      <p><strong>Variable:</strong> 5 context formats tested.</p>
+
+      <h4>Rails Results</h4>
+      <table>
+        <thead><tr><th>Experiment</th><th>Bare</th><th>Assembled</th><th>Delta</th><th>Qualitative</th></tr></thead>
+        <tbody>
+          <tr><td>War Stories</td><td>14</td><td><strong>20</strong></td><td>+6</td><td>Assembled 1st (beat bare)</td></tr>
+          <tr><td>Negative Examples</td><td>18</td><td>19</td><td>+1</td><td>2nd (war stories 1st)</td></tr>
+          <tr><td>First-Person Voice</td><td>15</td><td>18</td><td>+3</td><td>—</td></tr>
+          <tr><td>Minimal (Won't-Do)</td><td>12</td><td>13</td><td>+1</td><td>—</td></tr>
+          <tr><td>Reference-Only</td><td>18</td><td>19</td><td>+1</td><td>—</td></tr>
+        </tbody>
+      </table>
+
+      <h4>Novel Results</h4>
+      <table>
+        <thead><tr><th>Experiment</th><th>Bare</th><th>Assembled</th><th>Delta</th></tr></thead>
+        <tbody>
+          <tr><td>First-Person Voice</td><td><strong>20</strong></td><td>19</td><td>-1</td></tr>
+          <tr><td>Minimal (Won't-Do)</td><td><strong>20</strong></td><td>18</td><td>-2</td></tr>
+          <tr><td>Reference-Only</td><td><strong>20</strong></td><td>18</td><td>-2</td></tr>
+          <tr><td>War Stories</td><td><strong>19</strong></td><td>16</td><td>-3</td></tr>
+          <tr><td>Negative Examples</td><td><strong>19</strong></td><td>6 (failed)</td><td>-13</td></tr>
+        </tbody>
+      </table>
+      <p><strong>Finding:</strong> War stories produce instincts in structured domains. No format beats bare on creative work.</p>
+    </section>
+
+    <!-- Phase 6 -->
+    <section class="section" style="border-top:1px solid var(--border);">
+      <h3>Phase 6: Planning Pipeline <span style="color:var(--text-secondary);">(2026-03-27)</span></h3>
+      <p><strong>Variable:</strong> Whether brainstormer had personas loaded. Same scripted answers.</p>
+      <p><strong>Result:</strong> Judge verdict — assembled wins decisively.</p>
+      <p><strong>Specific assembled wins over bare:</strong></p>
+      <ol>
+        <li>Partial unique index (prevents data integrity bug)</li>
+        <li><code>FOR UPDATE SKIP LOCKED</code> (better concurrency)</li>
+        <li>Copy condition field (operational requirement bare missed)</li>
+        <li>Pagination (bare returned unbounded results)</li>
+        <li>Runnable RSpec code (bare wrote English descriptions)</li>
+        <li>RESTful cancel via <code>PATCH</code> (bare used <code>DELETE</code> with query param)</li>
+      </ol>
+      <p><strong>Finding:</strong> Personas change how problems are explored, not just how answers are presented.</p>
+    </section>
+
+    <!-- Phase 7 -->
+    <section class="section" style="border-top:1px solid var(--border);">
+      <h3>Phase 7: Format Experiment <span style="color:var(--text-secondary);">(2026-03-27)</span></h3>
+      <p><strong>Variable:</strong> 4 standards.md formats (bare, war stories, compressed, fix-only). 3 runs each.</p>
+
+      <h4>PR Verdicts</h4>
+      <table>
+        <thead><tr><th>Variant</th><th>Approved</th><th>Request Changes</th></tr></thead>
+        <tbody>
+          <tr><td>war stories</td><td>3/3</td><td>0/3</td></tr>
+          <tr><td>bare</td><td>3/3</td><td>0/3</td></tr>
+          <tr><td>fix-only</td><td>1/3</td><td>2/3</td></tr>
+          <tr><td>compressed</td><td>0/3</td><td>3/3</td></tr>
+        </tbody>
+      </table>
+
+      <h4>Engineer Level Assessments</h4>
+      <table>
+        <thead><tr><th>Variant</th><th>Run 1</th><th>Run 2</th><th>Run 3</th></tr></thead>
+        <tbody>
+          <tr><td>bare</td><td>Senior</td><td>Senior</td><td>Staff</td></tr>
+          <tr><td>war stories</td><td>Senior</td><td>Mid</td><td>Mid</td></tr>
+          <tr><td>fix-only</td><td>Mid</td><td>Junior</td><td>Senior</td></tr>
+          <tr><td>compressed</td><td>Mid</td><td>Mid</td><td>Mid</td></tr>
+        </tbody>
+      </table>
+      <p><strong>Finding:</strong> Execution context format doesn't matter. The spec quality determines output.</p>
+    </section>
+
+    <!-- Phase 8 -->
+    <section class="section" style="border-top:1px solid var(--border);">
+      <h3>Phase 8: Review Pipeline <span style="color:var(--text-secondary);">(2026-03-27)</span></h3>
+      <p><strong>Variable:</strong> Review approach — plan-aware vs code-quality vs combined.</p>
+
+      <table>
+        <thead><tr><th>Variant</th><th>Plan-Aware</th><th>Code-Quality</th><th>Combined</th></tr></thead>
+        <tbody>
+          <tr><td>bare</td><td>10 issues</td><td>14 issues</td><td>11 issues</td></tr>
+          <tr><td>war stories</td><td>10</td><td>12</td><td>11</td></tr>
+          <tr><td>compressed</td><td>13</td><td>14</td><td>13</td></tr>
+          <tr><td>fix-only</td><td>10</td><td>15</td><td>12</td></tr>
+        </tbody>
+      </table>
+      <p><strong>Finding:</strong> Two focused reviewers beat one combined reviewer. Plan-aware finds spec issues; code-quality finds engineering issues; combined averages instead of adding up.</p>
+    </section>
+
+    <!-- Phase 9 -->
+    <section class="section" style="border-top:1px solid var(--border);">
+      <h3>Phase 9: Integration Test <span style="color:var(--text-secondary);">(2026-03-27)</span></h3>
+      <p><strong>Variable:</strong> Full pipeline end-to-end (plan &rarr; execute &rarr; review).</p>
+      <table>
+        <thead><tr><th>Tier</th><th>Score</th></tr></thead>
+        <tbody>
+          <tr><td>Agent teams</td><td>20/20</td></tr>
+          <tr><td>Subagents</td><td>10/10</td></tr>
+          <tr><td><strong>Total</strong></td><td><strong>30/30</strong></td></tr>
+        </tbody>
+      </table>
+      <p><strong>Finding:</strong> Execution mechanism doesn't matter. The spec determines quality.</p>
+    </section>
+
+    <!-- Complete Picture -->
+    <section class="section" style="border-top:1px solid var(--border);">
+      <h2>The Complete Picture</h2>
+      <table>
+        <thead><tr><th>Run</th><th>Rails</th><th>Novel</th><th>Combined</th><th>Losses</th><th>What Changed</th></tr></thead>
+        <tbody>
+          <tr><td>Phase 1</td><td>88%</td><td>86%</td><td>87%</td><td>2</td><td>Baseline</td></tr>
+          <tr><td>Phase 2a</td><td>92%</td><td>100%</td><td>96%</td><td>0</td><td>+ calibration + specific pointers</td></tr>
+          <tr><td>Phase 2b</td><td>90%</td><td>92%</td><td>91%</td><td>7</td><td>Aberrant: hallucination on prompt 02</td></tr>
+          <tr><td>Phase 2c</td><td>100%</td><td>98%</td><td>99%</td><td>0</td><td>Confirmation</td></tr>
+          <tr><td>Hawkeye (structured) r1</td><td>98%</td><td>90%</td><td>94%</td><td>1</td><td>+ Overwatch (same both domains)</td></tr>
+          <tr><td>Hawkeye (structured) r2</td><td>94%</td><td>88%</td><td>91%</td><td>4</td><td>Second run</td></tr>
+          <tr><td>Hawkeye (adapted)</td><td>92%</td><td>100%</td><td>96%</td><td>0</td><td>+ domain-adapted Overwatch</td></tr>
+        </tbody>
+      </table>
+      <p><a href="/research/">Read the full narrative &rarr;</a></p>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>Built at <a href="https://croftspan.com">Croftspan</a>. MIT License.</span>
+      <ul class="footer-links">
+        <li><a href="https://github.com/Eaven/gigo">GitHub</a></li>
+        <li><a href="/docs/getting-started.html">Docs</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script src="/site/js/main.js"></script>
+</body>
+</html>
