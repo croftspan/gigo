@@ -11,7 +11,7 @@ Better plans. Better output. Fewer problems that make it to production.
 ## Quick Start
 
 ```bash
-claude install @eaven/gigo
+claude install @croftspan/gigo
 ```
 
 Open any project in Claude Code. Type `gigo`.
@@ -30,9 +30,11 @@ Open any project in Claude Code. Type `gigo`.
 
 Most AI tools are vibe coded. Ship it, hope it works, iterate on feelings. We took a different approach: published research, controlled experiments, real methodology.
 
-9 phases. Hundreds of eval runs. Blinded judging. Principal engineer reviews. Two completely different domains, a Rails API and a children's mystery novel. Built on [Gloaguen et al.](https://arxiv.org/abs/2602.11988) and [Hu et al.](https://arxiv.org/abs/2603.18507) 70M+ Claude tokens burned proving it.
+9 phases. Hundreds of eval runs. Blinded judging. Principal engineer reviews. Two completely different domains. Built on [Gloaguen et al.](https://arxiv.org/abs/2602.11988) and [Hu et al.](https://arxiv.org/abs/2603.18507)
 
-The results: **97% on the first pass. Zero fixes needed.**
+70M+ Claude tokens burned proving it.
+
+The results: **97% of requirements met on the first pass. Zero fixes needed.**
 
 ---
 
