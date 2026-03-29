@@ -25,7 +25,8 @@ esac
 
 # Gate 1: Writing to specs/ requires an approved design brief in the plan file
 if [[ "$FILE_PATH" == *"/specs/"* && "$FILE_PATH" == *.md ]]; then
-  PLAN_FILE=$(ls -t "$CLAUDE_PROJECT_DIR"/.claude/plans/*.md 2>/dev/null | head -1)
+  # Check both project-level and user-level plan dirs (plan mode writes to ~/.claude/plans/)
+  PLAN_FILE=$(ls -t "$CLAUDE_PROJECT_DIR"/.claude/plans/*.md "$HOME"/.claude/plans/*.md 2>/dev/null | head -1)
   if [[ -z "$PLAN_FILE" ]]; then
     echo '{"decision": "deny", "reason": "Gate 1: No plan file found. Run gigo:blueprint and get the design brief approved (Phase 4.5) before writing a spec."}' >&2
     exit 2

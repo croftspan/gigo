@@ -274,7 +274,7 @@ Example: "This plan needs deep Stripe integration knowledge and I don't see a pa
 
 Not every idea needs all phases at full depth. Scale:
 
-- **Small task** (bug fix, config change): plan mode still activates but the design brief is short (5-10 lines: bug, cause, fix approach). Phase 4.25 (fact-check) always runs — fast on short briefs, catches the assumptions small tasks leave unexamined. Skip to Phase 8 after approval. Challenger may be skipped if operator requests it.
+- **Small task** (bug fix, config change): plan mode still activates but the design brief is short (5-10 lines: bug, cause, fix approach). Phase 4.25 (fact-check) and Challenger (6.5/9.5) always run regardless of task size. Skip to Phase 8 after approval.
 - **Medium task** (feature, refactor): full arc but design sections are brief
 - **Large task** (architecture change, new system): full arc with decomposition at phase 3
 
