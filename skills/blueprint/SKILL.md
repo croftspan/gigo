@@ -9,7 +9,7 @@ You turn ideas into execution-ready plans. No character voice. Direct, opinionat
 
 You own the full arc from "I have an idea" to "here's exactly what to build, in what order." That arc is: explore context, ask a few questions, propose approaches, design, spec, plan. One continuous flow — not separate skills stitched together.
 
-**Announce every phase.** As you work, tell the operator what's happening: "Phase 1: Exploring project context...", "Phase 2: Clarifying questions...", "Phase 3: Proposing approaches...", "Phase 5: Writing spec...", "Phase 8: Writing plan..." Don't work silently.
+**Announce every phase.** As you work, tell the operator what's happening: "Phase 1: Exploring project context...", "Phase 2: Clarifying questions...", "Phase 3: Proposing approaches...", "Phase 4.25: Fact-checking design brief...", "Phase 5: Writing spec...", "Phase 8: Writing plan..." Don't work silently.
 
 ## The Hard Gate
 
@@ -86,6 +86,28 @@ Once you know which direction, present the design in sections:
 In existing codebases, follow established patterns. Where existing code has problems that affect the work, include targeted improvements — don't propose unrelated refactoring.
 
 **Write to plan file:** The full design — architecture, components, data flow, error handling. This is the design brief that Phase 5 will formalize into a spec.
+
+### Phase 4.25: Fact-Check Design Brief
+
+Before the operator sees the brief, verify its assumptions against the actual project. This catches redundancy, wrong assumptions, missing dependencies, and internal inconsistencies — high value when the operator doesn't know the project well.
+
+**How to run:** Read `references/fact-checker-prompt.md`. Fill `{DESIGN_BRIEF}` with the plan file contents and `{PROJECT_ROOT}` with the project's working directory. Dispatch using the Agent tool:
+
+```
+Agent tool:
+  subagent_type: "Plan"
+  prompt: [filled template with {DESIGN_BRIEF} and {PROJECT_ROOT} replaced]
+```
+
+Required: `subagent_type: "Plan"` — this runs in plan mode where only Explore/Plan types are available. Plan inherits the parent model for reasoning capacity.
+
+**Write to plan file:** Add the subagent's results under a `## Fact-Check Results` section at the end of the current brief content.
+
+**If findings exist:** Present them to the operator alongside the brief. The operator decides: revise the design (loop back to Phase 4) or proceed to approval (Phase 4.5).
+
+**If no issues:** Note "Fact-check passed — no issues found" and proceed to Phase 4.5.
+
+**Announce:** "Phase 4.25: Fact-checking design brief..."
 
 ### Phase 4.5: Approve Design Brief
 
@@ -250,7 +272,7 @@ Example: "This plan needs deep Stripe integration knowledge and I don't see a pa
 
 Not every idea needs all phases at full depth. Scale:
 
-- **Small task** (bug fix, config change): plan mode still activates but the design brief is short (5-10 lines: bug, cause, fix approach). Skip to Phase 8 after approval. Challenger may be skipped if operator requests it.
+- **Small task** (bug fix, config change): plan mode still activates but the design brief is short (5-10 lines: bug, cause, fix approach). Phase 4.25 (fact-check) always runs — fast on short briefs, catches the assumptions small tasks leave unexamined. Skip to Phase 8 after approval. Challenger may be skipped if operator requests it.
 - **Medium task** (feature, refactor): full arc but design sections are brief
 - **Large task** (architecture change, new system): full arc with decomposition at phase 3
 
