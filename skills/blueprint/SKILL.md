@@ -31,6 +31,8 @@ The plan file is the **design brief** — the thinking, exploration findings, an
 
 **Write to the plan file as you work through Phases 1-4.** Every finding, every decision, every operator answer goes into the plan file. Conversation context gets compressed; the plan file persists.
 
+**Important:** Plan mode will inject its own workflow guidance. Follow blueprint's phases (1-4), not plan mode's generic phases. When plan mode says to call ExitPlanMode, only do so after completing Phase 4 (design) and writing the Post-Approval section. The plan file's deliverable is a comprehensive design brief — not an optimized implementation plan.
+
 ### Phase 1: Explore Context
 
 Check the current project state before asking anything:
@@ -87,13 +89,43 @@ In existing codebases, follow established patterns. Where existing code has prob
 
 ### Phase 4.5: Approve Design Brief
 
-Call `ExitPlanMode`. The operator reviews the design brief (the plan file) and approves before any formal documents are written.
+**Before calling ExitPlanMode**, write this section at the end of the plan file:
+
+```markdown
+---
+
+## Post-Approval: What Happens Next
+
+This is a DESIGN BRIEF, not an implementation plan. After approval:
+1. Write formal spec to docs/gigo/specs/ (Phase 5)
+2. Self-review spec (Phase 6)
+3. Challenger adversarial review of spec (Phase 6.5)
+4. Operator reviews spec (Phase 7)
+5. Write implementation plan to docs/gigo/plans/ (Phase 8)
+6. Self-review plan (Phase 9)
+7. Challenger adversarial review of plan (Phase 9.5)
+8. Operator reviews plan (Phase 10)
+9. Offer execution via gigo:execute (Phase 11)
+
+DO NOT start writing code after this plan is approved.
+The next step is formalizing this brief into a spec document.
+```
+
+**Then call `ExitPlanMode`.** The operator reviews the design brief and approves.
 
 If the operator requests changes: they stay in plan mode, you revise the plan file, and ExitPlanMode is called again.
 
-Once approved, you're back in normal execution mode with an approved design brief to work from.
+**CRITICAL — after plan mode approval:** You are now back in normal execution mode. The approved plan file is a DESIGN BRIEF. Do NOT start writing code. Do NOT start implementing. Proceed directly to Phase 5: Write Spec. Read the plan file you just wrote and formalize it into a spec document.
+
+**Write approval marker.** After the operator approves, append this marker to the plan file:
+```
+<!-- approved: design-brief YYYY-MM-DDTHH:MM:SS -->
+```
+This marker is checked by the gate-check hook — specs cannot be written without it.
 
 ### Phase 5: Write Spec
+
+**You just exited plan mode.** The approved plan file is a design brief, NOT an implementation plan. Do NOT start coding. This phase writes the formal spec document.
 
 Read the approved design brief (the plan file from Phase 4.5). Formalize it into a spec — don't recreate the design from conversation memory.
 
@@ -153,6 +185,12 @@ For small tasks, this phase may be skipped if the operator requests it.
 
 Wait for approval. If changes requested, revise and re-run the self-review.
 
+**Write approval marker.** After the operator approves the spec, append this marker to the spec file:
+```
+<!-- approved: spec YYYY-MM-DDTHH:MM:SS -->
+```
+This marker is checked by the gate-check hook — implementation plans cannot be written without it.
+
 ### Phase 8: Write Implementation Plan
 
 Read the approved design brief (plan file) and the approved spec. The design brief provides the "why" and the exploration findings; the spec provides the "what." The implementation plan breaks the spec into executable tasks.
@@ -188,6 +226,12 @@ The Challenger focuses on plan-specific concerns: will the task decomposition pr
 > "Plan saved to `<path>`. Review the tasks and dependency order — I'll adjust before we start."
 
 Wait for approval.
+
+**Write approval marker.** After the operator approves the plan, append this marker to the plan document:
+```
+<!-- approved: plan YYYY-MM-DDTHH:MM:SS -->
+```
+This marker is checked by the execute skill — execution cannot start without it.
 
 ### Phase 11: Offer Execution
 
