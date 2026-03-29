@@ -5,16 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0a0a0a">
   <title>Eval Data — GIGO Research</title>
-  <meta name="description" content="Phase-by-phase results from 9 experimental phases testing AI context engineering. Raw numbers, methodology, and key findings.">
+  <meta name="description" content="Phase-by-phase results from 9 experimental phases testing how AI context affects output quality. Raw numbers, methodology, and key findings.">
 
   <meta property="og:title" content="Eval Data — GIGO Research">
-  <meta property="og:description" content="Phase-by-phase results from 9 experimental phases testing AI context engineering.">
+  <meta property="og:description" content="Phase-by-phase results from 9 experimental phases testing how AI context affects output quality.">
   <meta property="og:image" content="../assets/social-preview.png">
   <meta property="og:url" content="https://croftspan.github.io/gigo/research/eval-data.html">
   <meta property="og:type" content="article">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Eval Data — GIGO Research">
-  <meta name="twitter:description" content="Phase-by-phase results from 9 experimental phases testing AI context engineering.">
+  <meta name="twitter:description" content="Phase-by-phase results from 9 experimental phases testing how AI context affects output quality.">
   <meta name="twitter:image" content="../assets/social-preview.png">
 
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
@@ -59,10 +59,10 @@
         <h2>Methodology</h2>
         <ul>
           <li><strong>Domains:</strong> Rails API (OrderFlow) and Children&rsquo;s Mystery Novel (The Vanishing Paintings)</li>
-          <li><strong>Prompts:</strong> 10 per domain across 3 axes &mdash; quality bars (A), persona voice (B), routing (C)</li>
-          <li><strong>Comparison:</strong> Each prompt run twice &mdash; bare (source files only) vs assembled (full context)</li>
+          <li><strong>Prompts:</strong> 10 per domain across 3 axes: quality bars (A), persona voice (B), routing (C)</li>
+          <li><strong>Comparison:</strong> Each prompt run twice. Bare (source files only) vs assembled (full context)</li>
           <li><strong>Judging:</strong> Blinded A/B with randomized ordering</li>
-          <li><strong>Criteria:</strong> 5 per prompt &mdash; quality bar enforcement, persona voice, expertise routing, specificity, pushback quality</li>
+          <li><strong>Criteria:</strong> 5 per prompt: quality bar enforcement, persona voice, expertise routing, specificity, pushback quality</li>
           <li><strong>Scale:</strong> 20 prompts &times; 5 criteria = 100 evaluations per run</li>
         </ul>
       </section>
@@ -80,7 +80,7 @@
             <tr><td><strong>Combined</strong></td><td><strong>87%</strong></td><td><strong>11</strong></td><td><strong>2</strong></td></tr>
           </tbody>
         </table></div>
-        <p><strong>Finding:</strong> Assembled wins on presentation tasks, ties on content tasks &mdash; matches <a href="https://arxiv.org/abs/2603.18507" target="_blank" rel="noopener">Hu et al.</a> prediction.</p>
+        <p><strong>Finding:</strong> Assembled wins on presentation tasks, ties on content tasks. Matches <a href="https://arxiv.org/abs/2603.18507" target="_blank" rel="noopener">Hu et al.</a> prediction.</p>
       </section>
 
       <!-- Phase 2a -->
@@ -112,7 +112,7 @@
             <tr><td><strong>Combined</strong></td><td><strong>91%</strong></td><td><strong>7</strong></td><td><strong>5 (7 criteria)</strong></td></tr>
           </tbody>
         </table></div>
-        <p><strong>Finding:</strong> Assembled hallucinated a classification exercise on prompt 02 &mdash; eval scored it without catching the error. Led to Overwatch system.</p>
+        <p><strong>Finding:</strong> Assembled hallucinated a classification exercise on prompt 02. Eval scored it without catching the error. Led to Overwatch system.</p>
       </section>
 
       <!-- Phase 2c -->
@@ -200,9 +200,9 @@
           <tbody>
             <tr><td><strong>War Stories</strong></td><td>14</td><td><strong>20</strong></td><td><strong>+6</strong></td><td><strong>1st (beat bare)</strong></td></tr>
             <tr><td>Negative Examples</td><td>18</td><td>19</td><td>+1</td><td>2nd</td></tr>
-            <tr><td>First-Person Voice</td><td>15</td><td>18</td><td>+3</td><td>&mdash;</td></tr>
-            <tr><td>Minimal (Won&rsquo;t-Do)</td><td>12</td><td>13</td><td>+1</td><td>&mdash;</td></tr>
-            <tr><td>Reference-Only</td><td>18</td><td>19</td><td>+1</td><td>&mdash;</td></tr>
+            <tr><td>First-Person Voice</td><td>15</td><td>18</td><td>+3</td><td></td></tr>
+            <tr><td>Minimal (Won&rsquo;t-Do)</td><td>12</td><td>13</td><td>+1</td><td></td></tr>
+            <tr><td>Reference-Only</td><td>18</td><td>19</td><td>+1</td><td></td></tr>
           </tbody>
         </table></div>
 
@@ -217,7 +217,7 @@
             <tr><td>Negative Examples</td><td><strong>19</strong></td><td>6 (failed)</td><td>-13</td></tr>
           </tbody>
         </table></div>
-        <p><strong>Finding:</strong> War stories produce instincts in structured domains. No format beats bare on creative work. Combo test (rules + war stories) ranked last &mdash; more context dilutes instincts.</p>
+        <p><strong>Finding:</strong> War stories produce instincts in structured domains. No format beats bare on creative work. Combo test (rules + war stories) ranked last. More context dilutes instincts.</p>
       </section>
 
       <!-- Phase 6 -->
@@ -228,12 +228,12 @@
         <p><strong>Judge verdict:</strong> Assembled wins decisively. &ldquo;I would hand Team B&rsquo;s pipeline output to my engineering team.&rdquo;</p>
         <p><strong>6 specific assembled wins:</strong></p>
         <ol>
-          <li>Partial unique index &mdash; prevents data integrity bug</li>
-          <li><code>FOR UPDATE SKIP LOCKED</code> &mdash; better concurrency</li>
-          <li>Copy condition field &mdash; operational requirement bare missed</li>
-          <li>Pagination &mdash; bare returned unbounded results</li>
-          <li>Runnable RSpec code &mdash; bare wrote English descriptions</li>
-          <li>RESTful cancel &mdash; <code>PATCH</code> vs <code>DELETE</code> with query param</li>
+          <li>Partial unique index: prevents data integrity bug</li>
+          <li><code>FOR UPDATE SKIP LOCKED</code>: better concurrency</li>
+          <li>Copy condition field: operational requirement bare missed</li>
+          <li>Pagination: bare returned unbounded results</li>
+          <li>Runnable RSpec code: bare wrote English descriptions</li>
+          <li>RESTful cancel: <code>PATCH</code> vs <code>DELETE</code> with query param</li>
         </ol>
         <p><strong>Finding:</strong> Personas change how problems are explored, not just how answers are presented.</p>
       </section>
@@ -242,7 +242,7 @@
       <section class="section" id="phase-7">
         <p class="phase-header">2026-03-27</p>
         <h2>Phase 7: Format Experiment</h2>
-        <p><strong>Variable:</strong> 4 <code>standards.md</code> formats &mdash; bare (0 words), war stories (468), compressed (287), fix-only (229). 3 runs &times; 4 variants = 12 code generations.</p>
+        <p><strong>Variable:</strong> 4 <code>standards.md</code> formats: bare (0 words), war stories (468), compressed (287), fix-only (229). 3 runs &times; 4 variants = 12 code generations.</p>
 
         <h3>PR Verdicts</h3>
                 <div class="table-wrapper"><table>
@@ -272,7 +272,7 @@
       <section class="section" id="phase-8">
         <p class="phase-header">2026-03-27</p>
         <h2>Phase 8: Review Pipeline</h2>
-        <p><strong>Variable:</strong> Review approach &mdash; plan-aware (has spec) vs code-quality (code only) vs combined (both).</p>
+        <p><strong>Variable:</strong> Review approach: plan-aware (has spec) vs code-quality (code only) vs combined (both).</p>
                 <div class="table-wrapper"><table>
           <thead><tr><th>Variant</th><th>Plan-aware</th><th>Code-quality</th><th>Combined</th></tr></thead>
           <tbody>
@@ -307,7 +307,7 @@
                 <div class="table-wrapper"><table>
           <thead><tr><th>Phase</th><th>Rails</th><th>Novel</th><th>Combined</th><th>Losses</th><th>Variable</th></tr></thead>
           <tbody>
-            <tr><td>Phase 1 (baseline)</td><td>88%</td><td>86%</td><td>87%</td><td>2</td><td>&mdash;</td></tr>
+            <tr><td>Phase 1 (baseline)</td><td>88%</td><td>86%</td><td>87%</td><td>2</td><td></td></tr>
             <tr><td>Phase 2a</td><td>92%</td><td>100%</td><td>96%</td><td>0</td><td>+ calibration + specific pointers</td></tr>
             <tr><td>Phase 2b (aberrant)</td><td>90%</td><td>92%</td><td>91%</td><td>7</td><td>hallucination on prompt 02</td></tr>
             <tr><td>Phase 2c</td><td>100%</td><td>98%</td><td>99%</td><td>0</td><td>confirmation</td></tr>
