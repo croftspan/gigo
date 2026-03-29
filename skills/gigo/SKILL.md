@@ -148,6 +148,24 @@ Keep going until the operator says "lock it in" or you sense alignment and ask: 
 
 Once locked, run the **pre-write dedup pass** — scan all proposed content for the same rule appearing in more than two auto-loaded files. Then write everything to disk. Don't ask where — follow the structure below.
 
+### Step 6.5: Generate Review Criteria
+
+After writing all files, extract domain-specific review criteria for the review pipeline.
+
+1. Read each persona's `Quality bar:` line from the just-written CLAUDE.md
+2. Read bullets under `## Quality Gates` from the just-written `.claude/rules/standards.md`
+3. Read bullets under `## The Standard` from any domain extension files
+4. Classify each criterion:
+   - **Spec Compliance** — about whether the right thing was built (completeness, correctness)
+   - **Craft Review** — about whether the work is well-built (craft, robustness, structure)
+   - **Challenger** — about whether an approach will succeed (feasibility, design soundness)
+   - Some criteria belong in multiple sections
+5. Deduplicate within each section
+6. Write to `.claude/references/review-criteria.md`
+
+This step is mechanical — no operator approval needed. The criteria are derived
+directly from the approved team, not invented.
+
 After writing, remind the operator: "When you need new expertise or want a checkup, I can invoke `gigo:maintain` for you."
 
 ---
