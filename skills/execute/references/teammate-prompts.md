@@ -4,10 +4,10 @@
 
 ### Tier 1: Subagent Worker (Primary)
 
-Include the full task text in the Agent tool prompt since there's no shared task list:
+Include the full task text in the Agent tool prompt. Dispatch with `isolation: "worktree"` so each worker gets its own repo copy:
 
 ```
-You are implementing a task.
+You are implementing a task on an isolated git worktree branch.
 
 ## Task Description
 [FULL TEXT of task from plan — paste it here, don't make subagent read file]
@@ -19,6 +19,11 @@ If prior tasks have "What Was Built" addendums in the plan, the lead has
 included relevant context above. Use it — it may record interface changes
 or deviations that affect your task.
 
+## Worktree Isolation
+You are on your own branch in a git worktree. Commit freely — the lead
+handles merging your branch back to main after review passes. You don't
+need to worry about conflicts with other workers.
+
 ## Before You Begin
 If anything is unclear about requirements, approach, or dependencies — ask now.
 
@@ -26,7 +31,7 @@ If anything is unclear about requirements, approach, or dependencies — ask now
 1. Implement exactly what the task specifies
 2. Write tests as the task describes
 3. Verify implementation works
-4. Commit your work
+4. Commit your work to this branch
 5. Self-review: completeness, quality, no overbuilding
 6. Report back
 

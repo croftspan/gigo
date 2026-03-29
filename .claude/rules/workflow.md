@@ -36,9 +36,17 @@ Before finalizing any response, step back and verify:
 
 When performing overwatch verification on complex responses, read `.claude/references/overwatch.md`.
 
+## Session Orientation
+
+At session start, confirm you're in the correct project directory. If the operator switches repos mid-session, re-read the target project's CLAUDE.md before proceeding. Never assume context carries over from a previous project.
+
 ## Context Discipline
 
 - Use subagents for codebase exploration that would generate verbose output
 - Keep the main conversation focused on decisions, not data gathering
 - When reading many files, summarize findings rather than quoting entire contents
 - Clear context between unrelated tasks
+
+## When to Go Deeper
+
+When designing worktree-isolated parallel execution, read `.claude/references/worktree-isolation.md`.

@@ -35,50 +35,68 @@ You run approved plans. You don't plan, you don't design, you don't question the
 
 ## Tier 1: Subagents (Primary)
 
-Fresh subagent per task via Agent tool. Lead controls dispatch, review, and triage.
+Fresh subagent per task via Agent tool with **worktree isolation**. Each parallel worker gets its own copy of the repo. Lead controls dispatch, review, merge, and triage.
 
 ### Execution Flow
 
 For each **wave** of unblocked tasks:
 
 1. **Identify the wave.** Read the dependency graph. All tasks whose `blocked-by` dependencies are satisfied form the current wave.
-2. **Dispatch in parallel.** For tasks marked `parallelizable: true` with no shared file conflicts, dispatch multiple subagents in a single message (multiple Agent tool calls). Each subagent gets:
+2. **Pre-flight.** Before dispatching, verify readiness for each task in the wave:
+   - List all files the task will create or modify (from plan step descriptions)
+   - Verify referenced files/directories exist in the repo
+   - Check for file conflicts between parallel tasks — same file in multiple tasks means sequential, not parallel
+   - If any dependency artifact is missing, check the upstream "What Was Built" addendum for deviations
+   - **CWD check:** Confirm you're in `$CLAUDE_PROJECT_DIR`, not inside a previous worktree (context compaction can drift CWD)
+3. **Dispatch in parallel with isolation.** For tasks marked `parallelizable: true` with no shared file conflicts, dispatch multiple subagents in a single message. Each subagent gets:
+   - `isolation: "worktree"` — worker operates on its own git worktree branch
    - Full task text from the plan (don't make subagents read the plan file)
    - Context from completed dependencies ("What Was Built" addendums)
    - Model selected per task complexity — see `references/model-selection.md`
-   - The implementation prompt from `references/teammate-prompts.md` (Tier 1 variant)
-3. **Wait for completion.** Process results as subagents finish.
-4. **Review each completed task.** Invoke `gigo:verify` (Stage 1: spec compliance, Stage 2: engineering quality).
-5. **Triage findings.** For each reviewed task:
-   - **Auto-fix:** Dispatch a fix subagent with the review feedback (see fix prompt in `references/teammate-prompts.md`). Re-review after fix.
+   - The implementation prompt from `references/teammate-prompts.md` (Tier 1 variant, includes worktree awareness)
+4. **Wait for completion.** Process results as subagents finish. The Agent tool returns the worktree path and branch name for each worker that made changes.
+5. **Review each completed task.** Invoke `gigo:verify` (Stage 1: spec compliance, Stage 2: engineering quality) on the worker's branch.
+6. **Triage findings.** For each reviewed task:
+   - **Auto-fix:** Dispatch a fix subagent to the same worktree branch with review feedback. Re-review after fix.
    - **Ask-operator:** Surface to operator. Task stays blocked. Move to next independent task.
-   - **Accept/pass:** Write addendum, checkpoint, commit.
-6. **Update the wave.** Completed tasks unblock dependent tasks. Repeat from step 1 with the new wave.
+   - **Accept/pass:** Merge the branch, write addendum, checkpoint.
+7. **Merge.** After review passes, merge the worker's branch back to main:
+   - `git merge --no-ff <branch>` with a descriptive commit message referencing the task
+   - If merge conflicts: attempt auto-resolution for trivial conflicts. If non-trivial, escalate to operator.
+   - Run tests after merge to verify integration
+   - Worktree and branch are cleaned up automatically after merge
+8. **Update the wave.** Completed and merged tasks unblock dependent tasks. Repeat from step 1 with the new wave.
+
+For deep reference on worktree lifecycle, merge strategies, and known issues, read `.claude/references/worktree-isolation.md`.
 
 ### Parallel Dispatch Rules
 
 - Only dispatch tasks in parallel if they're marked `parallelizable: true` in the plan
-- Never dispatch tasks that modify the same files in parallel
+- Never dispatch tasks that modify the same files in parallel — pre-flight catches this
 - If unsure about file conflicts, dispatch sequentially — wasted time beats merge conflicts
 - The lead can dispatch up to 3-4 subagents per wave (more creates diminishing returns from context switching)
+
+### Retry Protocol
+
+When a subagent returns BLOCKED or fails (max 2 retry attempts per task):
+
+1. **Attempt 1:** Same model, include error context in prompt. Dispatch to a fresh worktree.
+2. **Attempt 2:** One model tier up (e.g., Sonnet → Opus), include both error contexts.
+3. **Escalate:** "Task N failed twice. Here's what happened: [errors]. Options: break it down, change approach, or skip."
+
+Never silently retry more than twice. Never silently skip a failure. The operator decides after escalation.
 
 ### Status Handling
 
 Workers report one of four statuses:
 
-**DONE** — Proceed to review via `gigo:verify`. Handle triage categories: auto-fix items go back to a fix subagent, ask-operator items block the task, accept items go into the addendum.
+**DONE** — Proceed to review via `gigo:verify`. Handle triage categories: auto-fix items go back to a fix subagent on the same branch, ask-operator items block the task, accept items go into the addendum.
 
 **DONE_WITH_CONCERNS** — Worker completed the task but flagged doubts. Read the concerns before proceeding to review. If concerns are about correctness or scope, address them first.
 
-**NEEDS_CONTEXT** — Worker needs information that wasn't provided. Provide context and re-dispatch a new subagent.
+**NEEDS_CONTEXT** — Worker needs information that wasn't provided. Provide context and re-dispatch a new subagent (fresh worktree).
 
-**BLOCKED** — Worker cannot complete the task. Assess the blocker:
-1. Context problem — provide more context, re-dispatch
-2. Task too hard — re-dispatch with a more capable model
-3. Task too large — break it into smaller pieces
-4. Plan is wrong — escalate to the operator
-
-Never silently skip a blocker. The operator decides.
+**BLOCKED** — Enters the retry protocol above.
 
 ---
 
