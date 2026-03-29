@@ -1,12 +1,16 @@
 # 義剛 GIGO
 
-**Research the experts. Build the team. Ship better work.**
+Every Claude Code project starts the same way. You add rules, things work great. Next session you add more. A week later your CLAUDE.md is 200 lines of overlapping, stale guidance and your AI output gets worse, not better.
 
-[croftspan.github.io/gigo](https://croftspan.github.io/gigo/)
+[Research confirms it](https://arxiv.org/abs/2602.11988): bloated context reduces task success rates while increasing cost.
 
-Describe what you're building. GIGO researches the best practitioners in that field, real people with real philosophies, and builds you an expert team.
+GIGO builds you an expert team that fixes this. Describe what you're building. GIGO researches the best practitioners in that field, real people with real philosophies, and gives you a team that plans, executes, and reviews your work. Your project gets sharper over time, not bigger.
 
-Better plans. Better output. Fewer problems that make it to production.
+---
+
+## What You Get
+
+Projects that improve with every session instead of rotting. Specs good enough that workers nail it on the first pass. Reviews that find almost nothing because the upstream process already caught it.
 
 ---
 
@@ -22,31 +26,13 @@ Open any project in Claude Code. Type `gigo`.
 
 ## How It Works
 
-1. **Plan with your expert team.** GIGO's personas ask the hard questions. They catch the architectural gaps, the missing edge cases, the things you'd only think of at 2am.
+1. **Your expert team plans the work.** GIGO builds a team from real practitioners in your domain. They ask the hard questions, catch architectural gaps, and surface the edge cases you'd find at 2am.
 
-2. **Write a spec that carries the expertise.** The team's knowledge gets baked into the spec as concrete requirements. Not vague rules. Specific decisions.
+2. **Their knowledge becomes a spec.** Not vague rules. Concrete requirements with specific conventions baked in. Error formats, naming schemes, output patterns. Everything a worker needs to get it right the first time.
 
-3. **Let the AI do its thing.** Workers get the spec, not the rules. No hand-holding. We tested this: bare workers with good specs were rated senior to staff level by principal engineers. Every run.
+3. **Workers execute from the spec.** They get the requirements, not the rules. First-pass quality validated across two completely different domains. Every run.
 
-4. **Review with real standards.** Two focused reviewers catch different bugs than one reviewer trying to do everything. The team knows what to look for.
-
-Most AI tools are vibe coded. Ship it, hope it works, iterate on feelings. We took a different approach: published research, controlled experiments, real methodology.
-
-9 phases. Hundreds of eval runs. Blinded judging. Principal engineer reviews. Two completely different domains. Built on [Gloaguen et al.](https://arxiv.org/abs/2602.11988) and [Hu et al.](https://arxiv.org/abs/2603.18507)
-
-70M+ Claude tokens burned proving it.
-
-The results: **97% of requirements met on the first pass. Zero fixes needed.**
-
----
-
-## Your Project Stays Lean
-
-Most AI setups grow out of control. Every session adds rules, nothing gets removed. Within weeks your context files are hundreds of lines of overlapping, outdated guidance that makes output worse, not better.
-
-GIGO uses a two-tier system. Rules that apply to every conversation stay lean (under 60 lines each). Deep knowledge loads only when relevant. Zero cost when unused.
-
-At the end of every session, The Snap audits your project: removes what's stale, merges what overlaps, enforces line budgets. Your project gets sharper over time, not bigger.
+4. **Two reviewers catch what one misses.** Spec compliance and engineering quality as separate passes. Different lenses find different problems.
 
 ---
 
@@ -57,19 +43,24 @@ At the end of every session, The Snap audits your project: removes what's stale,
 | `gigo` | Builds your expert team from scratch |
 | `gigo:maintain` | Adds expertise, audits for bloat, upgrades setups |
 | `gigo:blueprint` | Turns ideas into specs and implementation plans |
-| `gigo:execute` | Runs plans with agent teams. Workers get the spec, not the personas |
+| `gigo:execute` | Runs plans with agent teams. Workers get the spec, not the rules |
 | `gigo:verify` | Two-stage review: spec compliance + engineering quality |
 | `gigo:snap` | Session-end audit. Projects get sharper, not bigger |
-| `gigo:eval` | Proves the assembled context actually improves output |
+| `gigo:eval` | Tests whether the expert knowledge actually improves output |
 
 ---
 
-## The Name
+## Your Project Stays Lean
 
-義剛 (Gigo), pronounced *ghee-goh* (義 *gi*, righteousness + 剛 *gō*, strong).
+This is the problem GIGO was built to solve.
 
-In computer science, GIGO means "Garbage In, Garbage Out."
+You set up a project. Add some rules. Things work great. Next session you add more. Fix a gotcha. Add a convention. A week later your CLAUDE.md is 200 lines. Some rules contradict each other. Some are stale. Some just repeat what Claude already knows.
 
+Your AI output starts getting worse. More rules should help, right? But [research shows the opposite](https://arxiv.org/abs/2602.11988): bloated context files reduce success rates by 20%+ while increasing cost.
+
+GIGO keeps your project lean. Rules that apply to every conversation stay short (under 60 lines each). Deep knowledge loads only when relevant. Zero cost when unused. At the end of every session, The Snap audits your project: removes what's stale, merges what overlaps, enforces line budgets.
+
+Your project gets sharper over time, not bigger.
 
 ---
 
@@ -152,6 +143,14 @@ Same skill, different calibration. Software, fiction, game design, research, mus
 
 ---
 
-Built at [Croftspan](https://croftspan.com). apache 2.0.
+## The Name
 
-[Research](site/research/) · [Get Started](site/docs/getting-started.html) · [Skills](site/docs/skills.html) · [Architecture](site/docs/architecture.html)
+義剛 (Gigo), pronounced *ghee-goh* (義 *gi*, righteousness + 剛 *gō*, strong).
+
+In computer science, GIGO means "Garbage In, Garbage Out."
+
+---
+
+Built at [Croftspan](https://croftspan.com). Apache 2.0.
+
+[croftspan.github.io/gigo](https://croftspan.github.io/gigo/) · [Research](site/research/) · [Get Started](site/docs/getting-started.html) · [Skills](site/docs/skills.html)
