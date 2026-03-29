@@ -26,7 +26,7 @@ No changes to existing commands (`add`, `list`, `status`). No new dependencies.
 
 ## Store Interface Expansion (`store/store.go`)
 
-Add one sentinel error and two methods:
+Add one sentinel error and two methods. This requires adding `"errors"` to the import list in `store/store.go`.
 
 ```go
 var ErrNotFound = errors.New("not found")
@@ -43,6 +43,8 @@ type Store interface {
 ### `ErrNotFound`
 
 Returned by `Get` and `UpdatePriority` when the task ID doesn't exist. The watch spec defines the same sentinel with the message `"task not found"` — when watch lands, unify to one. For now, use `"not found"` (shorter, consistent with the error message format where context is added by the caller).
+
+**Implementation note:** If `ErrNotFound` already exists in `store/store.go` (from the watch spec landing first), use it as-is. Do not redefine it.
 
 ### `Get(id string) (Task, error)`
 
@@ -231,3 +233,5 @@ All conventions from previous specs remain. Additional conventions for this feat
 3. **Race between Get and UpdatePriority.** A concurrent process could change priority between the `Get` (to read old priority) and `UpdatePriority` (to write new priority). For a local CLI with no concurrent priority updates expected, this is acceptable. If atomicity is ever needed, a `CompareAndSwapPriority(id, oldPri, newPri)` method would solve it — not needed now.
 
 4. **No BoltDB implementation.** This spec only implements `MemoryStore`. When BoltDB lands (watch prerequisite), `Get` and `UpdatePriority` need BoltDB implementations. The command code doesn't change — it talks to the `Store` interface.
+
+5. **No scheduler exists yet.** The operator asked about updating the scheduler's priority queue atomically. There is no scheduler in the codebase — storage-layer atomicity is what this spec delivers. When the scheduler is built, it will need to either re-read priorities from the store on each scheduling decision (simplest — priority changes take effect on the next scheduling cycle) or expose a method to re-prioritize in-flight queue entries (only needed if sub-second priority propagation matters).
