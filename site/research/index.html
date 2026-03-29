@@ -8,7 +8,7 @@
   <meta name="description" content="We found that loading AI workers with rules makes them worse. The fix is a management philosophy, not a technical one. 9 phases of experiments, 50+ eval runs, two domains.">
 
   <!-- Open Graph -->
-  <meta property="og:title" content="Two Kinds of Leadership. What 9 experimental phases taught us about making AI output better">
+  <meta property="og:title" content="Two Kinds of Leadership. What controlled experiments taught us about making AI output better">
   <meta property="og:description" content="We ran 9 phases of controlled experiments to find where AI context helps and where it hurts. Then we built a system that applies the findings.">
   <meta property="og:image" content="../assets/social-preview.png">
   <meta property="og:url" content="https://croftspan.github.io/gigo/research/">
@@ -16,7 +16,7 @@
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Two Kinds of Leadership. What 9 experimental phases taught us about making AI output better">
+  <meta name="twitter:title" content="Two Kinds of Leadership. What controlled experiments taught us about making AI output better">
   <meta name="twitter:description" content="We ran 9 phases of controlled experiments to find where AI context helps and where it hurts.">
   <meta name="twitter:image" content="../assets/social-preview.png">
 
@@ -54,7 +54,7 @@
       <!-- Title -->
       <header class="section section--flush section--center">
         <h1>Two Kinds of Leadership</h1>
-        <p class="subtitle">What 9 experimental phases taught us about making AI output better</p>
+        <p class="subtitle">What controlled experiments taught us about making AI output better</p>
       </header>
 
       <!-- The Question -->
@@ -273,6 +273,8 @@
 
         <p>This is the central finding. It&rsquo;s not a technical finding. It&rsquo;s a management philosophy, validated with data.</p>
 
+        <hr style="border: none; border-top: 1px solid var(--border); margin: var(--space-xl) 0;">
+
         <h3>&ldquo;Do your job or I&rsquo;ll fire you&rdquo;</h3>
         <p>The intuitive approach: load the worker with rules, quality gates, war stories, and compliance checks. More context, more guardrails. The worker knows exactly what&rsquo;s expected.</p>
         <p>The data shows what happens with that boss:</p>
@@ -282,6 +284,8 @@
           <li><strong>Creative work suffers the most.</strong> Phase 5: bare Claude writing fiction scored 19-20/20 on every run. Every assembled format scored lower. Every single one.</li>
         </ol>
         <p>The &ldquo;do your job or I&rsquo;ll fire you&rdquo; boss creates mid-level workers who check boxes. The rules become the ceiling, not the floor.</p>
+
+        <hr style="border: none; border-top: 1px solid var(--border); margin: var(--space-xl) 0;">
 
         <h3>&ldquo;What can I do to help you do your job better?&rdquo;</h3>
         <p>The answer is almost always the same: <strong>give me a clear plan and honest feedback.</strong> Not someone standing over my shoulder.</p>
@@ -302,8 +306,8 @@
         <p><strong>Review, the honest feedback part:</strong></p>
         <ul>
           <li>The team evaluates the output against quality bars with real expertise.</li>
-          <li>The principal engineer review caught race windows between unlocked checks and locked inserts, fat controllers, missing database constraints, and expired-reservation bugs. (Phase 7)</li>
-          <li>Two focused reviewers each doing their job beats one reviewer trying to do both. Plan-aware review catches &ldquo;you built the wrong thing.&rdquo; Code-quality review catches &ldquo;you built it wrong.&rdquo; (Phase 8)</li>
+          <li>Expert reviewers caught issues that generic review missed: subtle correctness problems, missing constraints, and edge cases the worker didn&rsquo;t consider. (Phase 7)</li>
+          <li>Two focused reviewers each doing their job beats one reviewer trying to do both. Spec-aware review catches &ldquo;you built the wrong thing.&rdquo; Quality review catches &ldquo;you built it wrong.&rdquo; (Phase 8)</li>
         </ul>
       </section>
 
@@ -311,12 +315,12 @@
       <section class="section" id="architecture">
         <h2>The Complete Architecture</h2>
                 <div class="table-wrapper"><table>
-          <thead><tr><th>Phase</th><th>Context</th><th>Why</th></tr></thead>
+          <thead><tr><th style="white-space: nowrap">Phase</th><th>Context</th><th>Why</th></tr></thead>
           <tbody>
-            <tr><td><strong>Brainstorming</strong></td><td>Assembled ON</td><td>Personas shape questions, catch architectural gaps</td></tr>
-            <tr><td><strong>Spec writing</strong></td><td>Assembled ON</td><td>Standards define quality bars, identify edge cases</td></tr>
-            <tr><td><strong>Plan writing</strong></td><td>Assembled ON</td><td>Expertise becomes spec requirements</td></tr>
-            <tr><td><strong>Execution</strong></td><td>Bare</td><td>Workers produce best code with training + good spec</td></tr>
+            <tr><td style="white-space: nowrap"><strong>Brainstorming</strong></td><td>Assembled ON</td><td>Personas shape questions, catch architectural gaps</td></tr>
+            <tr><td style="white-space: nowrap"><strong>Spec writing</strong></td><td>Assembled ON</td><td>Standards define quality bars, identify edge cases</td></tr>
+            <tr><td style="white-space: nowrap"><strong>Plan writing</strong></td><td>Assembled ON</td><td>Expertise becomes spec requirements</td></tr>
+            <tr><td style="white-space: nowrap"><strong>Execution</strong></td><td>Bare</td><td>Workers produce best output with training + good spec</td></tr>
             <tr><td><strong>Review</strong></td><td>Assembled ON</td><td>Team catches what workers miss</td></tr>
           </tbody>
         </table></div>

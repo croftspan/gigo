@@ -76,7 +76,7 @@ cp -r gigo/skills/ ~/.claude/skills/</code></pre>
         <p>Here&rsquo;s what happens:</p>
         <ol>
           <li><strong>GIGO checks your project.</strong> It looks for an existing <code>CLAUDE.md</code> and <code>.claude/</code> directory. If nothing exists, it starts a conversational kickoff.</li>
-          <li><strong>You describe what you&rsquo;re building.</strong> Be as vague or specific as you want. &ldquo;A Rails API for library reservations&rdquo; or &ldquo;I&rsquo;m thinking about writing kids&rsquo; mystery books. Not sure where to start.&rdquo;</li>
+          <li><strong>You describe what you&rsquo;re building.</strong> Be as vague or specific as you want. &ldquo;A Rails API for library reservations&rdquo; or &ldquo;I&rsquo;m thinking about writing kids&rsquo; mystery books.&rdquo;</li>
           <li><strong>GIGO researches authorities.</strong> It finds the best practitioners in the domain, identifies their specific philosophies, and proposes blended expert team members. 2-3+ real practitioners per team member.</li>
           <li><strong>You react and refine.</strong> &ldquo;Drop that one.&rdquo; &ldquo;Add a testing expert.&rdquo; &ldquo;Who would they disagree with?&rdquo; The skill adjusts.</li>
           <li><strong>Lock it in.</strong> GIGO writes your project files. A complete expert team, ready to work.</li>
@@ -87,20 +87,20 @@ cp -r gigo/skills/ ~/.claude/skills/</code></pre>
       <section class="section" id="what-gets-created">
         <h2>What Gets Created</h2>
                 <div class="table-wrapper"><table>
-          <thead><tr><th>File</th><th>What it does</th><th>When it loads</th></tr></thead>
+          <thead><tr><th style="white-space: nowrap">File</th><th>What it does</th><th>When it loads</th></tr></thead>
           <tbody>
             <tr>
-              <td><code>CLAUDE.md</code></td>
+              <td style="white-space: nowrap"><code>CLAUDE.md</code></td>
               <td>Team roster. Expert team members with blended authorities, autonomy model, quick reference</td>
               <td>Auto-loaded every conversation</td>
             </tr>
             <tr>
-              <td><code>.claude/rules/</code></td>
+              <td style="white-space: nowrap"><code>.claude/rules/</code></td>
               <td>Standards, workflow, domain extensions. ~60 line cap per file</td>
               <td>Auto-loaded every conversation</td>
             </tr>
             <tr>
-              <td><code>.claude/references/</code></td>
+              <td style="white-space: nowrap"><code>.claude/references/</code></td>
               <td>Deep knowledge. Authority profiles, technique catalogs, domain deep-dives</td>
               <td>Zero cost when unused. Loaded on demand via &ldquo;When to Go Deeper&rdquo; pointers</td>
             </tr>
@@ -114,19 +114,19 @@ cp -r gigo/skills/ ~/.claude/skills/</code></pre>
         <h2>Next Steps</h2>
                 <div class="table-wrapper"><table>
             <tr>
-              <td><code>gigo:blueprint</code></td>
+              <td style="white-space: nowrap"><code>gigo:blueprint</code></td>
               <td>Turn your first task into a spec and implementation plan. Brainstorms first, then structures.</td>
             </tr>
             <tr>
-              <td><code>gigo:execute</code></td>
+              <td style="white-space: nowrap"><code>gigo:execute</code></td>
               <td>Run the plan with agent teams or subagents. Workers get the spec, not the rules.</td>
             </tr>
             <tr>
-              <td><code>gigo:verify</code></td>
-              <td>Two-stage code review. Spec compliance first, then engineering quality.</td>
+              <td style="white-space: nowrap"><code>gigo:verify</code></td>
+              <td>Two-stage review. Spec compliance first, then output quality.</td>
             </tr>
             <tr>
-              <td><code>gigo:snap</code></td>
+              <td style="white-space: nowrap"><code>gigo:snap</code></td>
               <td>Run at session end to audit rules and protect the project from context bloat.</td>
             </tr>
           </tbody>

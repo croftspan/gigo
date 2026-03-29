@@ -91,21 +91,12 @@
           <p><strong>Example:</strong> &ldquo;Building a CLI tool for database migrations. Go, targets Postgres and MySQL.&rdquo; &rarr; GIGO proposes The Migration Architect (Andrew Kane + Sandi Metz), The CLI Designer (Steve Francia + Rob Pike), The Test Strategist (Mitchell Hashimoto).</p>
         </div>
 
-        <!-- maintain -->
-        <div class="skill-card" id="maintain">
-          <h3><code>gigo:maintain</code></h3>
-          <p class="skill-meta"><strong>Trigger:</strong> Need new expertise, want a checkup, project has grown, &ldquo;maintain&rdquo;</p>
-          <p>Ongoing maintenance for your expert team. Auto-detects severity and picks the right mode: targeted addition (fill a specific gap), health check (assess coverage and freshness), restructure (fix bloat and drift), or upgrade (modernize older setups with latest patterns).</p>
-          <p>Also invoked automatically by <code>gigo:blueprint</code> when it detects expertise gaps during planning.</p>
-          <p><strong>Pipeline role:</strong> Keeps the team current as the project evolves.</p>
-        </div>
-
         <!-- plan -->
         <div class="skill-card" id="plan">
           <h3><code>gigo:blueprint</code></h3>
           <p class="skill-meta"><strong>Trigger:</strong> You have a task, feature, or idea, &ldquo;plan this&rdquo;</p>
           <p>Turns ideas into execution-ready plans. Full arc: explore project context &rarr; ask 2-3 clarifying questions &rarr; propose 2-3 approaches &rarr; design spec (with Conventions section) &rarr; write implementation plan with ordered tasks and dependencies.</p>
-          <p>Hard gate: no execution without an approved plan. The plan embeds team expertise as concrete requirements. This is where the expert team earns its keep. In testing, the team caught a partial unique index gap, SKIP LOCKED concurrency issues, and pagination problems that a bare planner missed entirely.</p>
+          <p>Hard gate: no execution without an approved plan. The plan embeds team expertise as concrete requirements. This is where the expert team earns its keep. In testing, the team consistently caught gaps and edge cases that a bare planner missed entirely.</p>
           <p><strong>Pipeline role:</strong> Planning with expertise. Your team shapes WHAT gets asked, not just formatting.</p>
         </div>
 
@@ -114,15 +105,15 @@
           <h3><code>gigo:execute</code></h3>
           <p class="skill-meta"><strong>Trigger:</strong> Plan exists and approved, &ldquo;execute&rdquo;</p>
           <p>Runs approved plans using three tiers: agent teams (full parallelization with hook-enforced review), subagents (sequential with some parallelization), or inline (sequential, no isolation). Workers run bare. They get the spec with embedded conventions, not the rules.</p>
-          <p>Testing validated this approach: bare workers with good specs were rated senior to staff level by a principal engineer. The quality comes from the spec, not from loading workers with rules.</p>
+          <p>Testing validated this approach: bare workers with good specs consistently produce high-quality output. The quality comes from the spec, not from loading workers with rules.</p>
           <p><strong>Pipeline role:</strong> Bare execution. Workers produce best output with training alone + good spec.</p>
         </div>
 
         <!-- review -->
         <div class="skill-card" id="review">
           <h3><code>gigo:verify</code></h3>
-          <p class="skill-meta"><strong>Trigger:</strong> Task completed, code ready for review</p>
-          <p>Two-stage code review. Stage 1: spec compliance. &ldquo;Did you build the right thing?&rdquo; Has the spec, checks implementation against requirements. Stage 2: engineering quality. &ldquo;Is the code good?&rdquo; Focused on bugs, race conditions, maintainability.</p>
+          <p class="skill-meta"><strong>Trigger:</strong> Task completed, work ready for review</p>
+          <p>Two-stage review. Stage 1: spec compliance. &ldquo;Did you build the right thing?&rdquo; Checks output against requirements. Stage 2: output quality. &ldquo;Is the work good?&rdquo; Focused on correctness, consistency, and completeness.</p>
           <p>Testing validated that two focused reviewers find more issues than one combined reviewer. Issues triaged as: auto-fix (worker handles), ask-operator (blocks), or accept (noted).</p>
           <p><strong>Pipeline role:</strong> Expert review. Team catches what workers miss.</p>
         </div>
@@ -134,6 +125,15 @@
           <p>Session-end audit and protection protocol. Two jobs, in order: (1) Protect the project. 10-point audit checking line caps, derivability, overlap, staleness, cost, persona calibration, total budget, coverage, overwatch, and pipeline integrity. (2) Capture learnings. Route new knowledge to the correct file.</p>
           <p>&ldquo;Whatever it takes to protect the project.&rdquo; A lean project with missing knowledge outperforms a bloated one with everything.</p>
           <p><strong>Pipeline role:</strong> Session boundary. Prevents the monotonic growth that degrades performance over time.</p>
+        </div>
+
+        <!-- maintain -->
+        <div class="skill-card" id="maintain">
+          <h3><code>gigo:maintain</code></h3>
+          <p class="skill-meta"><strong>Trigger:</strong> Need new expertise, want a checkup, project has grown, &ldquo;maintain&rdquo;</p>
+          <p>Ongoing maintenance for your expert team. Auto-detects severity and picks the right mode: targeted addition (fill a specific gap), health check (assess coverage and freshness), restructure (fix bloat and drift), or upgrade (modernize older setups with latest patterns).</p>
+          <p>Also invoked automatically by <code>gigo:blueprint</code> when it detects expertise gaps during planning.</p>
+          <p><strong>Pipeline role:</strong> Keeps the team current as the project evolves.</p>
         </div>
 
         <!-- eval -->
