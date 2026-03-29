@@ -71,7 +71,7 @@ game design, research, music, business.
 
 ## Quick Start
 
-claude install @eaven/gigo
+claude install @croftspan/gigo
 
 Open any project. Say "gigo."
 

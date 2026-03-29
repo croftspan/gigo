@@ -155,7 +155,7 @@ Full landing page following the spec's structure. Sections in order:
    - Xu et al. — task-specific persona descriptions outperform generic ones
    - Shinn et al. — reflection agents make dramatically better decisions
    - Yang et al. — interface design between agent and tools matters more than the prompt
-5. **Quick Start:** Three steps — `claude install @eaven/gigo`, open any project, say "gigo"
+5. **Quick Start:** Three steps — `claude install @croftspan/gigo`, open any project, say "gigo"
 6. **Skills Overview:** Seven skills, one sentence each, link to /docs/skills
 7. **The Name:** 義剛 = righteousness + strength. GIGO = garbage in, garbage out. Both are true.
 8. **Footer:** Built at Croftspan | MIT License | nav links
@@ -325,10 +325,10 @@ Install and first-run guide. Sections:
 **Install** — Two paths:
 ```bash
 # From the Claude Code marketplace
-claude install @eaven/gigo
+claude install @croftspan/gigo
 
 # Or manually
-git clone https://github.com/Eaven/gigo.git
+git clone https://github.com/croftspan/gigo.git
 cp -r gigo/skills/ ~/.claude/skills/
 ```
 
@@ -535,7 +535,7 @@ Then sections in order per spec:
 
 3. **Quick Start** — Three lines:
    ```
-   claude install @eaven/gigo
+   claude install @croftspan/gigo
    ```
    Open any project. Say `gigo`.
 
@@ -649,7 +649,7 @@ gh repo edit --homepage "https://eaven.github.io/gigo/"
 
 ```bash
 # Enable GitHub Pages from main branch, /site directory
-gh api repos/Eaven/gigo/pages -X POST -f source.branch=main -f source.path=/site
+gh api repos/croftspan/gigo/pages -X POST -f source.branch=main -f source.path=/site
 ```
 
 If this fails (Pages may need to be enabled via web UI), note it as a manual step.
