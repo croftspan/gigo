@@ -117,11 +117,12 @@ If the operator requests changes: they stay in plan mode, you revise the plan fi
 
 **CRITICAL — after plan mode approval:** You are now back in normal execution mode. The approved plan file is a DESIGN BRIEF. Do NOT start writing code. Do NOT start implementing. Proceed directly to Phase 5: Write Spec. Read the plan file you just wrote and formalize it into a spec document.
 
-**Write approval marker.** After the operator approves, append this marker to the plan file:
+**Write approval marker.** After the operator approves, run `git config user.name` to get the approver's identity, then append this marker to the plan file:
 ```
-<!-- approved: design-brief [current date and time — use the actual current timestamp, not a placeholder] -->
+<!-- approved: design-brief [actual current timestamp] by:[result of git config user.name] -->
 ```
-This marker is checked by the gate-check hook — specs cannot be written without it.
+Example: `<!-- approved: design-brief 2026-03-28T21:15:00 by:eaven -->`
+This marker is checked by the gate-check hook — specs cannot be written without it. The `by:` field creates an audit trail of who approved each phase.
 
 ### Phase 5: Write Spec
 
@@ -181,9 +182,9 @@ Dispatch a subagent using the prompt template in `gigo:verify`'s `references/spe
 
 Wait for approval. If changes requested, revise and re-run the self-review.
 
-**Write approval marker.** After the operator approves the spec, append this marker to the spec file:
+**Write approval marker.** After the operator approves the spec, run `git config user.name` to get the approver's identity, then append this marker to the spec file:
 ```
-<!-- approved: spec [current date and time — use the actual current timestamp, not a placeholder] -->
+<!-- approved: spec [actual current timestamp] by:[result of git config user.name] -->
 ```
 This marker is checked by the gate-check hook — implementation plans cannot be written without it.
 
@@ -223,9 +224,9 @@ The Challenger focuses on plan-specific concerns: will the task decomposition pr
 
 Wait for approval.
 
-**Write approval marker.** After the operator approves the plan, append this marker to the plan document:
+**Write approval marker.** After the operator approves the plan, run `git config user.name` to get the approver's identity, then append this marker to the plan document:
 ```
-<!-- approved: plan [current date and time — use the actual current timestamp, not a placeholder] -->
+<!-- approved: plan [actual current timestamp] by:[result of git config user.name] -->
 ```
 This marker is checked by the execute skill — execution cannot start without it.
 

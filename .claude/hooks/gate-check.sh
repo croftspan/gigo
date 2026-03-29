@@ -34,6 +34,10 @@ if [[ "$FILE_PATH" == *"/specs/"* && "$FILE_PATH" == *.md ]]; then
     echo '{"decision": "deny", "reason": "Gate 1: Design brief not approved. The operator must approve the design brief (Phase 4.5) before a spec can be written."}' >&2
     exit 2
   fi
+  if ! grep -q '<!-- approved: design-brief.*by:' "$PLAN_FILE" 2>/dev/null; then
+    echo '{"decision": "deny", "reason": "Gate 1: Design brief approval missing approver identity (by: field). Re-approve with operator name."}' >&2
+    exit 2
+  fi
 fi
 
 # Gate 2: Writing to plans/ (implementation plans, not .claude/plans/) requires an approved spec
@@ -45,6 +49,10 @@ if [[ "$FILE_PATH" == */docs/gigo/plans/* && "$FILE_PATH" == *.md ]]; then
   fi
   if ! grep -q '<!-- approved: spec' "$SPEC_FILE" 2>/dev/null; then
     echo '{"decision": "deny", "reason": "Gate 2: Spec not approved. The operator must approve the spec (Phase 7) before an implementation plan can be written."}' >&2
+    exit 2
+  fi
+  if ! grep -q '<!-- approved: spec.*by:' "$SPEC_FILE" 2>/dev/null; then
+    echo '{"decision": "deny", "reason": "Gate 2: Spec approval missing approver identity (by: field). Re-approve with operator name."}' >&2
     exit 2
   fi
 fi
