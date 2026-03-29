@@ -30,23 +30,9 @@ Open any project in Claude Code. Type `gigo`.
 
 2. **Their knowledge becomes a spec.** Not vague rules. Concrete requirements with specific conventions baked in. Error formats, naming schemes, output patterns. Everything a worker needs to get it right the first time.
 
-3. **Workers execute from the spec.** They get the requirements, not the rules. First-pass quality validated across two completely different domains. Every run.
+3. **Workers execute from the spec.** They get the requirements, not the rules. First-pass quality validated across any domain. Every run.
 
-4. **Two reviewers catch what one misses.** Spec compliance and engineering quality as separate passes. Different lenses find different problems.
-
----
-
-## The Seven Skills
-
-| Skill | What it does |
-|---|---|
-| `gigo` | Builds your expert team from scratch |
-| `gigo:maintain` | Adds expertise, audits for bloat, upgrades setups |
-| `gigo:blueprint` | Turns ideas into specs and implementation plans |
-| `gigo:execute` | Runs plans with agent teams. Workers get the spec, not the rules |
-| `gigo:verify` | Two-stage review: spec compliance + engineering quality |
-| `gigo:snap` | Session-end audit. Projects get sharper, not bigger |
-| `gigo:eval` | Tests whether the expert knowledge actually improves output |
+4. **Two reviewers catch what one misses.** Spec compliance and output quality as separate passes. Different lenses find different problems.
 
 ---
 
@@ -61,6 +47,20 @@ Your AI output starts getting worse. More rules should help, right? But [researc
 GIGO keeps your project lean. Rules that apply to every conversation stay short (under 60 lines each). Deep knowledge loads only when relevant. Zero cost when unused. At the end of every session, The Snap audits your project: removes what's stale, merges what overlaps, enforces line budgets.
 
 Your project gets sharper over time, not bigger.
+
+---
+
+## The Seven Skills
+
+| Skill | What it does |
+|---|---|
+| `gigo` | Builds your expert team from scratch |
+| `gigo:blueprint` | Turns ideas into specs and implementation plans |
+| `gigo:execute` | Runs plans with agent teams. Workers get the spec, not the rules |
+| `gigo:verify` | Two-stage review: spec compliance + output quality |
+| `gigo:snap` | Session-end audit. Projects get sharper, not bigger |
+| `gigo:maintain` | Adds expertise, audits for bloat, upgrades setups |
+| `gigo:eval` | Tests whether the expert knowledge actually improves output |
 
 ---
 
