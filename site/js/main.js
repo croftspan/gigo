@@ -33,6 +33,39 @@
     });
   }
 
+  /* --- Footer Version (from GitHub latest tag, cached 1hr) --- */
+  (function setVersion() {
+    var cached = localStorage.getItem('gigo-version');
+    var cacheTime = localStorage.getItem('gigo-version-time');
+    var oneHour = 3600000;
+
+    function apply(ver) {
+      document.querySelectorAll('.site-footer .container > span').forEach(function (el) {
+        el.childNodes.forEach(function (node) {
+          if (node.nodeType === 3 && /v[\d.]+/.test(node.textContent)) {
+            node.textContent = node.textContent.replace(/v[\d.]+/, ver);
+          }
+        });
+      });
+    }
+
+    if (cached && cacheTime && Date.now() - Number(cacheTime) < oneHour) {
+      apply(cached);
+      return;
+    }
+
+    fetch('https://api.github.com/repos/croftspan/gigo/tags?per_page=1')
+      .then(function (r) { return r.json(); })
+      .then(function (tags) {
+        if (tags && tags[0] && tags[0].name) {
+          localStorage.setItem('gigo-version', tags[0].name);
+          localStorage.setItem('gigo-version-time', String(Date.now()));
+          apply(tags[0].name);
+        }
+      })
+      .catch(function () {});
+  })();
+
   /* --- Mobile Nav Toggle --- */
   var navToggle = document.getElementById('nav-toggle');
   var navMenu = document.getElementById('nav-menu');
