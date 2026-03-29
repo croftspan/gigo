@@ -692,7 +692,7 @@ blockquote cite,
    ============================================================ */
 .results-highlight {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--space-md);
   margin: var(--space-xl) 0;
 }
@@ -727,13 +727,8 @@ blockquote cite,
   line-height: 1.4;
 }
 
-.results-highlight--3col {
-  grid-template-columns: repeat(3, 1fr);
-}
-
 @media (max-width: 768px) {
-  .results-highlight,
-  .results-highlight--3col {
+  .results-highlight {
     grid-template-columns: 1fr;
   }
 }
