@@ -164,3 +164,5 @@ The 30-second test. A stranger who has never heard of GIGO reads the README or l
 3. How do I try it? (`claude install @croftspan/gigo`)
 
 No sentence survives if the answer to "so what?" is unclear.
+
+<!-- approved: spec 2026-03-29T05:10:20 by:Eaven -->
