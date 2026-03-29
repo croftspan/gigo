@@ -190,7 +190,7 @@ Fix issues inline. No re-review needed.
 
 Dispatch a subagent using the prompt template in `gigo:verify`'s `references/spec-plan-reviewer-prompt.md`. Do NOT use `feature-dev:code-reviewer` or `code-review:code-review` — those are generic reviewers. The Challenger runs a two-pass protocol: blind technical assessment first (no knowledge of operator intent), then intent alignment second. This is what makes it adversarial rather than just another review.
 
-**How to dispatch:** Use the Agent tool with `subagent_type: "general-purpose"`. Read `skills/verify/references/spec-plan-reviewer-prompt.md`, fill in the template variables (`{DOCUMENT_TYPE}` = "spec", `{DOCUMENT_CONTENT}` = full spec text, `{OPERATOR_INTENT}` = 1-2 sentence intent summary, `{QUALITY_BAR_CHECKLIST}` = checklistable criteria from CLAUDE.md personas), and pass the filled template as the agent prompt.
+**How to dispatch:** Use the Agent tool with `subagent_type: "general-purpose"`. Read `skills/verify/references/spec-plan-reviewer-prompt.md`, fill in the template variables (`{DOCUMENT_TYPE}` = "spec", `{DOCUMENT_CONTENT}` = full spec text, `{OPERATOR_INTENT}` = 1-2 sentence intent summary, `{DOMAIN_CRITERIA}` = domain criteria — read `.claude/references/review-criteria.md` and extract the Challenger Criteria section. If the file does not exist, extract quality bars from CLAUDE.md personas as a fallback), and pass the filled template as the agent prompt.
 
 **Before dispatching:** Extract the operator's original request into 1-2 sentences. This becomes the intent summary for Pass 2. Don't include the design discussion or your reasoning — just what the operator asked for.
 
@@ -235,10 +235,10 @@ Fix issues inline.
 Same dispatch method as Phase 6.5 — use the prompt template in `skills/verify/references/spec-plan-reviewer-prompt.md` with `{DOCUMENT_TYPE}` = "plan". Do NOT use `feature-dev:code-reviewer` or other generic reviewers.
 
 **What the reviewer gets:**
-- Pass 1: the plan + the approved spec (as `{SPEC_CONTENT_IF_PLAN_REVIEW}`) + repo access + quality bar checklist
+- Pass 1: the plan + the approved spec (as `{SPEC_CONTENT_IF_PLAN_REVIEW}`) + repo access + domain criteria checklist
 - Pass 2: the same 1-2 sentence intent summary from Phase 6.5
 
-The Challenger focuses on plan-specific concerns: will the task decomposition produce what the spec describes? Is the dependency graph correct? Will workers get stuck on underspecified steps? Will the code in task steps actually work against the real codebase?
+The Challenger focuses on plan-specific concerns: will the task decomposition produce what the spec describes? Is the dependency graph correct? Will workers get stuck on underspecified steps? Will the steps actually work against the real project?
 
 **Present findings to the operator.** Same verdict handling as Phase 6.5 — Proceed / Revise / Rethink.
 
