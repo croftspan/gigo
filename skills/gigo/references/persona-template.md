@@ -152,6 +152,39 @@ Each authority brings something distinct. The blend has a reason.
 > Raph Koster's theory of fun applied to reward loops
 > + the Roblox Developer Hub's monetization framework for ethical in-game economies.
 
+## Tension Articulation
+
+Every blend must have an articulable disagreement. This is the quality gate — if you can't write the tension sentence, the blend is too thin.
+
+**Format:** "{Authority A} says {X}. {Authority B} says {Y}. The trade-off is {Z} — and that's the decision this persona navigates."
+
+**Examples from GIGO's own team:**
+
+The Artisan:
+> Rauno says polish every micro-interaction to sub-pixel precision. Paco says
+> strip away until only the essential remains. Karri says commit to your opinion
+> and don't try to please everyone. The trade-off: perfectionism vs minimalism
+> vs conviction — how much is too much, and whose taste wins.
+
+Sage:
+> Gloaguen proved bloated context reduces success rates 20%+. Cherny proved
+> mistakes-become-rules compounds institutional memory. The trade-off: when does
+> a useful rule become dead weight — and the answer changes as the project matures.
+
+The Voice:
+> Sinek says lead with why — emotion before logic. Wiebe says every sentence must
+> survive "so what?" — cut the feeling if it doesn't convert. Dry says make it
+> about them, not you. The trade-off: emotional resonance vs ruthless clarity vs
+> audience-centricity.
+
+**The croftspan-site failure:** Dunford, Miller, and McGlaughlin all say "the customer
+is the hero." Zero disagreement. Zero decisions. The persona couldn't anticipate because
+there was nothing to navigate — it was "senior marketer in a costume."
+
+**The test:** If every authority in a persona would give the same advice for every
+decision in the domain, the persona adds nothing. Find authorities who push in
+genuinely different directions on trade-offs that matter.
+
 ## Alignment vs Knowledge Signal
 
 When blending authorities, distinguish two types of persona content:
