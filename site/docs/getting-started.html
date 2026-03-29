@@ -5,16 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0a0a0a">
   <title>Getting Started — GIGO Docs</title>
-  <meta name="description" content="Install GIGO and run it on your first project. Two commands, one conversation, a complete expert team.">
+  <meta name="description" content="Five minutes from now, your project has an expert team. Install, describe what you're building, and GIGO does the rest.">
 
   <meta property="og:title" content="Getting Started — GIGO">
-  <meta property="og:description" content="Install GIGO and run it on your first project. Two commands, one conversation, a complete expert team.">
+  <meta property="og:description" content="Five minutes from now, your project has an expert team. Install, describe what you're building, and GIGO does the rest.">
   <meta property="og:image" content="../assets/social-preview.png">
   <meta property="og:url" content="https://croftspan.github.io/gigo/docs/getting-started.html">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Getting Started — GIGO">
-  <meta name="twitter:description" content="Install GIGO and run it on your first project. Two commands, one conversation, a complete expert team.">
+  <meta name="twitter:description" content="Five minutes from now, your project has an expert team. Install, describe what you're building, and GIGO does the rest.">
   <meta name="twitter:image" content="../assets/social-preview.png">
 
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
@@ -50,11 +50,12 @@
 
       <header class="section section--flush">
         <h1>Getting Started</h1>
+        <p class="text-secondary">Five minutes from now, your project has an expert team.</p>
       </header>
 
       <!-- Requirements -->
       <section class="section" id="requirements">
-        <h2>Requirements</h2>
+        <h2>What you need</h2>
         <p><a href="https://docs.anthropic.com/en/docs/build-with-claude/claude-code/overview">Claude Code CLI</a> installed. That&rsquo;s it.</p>
       </section>
 
@@ -72,63 +73,61 @@ cp -r gigo/skills/ ~/.claude/skills/</code></pre>
 
       <!-- First Run -->
       <section class="section" id="first-run">
-        <h2>First Run</h2>
+        <h2>Your first expert team</h2>
         <p>Open any project and say <strong>&ldquo;gigo.&rdquo;</strong></p>
-        <p>Here&rsquo;s what happens:</p>
         <ol>
-          <li><strong>GIGO checks your project.</strong> It looks for an existing <code>CLAUDE.md</code> and <code>.claude/</code> directory. If nothing exists, it starts a conversational kickoff.</li>
-          <li><strong>You describe what you&rsquo;re building.</strong> Be as vague or specific as you want. &ldquo;A Rails API for library reservations&rdquo; or &ldquo;I&rsquo;m thinking about writing kids&rsquo; mystery books.&rdquo;</li>
-          <li><strong>GIGO researches authorities.</strong> It finds the best practitioners in the domain, identifies their specific philosophies, and proposes blended expert team members. 2-3+ real practitioners per team member.</li>
-          <li><strong>You react and refine.</strong> &ldquo;Drop that one.&rdquo; &ldquo;Add a testing expert.&rdquo; &ldquo;Who would they disagree with?&rdquo; The skill adjusts.</li>
-          <li><strong>Lock it in.</strong> GIGO writes your project files. A complete expert team, ready to work.</li>
+          <li><strong>Describe what you&rsquo;re building.</strong> Be as vague or specific as you want. &ldquo;A Rails API for library reservations&rdquo; or &ldquo;I&rsquo;m thinking about writing kids&rsquo; mystery books.&rdquo;</li>
+          <li><strong>GIGO finds the right experts.</strong> Real practitioners in your domain. Their specific philosophies, blended into team members who have opinions and push back.</li>
+          <li><strong>You shape the team.</strong> &ldquo;Drop that one.&rdquo; &ldquo;Add a testing expert.&rdquo; &ldquo;Who would they disagree with?&rdquo; The skill adjusts until it feels right.</li>
+          <li><strong>Your project is ready.</strong> Expert team assembled. Rules lean. Deep knowledge loaded on demand. Start building.</li>
         </ol>
       </section>
 
       <!-- What Gets Created -->
       <section class="section" id="what-gets-created">
-        <h2>What Gets Created</h2>
+        <h2>What you get</h2>
                 <div class="table-wrapper"><table>
-          <thead><tr><th style="white-space: nowrap">File</th><th>What it does</th><th>When it loads</th></tr></thead>
+          <thead><tr><th style="white-space: nowrap">File</th><th>What it gives you</th><th>When it loads</th></tr></thead>
           <tbody>
             <tr>
               <td style="white-space: nowrap"><code>CLAUDE.md</code></td>
-              <td>Team roster. Expert team members with blended authorities, autonomy model, quick reference</td>
-              <td>Auto-loaded every conversation</td>
+              <td>Your expert team. Blended authorities, quality bars, and the autonomy model that keeps them effective</td>
+              <td>Every conversation</td>
             </tr>
             <tr>
               <td style="white-space: nowrap"><code>.claude/rules/</code></td>
-              <td>Standards, workflow, domain extensions. ~60 line cap per file</td>
-              <td>Auto-loaded every conversation</td>
+              <td>The essentials. Standards and workflow that apply to all work. Lean by design (~60 lines per file)</td>
+              <td>Every conversation</td>
             </tr>
             <tr>
               <td style="white-space: nowrap"><code>.claude/references/</code></td>
-              <td>Deep knowledge. Authority profiles, technique catalogs, domain deep-dives</td>
-              <td>Zero cost when unused. Loaded on demand via &ldquo;When to Go Deeper&rdquo; pointers</td>
+              <td>Deep expertise. Authority profiles, technique catalogs, domain knowledge. Only loads when the task needs it</td>
+              <td>On demand only</td>
             </tr>
           </tbody>
         </table></div>
-        <p>This keeps your always-on context lean and loads depth only when relevant. <a href="https://arxiv.org/abs/2602.11988" target="_blank" rel="noopener">Research found</a> that bloated context reduces task success rates while increasing cost by 20%+.</p>
+        <p>The result: your always-on context stays lean while deep expertise is available when the task calls for it. No bloat, no wasted attention. <a href="architecture.html">See how the architecture works &rarr;</a></p>
       </section>
 
       <!-- Next Steps -->
       <section class="section" id="next-steps">
-        <h2>Next Steps</h2>
+        <h2>What to do next</h2>
                 <div class="table-wrapper"><table>
             <tr>
               <td style="white-space: nowrap"><code>gigo:blueprint</code></td>
-              <td>Turn your first task into a spec and implementation plan. Brainstorms first, then structures.</td>
+              <td>Your expert team plans the work. They catch the gaps you&rsquo;d miss and produce a spec workers can follow.</td>
             </tr>
             <tr>
               <td style="white-space: nowrap"><code>gigo:execute</code></td>
-              <td>Run the plan with agent teams or subagents. Workers get the spec, not the rules.</td>
+              <td>Workers build from the spec. First-pass quality that sticks.</td>
             </tr>
             <tr>
               <td style="white-space: nowrap"><code>gigo:verify</code></td>
-              <td>Two-stage review. Spec compliance first, then output quality.</td>
+              <td>Two focused reviewers catch what one pass misses. Spec compliance, then output quality.</td>
             </tr>
             <tr>
               <td style="white-space: nowrap"><code>gigo:snap</code></td>
-              <td>Run at session end to audit rules and protect the project from context bloat.</td>
+              <td>Your project stays lean. Session-end audit that prevents the bloat that makes output worse.</td>
             </tr>
           </tbody>
         </table></div>

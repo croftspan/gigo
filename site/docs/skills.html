@@ -54,7 +54,7 @@
 
       <header class="section section--flush">
         <h1>The Seven Skills</h1>
-        <p class="text-secondary">Each skill has a distinct job in the pipeline. Listed in workflow order.</p>
+        <p class="text-secondary">Seven skills. One pipeline. Your project gets sharper with each one.</p>
       </header>
 
       <!-- Pipeline -->
@@ -86,9 +86,8 @@
         <div class="skill-card" id="gigo">
           <h3><code>gigo</code></h3>
           <p class="skill-meta"><strong>Trigger:</strong> New project, no CLAUDE.md exists, &ldquo;assemble&rdquo;</p>
-          <p>Builds your expert team from scratch. Researches the best practitioners in the domain, identifies their specific philosophies, and blends 2-3+ real authorities per team member. Then scaffolds the project: CLAUDE.md, rules, references, snap audit system.</p>
-          <p>This is where it starts. Describe your project and GIGO does the research. Be as vague or specific as you want.</p>
-          <p><strong>Pipeline role:</strong> Creates the expert knowledge that powers planning and review.</p>
+          <p>You go from an empty project to an expert team in one conversation. Describe what you&rsquo;re building and GIGO researches the best practitioners in that field. Real people, real philosophies, blended into team members who have opinions and push back. Then it scaffolds everything: lean rules, deep references, session-end audits.</p>
+          <p><strong>What you get:</strong> A project that starts with expertise instead of trial and error.</p>
           <p><strong>Example:</strong> &ldquo;Building a CLI tool for database migrations. Go, targets Postgres and MySQL.&rdquo; &rarr; GIGO proposes The Migration Architect (Andrew Kane + Sandi Metz), The CLI Designer (Steve Francia + Rob Pike), The Test Strategist (Mitchell Hashimoto).</p>
         </div>
 
@@ -96,54 +95,53 @@
         <div class="skill-card" id="plan">
           <h3><code>gigo:blueprint</code></h3>
           <p class="skill-meta"><strong>Trigger:</strong> You have a task, feature, or idea, &ldquo;plan this&rdquo;</p>
-          <p>Turns ideas into execution-ready plans. Full arc: explore project context &rarr; ask 2-3 clarifying questions &rarr; propose 2-3 approaches &rarr; design spec (with Conventions section) &rarr; write implementation plan with ordered tasks and dependencies.</p>
-          <p>Hard gate: no execution without an approved plan. The plan embeds team expertise as concrete requirements. This is where the expert team earns its keep. In testing, the team consistently caught gaps and edge cases that a bare planner missed entirely.</p>
-          <p><strong>Pipeline role:</strong> Planning with expertise. Your team shapes WHAT gets asked, not just formatting.</p>
+          <p>Your expert team plans the work before anyone builds anything. They explore the project, ask the hard questions, propose approaches with trade-offs, and produce a spec with concrete requirements. Not vague rules. Specific decisions a worker can follow.</p>
+          <p>No execution without an approved plan. In testing, the expert team consistently caught gaps and edge cases that planning without expertise missed entirely.</p>
+          <p><strong>What you get:</strong> Specs good enough that workers nail it on the first pass.</p>
         </div>
 
         <!-- execute -->
         <div class="skill-card" id="execute">
           <h3><code>gigo:execute</code></h3>
           <p class="skill-meta"><strong>Trigger:</strong> Plan exists and approved, &ldquo;execute&rdquo;</p>
-          <p>Runs approved plans using three tiers: agent teams (full parallelization with hook-enforced review), subagents (sequential with some parallelization), or inline (sequential, no isolation). Workers run bare. They get the spec with embedded conventions, not the rules.</p>
-          <p>Testing validated this approach: bare workers with good specs consistently produce high-quality output. The quality comes from the spec, not from loading workers with rules.</p>
-          <p><strong>Pipeline role:</strong> Bare execution. Workers produce best output with training alone + good spec.</p>
+          <p>Workers build from the spec your team wrote. They get the requirements, not the rules. Three execution tiers depending on your needs: full parallelization, sequential with some parallelization, or simple inline.</p>
+          <p>The quality comes from the spec, not from loading workers with extra context. Testing validated this: workers with good specs consistently produce first-pass quality that sticks.</p>
+          <p><strong>What you get:</strong> Output that matches the spec without hand-holding.</p>
         </div>
 
         <!-- review -->
         <div class="skill-card" id="review">
           <h3><code>gigo:verify</code></h3>
           <p class="skill-meta"><strong>Trigger:</strong> Task completed, work ready for review</p>
-          <p>Two-stage review. Stage 1: spec compliance. &ldquo;Did you build the right thing?&rdquo; Checks output against requirements. Stage 2: output quality. &ldquo;Is the work good?&rdquo; Focused on correctness, consistency, and completeness.</p>
-          <p>Testing validated that two focused reviewers find more issues than one combined reviewer. Issues triaged as: auto-fix (worker handles), ask-operator (blocks), or accept (noted).</p>
-          <p><strong>Pipeline role:</strong> Expert review. Team catches what workers miss.</p>
+          <p>An independent reviewer catches what the worker missed. Two focused passes: &ldquo;Did you build the right thing?&rdquo; checks output against the spec. &ldquo;Is the work good?&rdquo; checks correctness, consistency, and completeness. Two passes find more than one pass trying to do both.</p>
+          <p>Issues get triaged: auto-fix (worker handles it), ask-operator (needs your input), or accept (noted for later).</p>
+          <p><strong>What you get:</strong> Reviews that catch real problems, not rubber stamps.</p>
         </div>
 
         <!-- snap -->
         <div class="skill-card" id="snap">
           <h3><code>gigo:snap</code></h3>
           <p class="skill-meta"><strong>Trigger:</strong> Session end, saving progress, &ldquo;snap&rdquo;</p>
-          <p>Session-end audit and protection protocol. Two jobs, in order: (1) Protect the project. 10-point audit checking line caps, derivability, overlap, staleness, cost, persona calibration, total budget, coverage, overwatch, and pipeline integrity. (2) Capture learnings. Route new knowledge to the correct file.</p>
-          <p>&ldquo;Whatever it takes to protect the project.&rdquo; A lean project with missing knowledge outperforms a bloated one with everything.</p>
-          <p><strong>Pipeline role:</strong> Session boundary. Prevents the monotonic growth that degrades performance over time.</p>
+          <p>Your project gets sharper instead of bloated. At the end of every session, The Snap runs a 10-point audit: removes stale rules, merges overlaps, enforces line budgets, checks that your team still covers what your project needs. Then it captures what you learned and routes it to the right file.</p>
+          <p>A lean project with missing knowledge outperforms a bloated one with everything.</p>
+          <p><strong>What you get:</strong> A project that improves every session instead of rotting.</p>
         </div>
 
         <!-- maintain -->
         <div class="skill-card" id="maintain">
           <h3><code>gigo:maintain</code></h3>
           <p class="skill-meta"><strong>Trigger:</strong> Need new expertise, want a checkup, project has grown, &ldquo;maintain&rdquo;</p>
-          <p>Ongoing maintenance for your expert team. Auto-detects severity and picks the right mode: targeted addition (fill a specific gap), health check (assess coverage and freshness), restructure (fix bloat and drift), or upgrade (modernize older setups with latest patterns).</p>
-          <p>Also invoked automatically by <code>gigo:blueprint</code> when it detects expertise gaps during planning.</p>
-          <p><strong>Pipeline role:</strong> Keeps the team current as the project evolves.</p>
+          <p>Your team grows with your project. Need a new area of expertise? Maintain adds it. Project drifted? It restructures. Setup outdated? It upgrades. Auto-detects what kind of maintenance your project needs.</p>
+          <p>Also kicks in automatically during planning when the team spots an expertise gap.</p>
+          <p><strong>What you get:</strong> An expert team that stays relevant as your project evolves.</p>
         </div>
 
         <!-- eval -->
         <div class="skill-card" id="eval">
           <h3><code>gigo:eval</code></h3>
-          <p class="skill-meta"><strong>Trigger:</strong> Want to test whether your expert knowledge actually helps, &ldquo;eval&rdquo;</p>
-          <p>Tests whether your expert team actually improves output. Two modes: pipeline eval (default) runs multi-stage chains with different context levels and comparative judging. Isolated eval runs quick A/B checks on single tasks.</p>
-          <p>Methodology: same judge sees all variants, randomized labels, evidence-required scoring. &ldquo;Evidence over vibes.&rdquo;</p>
-          <p><strong>Pipeline role:</strong> Measurement. Without evals, improving AI output is guesswork.</p>
+          <p class="skill-meta"><strong>Trigger:</strong> Want to know if your expert team actually makes a difference, &ldquo;eval&rdquo;</p>
+          <p>Answers the question: is my setup actually helping? Runs your tasks with and without the expert team, then compares the output with blinded judging. Same judge, randomized labels, evidence required for every score.</p>
+          <p><strong>What you get:</strong> Evidence that your project setup works, not just a feeling.</p>
         </div>
 
       </section>

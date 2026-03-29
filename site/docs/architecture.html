@@ -5,16 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0a0a0a">
   <title>Architecture — GIGO Docs</title>
-  <meta name="description" content="The two-tier context system, the ~60 line cap, the non-derivable rule, The Snap, and the plan-execute-review pipeline. Why less context produces better output.">
+  <meta name="description" content="Why your project gets sharper instead of rotting. Lean rules, on-demand depth, automatic cleanup, and a pipeline that puts expertise where it actually helps.">
 
   <meta property="og:title" content="Architecture — GIGO">
-  <meta property="og:description" content="Two-tier context, line caps, The Snap audit, and the pipeline. How GIGO keeps your project lean. Line caps, on-demand loading, session-end audits, and the plan-execute-review pipeline.">
+  <meta property="og:description" content="Why your project gets sharper instead of rotting. Lean rules, on-demand depth, automatic cleanup, and a pipeline that puts expertise where it actually helps.">
   <meta property="og:image" content="../assets/social-preview.png">
   <meta property="og:url" content="https://croftspan.github.io/gigo/docs/architecture.html">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Architecture — GIGO">
-  <meta name="twitter:description" content="Two-tier context, line caps, The Snap audit, and the pipeline. How GIGO keeps your project lean. Line caps, on-demand loading, session-end audits, and the plan-execute-review pipeline.">
+  <meta name="twitter:description" content="Why your project gets sharper instead of rotting. Lean rules, on-demand depth, automatic cleanup, and a pipeline that puts expertise where it actually helps.">
   <meta name="twitter:image" content="../assets/social-preview.png">
 
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
@@ -49,12 +49,13 @@
     <div class="article-body">
 
       <header class="section section--flush">
-        <h1>Architecture</h1>
+        <h1>How your project stays sharp</h1>
+        <p class="text-secondary">Four pillars that prevent the rot every AI project hits.</p>
       </header>
 
       <!-- The Problem -->
       <section class="section" id="the-problem">
-        <h2>The Problem</h2>
+        <h2>The problem every AI project hits</h2>
         <p>Context files grow monotonically. Every session discovers something worth remembering, so rules files grow. Adding, never removing. Within weeks: 200+ lines of overlapping rules, outdated guidance, reference-depth detail loading on every conversation.</p>
         <p>Performance degrades. Sessions take longer, make more mistakes, sometimes ignore rules entirely. There&rsquo;s too much to attend to.</p>
         <p>Then <a href="https://arxiv.org/abs/2602.11988" target="_blank" rel="noopener">Gloaguen et al. (2026)</a> published the first rigorous study confirming it: bloated context files <em>reduce</em> task success rates while increasing cost by 20%+. You pay more and get worse results.</p>
@@ -62,7 +63,7 @@
 
       <!-- Two Tiers -->
       <section class="section" id="two-tiers">
-        <h2>Two Tiers</h2>
+        <h2>Deep expertise without the bloat</h2>
                 <div class="table-wrapper"><table>
           <thead><tr><th></th><th>Rules</th><th>References</th></tr></thead>
           <tbody>
@@ -80,24 +81,23 @@
 
       <!-- Line Cap -->
       <section class="section" id="line-cap">
-        <h2>The ~60 Line Cap</h2>
-        <p>Not arbitrary. Research-informed. A 30-line file that nails the essentials outperforms a 100-line file that&rsquo;s thorough but dilutes attention.</p>
-        <p>Approaching ~60 lines triggers a move: keep the essential rule in <code>rules/</code>, move the depth to <code>references/</code>. Total budget across all rules files: ~300 lines.</p>
+        <h2>Less is more (and we can measure it)</h2>
+        <p>A 30-line file that nails the essentials outperforms a 100-line file that dilutes attention. Every rules file stays under ~60 lines. Total budget across all rules: ~300 lines.</p>
+        <p>When a file approaches the cap, the essential stays in <code>rules/</code> and the depth moves to <code>references/</code>. Your project never pays for knowledge it doesn&rsquo;t need right now.</p>
       </section>
 
       <!-- Non-Derivable Rule -->
       <section class="section" id="non-derivable">
-        <h2>The Non-Derivable Rule</h2>
-        <p>Only write what Claude can&rsquo;t figure out by reading the project files.</p>
-        <p><strong>Write these:</strong> philosophy, quality bars, anti-patterns, blended authorities. They&rsquo;re not discoverable from the code.</p>
-        <p><strong>Never write these:</strong> directory structure, code patterns, file organization. The agent navigates codebases on its own. Codebase overviews are actively harmful: they waste attention on information the agent would have found anyway.</p>
+        <h2>Only write what matters</h2>
+        <p>If Claude can figure it out by reading your project, don&rsquo;t write a rule for it. Directory structure, file organization, standard patterns: the agent finds those on its own. Writing them down actually hurts. It wastes attention on information the agent already has.</p>
+        <p>What&rsquo;s worth writing: philosophy, quality bars, blended authorities, anti-patterns. The things your project cares about that aren&rsquo;t obvious from reading the files.</p>
       </section>
 
       <!-- The Snap -->
       <section class="section" id="the-snap">
-        <h2>The Snap</h2>
+        <h2>Automatic cleanup every session</h2>
         <p>Named after Tony&rsquo;s snap, not Thanos&rsquo;s. Not indiscriminate wiping. Sacrificing what has to go so what matters survives.</p>
-        <p>The 10-point audit runs every session end:</p>
+        <p>Every session ends with a 10-point audit:</p>
         <ol>
           <li><strong>Line check:</strong> any file approaching ~60 lines?</li>
           <li><strong>Derivability check:</strong> can the agent figure this out from the code?</li>
@@ -115,15 +115,15 @@
 
       <!-- Persona Architecture -->
       <section class="section" id="personas">
-        <h2>Persona Architecture</h2>
-        <p>Blended philosophies: 2-3+ real authorities per persona, each bringing a specific contribution. Not &ldquo;a senior developer&rdquo; but &ldquo;Andrew Kane&rsquo;s database ops pragmatism + Sandi Metz&rsquo;s &lsquo;small objects that talk to each other&rsquo; + DHH&rsquo;s convention-over-configuration.&rdquo;</p>
-        <p><strong>Alignment signal</strong> (quality bars, approach, constraints) stays in rules. <strong>Knowledge signal</strong> (factual specifics, implementation patterns) goes in references.</p>
-        <p>The <a href="https://arxiv.org/abs/2603.18507" target="_blank" rel="noopener">Hu et al.</a> tradeoff: personas help alignment but hurt knowledge retrieval. Addressed by the persona calibration heuristic, which tells the model when to lead with training vs persona. Phase 2a: this added 9 percentage points.</p>
+        <h2>Expert teams that actually have opinions</h2>
+        <p>Not &ldquo;a senior developer.&rdquo; That&rsquo;s generic. Your team members are specific: Andrew Kane&rsquo;s database ops pragmatism + Sandi Metz&rsquo;s &lsquo;small objects that talk to each other&rsquo; + DHH&rsquo;s convention-over-configuration. 2-3+ real authorities per team member, each bringing something the others don&rsquo;t.</p>
+        <p>Quality bars and approach stay in the always-on rules. Deep knowledge (technique catalogs, authority profiles) loads on demand. Your team is present in every conversation without making it slow.</p>
+        <p><a href="https://arxiv.org/abs/2603.18507" target="_blank" rel="noopener">Research found</a> that expert personas help alignment but can hurt knowledge retrieval. GIGO addresses this with a calibration heuristic that tells the model when to lean into expertise and when to lead with training. This single adjustment added 9% in testing.</p>
       </section>
 
       <!-- The Pipeline -->
       <section class="section" id="pipeline">
-        <h2>The Pipeline</h2>
+        <h2>Expertise where it helps, freedom where it doesn&rsquo;t</h2>
         <div class="how-it-works how-it-works--3col">
           <div class="how-it-works-step">
             <span class="step-number">1</span>
@@ -141,9 +141,9 @@
             <div class="step-desc">Team catches what's missed</div>
           </div>
         </div>
-        <p>The team&rsquo;s expertise shapes questions during planning. Phase 6: assembled catches partial unique index, pagination, copy condition that bare misses. Expertise gets embedded as requirements in the spec.</p>
-        <p>Bare workers follow the spec and produce senior/staff-level code. Phase 7: bare rated senior or staff every time by a principal engineer review.</p>
-        <p>The team reviews output against quality bars. Phase 8: two focused reviewers (spec compliance + engineering quality) find more issues than one combined reviewer.</p>
+        <p>During planning, your expert team asks the questions you&rsquo;d only think of at 2am. They catch gaps, surface edge cases, and embed their expertise as concrete requirements in the spec.</p>
+        <p>During execution, workers get the spec and produce high-quality output. No extra rules, no hand-holding. The quality is in the spec, not the worker&rsquo;s context.</p>
+        <p>During review, two focused passes catch what one pass misses. Did you build the right thing? Is the work good? Different questions, different lenses, more issues found.</p>
         <p>For the full data and narrative, read <a href="../research/">Two Kinds of Leadership</a>.</p>
       </section>
 
