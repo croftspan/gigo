@@ -19,7 +19,8 @@ Projects that improve with every session instead of rotting. Specs good enough t
 ## Quick Start
 
 ```bash
-claude install @croftspan/gigo
+claude marketplace add croftspan/gigo
+claude plugin install gigo
 ```
 
 Open any project in Claude Code. Type `gigo`.
