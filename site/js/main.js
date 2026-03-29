@@ -13,7 +13,14 @@
   function applyTheme(theme) {
     root.setAttribute('data-theme', theme);
     localStorage.setItem('gigo-theme', theme);
-    if (toggle) toggle.textContent = theme === 'dark' ? '\u2600\uFE0F' : '\uD83C\uDF19';
+    if (toggle) {
+      var sun = toggle.querySelector('.icon-sun');
+      var moon = toggle.querySelector('.icon-moon');
+      if (sun && moon) {
+        sun.style.display = theme === 'dark' ? 'block' : 'none';
+        moon.style.display = theme === 'dark' ? 'none' : 'block';
+      }
+    }
   }
 
   var saved = localStorage.getItem('gigo-theme');

@@ -270,14 +270,18 @@ main > section:last-child {
   background: none;
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  padding: 0.35em 0.6em;
+  padding: 0.4em;
   color: var(--text-secondary);
   cursor: pointer;
-  font-size: var(--text-sm);
-  font-family: var(--font-display);
-  line-height: 1;
+  line-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
 }
+
+#theme-toggle .icon-moon { display: none; }
+#theme-toggle .icon-sun { display: block; }
 
 #theme-toggle:hover {
   color: var(--text);
