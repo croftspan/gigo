@@ -2,6 +2,8 @@ package cmd
 
 import "github.com/spf13/cobra"
 
+var Version = "0.1.0"
+
 var jsonOutput bool
 
 var rootCmd = &cobra.Command{
