@@ -21,6 +21,16 @@ Before anything else, check the project:
 
 **This skill is for first assembly only** — when nothing exists yet or the operator chose to start fresh. For everything else, `gigo:maintain` handles it.
 
+**Domain asset scan.** Regardless of CLAUDE.md status, scan the project for existing domain expertise:
+
+- Search for files with names containing `brand`, `voice`, `messaging`, `pillars`, `style-guide`, `strategy`, `guidelines`, `standards`, `principles`, `manifesto`, `playbook`, `framework` — check `docs/`, `brand/`, `content/`, `strategy/`, `guidelines/`, project root, and any paths the operator mentions
+- Look for any document that codifies decisions about voice, brand, methodology, or domain approach
+
+If found: "I found existing domain expertise in your project: [list files]. These represent decisions already made. Want me to build a team that enforces these standards, or start fresh?"
+
+- **Enforcement** → read `references/enforcement-mode.md` for the modified assembly flow.
+- **Fresh** → proceed with standard assembly. Read the existing assets during Step 3 as prior art, but do not constrain personas to enforce them.
+
 ## The Token Tax
 
 Every line in `.claude/rules/` loads into context on every conversation and costs tokens, reasoning effort, and attention — even when it's irrelevant to the current task. Research shows that bloated context files *reduce* task success rates while *increasing* cost by 20%+ (Gloaguen et al., "Evaluating AGENTS.md: Are Repository-Level Context Files Helpful for Coding Agents?", arXiv:2602.11988, 2026). Unnecessary requirements make tasks harder, not easier.
@@ -68,7 +78,10 @@ Use the **universal discovery framework** — these seven questions work for eve
 
 1. **What is being built, and who is it for?** Understand the project's purpose, audience, and constraints before researching the domain. Everything else flows from this.
 
-2. **Who are the authorities?** Find 2-3+ practitioners per area of expertise. Not just names — their specific philosophies, what makes their approach distinct, what they'd fight for. **The tension test:** each authority in a blend must contribute something the others don't. If you dropped one, the persona's recommendations should change. Three experts who agree with each other is attribution, not blending — it produces "senior [domain] developer" which is no better than no persona.
+2. **Who are the authorities?** Find 2-3+ practitioners per area of expertise. Not just names — their specific philosophies, what makes their approach distinct, what they'd fight for. **The tension test:** each authority in a blend must contribute something the others don't. If you dropped one, the persona's recommendations should change. Three experts who agree with each other is attribution, not blending — it produces "senior [domain] developer" which is no better than no persona. For each blend, articulate the tension before proceeding:
+   - "{Authority A} says {X}. {Authority B} says {Y}. The trade-off is {Z}."
+   - If you can't articulate a genuine disagreement, the blend is too thin — find authorities that push in different directions.
+   - The disagreement must be about something that matters in this domain, not a contrived difference.
 
 3. **What does the gold standard look like?** Concrete examples of the best work. What specifically makes it excellent.
 
@@ -84,7 +97,7 @@ Use the **universal discovery framework** — these seven questions work for eve
 
 Based on your research, determine what distinct areas of expertise the project needs. Each meaningfully different area gets a persona. Don't inflate the team — if the project needs one expert, it gets one.
 
-**Tension test every blend.** Each authority in a blend must contribute something the others don't. The test: if you dropped one authority, would the persona's recommendations change? If not, that authority is redundant — it's the same voice in different words. Same-domain blends are fine if they have real tension (e.g., Pike's "share by communicating" vs Armstrong's "let it crash" vs Kleppmann's "persist before shutdown" — they disagree on crash handling). Same-domain blends that all agree (e.g., three Go experts who all say "use channels") are "senior developer in a costume."
+**Apply the tension test from Step 3 to every blend.** If you can't articulate the disagreement, go back and find better authorities.
 
 **Read the room first.** Before presenting, size up the operator from the conversation so far. Three signals:
 
@@ -94,16 +107,18 @@ Based on your research, determine what distinct areas of expertise the project n
 
 Don't ask about this. Just calibrate.
 
-**Present pitch-first.** Show the whole roster at once — each persona gets 2-3 lines max. Name, who they're modeled after, what they own. The operator reacts to the *shape* of the team before details:
+**Present pitch-first.** Show the whole roster at once — each persona gets 4-6 lines. Name, authorities with the tension between them, what they own. The operator reacts to the *shape* of the team before details:
 
 For a direct, experienced operator:
 ```
 Three on this one:
 
   The Migration Architect
-  Andrew Kane's database ops pragmatism + Sandi Metz's 'small objects
-  that talk to each other.' Owns migration safety, rollback logic,
-  and the 'will this lock the table?' question.
+  Andrew Kane's zero-downtime pragmatism vs Sandi Metz's 'each object does
+  one thing' vs DHH's convention-over-configuration. The tension: Kane wants
+  safety checks everywhere, Metz wants small focused units, DHH wants Rails
+  defaults. This persona navigates when safety requires breaking convention.
+  Owns migration safety, rollback logic, lock detection.
 
   [next persona...]
 
@@ -115,10 +130,11 @@ For a casual, less experienced operator:
 I can work with that. Here's who I'd bring in:
 
   The Story Architect
-  I'm pulling from Wendelin Van Draanen — she's the master of clues
-  kids can actually follow. Mixing in Lemony Snicket's philosophy that
-  kids are way smarter than adults give them credit for. This person
-  owns your plot and makes sure the mystery plays fair.
+  Wendelin Van Draanen is all about clues kids can follow step by step.
+  Lemony Snicket thinks kids are smarter than that — don't simplify.
+  Blue Balliett wants the mystery to teach something real. The push and pull:
+  how hard do you make the trail? This person navigates that.
+  Owns your plot and makes sure the mystery plays fair.
 
   [next persona...]
 
@@ -145,6 +161,11 @@ The operator reacts. You adjust. This is a natural back-and-forth:
 Keep going until the operator says "lock it in" or you sense alignment and ask: "Ready to lock this in?"
 
 ### Step 6: Write the Files
+
+**Pre-write tension gate.** Before writing, verify each persona's blend:
+- Can you state what the authorities disagree about in one sentence?
+- Would removing any single authority change the persona's recommendations?
+- If all authorities agree on everything, the persona is too thin — go back and find better authorities.
 
 Once locked, run the **pre-write dedup pass** — scan all proposed content for the same rule appearing in more than two auto-loaded files. Then write everything to disk. Don't ask where — follow the structure below.
 
