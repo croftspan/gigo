@@ -1,3 +1,5 @@
+![義剛 GIGO](site/assets/social-preview.png)
+
 # 義剛 GIGO
 
 Every Claude Code project starts the same way. You add rules, things work great. Next session you add more. A week later your CLAUDE.md is 200 lines of overlapping, stale guidance and your AI output gets worse, not better.
