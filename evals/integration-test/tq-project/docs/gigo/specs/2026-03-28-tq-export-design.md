@@ -230,3 +230,5 @@ All conventions from previous specs remain. Additional conventions for this feat
 3. **Large exports fit in memory.** The entire task list is marshaled to JSON in memory before writing. For the in-memory store, this is fine — the tasks are already in memory. If the store grows to millions of tasks, streaming JSON would be needed — not a realistic scenario for a local task queue CLI.
 
 4. **Temp file cleanup on failure.** If the process is killed between creating the temp file and renaming it, a `.tmp` file may remain. This is a minor inconvenience, not data corruption. The target file is never in a partial state.
+
+<!-- approved: spec 2026-03-29T04:09:19 by:Eaven -->
