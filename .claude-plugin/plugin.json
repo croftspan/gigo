@@ -1,7 +1,7 @@
 {
   "name": "gigo",
   "description": "Seven skills for building expert Claude Code projects with a proven plan→execute→review pipeline. gigo:gigo assembles expert teams from real-world authorities. gigo:blueprint brainstorms, specs, and produces ordered implementation plans. gigo:execute dispatches bare worker teams with per-task review. gigo:verify runs two-stage code review (spec compliance + engineering quality). gigo:maintain adds expertise, audits, or restructures. gigo:snap audits rules and captures learnings. gigo:eval tests whether assembled context actually improves output.",
-  "version": "6.4.0",
+  "version": "6.5.0",
   "author": {
     "name": "Eaven"
   },

@@ -163,21 +163,17 @@ Fix issues inline. No re-review needed.
 
 ### Phase 6.5: Independent Spec Challenge
 
-After self-review, dispatch `gigo:verify` in spec/plan review mode (The Challenger). This is a separate agent that didn't write the spec — it adversarially tests whether the approach is sound.
+Dispatch a subagent using the prompt template in `gigo:verify`'s `references/spec-plan-reviewer-prompt.md`. Do NOT use `feature-dev:code-reviewer` or `code-review:code-review` — those are generic reviewers. The Challenger runs a two-pass protocol: blind technical assessment first (no knowledge of operator intent), then intent alignment second. This is what makes it adversarial rather than just another review.
 
-**Before dispatching:** Extract the operator's original request into 1-2 sentences. This becomes the intent summary for the reviewer's Pass 2. Don't include the design discussion or your reasoning — just what the operator asked for.
+**How to dispatch:** Use the Agent tool with `subagent_type: "general-purpose"`. Read `skills/verify/references/spec-plan-reviewer-prompt.md`, fill in the template variables (`{DOCUMENT_TYPE}` = "spec", `{DOCUMENT_CONTENT}` = full spec text, `{OPERATOR_INTENT}` = 1-2 sentence intent summary, `{QUALITY_BAR_CHECKLIST}` = checklistable criteria from CLAUDE.md personas), and pass the filled template as the agent prompt.
 
-**What the reviewer gets:**
-- Pass 1: the spec + repo access + quality bar checklist (extracted from CLAUDE.md personas as checklistable criteria, not full persona context)
-- Pass 2: the 1-2 sentence intent summary
+**Before dispatching:** Extract the operator's original request into 1-2 sentences. This becomes the intent summary for Pass 2. Don't include the design discussion or your reasoning — just what the operator asked for.
 
 **Present findings to the operator:** Show the Challenger's review alongside the spec. The operator sees both and decides.
 
 - **Proceed:** Continue to Phase 7 (user reviews spec)
 - **Revise:** Fix the specific issues, re-run self-review (Phase 6), re-run Challenger
 - **Rethink:** Surface the Challenger's alternative. If operator agrees, loop back to Phase 3
-
-For small tasks, this phase may be skipped if the operator requests it.
 
 ### Phase 7: User Reviews Spec
 
@@ -211,10 +207,10 @@ Fix issues inline.
 
 ### Phase 9.5: Independent Plan Challenge
 
-Same pattern as Phase 6.5. Dispatch `gigo:verify` in spec/plan review mode on the implementation plan.
+Same dispatch method as Phase 6.5 — use the prompt template in `skills/verify/references/spec-plan-reviewer-prompt.md` with `{DOCUMENT_TYPE}` = "plan". Do NOT use `feature-dev:code-reviewer` or other generic reviewers.
 
 **What the reviewer gets:**
-- Pass 1: the plan + the approved spec + repo access + quality bar checklist
+- Pass 1: the plan + the approved spec (as `{SPEC_CONTENT_IF_PLAN_REVIEW}`) + repo access + quality bar checklist
 - Pass 2: the same 1-2 sentence intent summary from Phase 6.5
 
 The Challenger focuses on plan-specific concerns: will the task decomposition produce what the spec describes? Is the dependency graph correct? Will workers get stuck on underspecified steps? Will the code in task steps actually work against the real codebase?

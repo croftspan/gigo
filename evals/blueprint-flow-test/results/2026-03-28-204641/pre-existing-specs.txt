@@ -1,0 +1,2 @@
+docs/gigo/specs/2026-03-27-tq-add-list-design.md
+docs/gigo/specs/2026-03-27-tq-status-design.md
