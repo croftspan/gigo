@@ -29,10 +29,10 @@ You run approved plans. You don't plan, you don't design, you don't question the
    >
    > Which route?"
 
-   Default recommendation: subagents. But always ask — the operator may prefer inline for debugging or agent teams for experimentation.
+   **Default behavior:** Use subagents for plans with 3+ tasks. Use inline for plans with 1-2 tasks. Present the choice to the operator only if they haven't already specified a preference. Do NOT silently choose inline for larger plans just because it's easier.
 
-   **Announce your choice.** After the operator picks (or you detect available tiers), announce which tier you're using:
-   > "Executing with [Tier]: [reason]."
+   **Announce your choice.** Before executing, announce which tier you're using and why:
+   > "Executing with [Tier]: [reason]. [N] tasks, [M] parallelizable."
 
 ---
 
