@@ -152,7 +152,7 @@ See `references/review-hook.md` for hook configuration and the full agent teams 
 
 ## After Review Passes
 
-After a task passes both review stages, update the plan document before moving to the next task:
+After a task passes both review stages, update the plan document before moving to the next task. **Batch all updates into a single edit** — mark all checkboxes and write the addendum in one pass. Do not make separate edits for each checkbox.
 
 1. **Mark steps complete.** Update checkboxes: `- [ ]` → `- [x]`.
 2. **Write the "What Was Built" addendum** under the task:
