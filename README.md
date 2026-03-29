@@ -56,9 +56,11 @@ Your project gets sharper over time, not bigger.
 
 We use GIGO to build GIGO. Not as a demo. As the way we work.
 
-This README, the site, the fact-checker, the review pipeline. All planned, specced, and executed by the same system you install. When the Challenger found a blocker in its own spec, the pipeline caught it before execution. When a previous session surfaced a requirement, it automatically shaped the next feature's design.
+The review system assumed code. A children's novel project would get reviewed for deadlocks. So we used the pipeline to fix the pipeline. The Challenger found a runtime blocker in its own spec. The fact-checker caught issues in its own design brief. Dangling references, code-specific language that would have survived the fix, a subagent constraint that would crash on first use. All caught before shipping.
 
-Every bug we've fixed came from running the pipeline on real work. Not from theorizing. The tool improves because we depend on it, and you get something we trust enough to bet our own output on.
+Every improvement to GIGO's review system was reviewed by GIGO's review system. The tool improves because we depend on it, and you get something we trust enough to bet our own output on.
+
+[Read the full story &rarr;](site/docs/dogfooding.html)
 
 ---
 

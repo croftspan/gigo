@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0a0a">
+  <title>Built with GIGO — How the pipeline builds itself</title>
+  <meta name="description" content="GIGO used its own pipeline to redesign its review system. The Challenger caught a runtime blocker in its own spec. Every improvement was reviewed by the system it improved.">
+
+  <meta property="og:title" content="Built with GIGO">
+  <meta property="og:description" content="The review system caught bugs in its own redesign. If it does that for itself, imagine what it does for your project.">
+  <meta property="og:image" content="../assets/social-preview.png">
+  <meta property="og:url" content="https://croftspan.github.io/gigo/docs/dogfooding.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Built with GIGO">
+  <meta name="twitter:description" content="The review system caught bugs in its own redesign. If it does that for itself, imagine what it does for your project.">
+  <meta name="twitter:image" content="../assets/social-preview.png">
+
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to content</a>
+
+  <nav class="site-nav" aria-label="Main">
+    <div class="container">
+      <a href="../" class="brand"><span class="brand-kanji">義剛</span> GIGO</a>
+      <button id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul id="nav-menu" class="nav-links">
+        <li><a href="../">Home</a></li>
+        <li><a href="getting-started.html">Get Started</a></li>
+        <li><a href="skills.html">Skills</a></li>
+        <li><a href="../research/">Research</a></li>
+        <li><a href="https://github.com/croftspan/gigo" target="_blank" rel="noopener">GitHub</a></li>
+        <li><button id="theme-toggle" aria-label="Toggle theme">Light</button></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main id="main-content">
+    <article class="article-body">
+
+      <header class="section section--flush">
+        <h1>Built with GIGO</h1>
+        <p class="text-secondary">How the pipeline builds itself. And what that means for your project.</p>
+      </header>
+
+      <!-- The Problem -->
+      <section class="section" id="the-problem">
+        <h2>The problem we caught ourselves on</h2>
+        <p>GIGO claims to work for any domain. Software, children&rsquo;s novels, tabletop board games, research papers. But during a live pipeline run, we realized the review system assumed code. The Challenger asked about &ldquo;race conditions.&rdquo; The spec reviewer wanted &ldquo;file:line references.&rdquo;</p>
+        <p>A children&rsquo;s novel project would get reviewed for deadlocks.</p>
+        <p>That&rsquo;s not domain-agnostic. That&rsquo;s broken. So we used GIGO to fix GIGO.</p>
+      </section>
+
+      <!-- The Pipeline Plans the Fix -->
+      <section class="section" id="planning">
+        <h2>The pipeline plans its own fix</h2>
+        <p>We ran <code>gigo:blueprint</code>. Same pipeline you use. It entered plan mode, explored the existing review templates, found 40+ code-specific terms across three files, and designed the fix: neutral defaults with a <code>{DOMAIN_CRITERIA}</code> injection point that fills from your project&rsquo;s expertise.</p>
+        <p>The design brief went to the fact-checker. Phase 4.25. The same fact-checker that validates your design briefs.</p>
+        <p>It found two issues before the brief was even approved. One was a hardcoded section name that would break when the templates changed. The other was an insertion point that would append after the final step instead of inserting between steps.</p>
+        <p><strong>What this means for you:</strong> The fact-checker runs on every design brief. Yours included. It catches the assumptions you don&rsquo;t know you&rsquo;re making.</p>
+      </section>
+
+      <!-- The Challenger Catches a Blocker -->
+      <section class="section" id="challenger-spec">
+        <h2>The Challenger catches a blocker in its own spec</h2>
+        <p>The spec went to the Challenger. Independent adversarial review. Two passes: blind technical assessment first, then intent alignment. The Challenger doesn&rsquo;t know why the spec was written. It just looks for what&rsquo;s wrong.</p>
+        <p>It rated the spec 4/5 and flagged four issues. One of them was a constraint that would have crashed at runtime: the spec dispatched a subagent type that can&rsquo;t run in plan mode. If we&rsquo;d shipped that spec, the first user to trigger it would hit an error.</p>
+        <p>The Challenger caught it before a single line was written.</p>
+        <p><strong>What this means for you:</strong> Your specs get the same review. Blind-first, honest scoring, real issues with evidence. Not a rubber stamp.</p>
+      </section>
+
+      <!-- The Challenger Catches Dangling References -->
+      <section class="section" id="challenger-plan">
+        <h2>The Challenger catches dangling references in its own plan</h2>
+        <p>After the spec was approved, the implementation plan went through the same process. The Challenger found a dangling reference to a file that had been renamed in the spec. It also caught two code-specific phrases that would have survived the neutralization: &ldquo;quality bar checklist&rdquo; and &ldquo;code in task steps&rdquo; in a phase description.</p>
+        <p>Both were real. The dangling reference would have been a broken link. The surviving phrases would have been the only code-specific text left in the entire pipeline.</p>
+        <p><strong>What this means for you:</strong> Your plans get checked against the actual project. References that don&rsquo;t exist, names that don&rsquo;t match, steps that won&rsquo;t work. The Challenger reads the project before judging.</p>
+      </section>
+
+      <!-- The Result -->
+      <section class="section" id="result">
+        <h2>What shipped</h2>
+        <p>Three review templates now work for any domain. A Go project gets &ldquo;Does every goroutine have a shutdown path?&rdquo; A children&rsquo;s novel gets &ldquo;Is every clue planted 2+ chapters before payoff?&rdquo; A board game gets &ldquo;Does the reward loop respect the session-length target?&rdquo;</p>
+        <p>The criteria are generated automatically when your team is assembled. They&rsquo;re regenerated when the team changes. The Snap audits them for staleness.</p>
+        <p>Different criteria, same rigor. That&rsquo;s what domain-agnostic actually means.</p>
+      </section>
+
+      <!-- The Punchline -->
+      <section class="section" id="punchline">
+        <h2>What this tells you</h2>
+        <p>Every improvement to the review system was reviewed by the review system. The fact-checker checked its own design brief. The Challenger challenged its own spec. The pipeline caught real bugs in its own redesign and fixed them before shipping.</p>
+        <p>We don&rsquo;t use GIGO because we built it. We use it because it works. And every time we use it, it gets better.</p>
+
+        <div class="pull-quote">
+          <p>If the tool catches bugs in its own redesign, what will it catch in yours?</p>
+        </div>
+
+        <p><a href="getting-started.html">Try it yourself &rarr;</a></p>
+      </section>
+
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>Built at <a href="https://croftspan.com" target="_blank" rel="noopener">Croftspan</a>. Apache 2.0. v7.3.0</span>
+      <ul class="footer-links">
+        <li><a href="https://github.com/croftspan/gigo" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="getting-started.html">Get Started</a></li>
+        <li><a href="../research/">Research</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>
