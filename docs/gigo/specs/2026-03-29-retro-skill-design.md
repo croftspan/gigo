@@ -368,3 +368,5 @@ This is 3 lines. It does not change the audit itself. The operator can always de
 - **Empty results:** If no friction found, say "No friction detected." If no proposals generated, say "No improvements to propose — session looks healthy." Don't manufacture findings.
 - **JSON parsing:** Always use error-tolerant parsing. Skip files that fail. Report count of skipped files if > 0.
 - **Project matching:** Exact string match on `project_path`. Do not use substring or startswith — `/Users/x/projects/gigo` should not match `/Users/x/projects/gigo-orchestrator`.
+
+<!-- approved: spec 2026-03-29T21:00:49 by:Eaven -->
