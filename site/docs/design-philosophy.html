@@ -8,13 +8,13 @@
   <meta name="description" content="How GIGO was built: dev kits at Croftspan, the bloat problem, blended philosophies, and what the research confirmed.">
 
   <meta property="og:title" content="Design Philosophy — GIGO">
-  <meta property="og:description" content="The origin story, design decisions, and open questions behind research-backed context engineering.">
+  <meta property="og:description" content="The origin story, design decisions, and open questions behind making AI output better.">
   <meta property="og:image" content="../assets/social-preview.png">
   <meta property="og:url" content="https://croftspan.github.io/gigo/docs/design-philosophy.html">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Design Philosophy — GIGO">
-  <meta name="twitter:description" content="The origin story, design decisions, and open questions behind research-backed context engineering.">
+  <meta name="twitter:description" content="The origin story, design decisions, and open questions behind making AI output better.">
   <meta name="twitter:image" content="../assets/social-preview.png">
 
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
@@ -54,30 +54,30 @@
       <!-- Origin -->
       <section class="section" id="origin">
         <h2>The origin: dev kits that worked too well</h2>
-        <p>This skill didn&rsquo;t start as a skill. It started as a problem we kept hitting at <a href="https://croftspan.com" target="_blank" rel="noopener">Croftspan</a> &mdash; an AI-native agency where every project runs on Claude Code.</p>
-        <p>Every Croftspan project begins with a &ldquo;dev kit&rdquo; &mdash; a set of files that give Claude the brain of a domain expert before any work starts. The first kit was for Ruby on Rails: DHH&rsquo;s philosophy, 37signals&rsquo; practices, Rails 8&rsquo;s patterns, all distilled into lean rules files.</p>
-        <p>It worked immediately. Sessions with the rules produced better code, caught more edge cases, and needed fewer corrections than sessions without them. It wasn&rsquo;t just context &mdash; it was opinionated expertise that shaped every decision.</p>
-        <p>The question became: can this work for anything? Not just Rails, but children&rsquo;s novels, Roblox games, research papers, brand strategy? The answer turned out to be yes &mdash; the pattern is universal. Every domain has authorities, best practices, quality gates, and common mistakes. The skill just needed a framework for finding them in any field.</p>
+        <p>This skill didn&rsquo;t start as a skill. It started as a problem we kept hitting at <a href="https://croftspan.com" target="_blank" rel="noopener">Croftspan</a>, an AI-native agency where every project runs on Claude Code.</p>
+        <p>Every Croftspan project begins with a &ldquo;dev kit&rdquo;: a set of files that give Claude the brain of a domain expert before any work starts. The first kit was for Ruby on Rails: DHH&rsquo;s philosophy, 37signals&rsquo; practices, Rails 8&rsquo;s patterns, all distilled into lean rules files.</p>
+        <p>It worked immediately. Sessions with the rules produced better code, caught more edge cases, and needed fewer corrections than sessions without them. It wasn&rsquo;t just context. It was opinionated expertise that shaped every decision.</p>
+        <p>The question became: can this work for anything? Not just Rails, but children&rsquo;s novels, Roblox games, research papers, brand strategy? The answer turned out to be yes. The pattern is universal. Every domain has authorities, best practices, quality gates, and common mistakes. The skill just needed a framework for finding them in any field.</p>
       </section>
 
       <!-- Blended Philosophies -->
       <section class="section" id="blended">
         <h2>Why blended philosophies, not single authorities</h2>
         <p>Early setups said things like &ldquo;you are a senior Rails developer.&rdquo; Generic. No personality, no opinions, no specific approach to fight for.</p>
-        <p>The breakthrough was modeling personas after Croftspan&rsquo;s C-suite &mdash; each executive is a blend of real practitioners. The CTO isn&rsquo;t &ldquo;a CTO&rdquo; &mdash; she works in the tradition of DHH&rsquo;s monolith philosophy with Sandi Metz&rsquo;s object design and Kent Beck&rsquo;s testing discipline. She has opinions. She pushes back. She catches things a generic role wouldn&rsquo;t.</p>
-        <p>Blending multiple authorities creates something better than any single authority alone. Each practitioner brings a specific strength, and the combination covers blind spots that any one person would have. It also prevents the persona from being a shallow impersonation &mdash; it&rsquo;s a synthesis with its own coherent worldview.</p>
+        <p>The breakthrough was modeling personas after Croftspan&rsquo;s C-suite. Each executive is a blend of real practitioners. The CTO isn&rsquo;t &ldquo;a CTO.&rdquo; She works in the tradition of DHH&rsquo;s monolith philosophy with Sandi Metz&rsquo;s object design and Kent Beck&rsquo;s testing discipline. She has opinions. She pushes back. She catches things a generic role wouldn&rsquo;t.</p>
+        <p>Blending multiple authorities creates something better than any single authority alone. Each practitioner brings a specific strength, and the combination covers blind spots that any one person would have. It also prevents the persona from being a shallow impersonation. It&rsquo;s a synthesis with its own coherent worldview.</p>
       </section>
 
       <!-- Bloat -->
       <section class="section" id="bloat">
         <h2>The bloat problem</h2>
-        <p>The first projects grew out of control. Every session discovered something worth remembering, so rules files grew monotonically &mdash; adding, never removing. Within weeks, context files were hundreds of lines long, full of overlapping rules, outdated guidance, and reference-depth detail that didn&rsquo;t need to load on every conversation.</p>
-        <p>We noticed performance degrading. Sessions took longer, made more mistakes, and sometimes ignored rules entirely &mdash; there was too much to attend to. We started pruning manually and saw immediate improvement.</p>
+        <p>The first projects grew out of control. Every session discovered something worth remembering, so rules files grew monotonically. Adding, never removing. Within weeks, context files were hundreds of lines long, full of overlapping rules, outdated guidance, and reference-depth detail that didn&rsquo;t need to load on every conversation.</p>
+        <p>We noticed performance degrading. Sessions took longer, made more mistakes, and sometimes ignored rules entirely. There was too much to attend to. We started pruning manually and saw immediate improvement.</p>
         <p>Then <a href="https://arxiv.org/abs/2602.11988" target="_blank" rel="noopener">Gloaguen et al. (2026)</a> published the first rigorous study of how context files affect agent performance. Their findings confirmed exactly what we&rsquo;d experienced: well-crafted files improve task success rates, bloated ones reduce them. Irrelevant rules dilute the model&rsquo;s focus. More requirements can hurt. 20%+ cost increase with <em>lower</em> success rates.</p>
         <p>This shaped three core decisions:</p>
         <ul>
           <li><strong>The ~60 line cap.</strong> Rules files must be ruthlessly lean. A 30-line file that nails the essentials outperforms a 100-line file that dilutes attention.</li>
-          <li><strong>The non-derivable rule.</strong> Only write rules for things the agent can&rsquo;t figure out by reading the project. Philosophy, quality bars, blended authorities &mdash; write those. Directory structure, code patterns &mdash; never.</li>
+          <li><strong>The non-derivable rule.</strong> Only write rules for things the agent can&rsquo;t figure out by reading the project. Philosophy, quality bars, blended authorities: write those. Directory structure, code patterns: never.</li>
           <li><strong>The Snap.</strong> Every project gets a session-end audit. Before adding a rule: does this overlap? Is it derivable? Is it needed every conversation? Projects get sharper over time, not bigger.</li>
         </ul>
       </section>
@@ -86,22 +86,22 @@
       <section class="section" id="two-tiers">
         <h2>Why two tiers instead of one</h2>
         <p>The obvious approach is one tier: put everything in <code>.claude/rules/</code> and let it load. Simpler. No decisions about what goes where.</p>
-        <p>The problem: every line in <code>rules/</code> loads on every conversation. A deep-dive on solo AI opponent design is invaluable when you&rsquo;re building the Automa system &mdash; and pure noise when you&rsquo;re writing card flavor text. Loading it every time wastes tokens and dilutes attention on whatever the agent is actually doing.</p>
-        <p>The two-tier architecture solves this. Tier 1 (rules) contains only what applies to <em>all</em> work. Tier 2 (references) contains everything else. The key innovation is <strong>&ldquo;When to Go Deeper&rdquo;</strong> &mdash; rules files don&rsquo;t just point to references, they tell the agent <em>when</em> to read them. This makes the system task-aware: the agent loads deep context only when it&rsquo;s relevant.</p>
+        <p>The problem: every line in <code>rules/</code> loads on every conversation. A deep-dive on solo AI opponent design is invaluable when you&rsquo;re building the Automa system, and pure noise when you&rsquo;re writing card flavor text. Loading it every time wastes tokens and dilutes attention on whatever the agent is actually doing.</p>
+        <p>The solution: two tiers. Tier 1 (rules) contains only what applies to <em>all</em> work. Tier 2 (references) contains everything else. The key innovation is <strong>&ldquo;When to Go Deeper&rdquo;</strong> pointers. Rules files don&rsquo;t just point to references, they tell the agent <em>when</em> to read them. This makes the system task-aware: the agent loads deep context only when it&rsquo;s relevant.</p>
       </section>
 
       <!-- Conversational -->
       <section class="section" id="conversational">
         <h2>Why conversational, not procedural</h2>
         <p>Early versions used a phased approach: fill out this form, answer these questions, review this output. It felt like a wizard. Users didn&rsquo;t know the answers to half the questions (especially in unfamiliar domains), and the rigid structure prevented the natural back-and-forth that surfaces the best ideas.</p>
-        <p>The current design is a conversation. You say what you want to build. The skill does the research, proposes a team, and presents it. You react &mdash; &ldquo;drop the production lead, add a worldbuilder,&rdquo; &ldquo;I don&rsquo;t need a separate testing persona,&rdquo; &ldquo;what about solo mode?&rdquo; The skill adjusts. When it feels right, you lock it in.</p>
-        <p>This works better because the skill does the homework. You don&rsquo;t need to know who the best deck-builder designers are &mdash; the skill finds Vaccarino, Leacock, and Stegmaier and explains why each matters. Your job is taste and direction, not domain expertise.</p>
+        <p>The current design is a conversation. You say what you want to build. The skill does the research, proposes a team, and presents it. You react. &ldquo;Drop the production lead, add a worldbuilder.&rdquo; &ldquo;I don&rsquo;t need a separate testing persona.&rdquo; &ldquo;What about solo mode?&rdquo; The skill adjusts. When it feels right, you lock it in.</p>
+        <p>This works better because the skill does the homework. You don&rsquo;t need to know who the best deck-builder designers are. The skill finds Vaccarino, Leacock, and Stegmaier and explains why each matters. Your job is taste and direction, not domain expertise.</p>
       </section>
 
       <!-- Open Questions -->
       <section class="section" id="open-questions">
         <h2>What we&rsquo;d still like to figure out</h2>
-        <p><strong>Persona interaction.</strong> The assembled team currently lives as static rules. We think there&rsquo;s value in consulting individual personas conversationally &mdash; &ldquo;What would The Systems Architect think about adding a fifth resource type?&rdquo; &mdash; without bloating the always-on context. The architecture supports this (deep persona profiles in references, loaded on demand), but we haven&rsquo;t nailed the UX yet.</p>
+        <p><strong>Persona interaction.</strong> The assembled team currently lives as static rules. We think there&rsquo;s value in consulting individual personas conversationally. &ldquo;What would The Systems Architect think about adding a fifth resource type?&rdquo; Without bloating the always-on context. The architecture supports this (deep persona profiles in references, loaded on demand), but we haven&rsquo;t nailed the UX yet.</p>
         <p><strong>Cross-project learning.</strong> Right now each project&rsquo;s rules are independent. A pattern discovered in one Rails project could benefit another, but there&rsquo;s no mechanism for that. The Snap prevents bloat, but it doesn&rsquo;t help projects learn from siblings.</p>
         <p><strong>Automated health checks.</strong> The Snap can audit a project when you run it, but it&rsquo;d be better if it could flag &ldquo;your rules are getting stale, consider running maintenance&rdquo; based on actual usage patterns rather than a generic periodic reminder.</p>
       </section>
@@ -110,9 +110,9 @@
       <section class="section" id="further-reading">
         <h2>Further reading</h2>
         <ul>
-          <li><a href="https://arxiv.org/abs/2602.11988" target="_blank" rel="noopener">Gloaguen et al., 2026</a> &mdash; &ldquo;Evaluating AGENTS.md: Are Repository-Level Context Files Helpful for Coding Agents?&rdquo; The research that validated the lean-context approach.</li>
-          <li><a href="https://croftspan.com" target="_blank" rel="noopener">Croftspan</a> &mdash; The agency where this methodology was developed and battle-tested.</li>
-          <li><a href="../research/">Two Kinds of Leadership</a> &mdash; The full research narrative from 9 experimental phases.</li>
+          <li><a href="https://arxiv.org/abs/2602.11988" target="_blank" rel="noopener">Gloaguen et al., 2026</a>. &ldquo;Evaluating AGENTS.md: Are Repository-Level Context Files Helpful for Coding Agents?&rdquo; The research that validated the lean-context approach.</li>
+          <li><a href="https://croftspan.com" target="_blank" rel="noopener">Croftspan</a>. The agency where this methodology was developed and battle-tested.</li>
+          <li><a href="../research/">Two Kinds of Leadership</a>. The full research narrative from 9 experimental phases.</li>
         </ul>
       </section>
 
