@@ -235,3 +235,5 @@ All conventions from previous specs remain. Additional conventions for this feat
 4. **No BoltDB implementation.** This spec only implements `MemoryStore`. When BoltDB lands (watch prerequisite), `Get` and `UpdatePriority` need BoltDB implementations. The command code doesn't change — it talks to the `Store` interface.
 
 5. **No scheduler exists yet.** The operator asked about updating the scheduler's priority queue atomically. There is no scheduler in the codebase — storage-layer atomicity is what this spec delivers. When the scheduler is built, it will need to either re-read priorities from the store on each scheduling decision (simplest — priority changes take effect on the next scheduling cycle) or expose a method to re-prioritize in-flight queue entries (only needed if sub-second priority propagation matters).
+
+<!-- approved: spec 2026-03-28T14:00:00 -->
