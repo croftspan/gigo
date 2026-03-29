@@ -471,3 +471,5 @@ All conventions from previous specs remain. Additional conventions for this feat
 5. **Memory on large queues.** Watch snapshot holds `map[string]snapshotEntry` — ~64 bytes per task (state + name). At 10,000 tasks this is ~640KB. Not a concern for a local tool.
 
 6. **BoltDB is a new dependency.** First external dependency beyond Cobra. Justified because: it's the planned persistence layer per `persistence-patterns.md`, it's pure Go with no CGO, and persistence is required for watch (and every future cross-process feature).
+
+<!-- approved: spec 2026-03-28T12:30:00 -->
