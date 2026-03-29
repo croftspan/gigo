@@ -121,6 +121,25 @@
         <p><a href="https://arxiv.org/abs/2603.18507" target="_blank" rel="noopener">Research found</a> that expert personas help alignment but can hurt knowledge retrieval. GIGO addresses this with a calibration heuristic that tells the model when to lean into expertise and when to lead with training. This single adjustment added 9% in testing.</p>
       </section>
 
+      <!-- Adversarial Review -->
+      <section class="section" id="adversarial">
+        <h2>An independent reviewer that assumes you&rsquo;re wrong</h2>
+        <p>Your work gets reviewed by something that isn&rsquo;t trying to be nice. Not a yes-man. Not a rubber stamp. Three layers of review, each catching different things, each running before your work ships.</p>
+
+        <h3>Before you commit to a design</h3>
+        <p>The fact-checker reads your design brief and checks every assumption against the actual project. &ldquo;You&rsquo;re proposing a new event system but one already exists.&rdquo; &ldquo;The file you reference was renamed last week.&rdquo; &ldquo;Your insertion point is wrong. It appends after the final step instead of inserting between steps.&rdquo;</p>
+        <p>This runs before you even approve the design. The assumptions that feel obvious are the ones that ship bugs.</p>
+
+        <h3>Before you write a line</h3>
+        <p>The Challenger reviews your specs and plans in two passes. First pass is blind: it doesn&rsquo;t know what you asked for. It reads the spec cold and judges it purely on whether it will work. Will the dependency graph hold? Will a worker get stuck on an underspecified step? Does this actually fit the project as it exists today?</p>
+        <p>Second pass: does this solve the problem you actually stated? Drift, scope creep, misinterpretation. The Challenger catches the gap between what you meant and what the spec says.</p>
+        <p>Honest scores. When we used it on our own spec, it found a constraint that would have crashed at runtime. That bug would have hit the first user to trigger the feature.</p>
+
+        <h3>After every task</h3>
+        <p>Two focused reviewers run after execution. One checks spec compliance: did you build the right thing? The other checks craft quality: is the work good? Two passes find more than one pass trying to do both, because they&rsquo;re asking different questions with different expertise.</p>
+        <p>Issues get triaged automatically. Some the worker fixes. Some need your input. Some get noted for later. You don&rsquo;t wade through a wall of findings. You deal with what matters.</p>
+      </section>
+
       <!-- The Pipeline -->
       <section class="section" id="pipeline">
         <h2>Expertise where it helps, freedom where it doesn&rsquo;t</h2>
