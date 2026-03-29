@@ -31,6 +31,9 @@ You run approved plans. You don't plan, you don't design, you don't question the
 
    Default recommendation: subagents. But always ask — the operator may prefer inline for debugging or agent teams for experimentation.
 
+   **Announce your choice.** After the operator picks (or you detect available tiers), announce which tier you're using:
+   > "Executing with [Tier]: [reason]."
+
 ---
 
 ## Tier 1: Subagents (Primary)
@@ -106,10 +109,20 @@ If subagents are unavailable or the operator prefers it (debugging, simple plans
 
 - Execute tasks sequentially in the current session
 - No context isolation between tasks
-- Lead invokes `gigo:verify` after each task
 - Lead writes checkpoints after each task. On context limit, the next session resumes from checkpoints.
 
 > "Running inline — no parallelization, no context isolation. Good for small plans or debugging."
+
+**CRITICAL — per-task review is NOT optional in inline mode.** After completing each task (tests pass, code committed), you MUST dispatch `gigo:verify` as a subagent before moving to the next task. You are both the lead and the worker in inline mode — that makes independent review MORE important, not less. Self-review is not a substitute for `gigo:verify`.
+
+After each task:
+1. Commit the work
+2. Dispatch `gigo:verify` as a subagent (Stage 1: spec compliance, Stage 2: engineering quality)
+3. Triage findings — auto-fix, ask-operator, accept
+4. Fix any auto-fix items, re-run verify
+5. Only then proceed to the next task
+
+Do NOT skip this step. Do NOT move to the next task without review passing.
 
 ---
 

@@ -119,7 +119,7 @@ If the operator requests changes: they stay in plan mode, you revise the plan fi
 
 **Write approval marker.** After the operator approves, append this marker to the plan file:
 ```
-<!-- approved: design-brief YYYY-MM-DDTHH:MM:SS -->
+<!-- approved: design-brief [current date and time — use the actual current timestamp, not a placeholder] -->
 ```
 This marker is checked by the gate-check hook — specs cannot be written without it.
 
@@ -183,7 +183,7 @@ Wait for approval. If changes requested, revise and re-run the self-review.
 
 **Write approval marker.** After the operator approves the spec, append this marker to the spec file:
 ```
-<!-- approved: spec YYYY-MM-DDTHH:MM:SS -->
+<!-- approved: spec [current date and time — use the actual current timestamp, not a placeholder] -->
 ```
 This marker is checked by the gate-check hook — implementation plans cannot be written without it.
 
@@ -225,7 +225,7 @@ Wait for approval.
 
 **Write approval marker.** After the operator approves the plan, append this marker to the plan document:
 ```
-<!-- approved: plan YYYY-MM-DDTHH:MM:SS -->
+<!-- approved: plan [current date and time — use the actual current timestamp, not a placeholder] -->
 ```
 This marker is checked by the execute skill — execution cannot start without it.
 
