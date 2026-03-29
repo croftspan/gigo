@@ -64,7 +64,7 @@ Every improvement to GIGO's review system was reviewed by GIGO's review system. 
 
 ---
 
-## The Six Skills
+## The Seven Skills
 
 | Skill | What it does |
 |---|---|
@@ -73,6 +73,7 @@ Every improvement to GIGO's review system was reviewed by GIGO's review system. 
 | `gigo:execute` | Runs plans with agent teams. Workers get the spec, not the rules |
 | `gigo:verify` | Two-stage review: spec compliance + output quality |
 | `gigo:snap` | Session-end audit. Projects get sharper, not bigger |
+| `gigo:retro` | Turns session friction into project improvements. Every session teaches your project to be better |
 | `gigo:maintain` | Adds expertise, audits for bloat, upgrades setups |
 
 ---
