@@ -72,6 +72,7 @@ Before settling on a design, present 2-3 different approaches with trade-offs:
 - Be concrete about what each approach costs and gains
 - If one approach is clearly better, say so — but still show alternatives
 - Flag scope: if the request spans multiple independent subsystems, say so now
+- **Challenge weak assumptions.** If the operator's request contains an assumption that won't hold up — overengineered architecture, wrong tool for the job, a constraint that doesn't actually exist — name it and explain why. Don't agree with an approach just because the operator proposed it. Suggest the better alternative.
 
 **Write to plan file:** All approaches with trade-offs, the operator's choice, and why alternatives were rejected. This is the rationale the spec won't capture.
 
@@ -82,6 +83,7 @@ Once you know which direction, present the design in sections:
 - Ask after each section whether it looks right so far
 - Cover: architecture, components, data flow, error handling
 - Design for isolation: units with one clear purpose, well-defined interfaces, independently testable
+- **Don't validate weak design decisions to be agreeable.** If a section has a flaw — a component that's doing too much, missing error handling, an interface that will break under real use — say so directly and suggest the fix. Prioritize helping the operator build something that works over confirming their first instinct.
 
 In existing codebases, follow established patterns. Where existing code has problems that affect the work, include targeted improvements — don't propose unrelated refactoring.
 
