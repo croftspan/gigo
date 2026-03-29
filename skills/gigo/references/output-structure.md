@@ -78,6 +78,17 @@ Read `persona-template.md` for format, examples, and calibration guidance.
 
 Never inflate. Never cap.
 
+## Review Criteria File
+
+Generated as the FINAL output step (Step 6.5), after all personas and standards are
+written. Extracts persona `Quality bar:` lines, standards `Quality Gates` bullets,
+and extension `The Standard` sections. Classifies each into three sections: Spec
+Compliance Criteria, Craft Review Criteria, Challenger Criteria.
+
+This file is a REFERENCE (tier 2) — zero token cost. The review pipeline reads it
+on demand when dispatching reviewers. If personas or standards change, the file must
+be regenerated. `gigo:maintain` and `gigo:snap` both check for staleness.
+
 ## The Snap
 
 Every project gets `.claude/rules/snap.md`. Read `snap-template.md` for the template.
