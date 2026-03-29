@@ -46,7 +46,19 @@ When it hits Phase 11, tell it: "Use subagents. Do not run inline."
 
 ---
 
-## Session 3 (when ready): Eval Repo Split
+## Session 3: gigo:eval Overhaul
+
+gigo:eval was built before the domain-neutral redesign, before the Challenger, before {DOMAIN_CRITERIA}, before the fact-checker. It likely still references "assembled context", assumes code, and doesn't account for the current pipeline architecture.
+
+### Prompt:
+
+```
+/gigo:blueprint Audit and overhaul the gigo:eval skill. It was built before the domain-neutral review redesign, before the Challenger adversarial reviewer, before {DOMAIN_CRITERIA}, before the fact-checker (Phase 4.25), before plan mode integration. Read skills/eval/SKILL.md and all its references. Check for: stale references to old terminology ("assembled context", "engineering review", "QUALITY_BAR_CHECKLIST"), code-specific assumptions that don't work for novels/games/research, missing awareness of the current pipeline (plan mode → fact-checker → spec → Challenger → plan → Challenger → execute → per-task review). The eval skill should be able to test whether ANY assembled project produces better output than bare, across any domain. Use the fact-checker prompt as the reference for domain-neutral language.
+```
+
+---
+
+## Session 4 (when ready): Eval Repo Split
 
 Create croftspan/gigo-evals. Move:
 - `evals/` directory (scripts, fixtures, results)
