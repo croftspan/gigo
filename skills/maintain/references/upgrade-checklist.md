@@ -29,6 +29,8 @@ Read the project's setup and check for these features. Missing ones are upgrade 
 | Skill references | Workflow references `gigo:` skills (plan, maintain, snap) | Workflow references old `/` commands or no skill references |
 | Snap pipeline check | Snap includes pipeline health check (step 10) | Snap has no pipeline integrity audit |
 | Overwatch functional name | Overwatch persona uses functional name (The Overwatch), not character name | Persona still named Hawkeye |
+| Review criteria file | `.claude/references/review-criteria.md` exists with domain-specific review criteria | No review-criteria.md, or criteria don't match current personas |
+| Snap review criteria check | Snap audit includes check 11 (review criteria currency) | Snap has 10 or fewer audit checks, or no criteria currency verification |
 
 ## Step 2: Back Up Before Upgrading
 
@@ -69,5 +71,6 @@ Once approved:
 - Upgrade generic "When to Go Deeper" pointers to task-specific: name the observable task, name the reference file, name what to check
 - Add Overwatch audit check (check 9) to `snap.md` if missing
 - Preserve all existing domain knowledge — upgrading the architecture, not the expertise
+- Generate `.claude/references/review-criteria.md` using the extraction algorithm from gigo:gigo Step 6.5
 
 After upgrading: "Setup is current. Run `gigo:maintain` for your next checkup."

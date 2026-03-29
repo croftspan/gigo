@@ -100,6 +100,7 @@ Once approved, do the restructuring:
 7. **Add Overwatch** — if missing, add Persona Calibration and domain-adapted Overwatch sections to `workflow.md`, create `.claude/references/overwatch.md`, and add The Overwatch persona to CLAUDE.md if 3+ domain personas. Read `gigo/references/persona-template.md` → "The Overwatch" for templates.
 8. **Remove old files** — delete the files that were consolidated or emptied
 9. **Update CLAUDE.md** — if CLAUDE.md references files that moved or merged, update the references
+10. **Regenerate review criteria** — if personas or standards changed, regenerate `.claude/references/review-criteria.md` using the algorithm from gigo:gigo Step 6.5. If the file doesn't exist and personas have quality bars, create it.
 
 ## Phase 6: Assessment
 
