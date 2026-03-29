@@ -20,7 +20,7 @@ You've already read everything. Now evaluate on four axes:
 - Do persona entries in CLAUDE.md contain domain-knowledge content (factual specifics, implementation patterns)? → Alignment signal stays; knowledge moves to `.claude/references/`.
 
 **Pipeline Integrity** — Does the workflow encode the full pipeline? Check for:
-- Plan stage — does workflow reference `gigo:plan` or an equivalent planning step?
+- Plan stage — does workflow reference `gigo:blueprint` or an equivalent planning step?
 - Execute stage — is there a clear description of how work gets done?
 - Review stages — are review steps intact? Does snap run? Are review skills referenced?
 - If any stage is missing or broken, flag it.

@@ -53,7 +53,7 @@ A Go CLI tool for managing local task queues with priorities, dependencies, and 
 
 ## Quick Reference
 
-- **Pipeline:** `gigo:plan` → `gigo:execute` → `gigo:review` → `gigo:snap`
+- **Pipeline:** `gigo:blueprint` → `gigo:execute` → `gigo:verify` → `gigo:snap`
 - **Line cap:** ~60 lines per rules file, ~300 total
 - **Non-derivable rule:** If you can figure it out from reading the code, don't write it
 - **Two tiers:** Rules (auto-loaded) vs References (on-demand)

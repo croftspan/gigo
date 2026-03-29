@@ -64,7 +64,7 @@ For each issue, suggest a triage category:
 - **ask-operator** — fix would change the interface, involves a trade-off, or requires a scope/architecture decision.
 - **accept** — observation worth noting but doesn't need a fix. Future consideration, strength, informational.
 
-Your suggestion is a hint — the final triage decision is made by gigo:review, not you.
+Your suggestion is a hint — the final triage decision is made by gigo:verify, not you.
 
 ## Output Format
 

@@ -1,6 +1,6 @@
 ---
 name: execute
-description: "Execute implementation plans using Claude Code agent teams. Lead creates tasks with dependencies, spawns bare worker teammates, reviews each task via gigo:review before completion. Falls back to subagents if agent teams unavailable, inline if neither available. Use when you have an approved plan from gigo:plan."
+description: "Execute implementation plans using Claude Code agent teams. Lead creates tasks with dependencies, spawns bare worker teammates, reviews each task via gigo:verify before completion. Falls back to subagents if agent teams unavailable, inline if neither available. Use when you have an approved plan from gigo:blueprint."
 ---
 
 # Execute
@@ -15,7 +15,7 @@ You run approved plans. You don't plan, you don't design, you don't question the
 
 ## Before Starting
 
-1. **Verify the plan exists and is approved.** If there's no approved plan, stop and tell the operator to run `gigo:plan` first.
+1. **Verify the plan exists and is approved.** If there's no approved plan, stop and tell the operator to run `gigo:blueprint` first.
 2. **Read the full plan.** Extract all tasks, their descriptions (full text), dependencies, and parallelization markers.
    - **Check for checkpoints.** Scan for `<!-- checkpoint: ... -->` comments in the plan.
    - **If checkpoints found:** Report progress to the operator, verify SHAs exist, and resume from the appropriate point. See `references/checkpoint-format.md` for the full resume procedure.
@@ -56,12 +56,12 @@ Requires `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` enabled. Full parallelization, h
    - `description`: FULL TEXT of task from plan — don't make teammates read the plan file
 2. **Set dependencies.** Use `TaskUpdate` with `addBlocks`/`addBlockedBy` to match the plan's dependency graph. Tasks with unresolved `blockedBy` dependencies can't be claimed — the infrastructure handles ordering.
 3. **Spawn teammates.** Create bare worker teammates with the implementation prompt from `references/teammate-prompts.md`. Select model per task complexity — see `references/model-selection.md`. Team sizing: ~5-6 tasks per teammate.
-4. **Configure review hook.** TaskCompleted hook invokes `gigo:review` before any task can be marked done — see `references/review-hook.md`.
+4. **Configure review hook.** TaskCompleted hook invokes `gigo:verify` before any task can be marked done — see `references/review-hook.md`.
 
 **How it runs:**
 
 - Teammates auto-claim unblocked tasks and implement them
-- When a teammate marks a task complete, the TaskCompleted hook fires and runs `gigo:review`
+- When a teammate marks a task complete, the TaskCompleted hook fires and runs `gigo:verify`
 - If review passes (hook exits 0), the task is marked complete
 - If review finds issues (hook exits 2 with stderr feedback), the teammate receives the feedback and continues working on the task
 - Teammates communicate directly via `SendMessage` if they discover something another worker needs
@@ -78,7 +78,7 @@ If agent teams are not available. Fresh subagent per task via Agent tool.
 
 - Lead dispatches one subagent per task using the implementation prompt from `references/teammate-prompts.md` (Tier 2 variant)
 - Sequential execution, with manual parallelization of independent tasks where possible
-- After each subagent completes, lead invokes `gigo:review` manually
+- After each subagent completes, lead invokes `gigo:verify` manually
 - If review finds issues, dispatch a new subagent with the fix prompt + review feedback
 - Repeat until review passes, then move to next task
 - After each review pass, the lead writes a checkpoint and commits. On resume, checkpoints are the sole source of truth — no shared state to reconcile.
@@ -92,7 +92,7 @@ If neither agent teams nor subagents are available.
 
 - Execute tasks sequentially in the current session
 - No context isolation between tasks
-- Lead invokes `gigo:review` after each task
+- Lead invokes `gigo:verify` after each task
 - Lead writes checkpoints after each task. On context limit, the next session resumes from checkpoints.
 
 **Surface this warning:**
@@ -104,7 +104,7 @@ If neither agent teams nor subagents are available.
 
 Workers report one of four statuses. Handle each appropriately:
 
-**DONE** — Proceed to review (via TaskCompleted hook in Tier 1, manual invocation in Tier 2/3). After review, handle triage categories: auto-fix items go back to the worker, ask-operator items block the task until the operator decides, accept items go into the addendum. See `gigo:review` Triage section.
+**DONE** — Proceed to review (via TaskCompleted hook in Tier 1, manual invocation in Tier 2/3). After review, handle triage categories: auto-fix items go back to the worker, ask-operator items block the task until the operator decides, accept items go into the addendum. See `gigo:verify` Triage section.
 
 **DONE_WITH_CONCERNS** — Worker completed the task but flagged doubts. Read the concerns before proceeding. If concerns are about correctness or scope, address them before review. If they're observations (e.g., "this file is getting large"), note them and proceed to review.
 
@@ -152,7 +152,7 @@ After a task passes both review stages, update the plan document before moving t
 
 1. Synthesize results — read the "What Was Built" addendums across all tasks for a complete picture of deviations, review changes, and observations
 2. Report to operator with a summary: what was built, what deviated from plan, what the review cycle caught, and any "accept" observations worth noting
-3. Suggest: "Ready for a PR? I can invoke `gigo:review` in PR mode for the final gate."
+3. Suggest: "Ready for a PR? I can invoke `gigo:verify` in PR mode for the final gate."
 
 ---
 

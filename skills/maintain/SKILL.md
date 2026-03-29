@@ -1,6 +1,6 @@
 ---
 name: maintain
-description: "Ongoing maintenance for your assembled expert team. Add expertise, audit for bloat, restructure messy setups, or upgrade older projects. Auto-detects severity — targeted addition, health check, or full restructure. Use gigo:maintain, /maintain, or when gigo:plan or gigo:snap detect gaps."
+description: "Ongoing maintenance for your assembled expert team. Add expertise, audit for bloat, restructure messy setups, or upgrade older projects. Auto-detects severity — targeted addition, health check, or full restructure. Use gigo:maintain, /maintain, or when gigo:blueprint or gigo:snap detect gaps."
 argument-hint: "[upgrade]"
 ---
 
@@ -22,7 +22,7 @@ Before doing anything else, read all existing files: `CLAUDE.md`, every `.claude
 
 Then determine which mode applies. If `$ARGUMENTS` is "upgrade", go straight to **Upgrade**. Otherwise auto-detect:
 
-**Targeted Addition (Mode 1)** — the operator asked for something specific, or this skill was invoked by `gigo:plan` or `gigo:snap` with a detected gap. Read `references/targeted-addition.md` and follow it.
+**Targeted Addition (Mode 1)** — the operator asked for something specific, or this skill was invoked by `gigo:blueprint` or `gigo:snap` with a detected gap. Read `references/targeted-addition.md` and follow it.
 
 **Health Check (Mode 2)** — the operator ran maintain without specific direction, said "check on things," or was invoked by snap for a routine checkup. Read `references/health-check.md` and follow it. If the health check reveals multiple files over cap or structural drift, escalate to Mode 3.
 
@@ -36,7 +36,7 @@ Then determine which mode applies. If `$ARGUMENTS` is "upgrade", go straight to 
 
 Part of every mode. Check whether the workflow encodes the full pipeline:
 
-- **Plan stage** — does workflow reference `gigo:plan` or equivalent planning step?
+- **Plan stage** — does workflow reference `gigo:blueprint` or equivalent planning step?
 - **Execute stage** — does the workflow describe how work gets done?
 - **Review stages** — are review steps intact? Does snap run? Are review skills referenced?
 
@@ -46,7 +46,7 @@ If pipeline integrity is missing or incomplete, flag it as part of your findings
 
 ## Cross-Skill Invocation
 
-This skill can be invoked by other skills. When `gigo:plan` detects an expertise gap or `gigo:snap` finds coverage issues, they invoke maintain directly. The operator stays in the conversation — don't tell them to run a command, just act.
+This skill can be invoked by other skills. When `gigo:blueprint` detects an expertise gap or `gigo:snap` finds coverage issues, they invoke maintain directly. The operator stays in the conversation — don't tell them to run a command, just act.
 
 When maintain detects issues outside its scope, offer to invoke the appropriate skill rather than telling the operator to run it.
 

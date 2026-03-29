@@ -1,6 +1,6 @@
 ---
-name: plan
-description: "Brainstorm, write specs, and produce ordered implementation plans. Use when the user has an idea, feature, or task that needs planning — from vague intent to detailed execution-ready plan. Handles the full arc: explore → design → spec → plan. Use gigo:plan."
+name: blueprint
+description: "Brainstorm, write specs, and produce ordered implementation plans. Use when the user has an idea, feature, or task that needs planning — from vague intent to detailed execution-ready plan. Handles the full arc: explore → design → spec → plan. Use gigo:blueprint."
 ---
 
 # Plan

@@ -15,9 +15,9 @@ A Claude Code skill ecosystem that researches domain experts, blends their philo
 | Skill | Job | Trigger |
 |---|---|---|
 | `gigo:gigo` | First assembly — research domain, build team, scaffold project | New project, no CLAUDE.md, "assemble" |
-| `gigo:plan` | Planning — turn vague intent into clear, executable plans | Vague ideas, "plan this out," need structure before execution |
+| `gigo:blueprint` | Planning — turn vague intent into clear, executable plans | Vague ideas, "plan this out," need structure before execution |
 | `gigo:execute` | Execution — dispatch bare workers from a plan | Have a plan, ready to build, "execute" |
-| `gigo:review` | Two-stage review — spec compliance then engineering quality | Work completed, need review, "review" |
+| `gigo:verify` | Two-stage review — spec compliance then engineering quality | Work completed, need review, "review" |
 | `gigo:snap` | Audit rules and capture learnings — project protection protocol | Session end, "snap," saving progress |
 | `gigo:maintain` | Ongoing maintenance — add expertise, audit, health check, restructure | Existing project, need new expertise, bloated setup, "maintain" |
 | `gigo:eval` | Context effectiveness testing — measure how context changes affect output | Need to test prompt changes, "eval," measure quality |
@@ -26,9 +26,9 @@ A Claude Code skill ecosystem that researches domain experts, blends their philo
 - No CLAUDE.md → `gigo:gigo`
 - CLAUDE.md exists, lean and well-structured → `gigo:maintain`
 - CLAUDE.md exists, bloated or disorganized → `gigo:maintain` (auto-detects severity)
-- Operator has vague intent, needs clarity before execution → `gigo:plan`
+- Operator has vague intent, needs clarity before execution → `gigo:blueprint`
 - Have a plan, ready to implement → `gigo:execute`
-- Work completed, need quality check → `gigo:review`
+- Work completed, need quality check → `gigo:verify`
 - Wrapping up, saving progress, or want an audit → `gigo:snap`
 - Need to measure context effectiveness → `gigo:eval`
 
@@ -87,7 +87,7 @@ Seven questions, every domain, every time:
 
 ---
 
-## Skill: `gigo:plan` (Planning)
+## Skill: `gigo:blueprint` (Planning)
 
 ### Trigger Conditions
 
@@ -117,7 +117,7 @@ Seven questions, every domain, every time:
 
 **Invoke when:** A plan exists and the operator is ready to implement. User says "execute," "build it," or "implement the plan."
 
-**Do not invoke when:** No plan exists (use `gigo:plan` first). Operator is still exploring ideas.
+**Do not invoke when:** No plan exists (use `gigo:blueprint` first). Operator is still exploring ideas.
 
 ### How It Works
 
@@ -132,13 +132,13 @@ Workers run without assembled context. Research (Phase 7) proved that format, fr
 
 ---
 
-## Skill: `gigo:review` (Two-Stage Review)
+## Skill: `gigo:verify` (Two-Stage Review)
 
 ### Trigger Conditions
 
 **Invoke when:** Work has been completed and needs quality verification. User says "review," or execution has just finished.
 
-**Do not invoke when:** Work hasn't started yet (use `gigo:plan`). Mid-implementation (let workers finish first).
+**Do not invoke when:** Work hasn't started yet (use `gigo:blueprint`). Mid-implementation (let workers finish first).
 
 ### Two Stages
 
@@ -187,7 +187,7 @@ Every upgrade creates a timestamped backup at `.claude/pre-upgrade-backup-{date}
 
 **Invoke when:** Operator wants to measure how context changes affect AI output quality. User says "eval," "test this change," or "measure effectiveness."
 
-**Do not invoke when:** Operator wants to execute a plan (use `gigo:execute`). Operator wants a code review (use `gigo:review`).
+**Do not invoke when:** Operator wants to execute a plan (use `gigo:execute`). Operator wants a code review (use `gigo:verify`).
 
 ### What It Does
 

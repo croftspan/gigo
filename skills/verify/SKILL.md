@@ -1,6 +1,6 @@
 ---
-name: review
-description: "Two-stage code review: spec compliance (did you build the right thing?) then engineering quality (is the code good?). Invoked automatically by gigo:execute after each task, or standalone on any code. Use gigo:review."
+name: verify
+description: "Two-stage code review: spec compliance (did you build the right thing?) then engineering quality (is the code good?). Invoked automatically by gigo:execute after each task, or standalone on any code. Use gigo:verify."
 ---
 
 # Review

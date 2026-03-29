@@ -5,7 +5,7 @@
 
 **Spec:** `docs/gigo/specs/2026-03-27-pipeline-enhancements-design.md`
 
-**Goal:** Add "What Was Built" addendum, resume capability, and review triage to gigo:execute and gigo:review.
+**Goal:** Add "What Was Built" addendum, resume capability, and review triage to gigo:execute and gigo:verify.
 
 **Architecture:** All changes are prompt additions to existing SKILL.md files and reference files. No code, no scripts, no new skills. The plan document is the persistent storage layer for all three enhancements.
 
@@ -14,7 +14,7 @@
 ## Task Dependency Graph
 
 ```
-Task 1 (review triage in gigo:review)
+Task 1 (review triage in gigo:verify)
   ├── blocks: 2, 4, 5
   └── blocked-by: none
 
@@ -43,7 +43,7 @@ Tasks 1 and 3 are independent and parallelizable. Task 2 depends on 1 (triage ca
 
 ---
 
-### Task 1: Review Triage — gigo:review Changes
+### Task 1: Review Triage — gigo:verify Changes
 
 **blocks:** 2, 4, 5
 **blocked-by:** —
@@ -72,7 +72,7 @@ For each issue, suggest a triage category:
 - **ask-operator** — fix would change the interface, involves a trade-off, or requires a scope/architecture decision.
 - **accept** — observation worth noting but doesn't need a fix. Future consideration, strength, informational.
 
-Your suggestion is a hint — the final triage decision is made by gigo:review, not you.
+Your suggestion is a hint — the final triage decision is made by gigo:verify, not you.
 ```
 
 - [ ] **Step 2: Add "Suggested triage" field to spec reviewer prompt**
@@ -91,7 +91,7 @@ Triage guidance:
 - Misunderstanding of requirements → ask-operator
 ```
 
-- [ ] **Step 3: Add "Triage" section to gigo:review SKILL.md**
+- [ ] **Step 3: Add "Triage" section to gigo:verify SKILL.md**
 
 In `skills/review/SKILL.md`, add a new section titled `## Triage` between the `---` separator that follows `## Stage 2: Engineering Review` and the `## Send-Back-and-Fix Loop` section:
 
@@ -439,7 +439,7 @@ In `skills/execute/SKILL.md`, update the `**DONE**` status description in the St
 
 With:
 ```
-**DONE** — Proceed to review (via TaskCompleted hook in Tier 1, manual invocation in Tier 2/3). After review, handle triage categories: auto-fix items go back to the worker, ask-operator items block the task until the operator decides, accept items go into the addendum. See `gigo:review` Triage section.
+**DONE** — Proceed to review (via TaskCompleted hook in Tier 1, manual invocation in Tier 2/3). After review, handle triage categories: auto-fix items go back to the worker, ask-operator items block the task until the operator decides, accept items go into the addendum. See `gigo:verify` Triage section.
 ```
 
 - [ ] **Step 3: Add addendum reading hint to Tier 2 subagent prompt**
@@ -563,8 +563,8 @@ git commit -m "feat(execute): add resume detection via checkpoint scanning"
 Read all modified files and check:
 
 1. `gigo:execute` SKILL.md references `references/checkpoint-format.md` — does the reference exist?
-2. `gigo:execute` SKILL.md references `gigo:review` Triage section — does that section exist in review SKILL.md?
-3. `gigo:review` SKILL.md references the "What Was Built" addendum — does execute SKILL.md define the format?
+2. `gigo:execute` SKILL.md references `gigo:verify` Triage section — does that section exist in review SKILL.md?
+3. `gigo:verify` SKILL.md references the "What Was Built" addendum — does execute SKILL.md define the format?
 4. `review-hook.md` references `[ASK-OPERATOR]` and `[ACCEPT]` prefixes — are these consistent with the triage output format in review SKILL.md?
 5. `teammate-prompts.md` has the operator-resolved variant — does it match the triage flow described in execute SKILL.md?
 6. Both reviewer prompts include "Suggested triage" — consistent category names (`auto-fix`, `ask-operator`, `accept`)?
@@ -574,9 +574,9 @@ Read all modified files and check:
 Trace the full lifecycle of one task:
 
 1. Worker implements task → marks complete
-2. Hook fires → gigo:review runs Stage 1 + Stage 2
+2. Hook fires → gigo:verify runs Stage 1 + Stage 2
 3. Reviewers suggest triage categories on each finding
-4. gigo:review applies triage rules, produces categorized output
+4. gigo:verify applies triage rules, produces categorized output
 5. Auto-fix → hook exits 2, worker fixes
 6. Ask-operator → hook exits 2, worker moves to independent task, lead surfaces to operator
 7. Accept → noted for addendum
@@ -615,7 +615,7 @@ echo "Self-review passed. No issues found."
 
 ## Done When
 
-1. `gigo:review` has a Triage section that categorizes findings into auto-fix, ask-operator, and accept
+1. `gigo:verify` has a Triage section that categorizes findings into auto-fix, ask-operator, and accept
 2. Both reviewer prompts include a "Suggested triage" field
 3. `gigo:execute` writes a "What Was Built" addendum after each task passes review
 4. `gigo:execute` writes checkpoint comments and can resume from them on restart

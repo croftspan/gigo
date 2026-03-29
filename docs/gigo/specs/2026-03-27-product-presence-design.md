@@ -304,7 +304,7 @@ Not restructured — presented as reference data with brief context for each pha
 
 ### Documentation Pages (/docs/*)
 
-**Getting Started** — Install, what happens on first run (the conversational flow), what gets created (.claude/ directory), next steps (run gigo:plan on your first task).
+**Getting Started** — Install, what happens on first run (the conversational flow), what gets created (.claude/ directory), next steps (run gigo:blueprint on your first task).
 
 **Skills** — Each of the seven skills with:
 - What it does (one paragraph)

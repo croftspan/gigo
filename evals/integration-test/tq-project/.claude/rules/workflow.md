@@ -2,9 +2,9 @@
 
 ## The Pipeline
 
-1. **Plan.** Use `gigo:plan` for anything beyond a trivial fix. Spec first, code second.
+1. **Plan.** Use `gigo:blueprint` for anything beyond a trivial fix. Spec first, code second.
 2. **Execute.** Use `gigo:execute` to run approved plans. Workers run bare — no personas, no rules, just the spec.
-3. **Review.** Use `gigo:review` for two-stage review: spec compliance first, engineering quality second. Sequential, not parallel.
+3. **Review.** Use `gigo:verify` for two-stage review: spec compliance first, engineering quality second. Sequential, not parallel.
 4. **Snap.** At session end, use `gigo:snap`. Audit first, save learnings second.
 
 **Hook ordering:** Review gate hooks (`.claude/hooks/`) must be committed before execution begins. If the hook is a plan deliverable, it must block all tasks it gates in the dependency graph.

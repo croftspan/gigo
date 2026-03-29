@@ -32,7 +32,7 @@ These go in `.claude/rules/` and `CLAUDE.md`. They load every conversation. Ever
 |---|---|
 | `CLAUDE.md` | Team roster with blended philosophies, project identity, autonomy model, quick reference. At 3+ personas, include The Overwatch (see `persona-template.md` → The Overwatch). |
 | `.claude/rules/standards.md` | Quality gates, anti-patterns, forbidden list. "When to Go Deeper" pointers must be task-specific: name the observable task, name the reference file, name what to look for. |
-| `.claude/rules/workflow.md` | Encodes the pipeline (plan→execute→review) pointing to gigo:plan, gigo:execute, gigo:snap. Includes Persona Calibration section (see `persona-template.md`) and Overwatch section (see `persona-template.md` → The Overwatch). |
+| `.claude/rules/workflow.md` | Encodes the pipeline (plan→execute→review) pointing to gigo:blueprint, gigo:execute, gigo:snap. Includes Persona Calibration section (see `persona-template.md`) and Overwatch section (see `persona-template.md` → The Overwatch). |
 | `.claude/rules/snap.md` | The Snap — protects the project (see `snap-template.md`) |
 
 **Create domain extensions as needed** — but only when the domain has rules that genuinely apply to every task. Common examples:

@@ -1,10 +1,10 @@
 # Pipeline Enhancements — Design Spec
 
-Three targeted additions to existing skills (`gigo:execute` and `gigo:review`) that improve observability, resilience, and review efficiency. Absorbs process patterns from the deep trilogy (piercelamb/deep-project, deep-plan, deep-implement) — adapted to GIGO's proven architecture of assembled planning, bare execution, and two-stage review.
+Three targeted additions to existing skills (`gigo:execute` and `gigo:verify`) that improve observability, resilience, and review efficiency. Absorbs process patterns from the deep trilogy (piercelamb/deep-project, deep-plan, deep-implement) — adapted to GIGO's proven architecture of assembled planning, bare execution, and two-stage review.
 
 ## Guiding Constraints
 
-- **No new skills.** All changes modify `gigo:execute` and `gigo:review`.
+- **No new skills.** All changes modify `gigo:execute` and `gigo:verify`.
 - **No worker context changes.** Phase 7 proved bare workers produce the best code. These enhancements change what the *lead* and *reviewers* do, not what workers receive.
 - **Plan document as source of truth.** All three enhancements use the plan document as persistent storage. This works across all three execution tiers (agent teams, subagents, inline) and survives session breaks.
 - **Additive to existing flow.** Each enhancement slots into the existing SKILL.md structure at a specific point. No existing steps are removed or reordered.
@@ -192,7 +192,7 @@ After both review stages produce their findings, categorize each finding into on
 
 ### Why
 
-- Currently `gigo:review` returns everything equally. A missing import and an architectural concern get the same treatment. Workers waste cycles on trivial fixes while ignoring the real issues.
+- Currently `gigo:verify` returns everything equally. A missing import and an architectural concern get the same treatment. Workers waste cycles on trivial fixes while ignoring the real issues.
 - Architectural questions and scope decisions should go to the operator, not the worker. The worker can't decide whether to change the API surface — that's a planning decision.
 - Some review observations are worth recording but don't need fixes. "This works, but note that the caching layer will need revisiting when we add real-time updates" is useful context, not a bug.
 
@@ -232,7 +232,7 @@ Review currently outputs findings in two stages. After both stages complete, the
 2. Clean separation of concerns in the handler layer (strength)
 ```
 
-### Where It Inserts in gigo:review
+### Where It Inserts in gigo:verify
 
 **In SKILL.md:** New section titled **"Triage"** between Stage 2 and "Send-Back-and-Fix Loop":
 
@@ -273,7 +273,7 @@ After each issue, the reviewer adds a suggested category:
 - **Suggested triage:** auto-fix | ask-operator | accept
 ```
 
-The reviewer's suggestion is a hint, not a decision. The triage section in gigo:review makes the final call using the rules above.
+The reviewer's suggestion is a hint, not a decision. The triage section in gigo:verify makes the final call using the rules above.
 
 **Modification to `references/spec-reviewer-prompt.md`:** Same addition — each finding gets a suggested triage category.
 
@@ -281,7 +281,7 @@ The reviewer's suggestion is a hint, not a decision. The triage section in gigo:
 
 **Modification to "Send-Back-and-Fix Loop" behavior:** Currently gigo:execute receives all findings and sends them to the worker. With triage:
 
-1. Receive categorized findings from gigo:review
+1. Receive categorized findings from gigo:verify
 2. **auto-fix:** Send to worker immediately with "Fix these, no discussion needed"
 3. **ask-operator:** Surface to operator. Wait for decision. Then send decision to worker if action needed.
 4. **accept:** Hold for the addendum (Enhancement 1). Don't send to worker.
@@ -367,7 +367,7 @@ The integration points:
 | `references/checkpoint-format.md` | **New file.** Full checkpoint syntax, resume procedure, SHA verification, tier reconciliation, edge cases. |
 | `references/review-hook.md` | Update exit code semantics for triage categories. Document `[ASK-OPERATOR]` and `[ACCEPT]` stderr prefixes. |
 
-### gigo:review (`skills/review/`)
+### gigo:verify (`skills/review/`)
 
 | File | Change |
 |---|---|

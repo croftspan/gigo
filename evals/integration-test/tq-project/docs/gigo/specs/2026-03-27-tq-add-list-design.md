@@ -196,7 +196,7 @@ Tests:
 This is the hook script that `gigo:execute` invokes for Tier 1 automated review after each task completion. It runs two stages:
 
 1. **Go quality gate:** `go vet ./...` and `go test ./...` — fast, catches obvious problems
-2. **Two-stage review:** Invokes `gigo:review` for spec compliance then engineering quality
+2. **Two-stage review:** Invokes `gigo:verify` for spec compliance then engineering quality
 
 The hook is a shell script, not a Go file. It exits 0 on pass, non-zero on failure.
 
@@ -210,11 +210,11 @@ go vet ./...
 go test ./...
 
 # Stage 2: Two-stage review (spec compliance + engineering quality)
-echo "=== Stage 2: gigo:review ==="
-claude -p "Run gigo:review on the most recent changes. Two stages: spec compliance first, then engineering quality. Spec: docs/gigo/specs/2026-03-27-tq-add-list-design.md"
+echo "=== Stage 2: gigo:verify ==="
+claude -p "Run gigo:verify on the most recent changes. Two stages: spec compliance first, then engineering quality. Spec: docs/gigo/specs/2026-03-27-tq-add-list-design.md"
 ```
 
-The hook assumes `claude` CLI is available (it runs inside a Claude Code session). The `gigo:review` invocation handles both stages internally.
+The hook assumes `claude` CLI is available (it runs inside a Claude Code session). The `gigo:verify` invocation handles both stages internally.
 
 ---
 

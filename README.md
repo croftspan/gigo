@@ -56,9 +56,9 @@ At the end of every session, The Snap audits your project: removes what's stale,
 |---|---|
 | `gigo` | Builds your expert team from scratch |
 | `gigo:maintain` | Adds expertise, audits for bloat, upgrades setups |
-| `gigo:plan` | Turns ideas into specs and implementation plans |
+| `gigo:blueprint` | Turns ideas into specs and implementation plans |
 | `gigo:execute` | Runs plans with agent teams. Workers get the spec, not the personas |
-| `gigo:review` | Two-stage review: spec compliance + engineering quality |
+| `gigo:verify` | Two-stage review: spec compliance + engineering quality |
 | `gigo:snap` | Session-end audit. Projects get sharper, not bigger |
 | `gigo:eval` | Proves the assembled context actually improves output |
 

@@ -659,7 +659,7 @@ go vet ./...
 go test ./...
 
 echo "=== Stage 2: Two-stage review (spec compliance + engineering quality) ==="
-claude -p "Run gigo:review on the most recent changes. Two stages: spec compliance first, then engineering quality. Spec: $SPEC"
+claude -p "Run gigo:verify on the most recent changes. Two stages: spec compliance first, then engineering quality. Spec: $SPEC"
 ```
 
 - [ ] **Step 2: Make it executable**

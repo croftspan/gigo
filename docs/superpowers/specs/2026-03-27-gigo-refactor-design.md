@@ -17,10 +17,10 @@ All Marvel references go. The project becomes GIGO.
 | `gigo` | `gigo` | Repo, skill directories, all references |
 | `/gigo` → `gigo:gigo` | First assembly | |
 | `/fury` + `/smash` → `gigo:maintain` | Merged — severity auto-detected | |
-| `/cap` → `gigo:plan` | Absorbs superpowers planning process | |
+| `/cap` → `gigo:blueprint` | Absorbs superpowers planning process | |
 | `/snap` → `gigo:snap` | Name survives — it's not Marvel-specific | |
 | NEW: `gigo:execute` | Bare worker dispatch | |
-| NEW: `gigo:review` | Two-stage review pipeline | |
+| NEW: `gigo:verify` | Two-stage review pipeline | |
 | NEW: `gigo:eval` | Context effectiveness testing | |
 
 **Nick Fury voice drops.** The assembly skill speaks as itself — direct, opinionated, but not a character.
@@ -46,7 +46,7 @@ Added to THIS project's team (CLAUDE.md). Owns the execution pipeline.
 **What Conductor influences:**
 - How `gigo:gigo` generates `workflow.md` — the pipeline structure
 - How `gigo:execute` dispatches workers — bare, plan-ordered, parallelizable
-- How `gigo:review` structures two-stage review — spec compliance then engineering quality
+- How `gigo:verify` structures two-stage review — spec compliance then engineering quality
 - How `gigo:maintain` checks pipeline health
 - How `gigo:snap` audits pipeline integrity
 
@@ -73,17 +73,17 @@ This file lives in THIS project only. Never generated into operator projects.
 The skills chain together with operator gates:
 
 ```
-Operator triggers gigo:plan
+Operator triggers gigo:blueprint
   → brainstorm → spec → ordered plan
   → "Plan ready. Review it and tell me when you're ready to execute."
   → Operator approves plan
-  → gigo:plan invokes gigo:execute with the plan file
+  → gigo:blueprint invokes gigo:execute with the plan file
 
 gigo:execute runs the plan:
   For each task (respecting dependency order):
     → dispatch bare worker subagent
     → worker completes (DONE/DONE_WITH_CONCERNS/BLOCKED/NEEDS_CONTEXT)
-    → gigo:execute invokes gigo:review (per-task mode)
+    → gigo:execute invokes gigo:verify (per-task mode)
       → Stage 1: spec review (gigo's own)
       → Stage 2: engineering review (gigo's own, SHA-range based)
     → if issues found: re-dispatch worker with review feedback, re-review
@@ -91,7 +91,7 @@ gigo:execute runs the plan:
   → all tasks complete
   → gigo:execute reports results to operator
   → operator creates PR
-  → gigo:review (PR mode) invokes code-review:code-review for final gate
+  → gigo:verify (PR mode) invokes code-review:code-review for final gate
 
 Operator triggers gigo:snap at session end
 ```
@@ -117,11 +117,11 @@ Operator triggers gigo:snap at session end
 - Nick Fury voice drops — skill speaks as itself
 - Generated `workflow.md` encodes the pipeline (see Section 4)
 - Generated `snap.md` adds pipeline health check
-- Tool detection: checks for `gigo:plan`, `gigo:execute`, `gigo:review`, `gigo:snap` — if not installed, tells operator to install GIGO plugin
+- Tool detection: checks for `gigo:blueprint`, `gigo:execute`, `gigo:verify`, `gigo:snap` — if not installed, tells operator to install GIGO plugin
 - Persona Calibration and Overwatch sections remain (proven by eval)
 - Hawkeye persona renamed (Marvel) — becomes "The Overwatch" or similar functional name
 
-### 3.2 `gigo:plan` — Planning
+### 3.2 `gigo:blueprint` — Planning
 
 **Takes from:** superpowers:brainstorming + superpowers:writing-plans + our old `/cap` skill. All MIT.
 
@@ -147,12 +147,12 @@ Operator triggers gigo:snap at session end
 - **Single skill, not two invocations.** Brainstorm → spec → plan is one continuous arc. No handoff friction between brainstorming and writing-plans.
 - **Plans include explicit dependency graph.** Each task lists what it blocks and what blocks it. superpowers:writing-plans produces ordered steps but doesn't formalize dependencies.
 - **Plans mark parallelizable tasks.** `gigo:execute` needs to know what can run concurrently. The plan is the authority on this.
-- **Auto-gap-detection during brainstorming.** If the team hits a domain it lacks expertise in during planning, `gigo:plan` flags it and offers to invoke `gigo:maintain` to add a teammate right there. The operator doesn't leave the conversation.
+- **Auto-gap-detection during brainstorming.** If the team hits a domain it lacks expertise in during planning, `gigo:blueprint` flags it and offers to invoke `gigo:maintain` to add a teammate right there. The operator doesn't leave the conversation.
 - **Plan header references `gigo:execute`** instead of superpowers execution skills.
 - **Spec and plan save locations** follow GIGO conventions, not superpowers paths.
 - **Visual companion** — evaluate whether to keep, simplify, or drop. It's token-intensive and may not earn its cost.
 
-**Triggering:** Operator invokes `gigo:plan`. After the plan is written and approved, `gigo:plan` asks: "Plan ready. Want me to start execution?" If yes, `gigo:plan` invokes `gigo:execute` with the plan file. The operator stays in the conversation.
+**Triggering:** Operator invokes `gigo:blueprint`. After the plan is written and approved, `gigo:blueprint` asks: "Plan ready. Want me to start execution?" If yes, `gigo:blueprint` invokes `gigo:execute` with the plan file. The operator stays in the conversation.
 
 ### 3.3 `gigo:execute` — Worker Dispatch
 
@@ -163,7 +163,7 @@ Operator triggers gigo:snap at session end
 The lead (gigo:execute) has assembled context. It creates tasks in the shared task list with dependency relationships, spawns bare worker teammates, and coordinates. Agent teams give us:
 - **Shared task list with auto-unblocking** — tasks auto-unblock when dependencies complete. No custom dependency tracking.
 - **Auto-claiming** — teammates claim unblocked tasks automatically. Parallelization is handled by infrastructure.
-- **TaskCompleted hook** — invokes `gigo:review` before any task can be marked done. Per-task review enforced at the infrastructure level.
+- **TaskCompleted hook** — invokes `gigo:verify` before any task can be marked done. Per-task review enforced at the infrastructure level.
 - **Inter-agent messaging** — workers communicate directly if they discover something another worker needs.
 - **Model per teammate** — haiku for mechanical tasks, sonnet for integration, opus for architecture.
 
@@ -209,7 +209,7 @@ If you're in over your head, say so. Bad work is worse than no work.
 You are fixing issues found in Task N: [task name]
 
 ## Review Feedback
-[SPECIFIC issues from gigo:review — what's wrong, where, why it matters]
+[SPECIFIC issues from gigo:verify — what's wrong, where, why it matters]
 
 ## Original Task Description
 [FULL TEXT of task from plan]
@@ -223,9 +223,9 @@ Status: DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT
 
 Still bare — no personas, no rules. But the worker gets the specific review feedback as context. This is not "assembled context" — it's task-specific feedback the same way the original task spec is task-specific input.
 
-**Triggering:** Invoked by `gigo:plan` after plan approval. `gigo:execute` runs the full plan, invoking `gigo:review` after each task, and reports results when all tasks complete.
+**Triggering:** Invoked by `gigo:blueprint` after plan approval. `gigo:execute` runs the full plan, invoking `gigo:verify` after each task, and reports results when all tasks complete.
 
-### 3.4 `gigo:review` — Two-Stage Review Pipeline
+### 3.4 `gigo:verify` — Two-Stage Review Pipeline
 
 **Takes from:** superpowers:requesting-code-review + superpowers spec-reviewer-prompt (MIT). Stage 2 invokes code-review:code-review directly — we don't rebuild it.
 
@@ -244,7 +244,7 @@ Still bare — no personas, no rules. But the worker gets the specific review fe
 
 **Why two modes:** `code-review:code-review` is built around PRs — it uses `gh pr diff`, `gh pr view`, reads prior PR comments. During execution, there's no PR yet, just committed code on a branch. We can't invoke code-review mid-execution. So per-task engineering review is GIGO's own (lightweight, SHA-range based), and the full code-review runs once at PR time.
 
-**Tool-not-installed handling:** If `code-review:code-review` isn't installed when it's time for PR review, `gigo:review` tells the operator: "Final engineering review works best with the code-review plugin. Install it with `claude install @anthropic/code-review`. I can do an inline review, but it won't be as thorough as 5 focused parallel agents with confidence scoring." Always suggest installing the real thing, fall back with a warning.
+**Tool-not-installed handling:** If `code-review:code-review` isn't installed when it's time for PR review, `gigo:verify` tells the operator: "Final engineering review works best with the code-review plugin. Install it with `claude install @anthropic/code-review`. I can do an inline review, but it won't be as thorough as 5 focused parallel agents with confidence scoring." Always suggest installing the real thing, fall back with a warning.
 
 **What we improve over superpowers:**
 - **Two stages are enforced, never combined.** Phase 8 proved combining averages instead of adding up (11 issues combined vs 10-15 per focused reviewer).
@@ -253,7 +253,7 @@ Still bare — no personas, no rules. But the worker gets the specific review fe
 - **Review works standalone.** Can be invoked on any code, not just code produced by `gigo:execute`. Useful for reviewing existing PRs or manual work.
 - **Verification before completion.** Absorb the core principle from superpowers:verification-before-completion — evidence before claims. No claiming "tests pass" without running them. No "looks good" without checking. This discipline is baked into the review process, not a separate skill.
 
-**Standalone mode:** When invoked without a plan (operator wants to review a PR or manual work), `gigo:review` adapts:
+**Standalone mode:** When invoked without a plan (operator wants to review a PR or manual work), `gigo:verify` adapts:
 - If a plan/spec exists in the project, ask: "Want me to review against the spec, or just engineering quality?"
 - If no plan exists, skip Stage 1 (spec review) and run Stage 2 only (engineering review)
 - If reviewing a PR, invoke `code-review:code-review` directly (PR mode)
@@ -282,7 +282,7 @@ Still bare — no personas, no rules. But the worker gets the specific review fe
 
 **Three modes, severity auto-detected:**
 
-1. **Add expertise** (targeted addition) — operator identified a gap, or `gigo:plan`/`gigo:snap` detected one. Research, propose persona, merge into team. Same process as current fury targeted-addition.
+1. **Add expertise** (targeted addition) — operator identified a gap, or `gigo:blueprint`/`gigo:snap` detected one. Research, propose persona, merge into team. Same process as current fury targeted-addition.
 
 2. **Health check** (light audit) — coverage, freshness, weight. Three-axis check from current fury health-check. If things look lean, report and done.
 
@@ -296,7 +296,7 @@ Still bare — no personas, no rules. But the worker gets the specific review fe
 **What changes from current fury + smash:**
 - **Single skill, not two.** The operator doesn't need to know whether their setup needs a light audit or a full restructure. The skill figures it out.
 - **Pipeline health** is part of the health check — does the workflow encode the three phases? Are review stages intact?
-- **Can be invoked by other skills.** `gigo:plan` detects expertise gap → invokes `gigo:maintain` mode 1. `gigo:snap` detects structural drift → invokes `gigo:maintain` mode 2/3. The operator stays in the conversation.
+- **Can be invoked by other skills.** `gigo:blueprint` detects expertise gap → invokes `gigo:maintain` mode 1. `gigo:snap` detects structural drift → invokes `gigo:maintain` mode 2/3. The operator stays in the conversation.
 
 ### 3.7 `gigo:eval` — Context Effectiveness Testing
 
@@ -351,7 +351,7 @@ No pipeline content here. The team roster is about WHO, not HOW.
 The team plans together. Brainstorm with full team context — personas
 shape the questions, catch architectural gaps, identify edge cases.
 
-Run /gigo:plan to brainstorm, write a spec, and produce an ordered plan
+Run /gigo:blueprint to brainstorm, write a spec, and produce an ordered plan
 with dependencies.
 
 ### Execution and Review
@@ -417,7 +417,7 @@ The skill reads the current state and auto-detects severity:
 | Signal | Mode |
 |---|---|
 | Operator asks to add expertise | Targeted addition (mode 1) |
-| Invoked by gigo:plan (expertise gap) or gigo:snap (coverage check) | Health check (mode 2), escalate if needed |
+| Invoked by gigo:blueprint (expertise gap) or gigo:snap (coverage check) | Health check (mode 2), escalate if needed |
 | Operator says "check on things" | Health check (mode 2) |
 | Multiple files over line cap, structural drift | Restructure (mode 3) — auto-detected |
 | Operator says "this is a mess" | Restructure (mode 3) |
@@ -438,7 +438,7 @@ The skill reads the current state and auto-detects severity:
 ### Cross-Skill Invocation
 
 `gigo:maintain` can be invoked by:
-- **`gigo:plan`** — "The team doesn't have WebSocket expertise. This gap could produce a weak spec. Want me to add a teammate?" → invokes maintain mode 1
+- **`gigo:blueprint`** — "The team doesn't have WebSocket expertise. This gap could produce a weak spec. Want me to add a teammate?" → invokes maintain mode 1
 - **`gigo:snap`** — coverage check finds gaps → invokes maintain mode 2
 - **Operator directly** — `/gigo:maintain` or natural language
 
@@ -461,17 +461,17 @@ The skill reads the current state and auto-detects severity:
 
 ### Key Improvements Over Source
 
-1. **Single planning arc.** Brainstorm → spec → plan is one skill (`gigo:plan`), not two invocations with a handoff.
+1. **Single planning arc.** Brainstorm → spec → plan is one skill (`gigo:blueprint`), not two invocations with a handoff.
 
 2. **Explicit dependency graphs in plans.** Tasks declare what they block and what blocks them. Enables intelligent parallelization in `gigo:execute`.
 
 3. **Workers run bare.** Phase 7 proved this. superpowers injects project CLAUDE.md into workers; we don't.
 
-4. **Review is compositional.** `gigo:review` works standalone on any code, not just code from `gigo:execute`. Useful for PR review, manual work, etc.
+4. **Review is compositional.** `gigo:verify` works standalone on any code, not just code from `gigo:execute`. Useful for PR review, manual work, etc.
 
 5. **Two review stages enforced.** Phase 8 proved combining averages instead of adding up. Stage 1 is GIGO's own spec reviewer. Stage 2 has two modes: per-task (GIGO's own SHA-range review during execution) and at-PR-time (code-review:code-review for the final gate).
 
-6. **Auto-gap-detection.** `gigo:plan` detects missing expertise during brainstorming and offers to add it immediately via `gigo:maintain`. superpowers has no equivalent.
+6. **Auto-gap-detection.** `gigo:blueprint` detects missing expertise during brainstorming and offers to add it immediately via `gigo:maintain`. superpowers has no equivalent.
 
 7. **Verification baked in, not bolted on.** Evidence-before-claims is built into the review process, not a separate skill that needs to be remembered and invoked.
 
@@ -570,7 +570,7 @@ When they next interact with the tool (now GIGO), `gigo:maintain` can detect the
 
 1. **Overwatch persona name.** "Hawkeye" is Marvel. Options: "The Overwatch," "The Auditor," "The Critic," "QA." Need to pick one.
 
-2. **Visual companion in `gigo:plan`.** superpowers:brainstorming has a browser-based visual companion for mockups. It's token-intensive. Keep, simplify, or drop?
+2. **Visual companion in `gigo:blueprint`.** superpowers:brainstorming has a browser-based visual companion for mockups. It's token-intensive. Keep, simplify, or drop?
 
 3. **GIGO plugin package structure.** How does this get packaged and distributed as a Claude Code plugin? Need to understand plugin packaging requirements.
 

@@ -345,9 +345,9 @@ cp -r gigo/skills/ ~/.claude/skills/
 - `.claude/references/` — deep knowledge, loaded on demand (zero token cost when unused)
 
 **Next Steps** — After assembly:
-- `gigo:plan` — turn your first task into a spec and implementation plan
+- `gigo:blueprint` — turn your first task into a spec and implementation plan
 - `gigo:execute` — run the plan with agent teams or subagents
-- `gigo:review` — two-stage code review
+- `gigo:verify` — two-stage code review
 - `gigo:snap` — run at session end to audit and protect
 
 **Requirements** — Claude Code CLI installed. That's it.
@@ -392,11 +392,11 @@ Skills in pipeline order:
 
 2. **gigo:maintain** — Ongoing team maintenance. Trigger: need new expertise, want a checkup, project has grown. Four modes: targeted addition, health check, restructure, upgrade.
 
-3. **gigo:plan** — Ideas to execution-ready plans. Trigger: you have a task, feature, or idea. Full arc: explore → clarify → propose approaches → design → spec → plan. Hard gate: no execution without approved plan.
+3. **gigo:blueprint** — Ideas to execution-ready plans. Trigger: you have a task, feature, or idea. Full arc: explore → clarify → propose approaches → design → spec → plan. Hard gate: no execution without approved plan.
 
 4. **gigo:execute** — Runs approved plans. Trigger: plan exists and is approved. Three tiers: agent teams (parallel), subagents (sequential), inline. Workers run bare — they get the spec, not the personas.
 
-5. **gigo:review** — Two-stage code review. Trigger: task completed, code ready for review. Stage 1: spec compliance ("did you build the right thing?"). Stage 2: engineering quality ("is the code good?").
+5. **gigo:verify** — Two-stage code review. Trigger: task completed, code ready for review. Stage 1: spec compliance ("did you build the right thing?"). Stage 2: engineering quality ("is the code good?").
 
 6. **gigo:snap** — Session-end audit. Trigger: wrapping up, saving progress. Two jobs: protect the project (audit rules for bloat/staleness), then capture learnings.
 

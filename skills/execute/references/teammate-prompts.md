@@ -80,7 +80,7 @@ For subagent fallback, dispatch a new subagent with the fix prompt and review fe
 You are fixing issues found in a task.
 
 ## Review Feedback
-[SPECIFIC issues from gigo:review — what's wrong, where, why it matters]
+[SPECIFIC issues from gigo:verify — what's wrong, where, why it matters]
 
 ## Original Task
 [FULL TEXT of task from plan]
