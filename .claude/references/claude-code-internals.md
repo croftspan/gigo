@@ -118,6 +118,16 @@ Plugin skills are namespaced (`plugin-name:skill-name`) to prevent conflicts.
 - Shared across all worktrees within same git repo
 - Machine-local, not synced across devices
 
+## Plan Mode
+
+Skills can programmatically enter and exit plan mode via `EnterPlanMode` and `ExitPlanMode` tools.
+
+- **EnterPlanMode:** Transitions to read-only mode. Only the `.claude/plans/<name>.md` file is writable. All other edits blocked.
+- **ExitPlanMode:** Requests operator approval of the plan file. On approval, returns to normal execution mode.
+- **In plan mode:** `Read`, `Glob`, `Grep`, `Bash` (read-only), `AskUserQuestion`, and `Agent` (Explore/Plan types) still work.
+- **Plan files:** Stored in `.claude/plans/` with auto-generated names (e.g., `zany-sniffing-matsumoto.md`).
+- **Use case:** `gigo:blueprint` enters plan mode for design exploration (Phases 0-4), gets operator approval on the design brief, then exits to write formal spec/plan documents.
+
 ## Key Model Capabilities (Claude 4.6)
 
 - **Extended thinking:** Interleaved thinking between tool calls. Previous thinking blocks auto-stripped to save tokens.

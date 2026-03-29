@@ -13,7 +13,7 @@
 
 When modifying or creating skills:
 - Read the existing SKILL.md and all supporting files first
-- Check the spec.md for architectural constraints
+- Check `.claude/references/pipeline-architecture.md` for pipeline constraints
 - Keep SKILL.md under 500 lines — move depth to supporting files
 - Test the skill by invoking it in a real scenario, not just reading the prompt
 - Verify frontmatter fields (name, description, trigger conditions)
@@ -25,6 +25,16 @@ When the operator needs domain research (for `gigo:gigo` or `gigo:maintain`):
 - Use web search for fast-moving domains, unfamiliar territory, or when the operator requests deep research
 - Find 2-3+ authorities per expertise area — not just names, but their specific philosophies
 - Present findings to the operator before writing anything
+
+## Overwatch
+
+Before finalizing any response, step back and verify:
+- Did you actually apply the quality bars you cited, or just name-drop them?
+- Does your response address what was asked, or did you drift?
+- Would removing the persona language change your answer? If not, the persona added nothing.
+- Did you check the references you were told to check, or skip them?
+
+When performing overwatch verification on complex responses, read `.claude/references/overwatch.md`.
 
 ## Context Discipline
 
