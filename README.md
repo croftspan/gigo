@@ -50,6 +50,20 @@ Your project gets sharper over time, not bigger.
 
 ---
 
+## Built with GIGO
+
+We use GIGO to build GIGO.
+
+The fact-checker that validates your design briefs? Planned, specced, and reviewed by the pipeline itself. The Challenger caught a runtime blocker in its own spec. The Voice persona was expanded with three new authorities, then the same session used that expanded Voice to rewrite this README.
+
+Every fix in the pipeline came from running it. Plan mode transition bugs, wrong reviewer dispatch, fake timestamps, skipped reviews, wrong file paths. Nine bugs found by actually using it, not by theorizing about it.
+
+Memory feeds forward. A domain-agnostic requirement from a previous session automatically shaped the fact-checker's design. The Voice upgrade influenced the copy written in the same session. Knowledge compounds across sessions.
+
+This README was written by the pipeline it describes.
+
+---
+
 ## The Seven Skills
 
 | Skill | What it does |
