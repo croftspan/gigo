@@ -58,6 +58,20 @@
         <p class="subtitle">What controlled experiments taught us about making AI output better</p>
       </header>
 
+      <!-- TL;DR -->
+      <section class="section" id="tldr">
+        <h2>What we found</h2>
+        <ul>
+          <li><strong>Loading workers with rules makes output worse, not better.</strong> Bare workers with good specs were rated senior to staff level. Every context format scored lower.</li>
+          <li><strong>Expert context transforms planning.</strong> The expert team caught 6 requirements the bare planner missed entirely, including a data integrity bug that would have shipped.</li>
+          <li><strong>Even the pure output-quality criterion shows 95% wins.</strong> The reviewer concern that "tautological" criteria inflate the score isn&rsquo;t supported. quality_bar alone tells the same story.</li>
+          <li><strong>Two focused reviewers beat one combined reviewer.</strong> Spec compliance and output quality as separate passes find more issues than one pass doing both.</li>
+          <li><strong>No context format beats bare Claude for creative execution.</strong> Fiction scored 19-20/20 on every run. Every assembled variant scored lower.</li>
+          <li><strong>The architecture:</strong> plan with experts, execute bare, review with quality bars. Knowledge in the right place at the right time.</li>
+        </ul>
+        <p>The full narrative is below. Every claim links to the experiment that produced it.</p>
+      </section>
+
       <!-- The Question -->
       <section class="section" id="the-question">
         <h2>The Question</h2>
@@ -116,6 +130,10 @@
         <div class="pull-quote">
           <p>Children&rsquo;s novel went from 86% to 100%. Every previously tied prompt converted. The task-specific pointers gave concrete ammunition: revelation pacing, clue chain audits, chapter-specific diagnosis.</p>
         </div>
+
+        <h3>Per-criterion breakdown</h3>
+        <p>A fair question: do the 5 criteria inflate the score? Three criteria (persona voice, expertise routing, specificity) measure whether context was <em>used</em>. Two (quality bar enforcement, pushback quality) measure whether output was <em>better</em>. If the tautological criteria are inflating things, you&rsquo;d see them winning while quality criteria don&rsquo;t.</p>
+        <p>That&rsquo;s not what the data shows. quality_bar alone: 95% assembled wins. All five criteria are within 5% of each other. In 19 of 20 prompts, every criterion goes the same direction. The <a href="eval-data.html">full per-criterion breakdown is on the eval data page</a>.</p>
       </section>
 
       <!-- Hallucination -->
@@ -330,7 +348,7 @@
       <!-- Research Foundation -->
       <section class="section" id="research-foundation">
         <h2>The Research Foundation</h2>
-        <p>Every design decision traces back to published research, then validated with original experiments.</p>
+        <p>Every design decision traces back to published research, then validated with original experiments. Every paper links to the source so you can check it yourself.</p>
                 <div class="table-wrapper"><table>
           <thead><tr><th>Paper</th><th>What it told us</th><th>How we used it</th></tr></thead>
           <tbody>
@@ -345,22 +363,22 @@
               <td>Predicted the 87% baseline pattern. Led to the persona calibration heuristic (+9 points)</td>
             </tr>
             <tr>
-              <td>Kong et al.</td>
+              <td><a href="https://arxiv.org/abs/2308.07702" target="_blank" rel="noopener">Kong et al. (2023)</a></td>
               <td>Role-play activates domain knowledge when personas are specific</td>
               <td>Blended personas with named authorities instead of generic roles</td>
             </tr>
             <tr>
-              <td>Xu et al.</td>
+              <td><a href="https://arxiv.org/abs/2305.14688" target="_blank" rel="noopener">Xu et al. (2023)</a></td>
               <td>Task-specific persona descriptions outperform generic ones</td>
               <td>Combined with Kong: specific blended personas as the standard</td>
             </tr>
             <tr>
-              <td>Shinn et al.</td>
+              <td><a href="https://arxiv.org/abs/2303.11366" target="_blank" rel="noopener">Shinn et al. (2023)</a></td>
               <td>Reflection agents make dramatically better decisions</td>
               <td>Inspired the Overwatch adversarial system after Phase 2b hallucination</td>
             </tr>
             <tr>
-              <td>Yang et al.</td>
+              <td><a href="https://arxiv.org/abs/2405.15793" target="_blank" rel="noopener">Yang et al. (2024)</a></td>
               <td>Interface design matters more than the prompt</td>
               <td>Shaped skill architecture: hub-and-spoke SKILL.md, progressive disclosure</td>
             </tr>
@@ -425,7 +443,7 @@
   <!-- Footer -->
   <footer class="site-footer">
     <div class="container">
-      <span>Built at <a href="https://croftspan.com" target="_blank" rel="noopener">Croftspan</a>. Apache 2.0. v7.6.0</span>
+      <span>Built by Eaven at <a href="https://croftspan.com" target="_blank" rel="noopener">Croftspan</a>. Apache 2.0. v7.6.0</span>
       <ul class="footer-links">
         <li><a href="../docs/dogfooding.html">How We Build</a></li>
         <li><a href="https://github.com/croftspan/gigo" target="_blank" rel="noopener" aria-label="GitHub"><svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a></li>

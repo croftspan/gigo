@@ -53,17 +53,17 @@ Initializer + coding agent pattern. One feature at a time, incremental progress.
 
 ## Agent Research (Cited by Gloaguen et al.)
 
-**Yang et al. — SWE-agent (NeurIPS 2024):** Agent-Computer Interface (ACI) design. Careful interface design improves agent performance without modifying model weights. Custom commands with concise, context-limited outputs prevent overwhelming the context window.
+**Yang et al. — SWE-agent (NeurIPS 2024, [arXiv:2405.15793](https://arxiv.org/abs/2405.15793)):** Agent-Computer Interface (ACI) design. Careful interface design improves agent performance without modifying model weights. Custom commands with concise, context-limited outputs prevent overwhelming the context window.
 
-**Shinn et al. — Reflexion (2023):** Agents that verbally reflect on task feedback in episodic memory make dramatically better decisions. 91% pass@1 on HumanEval. The mechanism: linguistic feedback stored in memory, not weight updates.
+**Shinn et al. — Reflexion (2023, [arXiv:2303.11366](https://arxiv.org/abs/2303.11366)):** Agents that verbally reflect on task feedback in episodic memory make dramatically better decisions. 91% pass@1 on HumanEval. The mechanism: linguistic feedback stored in memory, not weight updates.
 
 **Liu et al. — "Lost in the Middle" (2023):** LLMs struggle with information positioned in the middle of long contexts. Performance peaks at beginning and end. Critical for rules file design — put the most important content first and last.
 
-**Kong et al. — Role-Play Prompting (2023):** Personas activate relevant domain knowledge when specific. Accuracy improvements of 10-60% on reasoning benchmarks. The mechanism: personas trigger chain-of-thought reasoning more effectively than "think step by step."
+**Kong et al. — Role-Play Prompting (2023, [arXiv:2308.07702](https://arxiv.org/abs/2308.07702)):** Personas activate relevant domain knowledge when specific. Accuracy improvements of 10-60% on reasoning benchmarks. The mechanism: personas trigger chain-of-thought reasoning more effectively than "think step by step."
 
 **Pei et al. — "When a Helpful Assistant Is Not Really Helpful" (2023):** Generic personas ("helpful assistant") perform no better than no persona at all across 162 personas tested. The key distinction: *specific, task-matched* personas help. *Generic* ones don't.
 
-**Xu et al. — ExpertPrompting (2023):** Detailed, customized expert identity descriptions per instruction improve answer quality. The persona must be *synthesized for the specific task*, not a generic role.
+**Xu et al. — ExpertPrompting (2023, [arXiv:2305.14688](https://arxiv.org/abs/2305.14688)):** Detailed, customized expert identity descriptions per instruction improve answer quality. The persona must be *synthesized for the specific task*, not a generic role.
 
 **Hu et al. — "Expert Personas Improve LLM Alignment but Damage Accuracy" (2026):** Persona effectiveness is task-type dependent. Expert personas consistently improve alignment-dependent tasks (writing style, tone, safety refusal, format adherence: +0.40 to +0.65 on MT-Bench) but consistently damage pretraining-dependent tasks (factual recall, coding knowledge, math: -0.10 to -0.65). Longer personas amplify both effects. Models more optimized for system-prompt steering are more sensitive to both gains and losses. For reasoning-distilled models, gains come from added context length triggering reasoning chains, not from persona identity itself.
 

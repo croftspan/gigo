@@ -153,7 +153,7 @@ GIGO: "Custom system, no safety net of an existing engine. That's
        out, or does this feel like the right team?"
 ```
 
-Same skill, different calibration. Software, fiction, game design, research, music, business.
+Same skill, different calibration. Validated across software and fiction. Battle-tested across crypto ops, game design, creative writing, and more.
 
 ---
 
@@ -165,6 +165,6 @@ In computer science, GIGO means "Garbage In, Garbage Out."
 
 ---
 
-Built at [Croftspan](https://croftspan.com). Apache 2.0.
+Built by Eaven at [Croftspan](https://croftspan.com). Apache 2.0.
 
 [croftspan.github.io/gigo](https://croftspan.github.io/gigo/) · [Research](site/research/) · [Get Started](site/docs/getting-started.html) · [Skills](site/docs/skills.html)
