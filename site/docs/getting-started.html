@@ -76,10 +76,10 @@ cp -r gigo/skills/ ~/.claude/skills/</code></pre>
         <p>Here&rsquo;s what happens:</p>
         <ol>
           <li><strong>GIGO checks your project.</strong> It looks for an existing <code>CLAUDE.md</code> and <code>.claude/</code> directory. If nothing exists, it starts a conversational kickoff.</li>
-          <li><strong>You describe what you&rsquo;re building.</strong> Be as vague or specific as you want &mdash; &ldquo;a Rails API for library reservations&rdquo; or &ldquo;I&rsquo;m thinking about writing kids&rsquo; mystery books. Not sure where to start.&rdquo;</li>
-          <li><strong>GIGO researches authorities.</strong> It finds the best practitioners in the domain, identifies their specific philosophies, and proposes blended personas &mdash; 2-3+ real practitioners per persona.</li>
+          <li><strong>You describe what you&rsquo;re building.</strong> Be as vague or specific as you want. &ldquo;A Rails API for library reservations&rdquo; or &ldquo;I&rsquo;m thinking about writing kids&rsquo; mystery books. Not sure where to start.&rdquo;</li>
+          <li><strong>GIGO researches authorities.</strong> It finds the best practitioners in the domain, identifies their specific philosophies, and proposes blended expert team members. 2-3+ real practitioners per team member.</li>
           <li><strong>You react and refine.</strong> &ldquo;Drop that one.&rdquo; &ldquo;Add a testing expert.&rdquo; &ldquo;Who would they disagree with?&rdquo; The skill adjusts.</li>
-          <li><strong>Lock it in.</strong> GIGO writes your project files &mdash; a complete expert team, ready to work.</li>
+          <li><strong>Lock it in.</strong> GIGO writes your project files. A complete expert team, ready to work.</li>
         </ol>
       </section>
 
@@ -91,22 +91,22 @@ cp -r gigo/skills/ ~/.claude/skills/</code></pre>
           <tbody>
             <tr>
               <td><code>CLAUDE.md</code></td>
-              <td>Team roster &mdash; personas with blended authorities, autonomy model, quick reference</td>
+              <td>Team roster. Expert team members with blended authorities, autonomy model, quick reference</td>
               <td>Auto-loaded every conversation</td>
             </tr>
             <tr>
               <td><code>.claude/rules/</code></td>
-              <td>Standards, workflow, domain extensions. ~60 line cap per file (research-informed)</td>
+              <td>Standards, workflow, domain extensions. ~60 line cap per file</td>
               <td>Auto-loaded every conversation</td>
             </tr>
             <tr>
               <td><code>.claude/references/</code></td>
-              <td>Deep knowledge &mdash; authority profiles, technique catalogs, domain deep-dives</td>
+              <td>Deep knowledge. Authority profiles, technique catalogs, domain deep-dives</td>
               <td>Zero cost when unused. Loaded on demand via &ldquo;When to Go Deeper&rdquo; pointers</td>
             </tr>
           </tbody>
         </table></div>
-        <p>The two-tier architecture keeps always-on context lean and loads depth only when relevant. This is based on <a href="https://arxiv.org/abs/2602.11988" target="_blank" rel="noopener">Gloaguen et al. (2026)</a>, which found that bloated context reduces task success rates while increasing cost by 20%+.</p>
+        <p>This keeps your always-on context lean and loads depth only when relevant. <a href="https://arxiv.org/abs/2602.11988" target="_blank" rel="noopener">Research found</a> that bloated context reduces task success rates while increasing cost by 20%+.</p>
       </section>
 
       <!-- Next Steps -->
@@ -119,11 +119,11 @@ cp -r gigo/skills/ ~/.claude/skills/</code></pre>
             </tr>
             <tr>
               <td><code>gigo:execute</code></td>
-              <td>Run the plan with agent teams or subagents. Workers get the spec, not the personas.</td>
+              <td>Run the plan with agent teams or subagents. Workers get the spec, not the rules.</td>
             </tr>
             <tr>
               <td><code>gigo:verify</code></td>
-              <td>Two-stage code review &mdash; spec compliance first, then engineering quality.</td>
+              <td>Two-stage code review. Spec compliance first, then engineering quality.</td>
             </tr>
             <tr>
               <td><code>gigo:snap</code></td>
