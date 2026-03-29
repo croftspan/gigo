@@ -1,7 +1,7 @@
 {
   "name": "gigo",
   "description": "Seven skills that keep your AI projects sharp. Expert teams from real practitioners, validated pipeline (plan, execute, review), and automatic cleanup that prevents context rot.",
-  "version": "7.2.1",
+  "version": "7.2.2",
   "author": {
     "name": "croftspan"
   },
