@@ -402,6 +402,12 @@ These conventions apply to all template modifications and must be consistent acr
 
 ---
 
+## Known Limitations
+
+- **PR mode does not receive `{DOMAIN_CRITERIA}`.** verify SKILL.md's PR mode invokes `code-review:code-review`, a third-party plugin that has its own review logic. The `{DOMAIN_CRITERIA}` injection only applies to per-task mode (craft-reviewer template) and spec/plan mode (Challenger template). PR mode is a software-specific optimization path — domain-neutral projects won't use it. If `code-review:code-review` adds a criteria injection point in the future, verify can be updated to pass it through.
+
+---
+
 ## Verification
 
 After implementation:
@@ -412,3 +418,5 @@ After implementation:
 4. **Criteria generation test:** Read the Rails API fixture's CLAUDE.md and standards.md. Verify the generated review-criteria.md contains criteria from each persona's quality bar
 5. **Empty criteria test:** Mentally trace a dispatch path with no review-criteria.md present — verify the template produces a coherent review prompt with `{DOMAIN_CRITERIA}` empty
 6. **Cross-domain test:** Read the children's novel fixture's generated review-criteria.md — verify no software-specific language leaked in
+
+<!-- approved: spec 2026-03-29T14:00:13 by:Eaven -->
