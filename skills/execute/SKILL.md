@@ -1,15 +1,15 @@
 ---
 name: execute
-description: "Execute implementation plans using Claude Code agent teams. Lead creates tasks with dependencies, spawns bare worker teammates, reviews each task via gigo:verify before completion. Falls back to subagents if agent teams unavailable, inline if neither available. Use when you have an approved plan from gigo:blueprint."
+description: "Execute implementation plans. Lead dispatches bare worker subagents per task, invokes gigo:verify after each, tracks progress via checkpoints. Falls back to inline if subagents unavailable. Agent teams available as experimental opt-in. Use when you have an approved plan from gigo:blueprint."
 ---
 
 # Execute
 
-Good spec + bare workers + per-task review = quality output. The lead coordinates, teammates implement, infrastructure handles parallelization and review gates.
+Good spec + bare workers + per-task review = quality output. The lead coordinates, subagents implement, review gates enforce quality on every task.
 
 You run approved plans. You don't plan, you don't design, you don't question the spec. You execute it — dispatching workers, tracking progress, enforcing review on every task, and reporting results.
 
-**Announce every phase.** As you work, tell the operator what's happening: "Reading plan...", "Detecting execution tier...", "Creating tasks from plan...", "Spawning teammates...", "Task 3 complete, running review...", "All tasks complete, synthesizing results." Don't work silently.
+**Announce every phase.** As you work, tell the operator what's happening: "Reading plan...", "Dispatching Task 1 and Task 2 in parallel...", "Task 1 complete, running review...", "All tasks complete, synthesizing results." Don't work silently.
 
 ---
 
@@ -20,105 +20,102 @@ You run approved plans. You don't plan, you don't design, you don't question the
    - **Check for checkpoints.** Scan for `<!-- checkpoint: ... -->` comments in the plan.
    - **If checkpoints found:** Report progress to the operator, verify SHAs exist, and resume from the appropriate point. See `references/checkpoint-format.md` for the full resume procedure.
    - **If no checkpoints:** Fresh execution — proceed normally.
-3. **Detect execution tier.** Check which tiers are available, then present all options to the operator and let them choose. Don't silently fall back.
+3. **Present execution options.** Let the operator choose their tier:
 
-   > "Ready to execute. Available tiers:
-   > 1. **Agent teams** (recommended) — full parallelization, hook-enforced review, inter-worker messaging. Requires `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS`.
-   > 2. **Subagents** — fresh worker per task, sequential with some parallelization.
-   > 3. **Inline** — sequential in this session, no isolation.
+   > "Ready to execute. Available options:
+   > 1. **Subagents** (recommended) — fresh worker per task, parallel dispatch for independent tasks, lead-managed review.
+   > 2. **Inline** — sequential in this session, no isolation. Good for small plans or debugging.
+   > 3. **Agent teams** (experimental opt-in) — full parallelization via shared task list, hook-enforced review. Requires `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS`.
    >
-   > [Mark unavailable tiers.] Which route?"
+   > Which route?"
 
-   Default recommendation: the best available tier. But always ask — the operator may prefer a lower tier for debugging or cost reasons.
-
-4. **Set up review hook (Tier 1 only).** If using agent teams, the review hook script must exist BEFORE any tasks are dispatched — it's infrastructure, not a task. The hook gates task completion; if it doesn't exist when a teammate marks a task done, the gate fails silently.
-
-   - Check if `.claude/hooks/gigo-review-gate.sh` exists and is executable
-   - Check if `.claude/settings.local.json` (or `settings.json`) has a `TaskCompleted` hook entry pointing to it
-   - If the hook script is missing: create it now (see `references/review-hook.md` for the template). Use the spec path from the plan.
-   - If the settings entry is missing: create `.claude/settings.local.json` with the `TaskCompleted` hook wired
-   - If the hook is a task in the plan: remove it from the task list — the lead handles it during setup, not a worker
-
-   This runs during setup, not during execution. Workers must never create their own review infrastructure.
+   Default recommendation: subagents. But always ask — the operator may prefer inline for debugging or agent teams for experimentation.
 
 ---
 
-## Three Execution Tiers
+## Tier 1: Subagents (Primary)
 
-### Tier 1: Agent Teams (optimal)
+Fresh subagent per task via Agent tool. Lead controls dispatch, review, and triage.
 
-Requires `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` enabled. Full parallelization, hook-enforced review, inter-worker messaging.
+### Execution Flow
 
-**Setup:**
+For each **wave** of unblocked tasks:
 
-1. **Create tasks in shared task list.** For each task in the plan, use `TaskCreate` with:
-   - `subject`: task name from plan
-   - `description`: FULL TEXT of task from plan — don't make teammates read the plan file
-2. **Set dependencies.** Use `TaskUpdate` with `addBlocks`/`addBlockedBy` to match the plan's dependency graph. Tasks with unresolved `blockedBy` dependencies can't be claimed — the infrastructure handles ordering.
-3. **Spawn teammates.** Create bare worker teammates with the implementation prompt from `references/teammate-prompts.md`. Select model per task complexity — see `references/model-selection.md`. Team sizing: ~5-6 tasks per teammate.
-4. **Configure review hook.** TaskCompleted hook invokes `gigo:verify` before any task can be marked done — see `references/review-hook.md`.
+1. **Identify the wave.** Read the dependency graph. All tasks whose `blocked-by` dependencies are satisfied form the current wave.
+2. **Dispatch in parallel.** For tasks marked `parallelizable: true` with no shared file conflicts, dispatch multiple subagents in a single message (multiple Agent tool calls). Each subagent gets:
+   - Full task text from the plan (don't make subagents read the plan file)
+   - Context from completed dependencies ("What Was Built" addendums)
+   - Model selected per task complexity — see `references/model-selection.md`
+   - The implementation prompt from `references/teammate-prompts.md` (Tier 1 variant)
+3. **Wait for completion.** Process results as subagents finish.
+4. **Review each completed task.** Invoke `gigo:verify` (Stage 1: spec compliance, Stage 2: engineering quality).
+5. **Triage findings.** For each reviewed task:
+   - **Auto-fix:** Dispatch a fix subagent with the review feedback (see fix prompt in `references/teammate-prompts.md`). Re-review after fix.
+   - **Ask-operator:** Surface to operator. Task stays blocked. Move to next independent task.
+   - **Accept/pass:** Write addendum, checkpoint, commit.
+6. **Update the wave.** Completed tasks unblock dependent tasks. Repeat from step 1 with the new wave.
 
-**How it runs:**
+### Parallel Dispatch Rules
 
-- Teammates auto-claim unblocked tasks and implement them
-- When a teammate marks a task complete, the TaskCompleted hook fires and runs `gigo:verify`
-- If review passes (hook exits 0), the task is marked complete
-- If review finds issues (hook exits 2 with stderr feedback), the teammate receives the feedback and continues working on the task
-- Teammates communicate directly via `SendMessage` if they discover something another worker needs
-- When all tasks complete, the lead synthesizes results and reports to the operator
-- After a task completes and addendum is written, the lead writes a checkpoint comment to the plan and commits. See `references/checkpoint-format.md`.
+- Only dispatch tasks in parallel if they're marked `parallelizable: true` in the plan
+- Never dispatch tasks that modify the same files in parallel
+- If unsure about file conflicts, dispatch sequentially — wasted time beats merge conflicts
+- The lead can dispatch up to 3-4 subagents per wave (more creates diminishing returns from context switching)
 
-**The CLAUDE.md question:** Teammates auto-load project CLAUDE.md. Phase 7 data says bare workers perform best, but assembled workers still passed engineering review (3/3 approvals). Agent teams' coordination benefits — auto-parallelization, shared task list, inter-worker messaging, hook-enforced review — outweigh the theoretical context concern. Accept for v1. Test and optimize later with `gigo:eval`.
+### Status Handling
 
-### Tier 2: Subagents (good)
+Workers report one of four statuses:
 
-If agent teams are not available. Fresh subagent per task via Agent tool.
+**DONE** — Proceed to review via `gigo:verify`. Handle triage categories: auto-fix items go back to a fix subagent, ask-operator items block the task, accept items go into the addendum.
 
-**How it runs:**
+**DONE_WITH_CONCERNS** — Worker completed the task but flagged doubts. Read the concerns before proceeding to review. If concerns are about correctness or scope, address them first.
 
-- Lead dispatches one subagent per task using the implementation prompt from `references/teammate-prompts.md` (Tier 2 variant)
-- Sequential execution, with manual parallelization of independent tasks where possible
-- After each subagent completes, lead invokes `gigo:verify` manually
-- If review finds issues, dispatch a new subagent with the fix prompt + review feedback
-- Repeat until review passes, then move to next task
-- After each review pass, the lead writes a checkpoint and commits. On resume, checkpoints are the sole source of truth — no shared state to reconcile.
+**NEEDS_CONTEXT** — Worker needs information that wasn't provided. Provide context and re-dispatch a new subagent.
 
-**Surface this warning:**
-> Agent teams not available. Running with subagents — no auto-parallelization, no inter-worker communication. Enable agent teams with `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` for better results.
+**BLOCKED** — Worker cannot complete the task. Assess the blocker:
+1. Context problem — provide more context, re-dispatch
+2. Task too hard — re-dispatch with a more capable model
+3. Task too large — break it into smaller pieces
+4. Plan is wrong — escalate to the operator
 
-### Tier 3: Inline (functional)
+Never silently skip a blocker. The operator decides.
 
-If neither agent teams nor subagents are available.
+---
+
+## Tier 2: Inline (Fallback)
+
+If subagents are unavailable or the operator prefers it (debugging, simple plans).
 
 - Execute tasks sequentially in the current session
 - No context isolation between tasks
 - Lead invokes `gigo:verify` after each task
 - Lead writes checkpoints after each task. On context limit, the next session resumes from checkpoints.
 
-**Surface this warning:**
-> Neither agent teams nor subagents available. Running inline — no parallelization, no context isolation. Consider enabling subagent support.
+> "Running inline — no parallelization, no context isolation. Good for small plans or debugging."
 
 ---
 
-## Status Handling
+## Tier 3: Agent Teams (Experimental Opt-In)
 
-Workers report one of four statuses. Handle each appropriately:
+Available when the operator specifically wants it and `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` is enabled. Not recommended as default due to: auto-claim race conditions, forced CLAUDE.md loading on teammates, significantly higher token cost, no session resume, and unproven hook integration.
 
-**DONE** — Proceed to review (via TaskCompleted hook in Tier 1, manual invocation in Tier 2/3). After review, handle triage categories: auto-fix items go back to the worker, ask-operator items block the task until the operator decides, accept items go into the addendum. See `gigo:verify` Triage section.
+**If the operator chooses agent teams:**
 
-**DONE_WITH_CONCERNS** — Worker completed the task but flagged doubts. Read the concerns before proceeding. If concerns are about correctness or scope, address them before review. If they're observations (e.g., "this file is getting large"), note them and proceed to review.
+1. **Set up review hook.** The hook must exist BEFORE tasks are dispatched — see `references/review-hook.md`.
+2. **Create tasks in shared task list.** Use `TaskCreate` with full task text in description.
+3. **Pre-assign tasks** to specific workers using `TaskUpdate` with `owner`. Do NOT rely on auto-claim — it defeats parallelism (one fast worker grabs everything).
+4. **Set dependencies.** Use `addBlocks`/`addBlockedBy` to match the plan's dependency graph.
+5. **Spawn teammates** with the agent team prompt from `references/teammate-prompts.md` (Tier 3 variant). Select model per task complexity. Team sizing: ~5-6 tasks per teammate.
+6. **TaskCompleted hook** invokes `gigo:verify` before any task can be marked done.
 
-**NEEDS_CONTEXT** — Worker needs information that wasn't provided.
-- Tier 1: Teammate sends message to lead via `SendMessage`. Lead provides context, teammate continues.
-- Tier 2: Lead provides context and re-dispatches subagent.
+See `references/review-hook.md` for hook configuration and the full agent teams flow.
 
-**BLOCKED** — Worker cannot complete the task. Assess the blocker:
-1. If it's a context problem — provide more context and let the worker retry
-2. If the task requires more reasoning — in Tier 1, the teammate can escalate; in Tier 2, re-dispatch with a more capable model
-3. If the task is too large — break it into smaller pieces
-4. If the plan itself is wrong — escalate to the operator
-
-Never silently skip a blocker. Never force the same model to retry without changes. The operator decides.
+**Known issues:**
+- Auto-claim lets one fast worker grab all tasks (mitigated by pre-assignment)
+- CLAUDE.md auto-loads on all teammates (can't make them truly bare)
+- No session resume — teammates die on crash, task list has stale state
+- Significantly more tokens than subagents
+- Hook integration with gigo:verify is unproven
 
 ---
 
@@ -137,7 +134,7 @@ After a task passes both review stages, update the plan document before moving t
 ```
 
 3. **Include "accept" observations** from review triage in the "Notes for downstream" field.
-4. **Check downstream impact.** If the implementation deviated in ways that affect dependent tasks, check whether those task descriptions need updating before a worker claims them.
+4. **Check downstream impact.** If the implementation deviated in ways that affect dependent tasks, check whether those task descriptions need updating before dispatching them.
 5. **Write checkpoint** (see `references/checkpoint-format.md`).
 6. **Commit the plan update.**
 
@@ -160,13 +157,13 @@ After a task passes both review stages, update the plan document before moving t
 
 **Never:**
 - Start implementation without an approved plan
-- Skip review on any task (TaskCompleted hook enforces this in Tier 1)
+- Skip review on any task
 - Proceed with unfixed review issues
 - Ignore worker escalations (BLOCKED, NEEDS_CONTEXT)
 - Silently skip a task
-- Make workers read the plan file — provide full task text in the task description
+- Make workers read the plan file — provide full task text in the dispatch prompt
 
-**If a worker asks questions:** Answer clearly and completely. Provide additional context if needed. Don't rush them into implementation.
+**If a worker reports concerns:** Read them before proceeding. Don't rush into review.
 
 **If review finds issues:** The worker fixes them, review runs again. Repeat until approved. Don't skip the re-review.
 
@@ -174,7 +171,7 @@ After a task passes both review stages, update the plan document before moving t
 
 ## References
 
-- `references/teammate-prompts.md` — Implementation and fix prompt templates
+- `references/teammate-prompts.md` — Implementation and fix prompt templates (all tiers)
 - `references/model-selection.md` — When to use which model tier
-- `references/review-hook.md` — TaskCompleted hook configuration and flow
+- `references/review-hook.md` — TaskCompleted hook configuration (agent teams only)
 - `references/checkpoint-format.md` — Checkpoint syntax, resume procedure, edge cases

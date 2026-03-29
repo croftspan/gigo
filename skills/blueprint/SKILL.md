@@ -23,6 +23,14 @@ it must exist and be approved.
 
 ## The Full Arc
 
+### Phase 0: Enter Plan Mode
+
+Call `EnterPlanMode` before doing anything else. Phases 1-4 happen in plan mode — read-only exploration and design, with all findings written to the `.claude/plans/` file. No formal documents get written until the operator approves the design brief.
+
+The plan file is the **design brief** — the thinking, exploration findings, and design decisions that feed formal documentation. It's not a replacement for the spec or implementation plan. It's the approved input to them.
+
+**Write to the plan file as you work through Phases 1-4.** Every finding, every decision, every operator answer goes into the plan file. Conversation context gets compressed; the plan file persists.
+
 ### Phase 1: Explore Context
 
 Check the current project state before asking anything:
@@ -33,9 +41,11 @@ Check the current project state before asking anything:
 
 This shapes your questions. Don't ask things the project files already answer.
 
+**Write to plan file:** Project state summary, relevant existing patterns, constraints discovered, code paths that will be affected.
+
 ### Phase 2: Ask Clarifying Questions (2-3 max)
 
-Ask 2-3 questions max. One at a time. Only questions whose answers change the plan.
+Ask 2-3 questions max. One at a time. Only questions whose answers change the plan. Use `AskUserQuestion` — it works in plan mode.
 
 If the operator's initial description is rich enough, skip straight to approaches.
 If they say "I don't know" or "pass" — move on. Research fills gaps, not interrogation.
@@ -51,6 +61,8 @@ Bad questions:
 - Multiple questions at once
 - Questions where all answers lead to the same plan
 
+**Write to plan file:** Record each question and the operator's answer. These decisions shouldn't live only in conversation context.
+
 ### Phase 3: Propose 2-3 Approaches
 
 Before settling on a design, present 2-3 different approaches with trade-offs:
@@ -58,6 +70,8 @@ Before settling on a design, present 2-3 different approaches with trade-offs:
 - Be concrete about what each approach costs and gains
 - If one approach is clearly better, say so — but still show alternatives
 - Flag scope: if the request spans multiple independent subsystems, say so now
+
+**Write to plan file:** All approaches with trade-offs, the operator's choice, and why alternatives were rejected. This is the rationale the spec won't capture.
 
 ### Phase 4: Present Design
 
@@ -69,11 +83,23 @@ Once you know which direction, present the design in sections:
 
 In existing codebases, follow established patterns. Where existing code has problems that affect the work, include targeted improvements — don't propose unrelated refactoring.
 
+**Write to plan file:** The full design — architecture, components, data flow, error handling. This is the design brief that Phase 5 will formalize into a spec.
+
+### Phase 4.5: Approve Design Brief
+
+Call `ExitPlanMode`. The operator reviews the design brief (the plan file) and approves before any formal documents are written.
+
+If the operator requests changes: they stay in plan mode, you revise the plan file, and ExitPlanMode is called again.
+
+Once approved, you're back in normal execution mode with an approved design brief to work from.
+
 ### Phase 5: Write Spec
+
+Read the approved design brief (the plan file from Phase 4.5). Formalize it into a spec — don't recreate the design from conversation memory.
 
 Save to `docs/gigo/specs/YYYY-MM-DD-<topic>-design.md` and commit.
 
-The spec is the source of truth. A bare worker who reads only this spec should be able to build the right thing.
+The spec is the source of truth. A bare worker who reads only this spec should be able to build the right thing. The design brief captures the thinking and rationale; the spec captures the requirements and decisions.
 
 **Include a Conventions section.** During design, the team's personas surface convention decisions — error message formats, output patterns, naming schemes, exit code discipline, durability patterns. These must be explicit in the spec, not left implicit in the personas. A bare worker won't have the personas; the spec is all they get.
 
@@ -103,13 +129,33 @@ After writing the spec, assume a bare worker follows it literally. What goes wro
 
 Fix issues inline. No re-review needed.
 
+### Phase 6.5: Independent Spec Challenge
+
+After self-review, dispatch `gigo:verify` in spec/plan review mode (The Challenger). This is a separate agent that didn't write the spec — it adversarially tests whether the approach is sound.
+
+**Before dispatching:** Extract the operator's original request into 1-2 sentences. This becomes the intent summary for the reviewer's Pass 2. Don't include the design discussion or your reasoning — just what the operator asked for.
+
+**What the reviewer gets:**
+- Pass 1: the spec + repo access + quality bar checklist (extracted from CLAUDE.md personas as checklistable criteria, not full persona context)
+- Pass 2: the 1-2 sentence intent summary
+
+**Present findings to the operator:** Show the Challenger's review alongside the spec. The operator sees both and decides.
+
+- **Proceed:** Continue to Phase 7 (user reviews spec)
+- **Revise:** Fix the specific issues, re-run self-review (Phase 6), re-run Challenger
+- **Rethink:** Surface the Challenger's alternative. If operator agrees, loop back to Phase 3
+
+For small tasks, this phase may be skipped if the operator requests it.
+
 ### Phase 7: User Reviews Spec
 
 > "Spec written and committed to `<path>`. Please review — I'll revise anything before we move to the implementation plan."
 
 Wait for approval. If changes requested, revise and re-run the self-review.
 
-### Phase 8: Write Plan
+### Phase 8: Write Implementation Plan
+
+Read the approved design brief (plan file) and the approved spec. The design brief provides the "why" and the exploration findings; the spec provides the "what." The implementation plan breaks the spec into executable tasks.
 
 Save to `docs/gigo/plans/YYYY-MM-DD-<feature-name>.md`.
 
@@ -124,6 +170,18 @@ Read `references/example-plan.md` for worked examples at small, medium, and larg
 3. **Type consistency:** Do types, method signatures, and property names used in later tasks match earlier tasks? `clearLayers()` in Task 3 but `clearFullLayers()` in Task 7 is a bug.
 
 Fix issues inline.
+
+### Phase 9.5: Independent Plan Challenge
+
+Same pattern as Phase 6.5. Dispatch `gigo:verify` in spec/plan review mode on the implementation plan.
+
+**What the reviewer gets:**
+- Pass 1: the plan + the approved spec + repo access + quality bar checklist
+- Pass 2: the same 1-2 sentence intent summary from Phase 6.5
+
+The Challenger focuses on plan-specific concerns: will the task decomposition produce what the spec describes? Is the dependency graph correct? Will workers get stuck on underspecified steps? Will the code in task steps actually work against the real codebase?
+
+**Present findings to the operator.** Same verdict handling as Phase 6.5 — Proceed / Revise / Rethink.
 
 ### Phase 10: User Reviews Plan
 
@@ -149,11 +207,13 @@ Example: "This plan needs deep Stripe integration knowledge and I don't see a pa
 
 ## Scale to the Task
 
-Not every idea needs all 11 phases. Scale:
+Not every idea needs all phases at full depth. Scale:
 
-- **Small task** (bug fix, config change): phases 1-2 lightly, skip to phase 8, produce a short plan
+- **Small task** (bug fix, config change): plan mode still activates but the design brief is short (5-10 lines: bug, cause, fix approach). Skip to Phase 8 after approval. Challenger may be skipped if operator requests it.
 - **Medium task** (feature, refactor): full arc but design sections are brief
 - **Large task** (architecture change, new system): full arc with decomposition at phase 3
+
+Every task enters plan mode. Every task gets an approved design brief. The brief scales — not the process.
 
 Every plan, regardless of scale, answers: What, Order, Risks, Done.
 

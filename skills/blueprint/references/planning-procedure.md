@@ -4,6 +4,25 @@ The detailed step-by-step for writing implementation plans. The hub (`SKILL.md`)
 
 ---
 
+## 0. Design Brief → Spec → Implementation Plan
+
+Three documents form the planning chain:
+
+1. **Design brief** (`.claude/plans/<name>.md`) — the approved thinking from plan mode. Contains exploration findings, operator answers, approach rationale, and design decisions. Created in Phases 0-4, approved at Phase 4.5.
+2. **Spec** (`docs/gigo/specs/YYYY-MM-DD-<topic>-design.md`) — the formal source of truth for bare workers. Formalizes the design brief into requirements. Created in Phase 5.
+3. **Implementation plan** (`docs/gigo/plans/YYYY-MM-DD-<feature>.md`) — ordered, executable tasks that implement the spec. Created in Phase 8.
+
+Each document feeds the next. The spec references the design brief for rationale. The implementation plan references both the design brief (why) and the spec (what).
+
+**Include in the spec header:**
+```markdown
+**Design brief:** `.claude/plans/<name>.md`
+```
+
+This links the formal document back to the approved thinking.
+
+---
+
 ## 1. Scope Check
 
 Before writing tasks, confirm the spec is appropriately scoped:

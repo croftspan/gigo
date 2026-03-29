@@ -63,23 +63,55 @@ Then fall back to per-task mode using the SHA range of the PR.
 
 ---
 
+## Spec/Plan Review Mode — The Challenger
+
+A fundamentally different review mode. Not compliance checking — adversarial validation. Triggered when reviewing a spec or plan document rather than code.
+
+**When this mode activates:**
+- Called by `gigo:blueprint` at Phase 6.5 (spec review) or Phase 9.5 (plan review)
+- Called standalone on any spec/plan document in `docs/gigo/specs/` or `docs/gigo/plans/`
+
+**How it works:** Dispatch a subagent using the prompt template in `references/spec-plan-reviewer-prompt.md`. The reviewer runs two passes:
+
+1. **Pass 1 (blind):** Reviewer sees the document + repo only. No knowledge of operator intent. Judges feasibility, alternatives, failure modes against the actual codebase. This prevents rationalizing the planner's choices.
+2. **Pass 2 (intent):** Reviewer then gets the operator's original request (1-2 sentences). Checks if the document solves the stated problem or drifted.
+
+**The reviewer checks:**
+- **Feasibility** — will this work in this codebase, given its actual patterns and constraints?
+- **Alternatives** — is there a fundamentally better approach? (not style preferences)
+- **Failure modes** — what will break during execution or in production?
+- **Honest assessment** — confidence 1-5, where most specs score 3-4 and 5 is rare
+- **Intent alignment** — does this solve the right problem? (pass 2 only)
+
+**Verdicts:** Proceed (minor issues) / Revise (specific fixes needed) / Rethink (fundamental problems, reconsider approach).
+
+**After the review:** Present findings to the operator alongside the spec/plan. Operator decides whether to revise, override, or proceed. If Rethink, blueprint can loop back to Phase 3 (approaches).
+
+This mode does NOT use the triage framework (auto-fix/ask-operator/accept) — all findings go directly to the operator. There's no worker to auto-fix a spec.
+
+---
+
 ## Standalone Mode
 
 When invoked without a plan context (not called from gigo:execute):
 
-1. **If plan/spec exists** in `docs/gigo/specs/` or `docs/gigo/plans/`:
+1. **If reviewing a spec or plan** (file in `docs/gigo/specs/` or `docs/gigo/plans/`):
+   - Run Spec/Plan Review Mode (The Challenger)
+   - Ask for the operator's original intent to enable Pass 2
+
+2. **If reviewing code with a plan/spec available:**
    - Ask: "Review against spec, or just engineering quality?"
-   - If against spec: run both stages
+   - If against spec: run both code review stages
    - If engineering only: skip to Stage 2
 
-2. **If no plan exists:**
+3. **If reviewing code with no plan:**
    - Skip Stage 1 entirely
    - Run Stage 2 only
 
-3. **If reviewing a PR:**
+4. **If reviewing a PR:**
    - Invoke `code-review:code-review` (PR mode)
 
-4. **If reviewing commits without a PR:**
+5. **If reviewing commits without a PR:**
    - Run SHA-range engineering review (per-task mode)
 
 ---
@@ -151,3 +183,5 @@ If a reviewer can't verify something (e.g., no test suite exists), they say so e
 Read `references/spec-reviewer-prompt.md` for the Stage 1 subagent prompt template.
 
 Read `references/engineering-reviewer-prompt.md` for the Stage 2 per-task subagent prompt template.
+
+Read `references/spec-plan-reviewer-prompt.md` for the Challenger (spec/plan adversarial review) prompt template.

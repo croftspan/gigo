@@ -1,4 +1,6 @@
-# Review Hook — TaskCompleted Gate
+# Review Hook — TaskCompleted Gate (Agent Teams Only)
+
+> **This applies to Tier 3 (Agent Teams) only.** The primary execution path (Tier 1: Subagents) uses lead-invoked review — the lead calls `gigo:verify` directly after each subagent completes. No hook needed.
 
 This hook runs when any teammate marks a task as complete. It invokes `gigo:verify` and blocks completion if review finds issues.
 

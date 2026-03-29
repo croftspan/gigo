@@ -1,40 +1,10 @@
-# Teammate/Worker Prompt Templates
+# Worker Prompt Templates
 
 ## Implementation Prompt
 
-Use as the spawn prompt when creating a teammate (Tier 1), or as the Agent tool prompt for subagents (Tier 2).
+### Tier 1: Subagent Worker (Primary)
 
-The prompt is intentionally lean. The plan's task description (in the shared task list) provides the spec. The teammate reads it when they claim the task.
-
-### Tier 1: Agent Team Teammate
-
-```
-You are a worker implementing tasks from the shared task list.
-
-Claim an unblocked task, implement it, and mark it complete.
-
-For each task:
-1. Read the task description carefully — it contains the full spec
-2. If anything is unclear, ask via SendMessage to the lead before starting
-3. Implement exactly what the task specifies
-4. Write tests as the task describes
-5. Verify implementation works
-6. Commit your work
-7. Self-review: completeness, quality, no overbuilding
-8. Mark the task complete (TaskCompleted hook will run review)
-
-If review feedback includes `[ASK-OPERATOR]` items, don't try to fix those — move to
-the next unblocked task. The lead will handle operator communication and send you the
-decision via SendMessage.
-
-If you're in over your head, message the lead. Bad work is worse than no work.
-
-After completing a task, claim the next unblocked task. When no tasks remain, go idle.
-```
-
-### Tier 2: Subagent Worker
-
-For subagent dispatch, include the full task text in the prompt since there's no shared task list:
+Include the full task text in the Agent tool prompt since there's no shared task list:
 
 ```
 You are implementing a task.
@@ -45,8 +15,9 @@ You are implementing a task.
 ## Context
 [Where this fits, dependencies, what was built in prior tasks]
 
-If prior tasks have "What Was Built" addendums in the plan, read them — they
-may record interface changes or deviations that affect your task.
+If prior tasks have "What Was Built" addendums in the plan, the lead has
+included relevant context above. Use it — it may record interface changes
+or deviations that affect your task.
 
 ## Before You Begin
 If anything is unclear about requirements, approach, or dependencies — ask now.
@@ -64,17 +35,45 @@ Status: DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT
 If you're in over your head, say so. Bad work is worse than no work.
 ```
 
+### Tier 2: Inline
+
+No prompt template needed — the lead executes tasks directly in the current session.
+
+### Tier 3: Agent Team Teammate (Experimental Opt-In)
+
+```
+You are a worker implementing tasks from the shared task list.
+
+Your assigned tasks: [LIST SPECIFIC TASK NUMBERS — don't rely on auto-claim]
+
+For each assigned task:
+1. Read the task description carefully — it contains the full spec
+2. If anything is unclear, ask via SendMessage to the lead before starting
+3. Implement exactly what the task specifies
+4. Write tests as the task describes
+5. Verify implementation works
+6. Commit your work
+7. Self-review: completeness, quality, no overbuilding
+8. Mark the task complete (TaskCompleted hook will run review)
+
+If review feedback includes `[ASK-OPERATOR]` items, don't try to fix those — move to
+the next assigned task. The lead will handle operator communication and send you the
+decision via SendMessage.
+
+If you're in over your head, message the lead. Bad work is worse than no work.
+
+After completing your assigned tasks, go idle.
+```
+
+**Note:** Tier 3 prompt explicitly assigns tasks to prevent auto-claim race conditions. Do not use generic "claim unblocked tasks" — one fast worker will grab everything.
+
 ---
 
 ## Fix Prompt
 
-### Tier 1: Agent Team (hook feedback)
+### Tier 1: Subagent Re-dispatch
 
-In Tier 1, when the TaskCompleted hook rejects completion, the teammate receives the review feedback via stderr and continues working on the task. No re-dispatch needed — the teammate already has context from the implementation attempt. The hook feedback tells them what to fix.
-
-### Tier 2: Subagent Re-dispatch
-
-For subagent fallback, dispatch a new subagent with the fix prompt and review feedback:
+Dispatch a new subagent with the fix prompt and review feedback:
 
 ```
 You are fixing issues found in a task.
@@ -92,9 +91,9 @@ Run tests. Commit. Report back.
 Status: DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT
 ```
 
-### Tier 2: Operator-Resolved Re-dispatch
+### Tier 1: Operator-Resolved Re-dispatch
 
-When ask-operator items have been decided by the operator, dispatch with the resolution:
+When ask-operator items have been decided by the operator:
 
 ```
 You are implementing a decision made by the project operator.
@@ -115,6 +114,10 @@ Don't change anything else. Run tests. Commit. Report back.
 Status: DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT
 ```
 
+### Tier 3: Agent Team (hook feedback)
+
+In agent teams, when the TaskCompleted hook rejects completion, the teammate receives the review feedback via stderr and continues working on the task. No re-dispatch needed — the teammate already has context from the implementation attempt.
+
 ---
 
 ## Prompt Design Rationale
@@ -123,4 +126,6 @@ Status: DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT
 
 **Why full task text:** Workers should never need to read the plan file themselves. The lead extracts and provides the full task description. This eliminates file-reading overhead and ensures the worker gets exactly the context they need.
 
-**Why self-review before marking complete:** Workers catch their own mistakes before the formal review runs. This reduces review-fix cycles and saves time.
+**Why self-review before reporting:** Workers catch their own mistakes before the formal review runs. This reduces review-fix cycles and saves time.
+
+**Why explicit task assignment (Tier 3):** Auto-claim in agent teams lets one fast worker grab all tasks, defeating parallelism. Pre-assigning tasks to specific workers ensures parallel execution when the dependency graph allows it.
