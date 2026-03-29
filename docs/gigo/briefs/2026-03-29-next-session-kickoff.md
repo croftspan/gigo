@@ -58,7 +58,29 @@ gigo:eval was built before the domain-neutral redesign, before the Challenger, b
 
 ---
 
-## Session 4 (when ready): Eval Repo Split
+## Session 4: gigo:gigo "Enforce Existing Expertise" Mode
+
+gigo:gigo currently only has one mode: research a domain from scratch. But the Croftspan enterprise play is: do discovery with a client, produce brand system/voice guide/messaging framework, THEN assemble a GIGO project that enforces those deliverables. If gigo:gigo treats existing expertise the same as a blank slate, the entire service model breaks.
+
+### The feature:
+
+When existing expertise artifacts exist (brand strategy, voice guide, messaging framework, pillars, style guide), `gigo:gigo` should detect them and switch to "enforce" mode:
+- Build personas that ENFORCE the existing system, not research the domain
+- Quality bars derived from the existing deliverables
+- The team's job is enforcement and execution, not discovery
+- Existing voice guide becomes law, not suggestion
+
+This is the core flow for every Croftspan client engagement: discovery → deliverables → assembly that enforces those deliverables.
+
+### Prompt:
+
+```
+/gigo:blueprint Add an "enforce existing expertise" mode to gigo:gigo. When assembling a project that has existing brand/voice/messaging/strategy deliverables from a discovery phase, the assembly should BUILD AROUND those deliverables instead of researching the domain from scratch. Detect existing artifacts (brand-strategy.md, voice-guide.md, messaging-framework.md, pillars.md, style-guide.md, etc.) and switch to enforcement mode: personas enforce the existing system, quality bars derive from the deliverables, the team's job is execution not discovery. This is critical for the Croftspan enterprise play where every client engagement produces deliverables that gigo:gigo then needs to operationalize.
+```
+
+---
+
+## Session 5 (when ready): Eval Repo Split
 
 Create croftspan/gigo-evals. Move:
 - `evals/` directory (scripts, fixtures, results)
