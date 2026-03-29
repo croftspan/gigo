@@ -18,7 +18,7 @@ PASS 1: BLIND TECHNICAL ASSESSMENT
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 You do NOT know why this {DOCUMENT_TYPE} was written. You don't know what the
-operator asked for. Judge it purely as engineering.
+operator asked for. Judge it purely on technical merit.
 
 ## The {DOCUMENT_TYPE}
 
@@ -26,32 +26,32 @@ operator asked for. Judge it purely as engineering.
 
 {SPEC_CONTENT_IF_PLAN_REVIEW}
 
-## The Codebase
+## The Project
 
-Read the codebase. Understand the existing patterns, constraints, dependencies,
-and architecture. The {DOCUMENT_TYPE} must work within this reality, not a
+Read the project. Understand the existing patterns, constraints, dependencies,
+and structure. The {DOCUMENT_TYPE} must work within this reality, not a
 hypothetical one.
 
-## Quality Bar Checklist
+## Domain-Specific Criteria
 
 These are domain-specific checks extracted from the project's expertise.
 Check each one against the {DOCUMENT_TYPE}:
 
-{QUALITY_BAR_CHECKLIST}
+{DOMAIN_CRITERIA}
 
 ## Your Mandate — Pass 1
 
-Check these five things. For each, provide evidence from the codebase or
+Check these five things. For each, provide evidence from the project or
 leave it empty. No evidence = no finding.
 
 ### 1. Feasibility
 
-Will this actually work in THIS codebase?
+Will this actually work in THIS project?
 
 - Does it account for existing patterns, or does it ignore them?
 - Are there dependencies it doesn't mention?
 - Are there constraints (technical, architectural, framework) it violates?
-- Has it accounted for the actual state of the code, not an idealized version?
+- Has it accounted for the actual state of the project, not an idealized version?
 
 Read the files this {DOCUMENT_TYPE} will touch. Check what's actually there.
 
@@ -62,7 +62,7 @@ Is there a fundamentally better approach?
 - Not style preferences or "I'd do it differently"
 - Genuine alternatives where the proposed approach has a structural problem
 - Simpler approaches that achieve the same outcome
-- Existing patterns in the codebase that already solve part of this
+- Existing patterns in the project that already solve part of this
 
 If the approach is sound, say "No better alternative identified." Don't
 invent alternatives to fill the section.
@@ -90,9 +90,9 @@ Most {DOCUMENT_TYPE}s should score 3-4. A score of 5 is rare — earn it with
 evidence, don't award it by default. A score of 1-2 requires specific,
 evidenced problems.
 
-### 5. Quality Bar Results
+### 5. Domain-Specific Criteria Results
 
-For each item in the Quality Bar Checklist above, report:
+For each item in the Domain-Specific Criteria above, report:
 - ✅ Addressed
 - ❌ Not addressed — [what's missing]
 - ⚠️ Partially addressed — [what's incomplete]
@@ -100,7 +100,7 @@ For each item in the Quality Bar Checklist above, report:
 ## Rules — Pass 1
 
 DO:
-- Read actual codebase files before judging feasibility
+- Read actual project files before judging feasibility
 - Cite specific files, functions, patterns as evidence
 - Be direct. "This won't work because X" not "this could potentially..."
 - Report genuine findings even if there are many
@@ -110,7 +110,7 @@ DO NOT:
 - Praise the {DOCUMENT_TYPE}
 - Soften findings ("overall this is good, but...")
 - Suggest cosmetic improvements
-- Raise issues you can't back with codebase evidence
+- Raise issues you can't back with project evidence
 - Check for completeness, placeholders, or internal consistency — the
   self-review already did that. You check whether the DECISIONS are right.
 - Score 5/5 unless you genuinely found nothing wrong after thorough review
@@ -150,7 +150,7 @@ OUTPUT FORMAT
 **Confidence: N/5**
 
 #### Feasibility Issues
-[numbered, with codebase evidence — file:line or pattern references]
+[numbered, with project evidence — specific location or pattern references]
 [or "None identified."]
 
 #### Better Alternatives
@@ -161,7 +161,7 @@ OUTPUT FORMAT
 [numbered — what will break and why]
 [or "None identified."]
 
-#### Quality Bar Results
+#### Domain-Specific Criteria Results
 [checklist results from section 5]
 
 ### Pass 2: Intent Alignment
@@ -186,7 +186,7 @@ OUTPUT FORMAT
 
 Set `{DOCUMENT_TYPE}` to "spec". The reviewer focuses on:
 - Whether the design will work when implemented
-- Whether the architecture fits the codebase
+- Whether the design fits the project
 - Whether the conventions section covers what workers need
 - Whether the spec is specific enough for a bare worker to build from
 
@@ -197,7 +197,7 @@ Set `{DOCUMENT_TYPE}` to "spec". The reviewer focuses on:
 Set `{DOCUMENT_TYPE}` to "plan". The reviewer focuses on:
 - Whether the task decomposition will produce what the spec describes
 - Whether the dependency graph is correct
-- Whether the code in task steps will actually work against the real codebase
+- Whether the steps will actually work against the real project
 - Whether workers will get stuck on underspecified steps
 
 `{SPEC_CONTENT_IF_PLAN_REVIEW}` should contain:
@@ -207,18 +207,22 @@ Set `{DOCUMENT_TYPE}` to "plan". The reviewer focuses on:
 {FULL_SPEC_TEXT}
 ```
 
-## Quality Bar Checklist Construction
+## Domain-Specific Criteria Construction
 
-The blueprint skill extracts checklistable quality criteria from the project's
-CLAUDE.md personas before dispatching. These are domain-specific questions, not
-generic engineering checks.
+The dispatching skill provides criteria extracted from the project's expertise.
+These are domain-specific checks, not generic quality assessments.
 
-Example checklist items:
+Example criteria (software):
 - "Does this survive a power failure mid-write?"
 - "Does every goroutine have a shutdown path?"
-- "Does the output work in a pipeline (stdout parseable, errors to stderr)?"
-- "Will this work with the existing auth middleware?"
-- "Does this handle the rate limiting constraints documented in X?"
 
-If no domain-specific quality bars exist in the project, omit the section.
-The reviewer's own engineering judgment covers generic quality.
+Example criteria (fiction):
+- "Is every clue planted 2+ chapters before payoff?"
+- "Does the chapter end mid-tension, not at a resolution?"
+
+Example criteria (game design):
+- "Does the server validate all game state mutations?"
+- "Does the reward loop respect the session-length target?"
+
+If no domain-specific criteria are provided, omit the section.
+The reviewer's own judgment covers generic quality.
