@@ -17,6 +17,7 @@ When modifying or creating skills:
 - Keep SKILL.md under 500 lines — move depth to supporting files
 - Test the skill by invoking it in a real scenario, not just reading the prompt
 - Verify frontmatter fields (name, description, trigger conditions)
+- **Dogfooding guard:** When modifying GIGO's own skill files, ALWAYS write to the source repo (`$CLAUDE_PROJECT_DIR/skills/`), NOT to the plugin install path (`~/.claude/plugins/`). Skill files load from the plugin path but the source of truth is the project repo.
 
 ## Research Pattern
 
