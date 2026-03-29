@@ -5,19 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0a0a0a">
   <title>Two Kinds of Leadership — GIGO Research</title>
-  <meta name="description" content="We proved that loading AI workers with rules makes them worse. The fix is a management philosophy, not a technical one. 9 phases of experiments, 50+ eval runs, two domains.">
+  <meta name="description" content="We found that loading AI workers with rules makes them worse. The fix is a management philosophy, not a technical one. 9 phases of experiments, 50+ eval runs, two domains.">
 
   <!-- Open Graph -->
-  <meta property="og:title" content="Two Kinds of Leadership — What 9 experimental phases taught us about AI context engineering">
-  <meta property="og:description" content="We ran 9 phases of controlled experiments to prove where AI context helps and where it hurts. Then we built a system that applies the findings.">
+  <meta property="og:title" content="Two Kinds of Leadership. What 9 experimental phases taught us about making AI output better">
+  <meta property="og:description" content="We ran 9 phases of controlled experiments to find where AI context helps and where it hurts. Then we built a system that applies the findings.">
   <meta property="og:image" content="../assets/social-preview.png">
   <meta property="og:url" content="https://croftspan.github.io/gigo/research/">
   <meta property="og:type" content="article">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Two Kinds of Leadership — What 9 experimental phases taught us about AI context engineering">
-  <meta name="twitter:description" content="We ran 9 phases of controlled experiments to prove where AI context helps and where it hurts.">
+  <meta name="twitter:title" content="Two Kinds of Leadership. What 9 experimental phases taught us about making AI output better">
+  <meta name="twitter:description" content="We ran 9 phases of controlled experiments to find where AI context helps and where it hurts.">
   <meta name="twitter:image" content="../assets/social-preview.png">
 
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
@@ -54,7 +54,7 @@
       <!-- Title -->
       <header class="section section--flush section--center">
         <h1>Two Kinds of Leadership</h1>
-        <p class="subtitle">What 9 experimental phases taught us about AI context engineering</p>
+        <p class="subtitle">What 9 experimental phases taught us about making AI output better</p>
       </header>
 
       <!-- The Question -->
@@ -69,8 +69,8 @@
         <h2>The Setup</h2>
         <p>Two fixture domains, chosen to be as different as possible:</p>
         <ul>
-          <li><strong>Rails API</strong> (OrderFlow) &mdash; 3 personas covering migration safety, API design, and TDD discipline. Quality gates, anti-patterns, reference patterns.</li>
-          <li><strong>Children&rsquo;s mystery novel</strong> (The Vanishing Paintings) &mdash; 3 personas covering plot structure, prose craft, and young reader advocacy. Mystery craft rules, clue-pacing standards.</li>
+          <li><strong>Rails API</strong> (OrderFlow). 3 personas covering migration safety, API design, and TDD discipline. Quality gates, anti-patterns, reference patterns.</li>
+          <li><strong>Children&rsquo;s mystery novel</strong> (The Vanishing Paintings). 3 personas covering plot structure, prose craft, and young reader advocacy. Mystery craft rules, clue-pacing standards.</li>
         </ul>
         <p>20 prompts across 3 axes: quality bars (prompts that invite mistakes), persona voice (open questions), and routing (complex multi-concern tasks). Each prompt ran twice: <strong>bare</strong> (source files only, no context) vs <strong>assembled</strong> (full team context). Blinded A/B judging with randomized ordering, 5 criteria per prompt.</p>
         <p>20 prompts &times; 5 criteria = <strong>100 evaluations per run.</strong></p>
@@ -80,7 +80,7 @@
       <section class="section" id="baseline">
         <h2>Phase 1: The Baseline (87%)</h2>
                 <div class="table-wrapper"><table>
-          <caption>The 11 ties and 2 losses tell the real story &mdash; they cluster by task type.</caption>
+          <caption>The 11 ties and 2 losses tell the real story. They cluster by task type.</caption>
           <thead><tr><th>Domain</th><th>Win %</th><th>Ties</th><th>Losses</th></tr></thead>
           <tbody>
             <tr><td>Rails API</td><td>88%</td><td>5</td><td>1</td></tr>
@@ -88,8 +88,8 @@
             <tr><td><strong>Combined</strong></td><td><strong>87%</strong></td><td><strong>11</strong></td><td><strong>2</strong></td></tr>
           </tbody>
         </table></div>
-        <p>The 13 non-wins clustered into a pattern that matched a paper we&rsquo;d already integrated: <a href="https://arxiv.org/abs/2603.18507" target="_blank" rel="noopener">Hu et al. (2026)</a> &mdash; &ldquo;Expert Personas Improve LLM Alignment but Damage Accuracy.&rdquo;</p>
-        <p>Presentation tasks (quality bars, style, structure) &mdash; assembled won almost every time. Content tasks (factual recall, deployment steps, diagnostics) &mdash; tied. The persona overhead was neutral or slightly negative. This wasn&rsquo;t a failure. It was the fundamental tradeoff the research predicts: personas help alignment, hurt knowledge retrieval. We were seeing it in our own data.</p>
+        <p>The 13 non-wins clustered into a pattern that matched a paper we&rsquo;d already integrated: <a href="https://arxiv.org/abs/2603.18507" target="_blank" rel="noopener">Hu et al. (2026)</a>, &ldquo;Expert Personas Improve LLM Alignment but Damage Accuracy.&rdquo;</p>
+        <p>Presentation tasks (quality bars, style, structure): assembled won almost every time. Content tasks (factual recall, deployment steps, diagnostics): tied. The persona overhead was neutral or slightly negative. This wasn&rsquo;t a failure. It was the fundamental tradeoff the research predicts: personas help alignment, hurt knowledge retrieval. We were seeing it in our own data.</p>
       </section>
 
       <!-- Calibration -->
@@ -101,7 +101,7 @@
         <p>A lightweight metacognitive check added to each domain&rsquo;s workflow: on presentation tasks, lean into persona fully. On content tasks, lead with training, persona for framing only. The theory: on content tasks, persona context was competing with the model&rsquo;s factual training. The heuristic tells the model to step back and let training lead.</p>
 
         <h3>Lever 2: Task-Specific &ldquo;When to Go Deeper&rdquo; Pointers</h3>
-        <p>The original pointers were generic: &ldquo;When working on migrations, read rails-patterns.md.&rdquo; The new pointers name the task and what to look for: &ldquo;When deploying or preparing for production, read rails-patterns.md &mdash; verify migration safety, index strategy, and CI status before shipping.&rdquo;</p>
+        <p>The original pointers were generic: &ldquo;When working on migrations, read rails-patterns.md.&rdquo; The new pointers name the task and what to look for: &ldquo;When deploying or preparing for production, read rails-patterns.md. Verify migration safety, index strategy, and CI status before shipping.&rdquo;</p>
         <p>The tied prompts involved tasks where domain knowledge lived in reference files that didn&rsquo;t load. Generic pointers don&rsquo;t trigger on &ldquo;deploy to production.&rdquo; Specific pointers do.</p>
 
                 <div class="table-wrapper"><table>
@@ -121,7 +121,7 @@
       <section class="section" id="hallucination">
         <h2>The Hallucination Problem</h2>
         <p>Between the 96% and 99% runs, we ran the eval again with a minor tweak. Got 91% with 7 losses.</p>
-        <p>The assembled version on one prompt hallucinated a classification exercise. Instead of answering the question, it categorized all 10 prompts and analyzed the persona calibration system. The judge faithfully scored this garbage against the bare version&rsquo;s correct answer &mdash; and awarded 5 losses.</p>
+        <p>The assembled version on one prompt hallucinated a classification exercise. Instead of answering the question, it categorized all 10 prompts and analyzed the persona calibration system. The judge faithfully scored this garbage against the bare version&rsquo;s correct answer, and awarded 5 losses.</p>
 
         <div class="pull-quote">
           <p>The judge scores quality, not correctness. A beautifully written, persona-rich response that doesn&rsquo;t answer the question can still win on voice and routing criteria.</p>
@@ -165,7 +165,7 @@
       <!-- Proficiency -->
       <section class="section" id="proficiency">
         <h2>The Proficiency Test</h2>
-        <p>The A/B eval proved assembled context <em>influences</em> behavior. But influence isn&rsquo;t outcome. The proficiency test asks: when both versions do real work, which output is actually better?</p>
+        <p>The A/B eval showed assembled context <em>influences</em> behavior. But influence isn&rsquo;t outcome. The proficiency test asks: when both versions do real work, which output is actually better?</p>
         <p>Two self-contained tasks: build a library reservation API from a complete spec, and write a mystery novel opening scene from a character brief. Automated structural checks plus LLM rubric scoring, 20 checks per domain.</p>
 
                 <div class="table-wrapper"><table>
@@ -176,9 +176,9 @@
           </tbody>
         </table></div>
 
-        <p>Then we dispatched blind qualitative judges &mdash; a senior engineer and senior editor who didn&rsquo;t know which version had context.</p>
-        <p>The blind engineer rated bare &ldquo;senior&rdquo; and assembled &ldquo;strong mid-level reaching for senior.&rdquo; Assembled was penalized for over-commenting, including planning notes in output, and showing a subtle race condition that bare avoided. The blind editor rated bare &ldquo;veteran&rdquo; and assembled &ldquo;mid-career&rdquo; &mdash; penalized for explaining its own clues in a postscript.</p>
-        <p>We re-ran with full context visible &mdash; letting the judge see <em>why</em> the assembled version showed its work.</p>
+        <p>Then we dispatched blind qualitative judges: a senior engineer and senior editor who didn&rsquo;t know which version had context.</p>
+        <p>The blind engineer rated bare &ldquo;senior&rdquo; and assembled &ldquo;strong mid-level reaching for senior.&rdquo; Assembled was penalized for over-commenting, including planning notes in output, and showing a subtle race condition that bare avoided. The blind editor rated bare &ldquo;veteran&rdquo; and assembled &ldquo;mid-career,&rdquo; penalized for explaining its own clues in a postscript.</p>
+        <p>We re-ran with full context visible, letting the judge see <em>why</em> the assembled version showed its work.</p>
 
         <div class="pull-quote">
           <p>&ldquo;Submission A is the stronger engineering outcome... but B&rsquo;s team, with A&rsquo;s instincts. B&rsquo;s standards create a shared vocabulary, testable quality gates, and a self-audit culture that scales across engineers.&rdquo;</p>
@@ -225,12 +225,12 @@
 
         <p>The assembled planner&rsquo;s spec caught six specific issues bare missed entirely:</p>
         <ol>
-          <li><strong>Partial unique index</strong> &mdash; prevents a data integrity bug bare&rsquo;s plan would ship</li>
-          <li><strong><code>FOR UPDATE SKIP LOCKED</code></strong> &mdash; better concurrency than bare&rsquo;s <code>FOR UPDATE</code></li>
-          <li><strong>Copy condition field</strong> &mdash; operational requirement bare missed (can&rsquo;t withdraw damaged books)</li>
-          <li><strong>Pagination</strong> &mdash; bare returned unbounded results on the list endpoint</li>
-          <li><strong>Runnable RSpec code</strong> &mdash; bare wrote English test descriptions, assembled wrote actual specs</li>
-          <li><strong>RESTful cancel</strong> &mdash; assembled used <code>PATCH</code> for state transition, bare used <code>DELETE</code> with query param</li>
+          <li><strong>Partial unique index</strong>: prevents a data integrity bug bare&rsquo;s plan would ship</li>
+          <li><strong><code>FOR UPDATE SKIP LOCKED</code></strong>: better concurrency than bare&rsquo;s <code>FOR UPDATE</code></li>
+          <li><strong>Copy condition field</strong>: operational requirement bare missed (can&rsquo;t withdraw damaged books)</li>
+          <li><strong>Pagination</strong>: bare returned unbounded results on the list endpoint</li>
+          <li><strong>Runnable RSpec code</strong>: bare wrote English test descriptions, assembled wrote actual specs</li>
+          <li><strong>RESTful cancel</strong>: assembled used <code>PATCH</code> for state transition, bare used <code>DELETE</code> with query param</li>
         </ol>
 
         <div class="pull-quote">
@@ -254,7 +254,7 @@
           </tbody>
         </table></div>
 
-        <p>Bare was rated senior or staff every time. The run 3 review called it &ldquo;staff&rdquo; &mdash; noting check constraints on copies_available, correct lock ordering, and handling of an expired-reservation edge case that &ldquo;most submissions miss entirely.&rdquo; Compressed was the only variant that got request-changes on every run, with real bugs: race windows, fat controllers, spec deviations.</p>
+        <p>Bare was rated senior or staff every time. The run 3 review called it &ldquo;staff,&rdquo; noting check constraints on copies_available, correct lock ordering, and handling of an expired-reservation edge case that &ldquo;most submissions miss entirely.&rdquo; Compressed was the only variant that got request-changes on every run, with real bugs: race windows, fat controllers, spec deviations.</p>
 
         <div class="pull-quote">
           <p>We thought the team&rsquo;s knowledge needs to reach the worker in the right format. Reality: the team&rsquo;s knowledge needs to reach the worker as a good spec.</p>
@@ -271,13 +271,13 @@
           <p>The team plans and reviews. The individual executes. That&rsquo;s not a compromise. That&rsquo;s the architecture.</p>
         </div>
 
-        <p>This is the central finding. It&rsquo;s not a technical finding &mdash; it&rsquo;s a management philosophy, proven with data.</p>
+        <p>This is the central finding. It&rsquo;s not a technical finding. It&rsquo;s a management philosophy, validated with data.</p>
 
         <h3>&ldquo;Do your job or I&rsquo;ll fire you&rdquo;</h3>
         <p>The intuitive approach: load the worker with rules, quality gates, war stories, and compliance checks. More context, more guardrails. The worker knows exactly what&rsquo;s expected.</p>
         <p>The data shows what happens with that boss:</p>
         <ol>
-          <li><strong>Workers perform compliance instead of doing the work.</strong> Phase 4: assembled workers over-commented their code, included planning notes in creative output, and explained their own craft decisions. A blind judge called the output &ldquo;mid-level reaching for senior&rdquo; &mdash; checking boxes instead of thinking.</li>
+          <li><strong>Workers perform compliance instead of doing the work.</strong> Phase 4: assembled workers over-commented their code, included planning notes in creative output, and explained their own craft decisions. A blind judge called the output &ldquo;mid-level reaching for senior.&rdquo; Checking boxes instead of thinking.</li>
           <li><strong>The format of the rules doesn&rsquo;t matter.</strong> Phase 7: four different ways to deliver the same knowledge. The worker who got nothing was rated senior to staff. The worker who got compressed rules produced the worst code every single time, with real bugs.</li>
           <li><strong>Creative work suffers the most.</strong> Phase 5: bare Claude writing fiction scored 19-20/20 on every run. Every assembled format scored lower. Every single one.</li>
         </ol>
@@ -286,20 +286,20 @@
         <h3>&ldquo;What can I do to help you do your job better?&rdquo;</h3>
         <p>The answer is almost always the same: <strong>give me a clear plan and honest feedback.</strong> Not someone standing over my shoulder.</p>
 
-        <p><strong>Planning &mdash; where leadership earns its keep:</strong></p>
+        <p><strong>Planning, where leadership earns its keep:</strong></p>
         <ul>
           <li>The assembled brainstormer asks &ldquo;What&rsquo;s the expected scale? <em>This determines whether we need to worry about table lock duration on migrations.</em>&rdquo; The bare brainstormer asks &ldquo;What&rsquo;s the expected scale?&rdquo; Same question. Different depth. (Phase 6)</li>
           <li>The assembled planner catches a data integrity bug, unbounded queries, and a missing operational requirement the bare planner misses. (Phase 6)</li>
-          <li>The output is a spec that embeds the team&rsquo;s expertise as concrete requirements &mdash; not rules to comply with, but decisions already made by people who thought about the hard problems.</li>
+          <li>The output is a spec that embeds the team&rsquo;s expertise as concrete requirements. Not rules to comply with, but decisions already made by people who thought about the hard problems.</li>
         </ul>
 
-        <p><strong>Execution &mdash; trust the worker:</strong></p>
+        <p><strong>Execution, trust the worker:</strong></p>
         <ul>
           <li>Worker receives the spec. No personas, no rules, no war stories. Just: here&rsquo;s what to build.</li>
           <li>A bare worker following a good spec produces senior/staff-level code. The same worker following a bare spec produces good-but-incomplete code. The delta is in the spec, not the worker&rsquo;s context. (Phase 7)</li>
         </ul>
 
-        <p><strong>Review &mdash; the honest feedback part:</strong></p>
+        <p><strong>Review, the honest feedback part:</strong></p>
         <ul>
           <li>The team evaluates the output against quality bars with real expertise.</li>
           <li>The principal engineer review caught race windows between unlocked checks and locked inserts, fat controllers, missing database constraints, and expired-reservation bugs. (Phase 7)</li>
@@ -367,7 +367,7 @@
       <!-- Phase 9: Integration Test -->
       <section class="section" id="integration">
         <h2>The Integration Test</h2>
-        <p>Every finding above was isolated: planning tested separately from execution, execution from review. Phase 9 tested the full pipeline end-to-end on a real project &mdash; a Go task queue CLI.</p>
+        <p>Every finding above was isolated: planning tested separately from execution, execution from review. Phase 9 tested the full pipeline end-to-end on a real project, a Go task queue CLI.</p>
 
         <h3>Pipeline Coherence</h3>
         <p>Three chains built the same feature with different context levels:</p>
@@ -379,7 +379,7 @@
             <tr><td>Bare</td><td>Nothing</td><td>14/30</td></tr>
           </tbody>
         </table></div>
-        <p>Architecture alone gets you from 14 to 20 &mdash; types match, interfaces match, error patterns match. Conventions embedded in the spec get you from 20 to 29 &mdash; error message formats, output discipline, durability patterns.</p>
+        <p>Architecture alone gets you from 14 to 20: types match, interfaces match, error patterns match. Conventions embedded in the spec get you from 20 to 29: error message formats, output discipline, durability patterns.</p>
 
         <h3>Convention Compliance</h3>
         <p>Bare workers following specs with explicit conventions sections, tested across two execution mechanisms:</p>
@@ -401,9 +401,9 @@
       <section class="section" id="implications">
         <h2>What This Means</h2>
         <p>The finding applies to anyone building with AI agents, not just GIGO users.</p>
-        <p><strong>Context shapes questions (good).</strong> During planning, assembled context causes the model to ask deeper questions, identify harder problems, and produce more defensible architectures. The persona makes Claude ask &ldquo;what happens under concurrent load?&rdquo; &mdash; a question only an expert asks.</p>
+        <p><strong>Context shapes questions (good).</strong> During planning, assembled context causes the model to ask deeper questions, identify harder problems, and produce more defensible architectures. The persona makes Claude ask &ldquo;what happens under concurrent load?&rdquo; A question only an expert asks.</p>
         <p><strong>Context shapes answers (bad).</strong> During execution, assembled context causes the model to perform compliance instead of doing the work. It cites rules instead of thinking. It shows its homework instead of being good at the job.</p>
-        <p>The architecture is transferable: plan with experts, embed expertise in the spec, execute bare, review with quality bars. It works because knowledge is in the right place at the right time &mdash; in the team&rsquo;s <em>questions</em> during planning, in the <em>spec</em> during execution, in the team&rsquo;s <em>judgment</em> during review.</p>
+        <p>The architecture is transferable: plan with experts, embed expertise in the spec, execute bare, review with quality bars. It works because knowledge is in the right place at the right time: in the team&rsquo;s <em>questions</em> during planning, in the <em>spec</em> during execution, in the team&rsquo;s <em>judgment</em> during review.</p>
       </section>
 
       <section class="section section--center" id="try-it">
