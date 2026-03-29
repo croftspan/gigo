@@ -1,6 +1,9 @@
 package store
 
-import "time"
+import (
+	"errors"
+	"time"
+)
 
 // State represents a task's position in the lifecycle.
 type State string
@@ -36,9 +39,14 @@ type Filter struct {
 	State *State // nil means all states
 }
 
+// ErrNotFound is returned when a task ID does not exist in the store.
+var ErrNotFound = errors.New("not found")
+
 // Store is the persistence interface. All access to task data goes through this.
 type Store interface {
 	Add(task Task) error
+	Get(id string) (Task, error)
 	List(filter Filter) ([]Task, error)
+	UpdatePriority(id string, priority int) error
 	Close() error
 }

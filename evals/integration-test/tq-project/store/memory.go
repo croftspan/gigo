@@ -46,6 +46,30 @@ func (m *MemoryStore) List(filter Filter) ([]Task, error) {
 	return result, nil
 }
 
+// Get returns a single task by ID. Returns ErrNotFound if the ID does not exist.
+func (m *MemoryStore) Get(id string) (Task, error) {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	t, ok := m.tasks[id]
+	if !ok {
+		return Task{}, ErrNotFound
+	}
+	return t, nil
+}
+
+// UpdatePriority atomically sets the priority of a task. Returns ErrNotFound if the ID does not exist.
+func (m *MemoryStore) UpdatePriority(id string, priority int) error {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	t, ok := m.tasks[id]
+	if !ok {
+		return ErrNotFound
+	}
+	t.Priority = priority
+	m.tasks[id] = t
+	return nil
+}
+
 // Close is a no-op for MemoryStore.
 func (m *MemoryStore) Close() error {
 	return nil

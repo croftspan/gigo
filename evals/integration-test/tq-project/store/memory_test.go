@@ -1,6 +1,9 @@
 package store
 
-import "testing"
+import (
+	"errors"
+	"testing"
+)
 
 func TestListEmpty(t *testing.T) {
 	s := NewMemoryStore()
@@ -54,5 +57,65 @@ func TestAddGeneratesID(t *testing.T) {
 	}
 	if tasks[0].ID == "" {
 		t.Fatal("expected generated ID, got empty string")
+	}
+}
+
+func TestGet(t *testing.T) {
+	s := NewMemoryStore()
+	task := Task{
+		ID:       "aaaa1111",
+		Name:     "build",
+		Cmd:      "make",
+		State:    StateReady,
+		Priority: 5,
+	}
+	s.Add(task)
+
+	got, err := s.Get("aaaa1111")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if got.ID != "aaaa1111" {
+		t.Errorf("expected ID aaaa1111, got %q", got.ID)
+	}
+	if got.Name != "build" {
+		t.Errorf("expected name build, got %q", got.Name)
+	}
+	if got.Priority != 5 {
+		t.Errorf("expected priority 5, got %d", got.Priority)
+	}
+	if got.State != StateReady {
+		t.Errorf("expected state ready, got %s", got.State)
+	}
+}
+
+func TestGetNotFound(t *testing.T) {
+	s := NewMemoryStore()
+	_, err := s.Get("nonexistent")
+	if !errors.Is(err, ErrNotFound) {
+		t.Errorf("expected ErrNotFound, got %v", err)
+	}
+}
+
+func TestUpdatePriority(t *testing.T) {
+	s := NewMemoryStore()
+	s.Add(Task{ID: "aaaa1111", Name: "build", Cmd: "make", State: StateReady, Priority: 5})
+
+	err := s.UpdatePriority("aaaa1111", 10)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	got, _ := s.Get("aaaa1111")
+	if got.Priority != 10 {
+		t.Errorf("expected priority 10 after update, got %d", got.Priority)
+	}
+}
+
+func TestUpdatePriorityNotFound(t *testing.T) {
+	s := NewMemoryStore()
+	err := s.UpdatePriority("nonexistent", 10)
+	if !errors.Is(err, ErrNotFound) {
+		t.Errorf("expected ErrNotFound, got %v", err)
 	}
 }
