@@ -523,4 +523,12 @@ Only commit if there were fixes. If clean, skip.
 - Hero subtitle copy is creative work. "Your AI setup is making your output worse" is strong but negative. "CLAUDE.md rot is real. GIGO fixes it." assumes knowledge. The implementation should try variations and pick the one that passes the 30-second test without assuming the reader knows GIGO terminology. The spec leaves this to execution, which is correct.
 - The transformation section before/after lists need to feel like real user pain, not marketing bullets. Use voice-of-customer language (what people actually say in Discord/Twitter about their AI setups), not polished copy.
 
+**Operator execution notes (approved 2026-03-29):**
+1. Hero subtitle in Task 2 Step 1 and Task 3 Step 2 is draft copy. Workers have explicit permission to iterate on it during execution. Do NOT write it verbatim. Apply Dunford/Wiebe/Dry influence here specifically. This is the one sentence that determines whether someone keeps reading or bounces.
+2. The "What changes" before/after bullets (Task 3 Step 4) should feel like real pain, not a comparison chart. One strong transformation beats four okay ones. Rewrite during execution.
+3. The skills table note after the README table (explaining why gigo:eval changed) is a plan note, NOT README content. Do not include it in the output file.
+4. The hero copy is where the new Voice authorities earn their keep. Frame around what the user becomes (Dunford), survive the "so what?" test (Wiebe), one transformation per message (Dry).
+
 **Done when:** All three files pass the language rules scan (zero "proven", zero em dashes in README/site, zero jargon). The 30-second test passes for both README and site. The Voice persona has all six authorities.
+
+<!-- approved: plan 2026-03-29T05:10:20 by:Eaven -->
