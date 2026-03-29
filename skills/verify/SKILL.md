@@ -1,23 +1,25 @@
 ---
 name: verify
-description: "Two-stage code review: spec compliance (did you build the right thing?) then engineering quality (is the code good?). Invoked automatically by gigo:execute after each task, or standalone on any code. Use gigo:verify."
+description: "Two-stage review: spec compliance (did you build the right thing?) then craft quality (is the work well-built?). Invoked automatically by gigo:execute after each task, or standalone on any work. Use gigo:verify."
 ---
 
 # Review
 
-Two-stage code review pipeline. Each stage finds different things — combining them into one reviewer averages instead of adding up (Phase 8 eval: 11 issues combined vs 10-15 per focused reviewer). Two focused passes always beat one pass trying to hold both lenses.
+Two-stage review pipeline. Each stage finds different things — combining them into one reviewer averages instead of adding up (Phase 8 eval: 11 issues combined vs 10-15 per focused reviewer). Two focused passes always beat one pass trying to hold both lenses.
 
 No character voice. Direct, adversarial, evidence-based.
 
-**Announce every phase.** As you work, tell the operator what's happening: "Running Stage 1: Spec compliance review...", "Stage 1 passed. Running Stage 2: Engineering quality review...", "Both stages complete. Triaging findings..." Don't work silently.
+**Announce every phase.** As you work, tell the operator what's happening: "Running Stage 1: Spec compliance review...", "Stage 1 passed. Running Stage 2: Craft quality review...", "Both stages complete. Triaging findings..." Don't work silently.
 
-**Stages are sequential, not parallel.** Run Stage 1 first. If Stage 1 fails (spec not met), skip Stage 2 — no point reviewing engineering quality on code that doesn't meet the spec. Only run Stage 2 after Stage 1 passes.
+**Stages are sequential, not parallel.** Run Stage 1 first. If Stage 1 fails (spec not met), skip Stage 2 — no point reviewing craft quality on work that doesn't meet the spec. Only run Stage 2 after Stage 1 passes.
 
 ---
 
 ## Stage 1: Spec Review — "Did the worker build what the plan said?"
 
 Dispatch a subagent using the prompt template in `references/spec-reviewer-prompt.md`.
+
+**{DOMAIN_CRITERIA} injection:** Before dispatching, check for `.claude/references/review-criteria.md` in the project. If it exists, read the `## Spec Compliance Criteria` section and inject as `{DOMAIN_CRITERIA}`. If it does not exist, leave `{DOMAIN_CRITERIA}` empty.
 
 The reviewer gets:
 - The full task requirements from the plan/spec
@@ -29,27 +31,26 @@ The reviewer does NOT trust the report. They read code and compare to requiremen
 - **Extra/unneeded work** — over-engineering, unrequested features
 - **Misunderstandings** — wrong interpretation, wrong problem, right feature wrong way
 
-Output: `✅ Spec compliant` or `❌ Issues found` with file:line references.
+Output: `✅ Spec compliant` or `❌ Issues found` with specific location references.
 
 ---
 
-## Stage 2: Engineering Review — "Is the code production-ready?"
+## Stage 2: Craft Review — "Is the work well-built?"
 
 Two modes depending on context:
 
 ### Per-task mode (during execution, or standalone commit review)
 
-Dispatch a subagent using the prompt template in `references/engineering-reviewer-prompt.md`.
+Dispatch a subagent using the prompt template in `references/craft-reviewer-prompt.md`.
 
-The reviewer operates on a git SHA range and checks:
-- **Bugs:** Race conditions, deadlocks, lock ordering, off-by-one, null handling, resource leaks. Production bugs, not style.
-- **Test quality:** Tests verify behavior not mocks? Edge cases? Independent tests?
-- **Architecture:** Clean separation? Single responsibility? Easy to modify in 6 months?
-- **CLAUDE.md compliance:** Project-specific standards followed?
+**{DOMAIN_CRITERIA} injection:** Before dispatching, check for `.claude/references/review-criteria.md` in the project. If it exists, read the `## Craft Review Criteria` section and inject as `{DOMAIN_CRITERIA}`. If it does not exist, leave `{DOMAIN_CRITERIA}` empty.
+
+The reviewer checks for defects, structural issues, and project standards.
+Domain-specific criteria are injected from `.claude/references/review-criteria.md` when available.
 
 Each issue is confidence-scored 0-100. Only issues scoring 80+ are reported. This filters noise and false positives.
 
-Output: Strengths (with file:line), Issues (Critical/Important/Minor with file:line), Assessment (Ready to proceed / Needs fixes).
+Output: Strengths (with specific location), Issues (Critical/Important/Minor with specific location), Assessment (Ready to proceed / Needs fixes).
 
 ### PR mode (at merge time, or standalone PR review)
 
@@ -57,7 +58,7 @@ Invoke `code-review:code-review` on the actual PR. This dispatches 5 focused Son
 
 If `code-review` is not installed, warn and offer inline fallback:
 
-> "Stage 2 engineering review works best with the code-review plugin. Install with `claude install @anthropic/code-review`. Running inline engineering review instead."
+> "Stage 2 craft review works best with the code-review plugin. Install with `claude install @anthropic/code-review`. Running inline craft review instead."
 
 Then fall back to per-task mode using the SHA range of the PR.
 
@@ -71,7 +72,11 @@ A fundamentally different review mode. Not compliance checking — adversarial v
 - Called by `gigo:blueprint` at Phase 6.5 (spec review) or Phase 9.5 (plan review)
 - Called standalone on any spec/plan document in `docs/gigo/specs/` or `docs/gigo/plans/`
 
-**How it works:** Dispatch a subagent using the prompt template in `references/spec-plan-reviewer-prompt.md`. The reviewer runs two passes:
+**How it works:** Dispatch a subagent using the prompt template in `references/spec-plan-reviewer-prompt.md`.
+
+**{DOMAIN_CRITERIA} injection:** Before dispatching, check for `.claude/references/review-criteria.md` in the project. If it exists, read the `## Challenger Criteria` section and inject as `{DOMAIN_CRITERIA}`. If it does not exist, leave `{DOMAIN_CRITERIA}` empty.
+
+The reviewer runs two passes:
 
 1. **Pass 1 (blind):** Reviewer sees the document + repo only. No knowledge of operator intent. Judges feasibility, alternatives, failure modes against the actual codebase. This prevents rationalizing the planner's choices.
 2. **Pass 2 (intent):** Reviewer then gets the operator's original request (1-2 sentences). Checks if the document solves the stated problem or drifted.
@@ -100,9 +105,9 @@ When invoked without a plan context (not called from gigo:execute):
    - Ask for the operator's original intent to enable Pass 2
 
 2. **If reviewing code with a plan/spec available:**
-   - Ask: "Review against spec, or just engineering quality?"
-   - If against spec: run both code review stages
-   - If engineering only: skip to Stage 2
+   - Ask: "Review against spec, or just craft quality?"
+   - If against spec: run both review stages
+   - If craft only: skip to Stage 2
 
 3. **If reviewing code with no plan:**
    - Skip Stage 1 entirely
@@ -112,7 +117,7 @@ When invoked without a plan context (not called from gigo:execute):
    - Invoke `code-review:code-review` (PR mode)
 
 5. **If reviewing commits without a PR:**
-   - Run SHA-range engineering review (per-task mode)
+   - Run SHA-range craft review (per-task mode)
 
 ---
 
@@ -128,7 +133,7 @@ After both stages complete, categorize each finding before returning feedback.
 
 **Default rules:**
 - Spec review findings → ask-operator (unless fix is unambiguous)
-- Engineering review findings → auto-fix (unless interface-changing or architectural)
+- Craft review findings → auto-fix (unless interface-changing or architectural)
 - Confidence informs but doesn't determine category — a high-confidence architectural issue is ask-operator, not auto-fix. A high-confidence missing import is auto-fix regardless of score.
 - Critical issues (confidence 90+) → never accept. Must be auto-fix or ask-operator.
 - When in doubt → ask-operator. False escalation costs a question. False auto-fix can cost a wrong decision.
@@ -136,7 +141,7 @@ After both stages complete, categorize each finding before returning feedback.
 **Output the categorized summary:**
 
 ### Auto-Fix (worker handles)
-[numbered list with file:line references]
+[numbered list with specific location references]
 
 ### Ask Operator
 [numbered list — these block the task]
@@ -172,7 +177,7 @@ Evidence before claims. Baked into both stages, not a separate step.
 - No "tests pass" without running them
 - No "spec compliant" without reading the code
 - No "ready to merge" without checking the diff
-- Every claim backed by file:line reference
+- Every claim backed by specific location reference
 
 If a reviewer can't verify something (e.g., no test suite exists), they say so explicitly rather than assuming it works.
 
@@ -182,6 +187,6 @@ If a reviewer can't verify something (e.g., no test suite exists), they say so e
 
 Read `references/spec-reviewer-prompt.md` for the Stage 1 subagent prompt template.
 
-Read `references/engineering-reviewer-prompt.md` for the Stage 2 per-task subagent prompt template.
+Read `references/craft-reviewer-prompt.md` for the Stage 2 per-task subagent prompt template.
 
 Read `references/spec-plan-reviewer-prompt.md` for the Challenger (spec/plan adversarial review) prompt template.
