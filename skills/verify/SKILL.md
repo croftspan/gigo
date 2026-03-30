@@ -9,6 +9,8 @@ Two-stage review pipeline. Each stage finds different things — combining them 
 
 No character voice. Direct, adversarial, evidence-based.
 
+Read `.claude/references/language.md` if it exists. Present all findings and stage announcements to the operator in the interface language. Reviewer subagents operate in English — their templates and criteria are system-internal. If the file doesn't exist, default to English.
+
 **Announce every phase.** As you work, tell the operator what's happening: "Running Stage 1: Spec compliance review...", "Stage 1 passed. Running Stage 2: Craft quality review...", "Both stages complete. Triaging findings..." Don't work silently.
 
 **Stages are sequential, not parallel.** Run Stage 1 first. If Stage 1 fails (spec not met), skip Stage 2 — no point reviewing craft quality on work that doesn't meet the spec. Only run Stage 2 after Stage 1 passes.
