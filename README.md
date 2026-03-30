@@ -19,7 +19,7 @@ Projects that improve with every session instead of rotting. Specs good enough t
 ## Quick Start
 
 ```bash
-claude marketplace add croftspan/gigo
+claude plugin marketplace add croftspan/gigo
 claude plugin install gigo
 ```
 
