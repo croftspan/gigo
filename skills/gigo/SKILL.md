@@ -212,7 +212,7 @@ Keep going until the operator says "lock it in" or you sense alignment and ask: 
 
 Once locked, run the **pre-write dedup pass** — scan all proposed content for the same rule appearing in more than two auto-loaded files. Then write everything to disk. Don't ask where — follow the structure below.
 
-When presenting the "files written" summary to the operator, include `.claude/references/language.md` (already written during Language Configuration — listed here for operator awareness, not re-written).
+When presenting the "files written" summary to the operator, include `.claude/references/language.md` and `.claude/references/persona-style.md` (both already written during earlier steps — listed here for operator awareness, not re-written).
 
 ### Step 6.5: Generate Review Criteria
 
@@ -254,8 +254,8 @@ Your team is assembled. Team routing is on — every task goes through your pers
 | `/verify` | Review any work — spec compliance then craft quality |
 | `/maintain` | Add expertise, audit the team, or restructure |
 | `/snap` | End-of-session audit — protects the project |
-| `/team off` | Turn off persona routing (vanilla Claude) |
-| `/team on` | Turn persona routing back on |
+
+Team routing is on by default. Say "team off" in conversation to switch to vanilla Claude, "team on" to switch back.
 
 **What's next:** Run `/blueprint` to start planning. Here's a starter prompt based on what we discussed — paste it after `/blueprint`, or write your own:
 

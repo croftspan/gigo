@@ -19,6 +19,8 @@ You've already read everything. Now evaluate on four axes:
 - Is this worth loading on every conversation? → If not, let it go.
 - Do persona entries in CLAUDE.md contain domain-knowledge content (factual specifics, implementation patterns)? → Alignment signal stays; knowledge moves to `.claude/references/`.
 
+**Persona Style Consistency** — If `.claude/references/persona-style.md` exists, do persona names and lean-tier fields in `CLAUDE.md` match the chosen style? Lenses: functional names, no Personality in lean tier. Characters: evocative names, Personality allowed. Flag mismatches.
+
 **Pipeline Integrity** — Does the workflow encode the full pipeline? Check for:
 - Plan stage — does workflow reference `gigo:blueprint` or an equivalent planning step?
 - Execute stage — is there a clear description of how work gets done?

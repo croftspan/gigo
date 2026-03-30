@@ -22,6 +22,8 @@ Before doing anything else, read all existing files: `CLAUDE.md`, every `.claude
 
 Read `.claude/references/language.md` if it exists. Conduct all conversation in the interface language. If the file doesn't exist, default to English.
 
+Read `.claude/references/persona-style.md` if it exists. When creating or modifying personas, match the chosen style: **Characters** (named personas with personality and voice) or **Lenses** (functional descriptors, no personality in lean tier). If the file doesn't exist, default to Lenses.
+
 Then determine which mode applies. If `$ARGUMENTS` is "upgrade", go straight to **Upgrade**. Otherwise auto-detect:
 
 **Targeted Addition (Mode 1)** — the operator asked for something specific, or this skill was invoked by `gigo:blueprint` or `gigo:snap` with a detected gap. Read `references/targeted-addition.md` and follow it.

@@ -33,6 +33,8 @@ Read the project's setup and check for these features. Missing ones are upgrade 
 | Snap review criteria check | Snap audit includes check 11 (review criteria currency) | Snap has 10 or fewer audit checks, or no criteria currency verification |
 | Language configuration | `.claude/references/language.md` exists with interface and output preferences | No language.md (pre-i18n project). Ask operator if they want language configuration. |
 | Snap language check | `.claude/rules/snap.md` includes check 12 (language configuration freshness) | Snap has 11 or fewer checks. Add check 12 from current template. |
+| Persona style preference | `.claude/references/persona-style.md` exists with `style: characters` or `style: lenses` | No persona-style.md (pre-style project). Ask operator which style they prefer. Default: lenses. |
+| Snap persona style check | `.claude/rules/snap.md` includes check 14 (persona style consistency) | Snap doesn't verify persona naming matches style. Add check 14 from current template. |
 
 ## Step 2: Back Up Before Upgrading
 

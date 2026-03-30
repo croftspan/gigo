@@ -37,7 +37,9 @@ For every rules file, evaluate against these checks:
 
 **7. Overwatch check.** Does `workflow.md` have a Persona Calibration section and an Overwatch section? If 3+ domain personas, does CLAUDE.md include The Overwatch? Does `.claude/references/overwatch.md` exist? Are "When to Go Deeper" pointers task-specific (naming the observable task and what to check) rather than generic? Read `gigo/references/persona-template.md` → "The Overwatch" for templates.
 
-**8. Pipeline check.** Does the workflow encode plan → execute → review? Are review stages intact? Does the workflow reference `gigo:blueprint` or equivalent planning? Does snap run as part of the pipeline? Flag missing or broken stages.
+**8. Persona style check.** If `.claude/references/persona-style.md` exists, do persona names and lean-tier fields in `CLAUDE.md` match the style? Lenses: functional names, no Personality in lean tier. Characters: evocative names, Personality allowed. If personas don't match, flag for realignment.
+
+**9. Pipeline check.** Does the workflow encode plan → execute → review? Are review stages intact? Does the workflow reference `gigo:blueprint` or equivalent planning? Does snap run as part of the pipeline? Flag missing or broken stages.
 
 ## Phase 3: Triage
 

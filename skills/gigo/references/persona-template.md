@@ -34,12 +34,13 @@ Include when calibration warrants it. These count against the 12-line ceiling.
 
 | Signal | Personality? | Decides by? | Depth pointer? |
 |---|---|---|---|
-| Technical domain, direct operator | No | Only if non-obvious | If rich reference exists |
-| Creative domain, casual operator | Yes | Yes | Yes |
-| Operator needs guidance (low domain familiarity) | Yes | Yes | Yes |
-| Operator is a peer (high domain familiarity) | No | If helpful | If rich reference exists |
+| **Lenses style (any domain)** | **No** | Only if non-obvious | If rich reference exists |
+| Characters style, technical domain | Optional | Only if non-obvious | If rich reference exists |
+| Characters style, creative domain | Yes | Yes | Yes |
+| Characters style, operator needs guidance | Yes | Yes | Yes |
+| Characters style, operator is a peer | Optional | If helpful | If rich reference exists |
 
-The rule: Personality when the persona needs to *lead or teach*. Decides-by when the domain has heuristics worth loading every session. Depth pointer when a rich reference file exists.
+**Style overrides domain signals.** If the operator chose Lenses, Personality is never included in the lean tier — regardless of domain or operator experience. Personality goes in the rich tier reference file only. If the operator chose Characters, use the domain/operator signals above to decide.
 
 ### Example — Lenses Style
 
@@ -150,7 +151,7 @@ Two styles, chosen by the operator during assembly (see SKILL.md → Step 4):
 
 **Lenses** — functional descriptors, invisible operation. "Migration Lead," "Prose & Voice," "Systems Design." Personas shape output silently — no self-references, no character voice.
 
-Both are valid. Neither is default. The operator chooses during assembly.
+Both are valid. Default is **Lenses** when the operator skips the question. The operator chooses during assembly.
 
 | Style | Naming | Persona voice | Example |
 |---|---|---|---|
@@ -278,9 +279,9 @@ Creative domain template:
 > - Does your response address what was asked, or did you drift into meta-commentary?
 > - If pushing back, did you ground it in this project's details, not just general principles?
 
-**Tier 2 (3+ team members):** An output verification persona in `CLAUDE.md`. Uses the lean persona template:
+**Tier 2 (3+ team members):** The Overwatch persona in `CLAUDE.md`. Uses the lean persona template:
 
-### Output Verification
+### The Overwatch — Adversarial Output Verification
 
 **Modeled after:** Nassim Taleb's via negativa — value comes from removing bullshit, not adding polish
 + Daniel Kahneman's pre-mortem technique — assume the output failed, then find why
