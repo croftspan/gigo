@@ -47,6 +47,8 @@ Before saving anything new, audit the existing rules. This runs every time.
 
 **11. Review criteria check.** If `.claude/references/review-criteria.md` exists, compare its criteria against current personas' quality bars and standards quality gates. If personas changed but criteria weren't updated, flag: "Review criteria are stale — offer to regenerate via `gigo:maintain`." If the file doesn't exist and personas have quality bars, flag: "No review criteria file — review pipeline uses neutral defaults. Offer to generate via `gigo:maintain`."
 
+**12. Language check.** If `.claude/references/language.md` exists, verify it's still accurate. If the project's language needs have changed (new audiences, expanded markets, shifted team composition), offer to update. If the file is missing and the project has non-English operators or output requirements, offer to create it.
+
 ## Saving New Learnings
 
 After the audit, capture what you learned this session. Route to the right file:
