@@ -60,6 +60,8 @@ These go in `.claude/references/`. They are read when needed, not every conversa
 
 **Language guard:** Any skill that produces operator-facing conversation must read `.claude/references/language.md` at startup and use the interface language for all conversation. Output deliverables follow the output language(s). If the file doesn't exist, default to English for both. This ensures new skills added via `gigo:maintain` inherit the language requirement.
 
+**Persona style:** `.claude/references/persona-style.md` stores the operator's preference for persona presentation. One field: `style:` (`characters` or `lenses`). Written during gigo:gigo assembly. Characters get named personas with personality and voice. Lenses get functional descriptors that work silently. If the file doesn't exist, default to `lenses`.
+
 Rules files tell the agent WHEN to read specific reference files. This creates task-aware context loading.
 
 ## Pre-Write Dedup Pass

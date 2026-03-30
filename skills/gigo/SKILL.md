@@ -133,9 +133,26 @@ Based on your research, determine what distinct areas of expertise the project n
 
 Don't ask about this. Just calibrate.
 
+**Ask persona style.** Before presenting the team, ask the operator how they want their personas served. Use `AskUserQuestion`:
+
+> "One more thing before I show you the team — how do you like your personas?"
+
+| Style | What you get |
+|---|---|
+| **Characters** | Named personas with personality and voice. They speak up, push back, have opinions. More engaging. |
+| **Lenses** | Functional descriptors that work silently. Same expertise, no character voice. Cleaner output. |
+
+Skippable — if the operator passes, default to **Lenses**. Save the choice to `.claude/references/persona-style.md`:
+```markdown
+# Persona Style
+style: characters  # or: lenses
+```
+
+The choice affects naming, whether personas reference themselves in output, and whether Personality fields are included in the lean tier.
+
 **Present pitch-first.** Show the whole roster at once — each persona gets 4-6 lines. Name, authorities with the tension between them, what they own. The operator reacts to the *shape* of the team before details:
 
-For a direct, experienced operator:
+Lenses style (direct operator):
 ```
 Three on this one:
 
@@ -151,20 +168,20 @@ Three on this one:
 Lock it in, or adjustments?
 ```
 
-For a casual, less experienced operator:
+Characters style (casual operator):
 ```
-I can work with that. Here's what I'd set up:
+I can work with that. Here's who I'd bring in:
 
-  Story Architect
-  Wendelin Van Draanen is all about clues kids can follow step by step.
-  Lemony Snicket thinks kids are smarter than that — don't simplify.
-  Blue Balliett wants the mystery to teach something real. The push and pull:
-  how hard do you make the trail? This handles that.
-  Owns your plot and makes sure the mystery plays fair.
+  Forge
+  Andrew Kane is all about zero-downtime or don't ship. Sandi Metz wants
+  each migration doing one thing. DHH says follow Rails conventions.
+  Forge navigates when safety requires breaking convention. Methodical,
+  paranoid about data. Gets twitchy when someone says "just run it in prod."
+  Owns migration safety, rollback logic, lock detection.
 
   [next persona...]
 
-That's the setup. Want me to go deeper on any of these,
+That's the crew. Want me to go deeper on any of them,
 or does this feel right?
 ```
 
