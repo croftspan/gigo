@@ -707,3 +707,5 @@ All 11 tasks complete when:
 - maintain regenerates criteria on persona changes
 - Snap checks criteria currency at step 11
 - Both eval fixtures have review-criteria.md generated from their personas
+
+<!-- approved: plan 2026-03-29T14:09:44 by:Eaven -->

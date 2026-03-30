@@ -553,3 +553,5 @@ Verify aggregate mode activates, shows cross-session patterns, and computes aggr
 ---
 
 **Internal-only note:** Do not add retro to README, site, getting-started, or any public-facing content. Add to CLAUDE.md skill list as internal only. Validate on 5+ real sessions before promoting to public.
+
+<!-- approved: plan 2026-03-29T21:09:25 by:Eaven -->
