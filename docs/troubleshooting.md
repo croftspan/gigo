@@ -10,8 +10,16 @@ Tracked issues users have hit. When a new issue is reported, add it here and to 
 
 **Fix for users:**
 ```bash
+# 1. Remove any leftover manual copies first
+rm -rf ~/.claude/skills/gigo*
+
+# 2. Uninstall the old plugin
 claude plugin uninstall gigo
+
+# 3. Clear the marketplace cache
 rm -rf ~/.claude/plugins/marketplaces/gigo
+
+# 4. Re-add and install fresh
 claude plugin marketplace add croftspan/gigo
 claude plugin install gigo
 ```
@@ -19,16 +27,3 @@ claude plugin install gigo
 **Fix for maintainers:** Both `marketplace.json` and `plugin.json` must be updated on every version bump. Added to release checklist.
 
 **Status:** Fixed in 87fc2b7.
-
-## Manual install conflicts with marketplace install
-
-**Symptom:** Skills behave unexpectedly or load old versions even after marketplace install.
-
-**Root cause:** Previous manual install (`cp -r gigo/skills/ ~/.claude/skills/`) left files that take precedence over or conflict with the marketplace plugin path.
-
-**Fix for users:**
-```bash
-rm -rf ~/.claude/skills/gigo*
-```
-
-**Status:** Documented in getting-started troubleshooting section.

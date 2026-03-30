@@ -144,27 +144,22 @@ cp -r gigo/skills/ ~/.claude/skills/</code></pre>
         <h2>Troubleshooting</h2>
 
         <h3>Getting a stale or old version</h3>
-        <p>If <code>claude plugin install gigo</code> gives you an outdated version, do a clean reinstall:</p>
-        <pre><code># Remove the old plugin
+        <p>If <code>claude plugin install gigo</code> gives you an outdated version, do a full clean reinstall:</p>
+        <pre><code># 1. Remove any leftover manual copies first
+rm -rf ~/.claude/skills/gigo*
+
+# 2. Uninstall the old plugin
 claude plugin uninstall gigo
 
-# Clear the marketplace cache
+# 3. Clear the marketplace cache
 rm -rf ~/.claude/plugins/marketplaces/gigo
 
-# Re-add and install fresh
+# 4. Re-add and install fresh
 claude plugin marketplace add croftspan/gigo
 claude plugin install gigo</code></pre>
 
         <p>Verify you got the latest:</p>
         <pre><code>cat ~/.claude/plugins/marketplaces/gigo/.claude-plugin/plugin.json | grep version</code></pre>
-
-        <h3>Skills from a previous manual install</h3>
-        <p>If you previously installed GIGO manually (via <code>git clone</code> + <code>cp</code>), leftover files can conflict with the marketplace version:</p>
-        <pre><code># Check for lingering manual copies
-ls ~/.claude/skills/
-
-# Remove them if present
-rm -rf ~/.claude/skills/gigo*</code></pre>
       </section>
 
     </div>
