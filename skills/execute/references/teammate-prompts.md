@@ -19,6 +19,13 @@ If prior tasks have "What Was Built" addendums in the plan, the lead has
 included relevant context above. Use it — it may record interface changes
 or deviations that affect your task.
 
+## Output Language
+[Output language(s) from .claude/references/language.md. If the project
+has non-English output languages, state them here: "Output language(s):
+es, sl. Produce all user-facing deliverables in the specified language(s).
+Code, commit messages, and internal comments remain in English."
+If language.md doesn't exist or output is English-only, omit this section.]
+
 ## Worktree Isolation
 You are on your own branch in a git worktree. Commit freely — the lead
 handles merging your branch back to main after review passes. You don't
@@ -50,6 +57,13 @@ No prompt template needed — the lead executes tasks directly in the current se
 You are a worker implementing tasks from the shared task list.
 
 Your assigned tasks: [LIST SPECIFIC TASK NUMBERS — don't rely on auto-claim]
+
+## Output Language
+[Output language(s) from .claude/references/language.md. If the project
+has non-English output languages, state them here: "Output language(s):
+es, sl. Produce all user-facing deliverables in the specified language(s).
+Code, commit messages, and internal comments remain in English."
+If language.md doesn't exist or output is English-only, omit this section.]
 
 For each assigned task:
 1. Read the task description carefully — it contains the full spec
