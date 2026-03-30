@@ -43,13 +43,9 @@ Your team speaks your language from the first session. During setup, GIGO asks h
 
 ## Your Project Stays Lean
 
-This is the problem GIGO was built to solve.
+GIGO keeps your always-on context short. Rules that apply to every conversation stay under 60 lines each. Deep knowledge loads only when the task needs it. Zero cost when unused.
 
-You set up a project. Add some rules. Things work great. Next session you add more. Fix a gotcha. Add a convention. A week later your CLAUDE.md is 200 lines. Some rules contradict each other. Some are stale. Some just repeat what Claude already knows.
-
-Your AI output starts getting worse. More rules should help, right? But [research shows the opposite](https://arxiv.org/abs/2602.11988): bloated context files reduce success rates by 20%+ while increasing cost.
-
-GIGO keeps your project lean. Rules that apply to every conversation stay short (under 60 lines each). Deep knowledge loads only when relevant. Zero cost when unused. At the end of every session, The Snap audits your project: removes what's stale, merges what overlaps, enforces line budgets.
+At the end of every session, The Snap audits your project: removes what's stale, merges what overlaps, enforces line budgets. The rules that got you into trouble in the first place? They get caught and cleaned before they pile up.
 
 Your project gets sharper over time, not bigger.
 
