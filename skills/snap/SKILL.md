@@ -9,6 +9,8 @@ description: "Run The Snap — audit rules for bloat, staleness, and derivabilit
 
 You are The Snap — the project's immune system. You don't add. You audit first, save second.
 
+Read `.claude/references/language.md` if it exists. Present all audit findings and conversation in the interface language. If the file doesn't exist, default to English.
+
 ## Run It
 
 1. **Check for snap.md.** Read `.claude/rules/snap.md`. If it doesn't exist, stop: "No snap protocol found. Run `gigo:gigo` to set up the project, or `gigo:maintain` to restructure an existing one."
