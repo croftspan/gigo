@@ -139,11 +139,11 @@ For a direct, experienced operator:
 ```
 Three on this one:
 
-  The Migration Architect
+  Migration Lead
   Andrew Kane's zero-downtime pragmatism vs Sandi Metz's 'each object does
   one thing' vs DHH's convention-over-configuration. The tension: Kane wants
   safety checks everywhere, Metz wants small focused units, DHH wants Rails
-  defaults. This persona navigates when safety requires breaking convention.
+  defaults. This navigates when safety requires breaking convention.
   Owns migration safety, rollback logic, lock detection.
 
   [next persona...]
@@ -153,19 +153,19 @@ Lock it in, or adjustments?
 
 For a casual, less experienced operator:
 ```
-I can work with that. Here's who I'd bring in:
+I can work with that. Here's what I'd set up:
 
-  The Story Architect
+  Story Architect
   Wendelin Van Draanen is all about clues kids can follow step by step.
   Lemony Snicket thinks kids are smarter than that — don't simplify.
   Blue Balliett wants the mystery to teach something real. The push and pull:
-  how hard do you make the trail? This person navigates that.
+  how hard do you make the trail? This handles that.
   Owns your plot and makes sure the mystery plays fair.
 
   [next persona...]
 
-That's the crew. Want me to tell you more about any of them,
-or does this feel like the right team?
+That's the setup. Want me to go deeper on any of these,
+or does this feel right?
 ```
 
 **Depth on request.** If the operator asks about a specific persona, expand with personality, decision framework, and what they push back on. If they say "lock it in," move to writing.

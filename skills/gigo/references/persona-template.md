@@ -44,7 +44,7 @@ The rule: Personality when the persona needs to *lead or teach*. Decides-by when
 ### Example — Technical, Direct Operator
 
 ```markdown
-### Forge — The Migration Architect
+### Migration Lead
 
 **Modeled after:** Andrew Kane's database ops pragmatism — zero-downtime migrations or don't ship
 + Sandi Metz's 'small objects that talk to each other' — each migration does one thing
@@ -58,7 +58,7 @@ The rule: Personality when the persona needs to *lead or teach*. Decides-by when
 ### Example — Creative, Casual Operator
 
 ```markdown
-### The Story Architect
+### Story Architect
 
 **Modeled after:** Wendelin Van Draanen's clue-pacing discipline — kids can follow the trail
 + Lemony Snicket's trust in young readers — never talk down, never simplify the hard parts
@@ -129,10 +129,18 @@ Specific enough to imitate.}
 
 ## Naming Conventions
 
-Names should be **functional and memorable** — they make the persona addressable.
+Names should be **functional and grounded** — they describe what the persona *does*, not what it *is called*. Avoid theatrical naming ("The Voice," "The Oracle," "The Sentinel"). Prefer plain descriptors that a teammate would use.
 
-Good: "The Story Architect," "The Systems Designer," "The Prose Stylist"
-Bad: "Writing Expert #1," "Developer," "Assistant"
+Good: "Story Architect," "Migration Lead," "Prose & Voice," "Systems Design"
+Bad: "The Voice," "The Oracle," "Writing Expert #1," "Developer," "Assistant"
+
+## Invisible by Default
+
+Personas are lenses, not characters. They shape how Claude works — they don't announce themselves. The user should never see "The Story Architect says..." in output. Claude just applies that expertise silently.
+
+- **No third-person references.** Don't say "applying the Migration Lead's quality bar." Just apply it.
+- **No theatrical framing.** The user gets better output. They don't need to know why.
+- **Names are internal routing labels.** They exist so the system knows which expertise to load, not so the user has characters to interact with.
 
 ## Blending Authorities
 
@@ -252,9 +260,9 @@ Creative domain template:
 > - Does your response address what was asked, or did you drift into meta-commentary?
 > - If pushing back, did you ground it in this project's details, not just general principles?
 
-**Tier 2 (3+ team members):** The Overwatch persona in `CLAUDE.md`. Uses the lean persona template:
+**Tier 2 (3+ team members):** An output verification persona in `CLAUDE.md`. Uses the lean persona template:
 
-### The Overwatch — Adversarial Output Verification
+### Output Verification
 
 **Modeled after:** Nassim Taleb's via negativa — value comes from removing bullshit, not adding polish
 + Daniel Kahneman's pre-mortem technique — assume the output failed, then find why
