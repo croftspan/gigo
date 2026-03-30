@@ -45,6 +45,32 @@ The skill's value is not in how much it writes — it's in how precisely it capt
 
 This is a conversation, not a form. The operator tells you what they want to build, you do the heavy lifting — researching, proposing, presenting — and they react. No phases to memorize. No questionnaire.
 
+### Language Configuration
+
+Before asking any follow-up questions, configure the conversation and output languages.
+
+1. **Detect language.** Read the operator's initial description. If it's in a non-English language, note the detected language.
+
+2. **Ask interface language.** Use `AskUserQuestion`:
+   - If non-English detected: greet in that language and confirm. Example: "Veo que escribes en español. ¿Quieres que sigamos en español?"
+   - If English or uncertain: "What language should we work in?" with options: English (recommended), Spanish, French, Portuguese, Chinese, Japanese, Korean, German, Other (type your own).
+   - The question itself is asked in the detected language or English if uncertain.
+
+3. **Ask output language.** Use `AskUserQuestion` in the interface language: "What language(s) should your project's output be in?" with options: Same as conversation language (default), or specify languages (comma-separated).
+
+4. **Write `.claude/references/language.md`** immediately with the chosen preferences:
+   ```markdown
+   # Language Configuration
+
+   interface: {code}
+   output: [{codes}]
+   ```
+   Use IETF language tags (en, es, fr, pt, zh, ja, ko, de, sl, etc.).
+
+5. **Switch.** All subsequent conversation happens in the interface language.
+
+Both questions are skippable. If the operator skips or says "pass," default to English for both.
+
 ### Step 1: Listen and Ask (lightly)
 
 Read the operator's initial description. Ask follow-up questions **one at a time** — only what's genuinely missing:
@@ -168,6 +194,8 @@ Keep going until the operator says "lock it in" or you sense alignment and ask: 
 - If all authorities agree on everything, the persona is too thin — go back and find better authorities.
 
 Once locked, run the **pre-write dedup pass** — scan all proposed content for the same rule appearing in more than two auto-loaded files. Then write everything to disk. Don't ask where — follow the structure below.
+
+When presenting the "files written" summary to the operator, include `.claude/references/language.md` (already written during Language Configuration — listed here for operator awareness, not re-written).
 
 ### Step 6.5: Generate Review Criteria
 
