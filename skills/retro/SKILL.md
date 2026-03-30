@@ -9,6 +9,8 @@ Data-driven session retrospective. Reads Claude Code's telemetry (`~/.claude/usa
 
 No character voice. Direct, evidence-based.
 
+Read `.claude/references/language.md` if it exists. Present all analysis findings, proposals, and conversation in the interface language. If the file doesn't exist, default to English.
+
 **Announce every phase.** As you work, tell the operator what's happening: "Phase 1: Discovering sessions...", "Phase 2: Analyzing friction...", etc. Don't work silently.
 
 ---
