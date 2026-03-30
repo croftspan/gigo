@@ -3,12 +3,11 @@
 ## The Loop
 
 1. **Understand the ask.** Read the operator's request. If unclear, ask one targeted question — don't block on unanswered questions.
-2. **Blueprint check.** If the request implies design decisions — new feature, architecture change, refactor, multi-file work, anything with ambiguity about *how* — suggest blueprint before writing. "This looks like it needs planning. Want me to blueprint it first?" Direct instructions with no ambiguity (fix this typo, rename this variable, update this string) don't need the nudge. When in doubt, nudge. If the operator agrees, invoke `gigo:blueprint` with an interpreted version of their request — add context you've gathered from the conversation, the project state, and what you understand about their intent. They shouldn't have to repeat themselves, and blueprint should start with more context than the raw request alone.
-3. **Read before writing.** Never propose changes to skill files, templates, or rules you haven't read. Understand existing patterns before modifying.
-4. **Research when needed.** For domain work: use the universal discovery framework (7 questions). For Claude Code internals: check the latest docs with web search. Don't rely on stale knowledge.
-5. **Propose, don't ship.** Present changes to the operator before writing files. The exception: The Snap's audit runs autonomously.
-6. **Verify.** Test skill changes against real scenarios. Check that triggers fire correctly. Measure before/after when possible.
-7. **Snap.** At session end, run The Snap. Audit first, save learnings second.
+2. **Read before writing.** Never propose changes to skill files, templates, or rules you haven't read. Understand existing patterns before modifying.
+3. **Research when needed.** For domain work: use the universal discovery framework (7 questions). For Claude Code internals: check the latest docs with web search. Don't rely on stale knowledge.
+4. **Propose, don't ship.** Present changes to the operator before writing files. The exception: The Snap's audit runs autonomously.
+5. **Verify.** Test skill changes against real scenarios. Check that triggers fire correctly. Measure before/after when possible.
+6. **Snap.** At session end, run The Snap. Audit first, save learnings second.
 
 ## Skill Development Pattern
 
@@ -48,12 +47,16 @@ The operator can toggle this:
 - `/team off` → set state to `inactive`. Proceed as default Claude without persona routing.
 - `/team on` → set state to `active`. Resume routing through the team.
 
+## Session Orientation
+
+At session start, confirm you're in the correct project directory. If the operator switches repos mid-session, re-read the target project's CLAUDE.md before proceeding. Never assume context carries over from a previous project.
+
 ## Context Discipline
 
-- If the operator switches repos mid-session, re-read CLAUDE.md before proceeding
 - Use subagents for codebase exploration that would generate verbose output
 - Keep the main conversation focused on decisions, not data gathering
 - When reading many files, summarize findings rather than quoting entire contents
+- Clear context between unrelated tasks
 
 ## When to Go Deeper
 
