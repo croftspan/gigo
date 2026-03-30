@@ -231,3 +231,5 @@ Claude is multilingual. Craft review of Spanish prose, Japanese documentation, o
 - Spec Language Requirements section: appears after the main spec content, before Conventions.
 - Plan output language note: appears per-task as `**Output languages:** en, es, sl` — bold label, comma-separated codes.
 - Worker prompt language section: appears after `## Context`, before `## Before You Begin`.
+
+<!-- approved: spec 2026-03-30T00:54:17 by:Eaven -->
