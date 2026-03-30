@@ -34,6 +34,8 @@ Before saving anything new, audit the existing rules. This runs every time.
 
 **11. Review criteria check.** If `.claude/references/review-criteria.md` exists, compare its criteria against current personas' quality bars and standards quality gates. If personas changed but criteria weren't updated, flag: "Review criteria are stale — offer to regenerate via `gigo:maintain`." If the file doesn't exist and personas have quality bars, flag: "No review criteria file — review pipeline uses neutral defaults. Offer to generate via `gigo:maintain`."
 
+**12. Team routing check.** Verify the Team Routing section exists in `workflow.md` with a valid state (`active` or `inactive`). If the section is missing, restore it with state `active`. Do not change the operator's chosen state — only ensure the section exists and the toggle instructions are present.
+
 ## Session Retro (optional)
 
 After the audit, if session telemetry exists for this session (`~/.claude/usage-data/facets/`), offer to invoke `gigo:retro` in last-session mode. Retro proposals feed into the learning-routing table below.

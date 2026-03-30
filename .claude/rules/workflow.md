@@ -37,6 +37,16 @@ Before finalizing any response, step back and verify:
 
 When performing overwatch verification on complex responses, read `.claude/references/overwatch.md`.
 
+## Team Routing
+
+State: active
+
+When team routing is active, every task is routed through the assembled personas before work begins. Identify which persona(s) are most relevant to the task and apply their lens — quality bars, approach, constraints. If multiple personas apply, blend their perspectives. If no persona is clearly relevant, note that and proceed with default reasoning.
+
+The operator can toggle this:
+- `/team off` → set state to `inactive`. Proceed as default Claude without persona routing.
+- `/team on` → set state to `active`. Resume routing through the team.
+
 ## Session Orientation
 
 At session start, confirm you're in the correct project directory. If the operator switches repos mid-session, re-read the target project's CLAUDE.md before proceeding. Never assume context carries over from a previous project.

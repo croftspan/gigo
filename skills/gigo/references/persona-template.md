@@ -219,6 +219,8 @@ Personas should know when to lead and when to step back. Not every task benefits
 
 This is not a rigid gate — it's a lightweight metacognitive check. The model self-assesses task type before deciding how heavily to apply the persona lens. For tasks the heuristic doesn't cleanly cover, the instruction to "default to training for core reasoning" provides a safe fallback.
 
+**Team routing integration:** When team routing is `active` in workflow.md, persona calibration still applies — but the default is to route through personas rather than waiting for the operator to name one. The calibration heuristic determines *how much* persona to apply, not *whether* to apply it.
+
 ## Team Sizing
 
 - **One persona** is fine for a focused project

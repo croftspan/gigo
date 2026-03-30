@@ -49,6 +49,8 @@ Before saving anything new, audit the existing rules. This runs every time.
 
 **12. Language check.** If `.claude/references/language.md` exists, verify it's still accurate. If the project's language needs have changed (new audiences, expanded markets, shifted team composition), offer to update. If the file is missing and the project has non-English operators or output requirements, offer to create it.
 
+**13. Team routing check.** Verify the Team Routing section exists in `workflow.md` with a valid state (`active` or `inactive`). If the section is missing, restore it with state `active`. Do not change the operator's chosen state — only ensure the section exists and the toggle instructions are present.
+
 ## Saving New Learnings
 
 After the audit, capture what you learned this session. Route to the right file:

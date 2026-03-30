@@ -32,7 +32,7 @@ These go in `.claude/rules/` and `CLAUDE.md`. They load every conversation. Ever
 |---|---|
 | `CLAUDE.md` | Team roster with blended philosophies, project identity, autonomy model, quick reference. At 3+ personas, include The Overwatch (see `persona-template.md` → The Overwatch). |
 | `.claude/rules/standards.md` | Quality gates, anti-patterns, forbidden list. "When to Go Deeper" pointers must be task-specific: name the observable task, name the reference file, name what to look for. |
-| `.claude/rules/workflow.md` | Encodes the pipeline (plan→execute→review) pointing to gigo:blueprint, gigo:execute, gigo:snap. Includes Persona Calibration section (see `persona-template.md`) and Overwatch section (see `persona-template.md` → The Overwatch). |
+| `.claude/rules/workflow.md` | Encodes the pipeline (plan→execute→review) pointing to gigo:blueprint, gigo:execute, gigo:snap. Includes Persona Calibration section (see `persona-template.md`), Overwatch section (see `persona-template.md` → The Overwatch), and Team Routing section (see below). |
 | `.claude/rules/snap.md` | The Snap — protects the project (see `snap-template.md`) |
 
 **Create domain extensions as needed** — but only when the domain has rules that genuinely apply to every task. Common examples:
@@ -92,6 +92,28 @@ Compliance Criteria, Craft Review Criteria, Challenger Criteria.
 This file is a REFERENCE (tier 2) — zero token cost. The review pipeline reads it
 on demand when dispatching reviewers. If personas or standards change, the file must
 be regenerated. `gigo:maintain` and `gigo:snap` both check for staleness.
+
+## Team Routing
+
+Every assembled project gets a **Team Routing** section in `.claude/rules/workflow.md`. This controls whether every task is automatically routed through the assembled personas or handled as default Claude.
+
+**Default state: `active`.** The operator assembled a team for a reason — use it.
+
+The generated workflow.md must include this section:
+
+```markdown
+## Team Routing
+
+State: active
+
+When team routing is active, every task is routed through the assembled personas before work begins. Identify which persona(s) are most relevant to the task and apply their lens — quality bars, approach, constraints. If multiple personas apply, blend their perspectives. If no persona is clearly relevant, note that and proceed with default reasoning.
+
+The operator can toggle this:
+- `/team off` → set state to `inactive`. Proceed as default Claude without persona routing.
+- `/team on` → set state to `active`. Resume routing through the team.
+```
+
+**Why this matters:** Personas are most valuable when they're active by default, not when the operator has to remember to invoke them. The toggle gives the operator control without requiring per-task activation.
 
 ## The Snap
 
