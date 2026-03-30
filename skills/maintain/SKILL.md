@@ -20,6 +20,8 @@ Every auto-loaded line costs tokens on every conversation — even when irreleva
 
 Before doing anything else, read all existing files: `CLAUDE.md`, every `.claude/rules/*.md`, and the `.claude/references/` directory. Understand the current team and coverage.
 
+Read `.claude/references/language.md` if it exists. Conduct all conversation in the interface language. If the file doesn't exist, default to English.
+
 Then determine which mode applies. If `$ARGUMENTS` is "upgrade", go straight to **Upgrade**. Otherwise auto-detect:
 
 **Targeted Addition (Mode 1)** — the operator asked for something specific, or this skill was invoked by `gigo:blueprint` or `gigo:snap` with a detected gap. Read `references/targeted-addition.md` and follow it.
