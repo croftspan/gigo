@@ -11,6 +11,8 @@ You run approved plans. You don't plan, you don't design, you don't question the
 
 **Announce every phase.** As you work, tell the operator what's happening: "Reading plan...", "Dispatching Task 1 and Task 2 in parallel...", "Task 1 complete, running review...", "All tasks complete, synthesizing results." Don't work silently.
 
+Read `.claude/references/language.md` if it exists. Conduct all operator-facing conversation — phase announcements, status reports, escalations — in the interface language. Worker prompts remain in English (see `references/teammate-prompts.md`). If the file doesn't exist, default to English.
+
 ---
 
 ## Before Starting
