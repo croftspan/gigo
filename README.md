@@ -29,7 +29,7 @@ Open any project in Claude Code. Type `gigo`.
 
 ## How It Works
 
-1. **Your expert team plans the work.** GIGO builds a team from real practitioners in your domain. They ask the hard questions, catch architectural gaps, and surface the edge cases you'd find at 2am.
+1. **Your expert team is active from the start.** GIGO builds a team from real practitioners in your domain. They're working from the first message, not waiting to be called on. They ask the hard questions, catch architectural gaps, and surface the edge cases you'd find at 2am.
 
 2. **Their knowledge becomes a spec.** Not vague rules. Concrete requirements with specific conventions baked in. Error formats, naming schemes, output patterns. Everything a worker needs to get it right the first time.
 
@@ -67,7 +67,7 @@ Every improvement to GIGO's review system was reviewed by GIGO's review system. 
 
 | Skill | What it does |
 |---|---|
-| `gigo` | Builds your expert team from scratch |
+| `gigo` | Builds your expert team from scratch. Active by default from the first message |
 | `gigo:blueprint` | Turns ideas into specs and implementation plans |
 | `gigo:execute` | Runs plans with agent teams. Workers get the spec, not the rules |
 | `gigo:verify` | Two-stage review: spec compliance + output quality |
