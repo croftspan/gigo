@@ -37,6 +37,7 @@ The plan file is the **design brief** — the thinking, exploration findings, an
 
 Check the current project state before asking anything:
 - Read `CLAUDE.md` — who's on the team, what's the project
+- Read `.claude/references/language.md` if it exists — conduct all conversation in the interface language. If the file doesn't exist, default to English.
 - Skim `.claude/rules/` — constraints and standards
 - Check recent git history — what's been happening
 - Scan existing docs, tests, related files
@@ -156,6 +157,8 @@ Read the approved design brief (the plan file from Phase 4.5). Formalize it into
 
 Save to `docs/gigo/specs/YYYY-MM-DD-<topic>-design.md` and commit.
 
+If `.claude/references/language.md` exists with non-English output languages, write the spec in the primary output language (first in the output array). If multi-language output is configured (2+ languages in the output array), include a **Language Requirements** section in the spec specifying which deliverables need which languages and which stay in English (code comments, commit messages, internal docs).
+
 The spec is the source of truth. A bare worker who reads only this spec should be able to build the right thing. The design brief captures the thinking and rationale; the spec captures the requirements and decisions.
 
 **Include a Conventions section.** During design, the team's personas surface convention decisions — error message formats, output patterns, naming schemes, exit code discipline, durability patterns. These must be explicit in the spec, not left implicit in the personas. A bare worker won't have the personas; the spec is all they get.
@@ -217,6 +220,8 @@ This marker is checked by the gate-check hook — implementation plans cannot be
 Read the approved design brief (plan file) and the approved spec. The design brief provides the "why" and the exploration findings; the spec provides the "what." The implementation plan breaks the spec into executable tasks.
 
 Save to `docs/gigo/plans/YYYY-MM-DD-<feature-name>.md`.
+
+Plans are always written in English (operational instructions with task descriptions, dependencies, and file paths). For tasks that produce user-facing deliverables, include `**Output languages:** {codes from language.md}` so workers know which languages to produce.
 
 Read `references/planning-procedure.md` for the full procedure — file structure mapping, task format, dependency graph, bite-sized steps, no-placeholder rules.
 
