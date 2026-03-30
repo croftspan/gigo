@@ -37,6 +37,8 @@ Open any project in Claude Code. Type `gigo`.
 
 4. **Two reviewers catch what one misses.** Spec compliance and output quality as separate passes. Different lenses find different problems.
 
+Your team speaks your language from the first session. During setup, GIGO asks how you want to work. Conversation in your language. Deliverables in whatever languages your project needs.
+
 ---
 
 ## Your Project Stays Lean
