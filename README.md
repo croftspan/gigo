@@ -31,7 +31,7 @@ Open any project in Claude Code. Type `gigo`.
 
 1. **Your expert team is active from the start.** GIGO builds a team from real practitioners in your domain. They're working from the first message, not waiting to be called on. They ask the hard questions, catch architectural gaps, and surface the edge cases you'd find at 2am.
 
-2. **Their knowledge becomes a spec.** Not vague rules. Concrete requirements with specific conventions baked in. Error formats, naming schemes, output patterns. Everything a worker needs to get it right the first time.
+2. **Their knowledge becomes a spec.** Whether it's a quick fix or a full redesign, blueprint scales to the task. Either way you get concrete requirements with specific conventions baked in. Everything a worker needs to get it right the first time.
 
 3. **Workers execute from the spec.** They get the requirements, not the rules. First-pass quality validated across any domain. Every run.
 
