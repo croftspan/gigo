@@ -56,6 +56,10 @@ These go in `.claude/references/`. They are read when needed, not every conversa
 - Decision rationale ("why we chose X over Y")
 - Narrow rules that only apply to specific task types
 
+**Language configuration:** `.claude/references/language.md` stores the operator's interface language and output language(s). Two fields: `interface:` (single IETF tag) and `output:` (bracketed array of IETF tags). Written during gigo:gigo assembly. Read on demand by skills at startup — never auto-loaded.
+
+**Language guard:** Any skill that produces operator-facing conversation must read `.claude/references/language.md` at startup and use the interface language for all conversation. Output deliverables follow the output language(s). If the file doesn't exist, default to English for both. This ensures new skills added via `gigo:maintain` inherit the language requirement.
+
 Rules files tell the agent WHEN to read specific reference files. This creates task-aware context loading.
 
 ## Pre-Write Dedup Pass
