@@ -31,6 +31,8 @@ Read the project's setup and check for these features. Missing ones are upgrade 
 | Overwatch functional name | Overwatch persona uses functional name (The Overwatch), not character name | Persona still named Hawkeye |
 | Review criteria file | `.claude/references/review-criteria.md` exists with domain-specific review criteria | No review-criteria.md, or criteria don't match current personas |
 | Snap review criteria check | Snap audit includes check 11 (review criteria currency) | Snap has 10 or fewer audit checks, or no criteria currency verification |
+| Language configuration | `.claude/references/language.md` exists with interface and output preferences | No language.md (pre-i18n project). Ask operator if they want language configuration. |
+| Snap language check | `.claude/rules/snap.md` includes check 12 (language configuration freshness) | Snap has 11 or fewer checks. Add check 12 from current template. |
 
 ## Step 2: Back Up Before Upgrading
 
