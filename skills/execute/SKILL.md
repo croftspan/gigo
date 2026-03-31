@@ -40,22 +40,22 @@ Read `.claude/references/language.md` if it exists. Conduct all operator-facing 
 
 ## Tier 1: Subagents (Primary)
 
-Fresh subagent per task via Agent tool with **worktree isolation**. Each parallel worker gets its own copy of the repo. Lead controls dispatch, review, merge, and triage.
+Fresh subagent per task. Lead controls dispatch, review, and triage.
+
+**Worktree isolation:** Use `isolation: "worktree"` for parallel tasks when available — each worker gets its own repo copy. If worktree creation fails (not a git repo, permissions, hooks), drop `isolation: "worktree"` and dispatch subagents without it. Subagents without worktrees still give fresh context per task — you just lose file isolation, so dispatch parallel tasks sequentially instead. **Do NOT fall back to inline just because worktrees failed.**
 
 ### Execution Flow
 
 For each **wave** of unblocked tasks:
 
-1. **Identify the wave.** Read the dependency graph. All tasks whose `blocked-by` dependencies are satisfied form the current wave.
-2. **Pre-flight.** Before dispatching, verify readiness for each task in the wave:
-   - List all files the task will create or modify (from plan step descriptions)
-   - Verify referenced files/directories exist in the repo
-   - Check for file conflicts between parallel tasks — same file in multiple tasks means sequential, not parallel
-   - If any dependency artifact is missing, check the upstream "What Was Built" addendum for deviations
-   - **CWD check:** Confirm you're in `$CLAUDE_PROJECT_DIR`, not inside a previous worktree (context compaction can drift CWD)
-3. **Dispatch in parallel with isolation.** For tasks marked `parallelizable: true` with no shared file conflicts, dispatch multiple subagents in a single message. Each subagent gets:
-   - `isolation: "worktree"` — worker operates on its own git worktree branch
-   - Full task text from the plan (don't make subagents read the plan file)
+1. **Identify the wave.** All tasks whose `blocked-by` dependencies are satisfied.
+2. **Pre-flight.** Verify readiness:
+   - List files each task will create or modify
+   - Check for file conflicts between parallel tasks — same file means sequential
+   - **CWD check:** Confirm you're in `$CLAUDE_PROJECT_DIR`
+3. **Dispatch.** For parallelizable tasks with no file conflicts, dispatch multiple subagents in one message. Each gets:
+   - `isolation: "worktree"` if available (omit if worktrees failed — dispatch sequentially instead)
+   - Full task text from the plan
    - Context from completed dependencies ("What Was Built" addendums)
    - Model selected per task complexity — see `references/model-selection.md`
    - The implementation prompt from `references/teammate-prompts.md` (Tier 1 variant, includes worktree awareness)
