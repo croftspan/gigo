@@ -26,36 +26,6 @@ not for context pressure, not for speed. Only the operator can waive a Challenge
 
 ## The Full Arc
 
-### Phase -1: Resume Check
-
-Before entering plan mode, check if a previous session left in-progress blueprint work. This is a read-only scan — don't enter plan mode yet.
-
-**1. Scan for artifacts.** Check in reverse order (most-progressed first):
-- `docs/gigo/plans/*.md` — grep for `<!-- approved: plan`
-- `docs/gigo/specs/*.md` — grep for `<!-- approved: spec`
-- Design briefs — check BOTH `~/.claude/plans/*.md` AND `.claude/plans/*.md` for `<!-- approved: design-brief`. Filter `~/.claude/plans/` by reading content — it's shared across all projects. Only consider files that reference this project's paths, team names, or feature names.
-- Same brief locations — files without approval markers (unapproved briefs still in design)
-
-Only consider files modified in the last 14 days. Sort by modification time (most recent first).
-
-**2. Determine resume phase from highest artifact.**
-
-| Highest artifact | Has approval marker? | Resume at |
-|---|---|---|
-| Implementation plan (`docs/gigo/plans/`) | Yes | Phase 11 |
-| Implementation plan (`docs/gigo/plans/`) | No | Phase 9 |
-| Spec (`docs/gigo/specs/`) | Yes | Phase 8 |
-| Spec (`docs/gigo/specs/`) | No | Phase 6 |
-| Design brief (`~/.claude/plans/` or `.claude/plans/`) | Yes | Phase 5 |
-| Design brief | No | Phase 4 (re-enter plan mode) |
-| Nothing | — | Phase 0 (fresh start) |
-
-**3. Present to operator and confirm.** Show which artifacts exist, their approval status, and the recommended resume phase. If multiple features found, list all and ask which to resume. Never auto-resume — always confirm.
-
-**4. On resume:** Read all existing artifacts to rebuild context. If brief is already approved, do NOT re-enter plan mode — proceed from the identified phase in normal mode.
-
-**If nothing found or operator says "start fresh":** proceed to Phase 0.
-
 ### Phase 0: Enter Plan Mode
 
 Call `EnterPlanMode` before doing anything else. Phases 1-4 happen in plan mode — read-only exploration and design, with all findings written to the `.claude/plans/` file. No formal documents get written until the operator approves the design brief.
