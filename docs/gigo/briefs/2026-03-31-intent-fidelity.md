@@ -65,11 +65,41 @@ Blueprint Phase 3 (propose approaches) and Phase 4 (present design) are where dr
 - Challenger findings get noted but not escalated → make escalation mandatory
 - Design phase drifts from verbs to architecture → verb-tracing before design
 
+### Fix 4: Split blueprint and execute responsibilities
+
+Blueprint currently owns 11 phases — by Phase 8 (implementation plan), context is compressed and the user's original words are buried under design deliberation.
+
+**Proposed split:**
+
+**blueprint** owns: idea → approved spec (Phases 0-7)
+- Explore, question, design, fact-check, write spec, self-review, challenger, operator approves
+- Deliverable: approved spec. Done.
+
+**execute** owns: approved spec → shipped code (Phases 8-11 + build)
+- Reads the spec with fresh context (user's words right there, not compressed)
+- Writes implementation plan (current Phases 8-9)
+- Challenger on plan (current Phase 9.5)
+- Operator approves plan (current Phase 10)
+- Builds (existing execution flow)
+
+**Why this helps intent fidelity:**
+- Execute starts with the spec as primary input, not a compressed hour-long conversation
+- The spec has the intent anchor (Fix 1) — user's exact words quoted at top
+- Implementation plan is written against the spec, not against fading conversation memory
+- Each skill has one clear deliverable, not an 11-phase marathon
+
+**What changes:**
+- `skills/blueprint/SKILL.md` — remove Phases 8-11, end at spec approval
+- `skills/blueprint/references/formal-phases.md` — remove Phases 8-10
+- `skills/execute/SKILL.md` — add implementation plan writing before execution
+- Phase 11 ("offer execution") disappears — execute IS the next step after blueprint
+
 ## Files to Modify
 
-- `skills/blueprint/references/formal-phases.md` — Phase 5 intent anchor, Phase 6.5/9.5 escalation rule
-- `skills/blueprint/SKILL.md` — Phase 3 verb-listing before approaches
-- `skills/verify/references/spec-plan-reviewer-prompt.md` — Strengthen Pass 2 intent alignment output
+- `skills/blueprint/SKILL.md` — intent verb-listing (Fix 3), end at spec approval (Fix 4)
+- `skills/blueprint/references/formal-phases.md` — intent anchor in Phase 5 (Fix 1), remove Phases 8-10 (Fix 4), challenger escalation (Fix 2)
+- `skills/execute/SKILL.md` — absorb implementation plan writing (Fix 4)
+- `skills/verify/references/spec-plan-reviewer-prompt.md` — strengthen Pass 2 intent alignment
 
 ## Validation
 
