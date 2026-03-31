@@ -247,16 +247,15 @@ directly from the approved team, not invented.
 
 ### Step 7: The Handoff
 
-The operator just invested time describing their project and approving a team. Don't waste that context. Close with three things:
+Close with two things:
 
 1. **What just happened** — brief confirmation of the setup.
-2. **What to do next** — tell them to run `/blueprint` to start planning.
-3. **A ready-to-copy first prompt** — synthesize everything you learned during assembly (project description, goals, domain, constraints, audience, the operator's own words) into a concrete first prompt they can paste into `/blueprint`. This is not generic. It's specific to what they told you.
+2. **What to do next** — tell them to run `/blueprint` with what they want to build.
 
 **Format:**
 
 ```
-Your team is assembled. Team routing is on — every task goes through your personas.
+Your team is ready.
 
 **Your commands:**
 
@@ -270,18 +269,8 @@ Your team is assembled. Team routing is on — every task goes through your pers
 | `/maintain` | Add expertise, audit the team, or restructure |
 | `/snap` | End-of-session audit — protects the project |
 
-Team routing is on by default. Say "team off" in conversation to switch to vanilla Claude, "team on" to switch back.
-
-**What's next:** Run `/blueprint` to start planning. It'll produce a design brief, then hand off to `/spec` for the formal spec and plan. Here's a starter prompt based on what we discussed — paste it after `/blueprint`, or write your own:
-
-> [Synthesized prompt that captures the project's core goal, key constraints,
-> and a concrete first deliverable. Written in the operator's voice/style,
-> not in skill-speak. 2-4 sentences.]
+Run `/blueprint` with what you want to build.
 ```
-
-**The prompt must be specific.** "Build the landing page" is useless. "Build the landing page for [project] with [specific constraint from conversation] targeting [audience they mentioned]" is what the operator needs. Use their words, not yours.
-
-**Why this matters:** The operator just told you everything about their project. If you end with "your project is set up, start building" you've thrown away 15 minutes of context and left them staring at a blank prompt. The kickoff prompt bridges assembly into action.
 
 ---
 
