@@ -11,7 +11,7 @@ Reference material for the Conductor persona. This explains the "why" behind the
 | Execution (subagents, primary) | `/execute` | Bare | Lead dispatches fresh subagents per task. Workers produce best output with training alone + good spec (Phase 7). Parallel dispatch for independent tasks. |
 | Review Stage 1 (spec compliance) | `/verify` | Spec as context | Catches "you built the wrong thing" (Phase 8) |
 | Review Stage 2 (engineering quality) | `/verify` | Bare workers | Catches "you built it wrong" — race conditions, lock ordering, test quality (Phase 8) |
-| Code audit (3 parallel auditors) | `/audit` | Full project | Security, stubs, code quality. Post-execute or standalone. |
+| Code audit (3 parallel auditors) | `/sweep` | Full project | Security, stubs, code quality. Post-execute or standalone. |
 
 ## Why Workers Run Bare (Phase 7)
 
@@ -82,7 +82,7 @@ Blueprint owned 11 phases — from "I have an idea" through spec, plan, and exec
 
 The split moves to artifact-based handoff: each skill reads its input from disk (not conversation memory), writes its output to disk, then offers to invoke the next skill. Every pipeline boundary is a potential session boundary. Users can enter at any point with their own artifact.
 
-The handoff chain: `/blueprint` → brief → `/spec` → plan → `/execute` → code → `/verify` or `/audit`.
+The handoff chain: `/blueprint` → brief → `/spec` → plan → `/execute` → code → `/verify` or `/sweep`.
 
 ## Key Insight
 

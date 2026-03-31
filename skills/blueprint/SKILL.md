@@ -117,7 +117,7 @@ This is a DESIGN BRIEF, not an implementation plan. After approval:
 1. Run /spec to formalize this brief into a spec and implementation plan
 2. /spec handles: spec writing, self-review, Challenger, operator approval, plan writing, plan review
 3. Run /execute to build from the approved plan
-4. Run /verify or /audit after execution
+4. Run /verify or /sweep after execution
 
 DO NOT start writing code after this brief is approved.
 The next step is /spec.

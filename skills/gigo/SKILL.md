@@ -266,7 +266,7 @@ Your team is assembled. Team routing is on — every task goes through your pers
 | `/spec` | Formalize a design brief into spec and implementation plan |
 | `/execute` | Execute an approved plan with the full pipeline |
 | `/verify` | Review any work — spec compliance then craft quality |
-| `/audit` | Deep code sweep — security, stubs, code quality |
+| `/sweep` | Deep code sweep — security, stubs, code quality |
 | `/maintain` | Add expertise, audit the team, or restructure |
 | `/snap` | End-of-session audit — protects the project |
 

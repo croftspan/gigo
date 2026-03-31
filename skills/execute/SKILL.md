@@ -194,9 +194,9 @@ After a task passes both review stages, update the plan document before moving t
    - Commit the changelog update.
 4. **Compact.** Compact the conversation to shed execution context before offering the next skill.
 5. **Handoff.** Ask the operator:
-   > "Want me to run /verify in PR mode for the final gate? Or /audit for a deep code sweep?"
+   > "Want me to run /verify in PR mode for the final gate? Or /sweep for a deep code sweep?"
    - `/verify` → invoke `gigo:verify` in PR mode
-   - `/audit` → invoke `gigo:audit`
+   - `/sweep` → invoke `gigo:sweep`
    - Neither → done
 
 ---

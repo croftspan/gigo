@@ -1,6 +1,6 @@
 ---
-name: audit
-description: "Deep code audit — dispatches 3 parallel focused auditors for security, stubs, and code quality. Works standalone or offered after gigo:execute completes. Use gigo:audit."
+name: sweep
+description: "Deep code sweep — dispatches 3 parallel focused auditors for security, stubs, and code quality. Works standalone or offered after gigo:execute completes. Use gigo:sweep."
 ---
 
 # Audit
@@ -80,6 +80,6 @@ If no findings in a severity category, omit that section.
 
 ## Standalone vs Post-Execute
 
-**Standalone:** Operator invokes `/audit` directly. Run on current project state.
+**Standalone:** Operator invokes `/sweep` directly. Run on current project state.
 
 **Post-execute:** Offered by gigo:execute after all tasks complete. Can scope to only files changed during execution (via git diff from first task commit to HEAD).
