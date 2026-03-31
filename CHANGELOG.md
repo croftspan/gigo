@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## v0.11.0-beta (2026-03-31)
 
 ### New Skills
 
