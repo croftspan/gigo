@@ -71,7 +71,7 @@ Then fall back to per-task mode using the SHA range of the PR.
 A fundamentally different review mode. Not compliance checking — adversarial validation. Triggered when reviewing a spec or plan document rather than code.
 
 **When this mode activates:**
-- Called by `gigo:blueprint` at Phase 6.5 (spec review) or Phase 9.5 (plan review)
+- Called by `gigo:spec` at Phase 6.5 (spec review) or Phase 9.5 (plan review)
 - Called standalone on any spec/plan document in `docs/gigo/specs/` or `docs/gigo/plans/`
 
 **How it works:** Dispatch a subagent using the prompt template in `references/spec-plan-reviewer-prompt.md`.

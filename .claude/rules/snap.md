@@ -36,6 +36,10 @@ Before saving anything new, audit the existing rules. This runs every time.
 
 **12. Team routing check.** Verify the Team Routing section exists in `workflow.md` with a valid state (`active` or `inactive`). If the section is missing, restore it with state `inactive`. Do not change the operator's chosen state — only ensure the section exists and the toggle instructions are present.
 
+**13. Language check.** If `.claude/references/language.md` exists, verify it's still accurate. If the project's language needs have changed (new audiences, expanded markets, shifted team composition), offer to update. If the file is missing and the project has non-English operators or output requirements, offer to create it.
+
+**14. Persona style check.** If `.claude/references/persona-style.md` exists, verify persona naming in `CLAUDE.md` matches the chosen style. Lenses style: functional names, no Personality field in lean tier. Characters style: evocative names, Personality field allowed. If personas don't match the style, flag: "Persona naming doesn't match the chosen style — offer to realign via `gigo:maintain`." If the file is missing, treat as Lenses (the default).
+
 ## Session Retro (optional)
 
 After the audit, if session telemetry exists for this session (`~/.claude/usage-data/facets/`), offer to invoke `gigo:retro` in last-session mode. Retro proposals feed into the learning-routing table below.

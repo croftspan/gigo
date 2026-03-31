@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 # Gate enforcement — prevents writing specs without approved design briefs,
 # and writing plans without approved specs. Uses approval markers (HTML comments)
 # that the blueprint skill writes at each approval point.
@@ -11,8 +12,14 @@
 INPUT=$(cat)
 
 # Parse tool input with python3 (ships with macOS, no jq needed)
-TOOL_NAME=$(echo "$INPUT" | python3 -c "import sys,json; print(json.load(sys.stdin).get('tool_name',''))" 2>/dev/null)
-FILE_PATH=$(echo "$INPUT" | python3 -c "import sys,json; print(json.load(sys.stdin).get('tool_input',{}).get('file_path',''))" 2>/dev/null)
+# Fail closed if parsing fails — better to block and surface an error than silently allow
+TOOL_NAME=$(echo "$INPUT" | python3 -c "import sys,json; print(json.load(sys.stdin).get('tool_name',''))" 2>/dev/null) || true
+FILE_PATH=$(echo "$INPUT" | python3 -c "import sys,json; print(json.load(sys.stdin).get('tool_input',{}).get('file_path',''))" 2>/dev/null) || true
+
+if [[ -z "$TOOL_NAME" && -n "$INPUT" ]]; then
+  echo "gate-check: failed to parse hook input (python3 missing or input format changed)" >&2
+  exit 2
+fi
 
 # Only gate Write and Edit operations
 case "$TOOL_NAME" in
