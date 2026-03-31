@@ -13,6 +13,8 @@ You run approved plans. You don't plan, you don't design, you don't question the
 
 Read `.claude/references/language.md` if it exists. Conduct all operator-facing conversation — phase announcements, status reports, escalations — in the interface language. Worker prompts remain in English (see `references/teammate-prompts.md`). If the file doesn't exist, default to English.
 
+Read `.claude/references/verbosity.md` if it exists. If `level: minimal`, announce wave dispatch and task completion only — skip per-step narration within tasks, skip file-conflict analysis details, skip retry reasoning. If `level: verbose` or the file doesn't exist, narrate fully. Default to minimal.
+
 ---
 
 ## Before Starting
@@ -182,7 +184,20 @@ After a task passes both review stages, update the plan document before moving t
 
 1. Synthesize results — read the "What Was Built" addendums across all tasks for a complete picture of deviations, review changes, and observations
 2. Report to operator with a summary: what was built, what deviated from plan, what the review cycle caught, and any "accept" observations worth noting
-3. Suggest: "Ready for a PR? I can invoke `gigo:verify` in PR mode for the final gate."
+3. **Auto-changelog.** Generate a changelog entry:
+   - Read the approved spec (linked in the plan header under `**Spec:**`)
+   - Get the git diff since execution started: `git diff <first-task-parent-sha>..HEAD`
+   - Generate a changelog entry in Keep a Changelog format grounded in both sources
+   - The entry describes what was BUILT (from the diff), not what was PLANNED (from the spec). The spec provides "why" context, the diff provides "what" facts.
+   - Use `[Unreleased]` for version unless the operator specifies one. Use today's date.
+   - Append to project root `CHANGELOG.md`. If no `CHANGELOG.md` exists, create it with the standard Keep a Changelog header.
+   - Commit the changelog update.
+4. **Compact.** Compact the conversation to shed execution context before offering the next skill.
+5. **Handoff.** Ask the operator:
+   > "Want me to run /verify in PR mode for the final gate? Or /audit for a deep code sweep?"
+   - `/verify` → invoke `gigo:verify` in PR mode
+   - `/audit` → invoke `gigo:audit`
+   - Neither → done
 
 ---
 
