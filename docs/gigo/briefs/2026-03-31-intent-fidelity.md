@@ -65,55 +65,50 @@ Blueprint Phase 3 (propose approaches) and Phase 4 (present design) are where dr
 - Challenger findings get noted but not escalated → make escalation mandatory
 - Design phase drifts from verbs to architecture → verb-tracing before design
 
-### Fix 4: Split blueprint and execute responsibilities
+### Fix 4: Split the pipeline into clean context boundaries
 
-Blueprint currently owns 11 phases — by Phase 8 (implementation plan), context is compressed and the user's original words are buried under design deliberation.
+Blueprint currently owns 11 phases. By Phase 8 context is compressed and the user's original words are buried. Each step should be its own skill with one job and one deliverable.
 
-**Proposed split:**
+**The pipeline (4 skills):**
 
-**blueprint** owns: idea → approved spec (Phases 0-7)
-- Explore, question, design, fact-check, write spec, self-review, challenger, operator approves
-- Deliverable: approved spec. Done.
+1. **blueprint** — idea → approved design brief
+   - Plan mode: explore, question, propose approaches, design, fact-check
+   - Operator approves the brief
+   - Done. Hands off to `/spec`.
 
-**execute** owns: approved spec → shipped code (Phases 8-11 + build)
-- Reads the spec with fresh context (user's words right there, not compressed)
-- Writes implementation plan (current Phases 8-9)
-- Challenger on plan (current Phase 9.5)
-- Operator approves plan (current Phase 10)
-- Builds (existing execution flow)
+2. **spec** — approved brief → approved spec + implementation plan
+   - Fresh context. Reads the brief (intent anchor right there).
+   - Writes the formal spec with conventions section
+   - Self-review, challenger (large tasks), operator approves spec
+   - Writes the implementation plan from the approved spec
+   - Self-review, challenger (large tasks), operator approves plan
+   - Done. Hands off to `/execute`.
+   - Spec and plan stay together because they're two views of the same thing — "what" and "how." Breaking context between them adds overhead without value.
 
-**Why this helps intent fidelity:**
-- Execute starts with the spec as primary input, not a compressed hour-long conversation
-- The spec has the intent anchor (Fix 1) — user's exact words quoted at top
-- Implementation plan is written against the spec, not against fading conversation memory
-- Each skill has one clear deliverable, not an 11-phase marathon
+3. **execute** — approved plan → built code
+   - Fresh context. Reads the plan + spec.
+   - Dispatch workers, per-task verify, checkpoints
+   - Unchanged from current execute behavior (minus plan writing)
 
-**Option A (two-way split):**
-- blueprint: idea → approved spec
-- execute: spec → implementation plan → build
+4. **verify** — review any work (unchanged)
 
-**Option B (full pipeline split — preferred):**
-Each step is its own skill with its own clean context window:
+**Operator flow:** `/blueprint` → approve brief → `/spec` → approve spec → approve plan → `/execute`
 
-1. **blueprint** — idea → approved design brief (plan mode explore/question/design)
-2. **spec** — brief → approved spec (read brief, write spec, self-review, challenger)
-3. **plan** — spec → approved implementation plan (read spec, write plan, self-review, challenger)
-4. **execute** — plan → built code (dispatch workers, per-task verify)
-5. **verify** — review any work (unchanged)
+**Why this works:**
+- Each skill starts with a clean context window
+- The spec skill reads the brief fresh — user's intent (with anchor from Fix 1) isn't compressed
+- The plan is written right after the spec in the same context — they naturally inform each other
+- Execute reads the plan fresh — no design deliberation noise
+- Any step can be a session boundary if context gets tight
+- Users can enter at any point (hand-written spec → `/execute` still works)
 
-Operator flow: `/blueprint` → approve → `/spec` → approve → `/plan` → approve → `/execute`
-
-Each skill starts fresh, reads the artifact from the previous step, does one thing. No context compression killing intent. Each approval gate is a natural session boundary — if context gets tight, break between any two steps.
-
-Skills can auto-chain (blueprint offers `/spec` after approval) but don't have to. The user can also start at any step if they already have the input artifact (e.g., hand-written spec → `/plan` → `/execute`).
-
-## Files to Modify
-
-- `skills/blueprint/SKILL.md` — intent verb-listing (Fix 3), end at spec approval (Fix 4)
-- `skills/blueprint/references/formal-phases.md` — intent anchor in Phase 5 (Fix 1), remove Phases 8-10 (Fix 4), challenger escalation (Fix 2)
-- `skills/execute/SKILL.md` — absorb implementation plan writing (Fix 4)
-- `skills/verify/references/spec-plan-reviewer-prompt.md` — strengthen Pass 2 intent alignment
+**What changes:**
+- `skills/blueprint/SKILL.md` — strip to Phases 0-4.5 only (design brief). Add verb-listing (Fix 3).
+- `skills/blueprint/references/formal-phases.md` — delete (absorbed into spec skill)
+- New: `skills/spec/SKILL.md` — spec writing + plan writing + challenger reviews
+- `skills/execute/SKILL.md` — remove plan writing, just reads approved plan and builds
+- `skills/verify/` — unchanged
 
 ## Validation
 
-Run Carlos's exact prompt against a fresh project with the fixes applied. The spec must contain requirements for merge, group, and classify as user-facing actions, not just pipeline operations. If it builds a read-only viewer again, we haven't fixed it.
+Run Carlos's exact prompt against a fresh project with all fixes applied. The spec must contain requirements for merge, group, and classify as user-facing actions, not just pipeline operations. If it builds a read-only viewer again, we haven't fixed it.
