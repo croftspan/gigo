@@ -88,11 +88,24 @@ Blueprint currently owns 11 phases — by Phase 8 (implementation plan), context
 - Implementation plan is written against the spec, not against fading conversation memory
 - Each skill has one clear deliverable, not an 11-phase marathon
 
-**What changes:**
-- `skills/blueprint/SKILL.md` — remove Phases 8-11, end at spec approval
-- `skills/blueprint/references/formal-phases.md` — remove Phases 8-10
-- `skills/execute/SKILL.md` — add implementation plan writing before execution
-- Phase 11 ("offer execution") disappears — execute IS the next step after blueprint
+**Option A (two-way split):**
+- blueprint: idea → approved spec
+- execute: spec → implementation plan → build
+
+**Option B (full pipeline split — preferred):**
+Each step is its own skill with its own clean context window:
+
+1. **blueprint** — idea → approved design brief (plan mode explore/question/design)
+2. **spec** — brief → approved spec (read brief, write spec, self-review, challenger)
+3. **plan** — spec → approved implementation plan (read spec, write plan, self-review, challenger)
+4. **execute** — plan → built code (dispatch workers, per-task verify)
+5. **verify** — review any work (unchanged)
+
+Operator flow: `/blueprint` → approve → `/spec` → approve → `/plan` → approve → `/execute`
+
+Each skill starts fresh, reads the artifact from the previous step, does one thing. No context compression killing intent. Each approval gate is a natural session boundary — if context gets tight, break between any two steps.
+
+Skills can auto-chain (blueprint offers `/spec` after approval) but don't have to. The user can also start at any step if they already have the input artifact (e.g., hand-written spec → `/plan` → `/execute`).
 
 ## Files to Modify
 
