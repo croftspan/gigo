@@ -1,5 +1,30 @@
 # Changelog
 
+## v0.10.0-beta (2026-03-31)
+
+### Breaking Changes
+
+- **Team routing OFF by default.** Personas still in CLAUDE.md and influence behavior, but explicit per-response routing is now opt-in (`team on`). Existing projects keep their current state — only new assemblies default to inactive.
+
+### Improvements
+
+- **Blueprint proportionality.** SKILL.md cut from 303 to 182 lines. Phases 5-10 procedural details moved to on-demand reference file. Less context loaded per blueprint run.
+- **Challenger scaling.** Adversarial reviews now run for large tasks only. Small and medium tasks use self-review. Operator can always request a Challenger.
+- **Fact-checker scaling.** Phase 4.25 only runs for existing codebases. Greenfield projects skip it — nothing meaningful to check against.
+- **Assembly speed.** Training knowledge is the default. Web search only for genuinely unfamiliar domains or when the operator requests deep research. Saves ~10 minutes on assembly.
+- **Troubleshooting docs.** Added troubleshooting section to getting-started page and `docs/troubleshooting.md` for tracking known issues.
+
+### Bug Fixes
+
+- **Marketplace version sync.** `marketplace.json` was stuck at 6.0.0 while `plugin.json` had 0.9.9-beta, causing users to get stale versions on install.
+- **Site footer versions.** All 9 site pages updated from stale v7.6.0.
+
+## v0.9.9-beta (2026-03-30)
+
+### Bug Fixes
+
+- **Marketplace version sync.** Fixed version mismatch between marketplace.json and plugin.json.
+
 ## v0.9.8-beta (2026-03-30)
 
 ### New Features
