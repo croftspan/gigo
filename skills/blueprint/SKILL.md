@@ -11,13 +11,16 @@ You own the full arc from "I have an idea" to "here's exactly what to build, in 
 
 **Announce every phase.** As you work, tell the operator what's happening: "Phase 1: Exploring project context...", "Phase 2: Clarifying questions...", "Phase 3: Proposing approaches...", "Phase 4.25: Fact-checking design brief...", "Phase 5: Writing spec...", "Phase 8: Writing plan..." Don't work silently.
 
-## The Hard Gate
+## The Hard Gates
 
 Do NOT invoke gigo:execute, write any code, scaffold any project, or take any
 implementation action until the operator has approved the plan. This applies to
 EVERY project regardless of perceived simplicity. "Simple" projects are where
 unexamined assumptions cause the most wasted work. The plan can be short, but
 it must exist and be approved.
+
+Do NOT skip Challenger reviews (Phases 6.5 and 9.5). Not for "concrete" designs,
+not for context pressure, not for speed. Only the operator can waive a Challenger.
 
 ---
 
@@ -221,6 +224,8 @@ Fix issues inline. No re-review needed.
 
 ### Phase 6.5: Independent Spec Challenge
 
+**This phase is NOT optional.** Do not skip, "streamline," or defer it regardless of task size, context pressure, or how concrete the design feels. The Challenger catches what self-review cannot — that's the point.
+
 Dispatch a subagent using the prompt template in `gigo:verify`'s `references/spec-plan-reviewer-prompt.md`. Do NOT use `feature-dev:code-reviewer` or `code-review:code-review` — those are generic reviewers. The Challenger runs a two-pass protocol: blind technical assessment first (no knowledge of operator intent), then intent alignment second. This is what makes it adversarial rather than just another review.
 
 **How to dispatch:** Use the Agent tool with `subagent_type: "general-purpose"`. Read `skills/verify/references/spec-plan-reviewer-prompt.md`, fill in the template variables (`{DOCUMENT_TYPE}` = "spec", `{DOCUMENT_CONTENT}` = full spec text, `{OPERATOR_INTENT}` = 1-2 sentence intent summary, `{DOMAIN_CRITERIA}` = domain criteria — read `.claude/references/review-criteria.md` and extract the Challenger Criteria section. If the file does not exist, extract quality bars from CLAUDE.md personas as a fallback), and pass the filled template as the agent prompt.
@@ -266,6 +271,8 @@ Read `references/example-plan.md` for worked examples at small, medium, and larg
 Fix issues inline.
 
 ### Phase 9.5: Independent Plan Challenge
+
+**This phase is NOT optional.** Same rule as Phase 6.5 — never skip the Challenger, never "streamline" it away.
 
 Same dispatch method as Phase 6.5 — use the prompt template in `skills/verify/references/spec-plan-reviewer-prompt.md` with `{DOCUMENT_TYPE}` = "plan". Do NOT use `feature-dev:code-reviewer` or other generic reviewers.
 
