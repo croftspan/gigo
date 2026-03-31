@@ -33,7 +33,7 @@ esac
 # Gate 1: Writing to specs/ requires an approved design brief in the plan file
 if [[ "$FILE_PATH" == *"/specs/"* && "$FILE_PATH" == *.md ]]; then
   # Check both project-level and user-level plan dirs (plan mode writes to ~/.claude/plans/)
-  PLAN_FILE=$(ls -t "$CLAUDE_PROJECT_DIR"/.claude/plans/*.md "$HOME"/.claude/plans/*.md 2>/dev/null | head -1)
+  PLAN_FILE=$(find "$CLAUDE_PROJECT_DIR"/.claude/plans "$HOME"/.claude/plans -maxdepth 1 -name '*.md' 2>/dev/null | xargs -I{} stat -f '%m %N' {} 2>/dev/null | sort -rn | head -1 | cut -d' ' -f2-)
   if [[ -z "$PLAN_FILE" ]]; then
     echo '{"decision": "deny", "reason": "Gate 1: No plan file found. Run gigo:blueprint and get the design brief approved (Phase 4.5) before writing a spec."}' >&2
     exit 2
@@ -50,7 +50,7 @@ fi
 
 # Gate 2: Writing to plans/ (implementation plans, not .claude/plans/) requires an approved spec
 if [[ "$FILE_PATH" == */docs/gigo/plans/* && "$FILE_PATH" == *.md ]]; then
-  SPEC_FILE=$(ls -t "$CLAUDE_PROJECT_DIR"/docs/gigo/specs/*.md 2>/dev/null | head -1)
+  SPEC_FILE=$(find "$CLAUDE_PROJECT_DIR"/docs/gigo/specs -maxdepth 1 -name '*.md' 2>/dev/null | xargs -I{} stat -f '%m %N' {} 2>/dev/null | sort -rn | head -1 | cut -d' ' -f2-)
   if [[ -z "$SPEC_FILE" ]]; then
     echo '{"decision": "deny", "reason": "Gate 2: No spec file found. The spec must be written and approved (Phase 7) before writing an implementation plan."}' >&2
     exit 2

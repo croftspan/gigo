@@ -8,7 +8,7 @@ PROJECT_NAME=$(basename "$CLAUDE_PROJECT_DIR")
 MARKERS=""
 if [[ -f "$CLAUDE_PROJECT_DIR/CLAUDE.md" ]]; then
   # Extract first non-empty, non-heading line as project description
-  DESC=$(grep -m1 '^[^#]' "$CLAUDE_PROJECT_DIR/CLAUDE.md" | head -c 120)
+  DESC=$(grep -m1 '^[^#]' "$CLAUDE_PROJECT_DIR/CLAUDE.md" | head -c 120 | sed 's/\\/\\\\/g; s/"/\\"/g')
   if [[ -n "$DESC" ]]; then
     MARKERS=" Project: $DESC"
   fi

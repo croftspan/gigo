@@ -62,7 +62,7 @@
     }
 
     fetch('https://api.github.com/repos/croftspan/gigo/tags?per_page=1')
-      .then(function (r) { return r.json(); })
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
       .then(function (tags) {
         if (tags && tags[0] && tags[0].name) {
           localStorage.setItem('gigo-version', tags[0].name);
