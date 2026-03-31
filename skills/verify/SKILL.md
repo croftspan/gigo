@@ -3,7 +3,7 @@ name: verify
 description: "Two-stage review: spec compliance (did you build the right thing?) then craft quality (is the work well-built?). Invoked automatically by gigo:execute after each task, or standalone on any work. Use gigo:verify."
 ---
 
-# Review
+# Verify
 
 Two-stage review pipeline. Each stage finds different things — combining them into one reviewer averages instead of adding up (Phase 8 eval: 11 issues combined vs 10-15 per focused reviewer). Two focused passes always beat one pass trying to hold both lenses.
 

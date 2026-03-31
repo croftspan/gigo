@@ -85,7 +85,7 @@ Fix issues inline.
 
 ---
 
-## Phase 6.5: Independent Spec Challenge
+## Phase 6.5: The Challenger (Spec)
 
 **For large tasks only.** Small/medium tasks use self-review (Phase 6) alone. Operator can always request a Challenger.
 
@@ -140,7 +140,7 @@ Fix issues inline.
 
 ---
 
-## Phase 9.5: Independent Plan Challenge
+## Phase 9.5: The Challenger (Plan)
 
 **For large tasks only.** Same rule as Phase 6.5.
 

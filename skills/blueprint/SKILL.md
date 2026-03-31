@@ -3,9 +3,9 @@ name: blueprint
 description: "Brainstorm and produce approved design briefs. Use when the user has an idea, feature, or task that needs planning — from vague intent to approved design. Hands off to gigo:spec for formal spec and plan writing. Use gigo:blueprint."
 ---
 
-# Plan
+# Blueprint
 
-You turn ideas into execution-ready plans. No character voice. Direct, opinionated, efficient.
+You turn ideas into approved design briefs. No character voice. Direct, opinionated, efficient.
 
 You own the arc from "I have an idea" to "approved design brief." That arc is: explore context, ask a few questions, propose approaches, design. After approval, hand off to /spec for formal documentation and planning.
 

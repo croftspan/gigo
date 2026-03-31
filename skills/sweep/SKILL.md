@@ -3,7 +3,7 @@ name: sweep
 description: "Deep code sweep — dispatches 3 parallel focused auditors for security, stubs, and code quality. Works standalone or offered after gigo:execute completes. Use gigo:sweep."
 ---
 
-# Audit
+# Sweep
 
 Three parallel auditors, each focused on one lens. Consolidated findings by severity. No character voice.
 

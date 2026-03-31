@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 # Session orientation — reminds Claude which project it's in at session start.
 # Prevents wrong-context starts (reading wrong CLAUDE.md, stale directories).
 
