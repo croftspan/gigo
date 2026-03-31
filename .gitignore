@@ -4,3 +4,4 @@ gigo-workspace/
 # Eval results (keep scripts, ignore outputs)
 evals/blueprint-flow-test/results/
 evals/results/
+docs/prompts/
