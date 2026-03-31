@@ -1,6 +1,6 @@
 # GIGO (Garbage In, Garbage Out) — The Skill That Builds Skills
 
-This is a Claude Code skill ecosystem that researches domain experts, blends their philosophies into focused personas, scaffolds lean AI-native project setups, and orchestrates the validated plan→execute→review pipeline. Seven skills: `gigo:gigo` (first assembly), `gigo:maintain` (ongoing maintenance), `gigo:blueprint` (planning), `gigo:execute` (execution), `gigo:verify` (two-stage review), `gigo:snap` (audit & protect), `gigo:retro` (session retrospective).
+This is a Claude Code skill ecosystem that researches domain experts, blends their philosophies into focused personas, scaffolds lean AI-native project setups, and orchestrates the validated plan→execute→review pipeline. Nine skills: `gigo:gigo` (first assembly), `gigo:maintain` (ongoing maintenance), `gigo:blueprint` (design briefs), `gigo:spec` (spec & plan writing), `gigo:execute` (execution), `gigo:verify` (two-stage review), `gigo:audit` (code audit), `gigo:snap` (audit & protect), `gigo:retro` (session retrospective).
 
 ## The Team
 
@@ -117,7 +117,7 @@ This is a Claude Code skill ecosystem that researches domain experts, blends the
 
 ## Quick Reference
 
-- **Seven skills:** `gigo:gigo` (assemble), `gigo:maintain` (maintain), `gigo:blueprint` (plan), `gigo:execute` (execute), `gigo:verify` (review), `gigo:snap` (audit), `gigo:retro` (retrospective).
+- **Nine skills:** `gigo:gigo` (assemble), `gigo:maintain` (maintain), `gigo:blueprint` (design brief), `gigo:spec` (spec & plan), `gigo:execute` (execute), `gigo:verify` (review), `gigo:audit` (code audit), `gigo:snap` (audit & protect), `gigo:retro` (retrospective).
 - **Line cap:** ~60 lines per rules file. Fewer is better.
 - **Non-derivable rule:** If the agent can figure it out from reading the project, don't write it.
 - **Two tiers:** Rules (auto-loaded, token-taxed) vs References (on-demand, zero cost).

@@ -4,14 +4,15 @@ Reference material for the Conductor persona. This explains the "why" behind the
 
 ## The Proven Architecture
 
-| Phase | Context | Why |
-|---|---|---|
-| Design brief (plan mode, Phases 0-4) | Assembled ON, read-only | Explore, question, design in plan mode. Operator approves thinking before formal docs. |
-| Formal documentation (Phases 5-10) | Assembled ON, normal mode | Spec and implementation plan written from approved design brief. |
-| Spec/Plan Challenge (adversarial) | Document + repo + quality bar checklist | Independent agent tests feasibility, alternatives, failure modes. Blind-first, intent-second. |
-| Execution (subagents, primary) | Bare | Lead dispatches fresh subagents per task. Workers produce best output with training alone + good spec (Phase 7). Parallel dispatch for independent tasks. |
-| Review Stage 1 (spec compliance) | Spec as context | Catches "you built the wrong thing" (Phase 8) |
-| Review Stage 2 (engineering quality) | Bare workers | Catches "you built it wrong" — race conditions, lock ordering, test quality (Phase 8) |
+| Phase | Skill | Context | Why |
+|---|---|---|---|
+| Design brief (plan mode, Phases 0-4) | `/blueprint` | Assembled ON, read-only | Explore, question, design in plan mode. Operator approves thinking before formal docs. |
+| Formal documentation (Phases 5-10) | `/spec` | Assembled ON, normal mode | Spec and implementation plan written from approved design brief. Absorbed from blueprint. |
+| Spec/Plan Challenge (adversarial) | `/spec` → `/verify` | Document + repo + quality bar checklist | Independent agent tests feasibility, alternatives, failure modes. Blind-first, intent-second. Intent mismatch = hard stop. |
+| Execution (subagents, primary) | `/execute` | Bare | Lead dispatches fresh subagents per task. Workers produce best output with training alone + good spec (Phase 7). Parallel dispatch for independent tasks. |
+| Review Stage 1 (spec compliance) | `/verify` | Spec as context | Catches "you built the wrong thing" (Phase 8) |
+| Review Stage 2 (engineering quality) | `/verify` | Bare workers | Catches "you built it wrong" — race conditions, lock ordering, test quality (Phase 8) |
+| Code audit (3 parallel auditors) | `/audit` | Full project | Security, stubs, code quality. Post-execute or standalone. |
 
 ## Why Workers Run Bare (Phase 7)
 
@@ -72,6 +73,17 @@ The Challenger is a separate agent that:
 - **Gets quality bar checklists, not personas:** Same pattern as code review subagents (Phase 9 finding). The value personas add is in identifying WHAT to check, not in WHO is checking.
 
 Design mirrors the two-stage code review insight: two focused passes (blind technical + intent alignment) beat one combined pass.
+
+## Why Pipeline Split (v2)
+
+Blueprint owned 11 phases — from "I have an idea" through spec, plan, and execution handoff. This created two problems:
+
+1. **Context fragility.** If context was compressed mid-pipeline, phase 8 (plan writing) could lose phase 2's operator answers. Every boundary between phases was a potential data loss point.
+2. **No re-entry.** If a session crashed after the spec was written but before the plan, the operator had to re-run blueprint from scratch.
+
+The split moves to artifact-based handoff: each skill reads its input from disk (not conversation memory), writes its output to disk, then offers to invoke the next skill. Every pipeline boundary is a potential session boundary. Users can enter at any point with their own artifact.
+
+The handoff chain: `/blueprint` → brief → `/spec` → plan → `/execute` → code → `/verify` or `/audit`.
 
 ## Key Insight
 

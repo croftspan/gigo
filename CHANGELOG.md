@@ -1,5 +1,27 @@
 # Changelog
 
+## [Unreleased]
+
+### New Skills
+
+- **`/spec`** — Formalizes approved design briefs into specs and implementation plans. Absorbs Phases 5-10 from blueprint. Self-review, Challenger for large tasks, operator approval at each gate.
+- **`/audit`** — Deep code audit dispatching 3 parallel focused auditors (security, stubs, code quality). Works standalone or offered after execute completes.
+
+### Pipeline Changes
+
+- **Blueprint stripped to design brief only.** Phases 5-11 removed. Blueprint now ends at the approved design brief and hands off to `/spec`.
+- **Intent fidelity.** Three fixes: verb-listing before design (blueprint Phase 3), intent anchor with verb trace in every spec (spec Phase 5), Challenger hard stop on intent mismatch (spec Phase 6.5).
+- **Auto-changelog.** Execute auto-generates a changelog entry after all tasks complete, grounded in the approved spec and actual git diff.
+- **Handoff chain.** Each skill saves its artifact then offers to invoke the next: `/blueprint` → `/spec` → `/execute` → `/verify` or `/audit`.
+- **Assembly flow.** Task description now optional during assembly — team composed for the project domain, not a specific task.
+- **Verbosity control.** `.claude/references/verbosity.md` with minimal/verbose levels. Default minimal. Asked during assembly. All pipeline skills check it.
+- **Compact at handoff.** Conversation compacted between skill invocations to shed prior context. Artifact on disk is the durable record.
+
+### Documentation
+
+- Skill count updated from 7 to 9 across CLAUDE.md and pipeline architecture reference.
+- Gigo handoff table updated with all 9 skills.
+
 ## v0.10.0-beta (2026-03-31)
 
 ### Breaking Changes
