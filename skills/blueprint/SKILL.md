@@ -11,16 +11,12 @@ You own the full arc from "I have an idea" to "here's exactly what to build, in 
 
 **Announce every phase.** As you work, tell the operator what's happening: "Phase 1: Exploring project context...", "Phase 2: Clarifying questions...", "Phase 3: Proposing approaches...", "Phase 4.25: Fact-checking design brief...", "Phase 5: Writing spec...", "Phase 8: Writing plan..." Don't work silently.
 
-## The Hard Gates
+## The Hard Gate
 
 Do NOT invoke gigo:execute, write any code, scaffold any project, or take any
 implementation action until the operator has approved the plan. This applies to
-EVERY project regardless of perceived simplicity. "Simple" projects are where
-unexamined assumptions cause the most wasted work. The plan can be short, but
+EVERY project regardless of perceived simplicity. The plan can be short, but
 it must exist and be approved.
-
-Do NOT skip Challenger reviews (Phases 6.5 and 9.5). Not for "concrete" designs,
-not for context pressure, not for speed. Only the operator can waive a Challenger.
 
 ---
 
@@ -93,27 +89,11 @@ In existing codebases, follow established patterns. Where existing code has prob
 
 **Write to plan file:** The full design — architecture, components, data flow, error handling. This is the design brief that Phase 5 will formalize into a spec.
 
-### Phase 4.25: Fact-Check Design Brief
+### Phase 4.25: Fact-Check Design Brief (existing codebases only)
 
-Before the operator sees the brief, verify its assumptions against the actual project. This catches redundancy, wrong assumptions, missing dependencies, and internal inconsistencies — high value when the operator doesn't know the project well.
+**Skip for greenfield projects** (< ~10 source files). Nothing meaningful to check against.
 
-**How to run:** Read `references/fact-checker-prompt.md`. Fill `{DESIGN_BRIEF}` with the plan file contents and `{PROJECT_ROOT}` with the project's working directory. Dispatch using the Agent tool:
-
-```
-Agent tool:
-  subagent_type: "Plan"
-  prompt: [filled template with {DESIGN_BRIEF} and {PROJECT_ROOT} replaced]
-```
-
-Required: `subagent_type: "Plan"` — this runs in plan mode where only Explore/Plan types are available. Plan inherits the parent model for reasoning capacity.
-
-**Write to plan file:** Add the subagent's results under a `## Fact-Check Results` section at the end of the current brief content.
-
-**If findings exist:** Present them to the operator alongside the brief. The operator decides: revise the design (loop back to Phase 4) or proceed to approval (Phase 4.5).
-
-**If no issues:** Note "Fact-check passed — no issues found" and proceed to Phase 4.5.
-
-**Announce:** "Phase 4.25: Fact-checking design brief..."
+For existing codebases: read `references/fact-checker-prompt.md`, fill the template, dispatch via `Agent` with `subagent_type: "Plan"`. Write results to the plan file under `## Fact-Check Results`. Present findings to operator — they decide to revise or proceed.
 
 ### Phase 4.5: Approve Design Brief
 
@@ -152,119 +132,20 @@ If the operator requests changes: they stay in plan mode, you revise the plan fi
 Example: `<!-- approved: design-brief 2026-03-28T21:15:00 by:eaven -->`
 This marker is checked by the gate-check hook — specs cannot be written without it. The `by:` field creates an audit trail of who approved each phase.
 
-### Phase 5: Write Spec
+### Phases 5-10: Formalize and Review
 
-**You just exited plan mode.** The approved plan file is a design brief, NOT an implementation plan. Do NOT start coding. This phase writes the formal spec document.
+After the brief is approved, read `references/formal-phases.md` for the full procedure. Summary:
 
-Read the approved design brief (the plan file from Phase 4.5). Formalize it into a spec — don't recreate the design from conversation memory.
+1. **Phase 5: Write spec** — formalize the brief into `docs/gigo/specs/YYYY-MM-DD-<topic>-design.md`. Include a Conventions section. Commit.
+2. **Phase 6: Self-review spec** — placeholder scan, consistency, ambiguity, bare-worker test. Fix inline.
+3. **Phase 6.5: Challenger spec review** — large tasks only. Dispatch via `gigo:verify`'s `references/spec-plan-reviewer-prompt.md`. Operator can request for any task.
+4. **Phase 7: Operator reviews spec** — wait for approval. Write `<!-- approved: spec [timestamp] by:[name] -->` marker.
+5. **Phase 8: Write implementation plan** — break spec into ordered tasks. Save to `docs/gigo/plans/YYYY-MM-DD-<feature>.md`. Read `references/planning-procedure.md` and `references/example-plan.md`.
+6. **Phase 9: Self-review plan** — spec coverage, placeholder scan, type consistency. Fix inline.
+7. **Phase 9.5: Challenger plan review** — large tasks only. Same dispatch as 6.5.
+8. **Phase 10: Operator reviews plan** — wait for approval. Write `<!-- approved: plan [timestamp] by:[name] -->` marker.
 
-Save to `docs/gigo/specs/YYYY-MM-DD-<topic>-design.md` and commit.
-
-If `.claude/references/language.md` exists with non-English output languages, write the spec in the primary output language (first in the output array). If multi-language output is configured (2+ languages in the output array), include a **Language Requirements** section in the spec specifying which deliverables need which languages and which stay in English (code comments, commit messages, internal docs).
-
-The spec is the source of truth. A bare worker who reads only this spec should be able to build the right thing. The design brief captures the thinking and rationale; the spec captures the requirements and decisions.
-
-**Include a Conventions section.** During design, the team's personas surface convention decisions — error message formats, output patterns, naming schemes, exit code discipline, durability patterns. These must be explicit in the spec, not left implicit in the personas. A bare worker won't have the personas; the spec is all they get.
-
-Example conventions section:
-```
-## Conventions
-- Error messages: `tq: cannot add task "<name>": <reason>`
-- Output: only the task ID to stdout on success. Errors to stderr.
-- Commands: wrap shell strings as `["sh", "-c", <cmd>]`
-- Exit codes: return errors from RunE, never call os.Exit in command logic
-- State naming: `State` not `Status`, constants prefixed `State` (StatePending, StateReady)
-- Writes: atomic via temp file + fsync + rename
-```
-
-The personas' job is to *notice* these during planning. The spec's job is to *deliver* them to the worker.
-
-### Phase 6: Spec Self-Review (Stricter)
-
-After writing the spec, assume a bare worker follows it literally. What goes wrong?
-
-1. **Placeholder scan:** Any "TBD", "TODO", incomplete sections, vague requirements? Fix them.
-2. **Internal consistency:** Do sections contradict each other? Does the architecture match the feature descriptions?
-3. **Scope check:** Is this one spec or should it be decomposed into sub-projects? Each sub-project gets its own spec-plan-execute cycle.
-4. **Ambiguity check:** Could any requirement be read two ways? Pick one.
-5. **Bare worker test:** If a worker gets ONLY this spec — no personas, no context, no ability to ask questions — what would they build wrong? Fix that.
-6. **Convention check:** Does the Conventions section capture every decision the personas surfaced? Error formats, output patterns, naming, exit codes, durability? If a convention is in your head but not in the spec, the worker won't produce it.
-
-Fix issues inline. No re-review needed.
-
-### Phase 6.5: Independent Spec Challenge
-
-**This phase is NOT optional.** Do not skip, "streamline," or defer it regardless of task size, context pressure, or how concrete the design feels. The Challenger catches what self-review cannot — that's the point.
-
-Dispatch a subagent using the prompt template in `gigo:verify`'s `references/spec-plan-reviewer-prompt.md`. Do NOT use `feature-dev:code-reviewer` or `code-review:code-review` — those are generic reviewers. The Challenger runs a two-pass protocol: blind technical assessment first (no knowledge of operator intent), then intent alignment second. This is what makes it adversarial rather than just another review.
-
-**How to dispatch:** Use the Agent tool with `subagent_type: "general-purpose"`. Read `skills/verify/references/spec-plan-reviewer-prompt.md`, fill in the template variables (`{DOCUMENT_TYPE}` = "spec", `{DOCUMENT_CONTENT}` = full spec text, `{OPERATOR_INTENT}` = 1-2 sentence intent summary, `{DOMAIN_CRITERIA}` = domain criteria — read `.claude/references/review-criteria.md` and extract the Challenger Criteria section. If the file does not exist, extract quality bars from CLAUDE.md personas as a fallback), and pass the filled template as the agent prompt.
-
-**Before dispatching:** Extract the operator's original request into 1-2 sentences. This becomes the intent summary for Pass 2. Don't include the design discussion or your reasoning — just what the operator asked for.
-
-**Present findings to the operator:** Show the Challenger's review alongside the spec. The operator sees both and decides.
-
-- **Proceed:** Continue to Phase 7 (user reviews spec)
-- **Revise:** Fix the specific issues, re-run self-review (Phase 6), re-run Challenger
-- **Rethink:** Surface the Challenger's alternative. If operator agrees, loop back to Phase 3
-
-### Phase 7: User Reviews Spec
-
-> "Spec written and committed to `<path>`. Please review — I'll revise anything before we move to the implementation plan."
-
-Wait for approval. If changes requested, revise and re-run the self-review.
-
-**Write approval marker.** After the operator approves the spec, run `git config user.name` to get the approver's identity, then append this marker to the spec file:
-```
-<!-- approved: spec [actual current timestamp] by:[result of git config user.name] -->
-```
-This marker is checked by the gate-check hook — implementation plans cannot be written without it.
-
-### Phase 8: Write Implementation Plan
-
-Read the approved design brief (plan file) and the approved spec. The design brief provides the "why" and the exploration findings; the spec provides the "what." The implementation plan breaks the spec into executable tasks.
-
-Save to `docs/gigo/plans/YYYY-MM-DD-<feature-name>.md`.
-
-Plans are always written in English (operational instructions with task descriptions, dependencies, and file paths). For tasks that produce user-facing deliverables, include `**Output languages:** {codes from language.md}` so workers know which languages to produce.
-
-Read `references/planning-procedure.md` for the full procedure — file structure mapping, task format, dependency graph, bite-sized steps, no-placeholder rules.
-
-Read `references/example-plan.md` for worked examples at small, medium, and large scale.
-
-### Phase 9: Plan Self-Review
-
-1. **Spec coverage:** Skim each section/requirement in the spec. Can you point to a task that implements it? List any gaps.
-2. **Placeholder scan:** Search the plan for "TBD", "TODO", "implement later", "add appropriate handling", "similar to Task N" — fix them.
-3. **Type consistency:** Do types, method signatures, and property names used in later tasks match earlier tasks? `clearLayers()` in Task 3 but `clearFullLayers()` in Task 7 is a bug.
-
-Fix issues inline.
-
-### Phase 9.5: Independent Plan Challenge
-
-**This phase is NOT optional.** Same rule as Phase 6.5 — never skip the Challenger, never "streamline" it away.
-
-Same dispatch method as Phase 6.5 — use the prompt template in `skills/verify/references/spec-plan-reviewer-prompt.md` with `{DOCUMENT_TYPE}` = "plan". Do NOT use `feature-dev:code-reviewer` or other generic reviewers.
-
-**What the reviewer gets:**
-- Pass 1: the plan + the approved spec (as `{SPEC_CONTENT_IF_PLAN_REVIEW}`) + repo access + domain criteria checklist
-- Pass 2: the same 1-2 sentence intent summary from Phase 6.5
-
-The Challenger focuses on plan-specific concerns: will the task decomposition produce what the spec describes? Is the dependency graph correct? Will workers get stuck on underspecified steps? Will the steps actually work against the real project?
-
-**Present findings to the operator.** Same verdict handling as Phase 6.5 — Proceed / Revise / Rethink.
-
-### Phase 10: User Reviews Plan
-
-> "Plan saved to `<path>`. Review the tasks and dependency order — I'll adjust before we start."
-
-Wait for approval.
-
-**Write approval marker.** After the operator approves the plan, run `git config user.name` to get the approver's identity, then append this marker to the plan document:
-```
-<!-- approved: plan [actual current timestamp] by:[result of git config user.name] -->
-```
-This marker is checked by the execute skill — execution cannot start without it.
+**CRITICAL:** Do NOT start writing code after the brief is approved. The next step is always Phase 5 (spec), not implementation.
 
 ### Phase 11: Offer Execution
 
@@ -286,13 +167,11 @@ Example: "This plan needs deep Stripe integration knowledge and I don't see a pa
 
 Not every idea needs all phases at full depth. Scale:
 
-- **Small task** (bug fix, config change): plan mode still activates but the design brief is short (5-10 lines: bug, cause, fix approach). Phase 4.25 (fact-check) and Challenger (6.5/9.5) always run regardless of task size. Skip to Phase 8 after approval.
-- **Medium task** (feature, refactor): full arc but design sections are brief
-- **Large task** (architecture change, new system): full arc with decomposition at phase 3
+- **Small task** (bug fix, config change): brief is 5-10 lines. Skip fact-check (4.25) and Challenger (6.5/9.5). Skip to Phase 8 after approval.
+- **Medium task** (feature, refactor): full arc but brief sections are concise. Skip fact-check for greenfield. Self-review sufficient — Challenger on request.
+- **Large task** (architecture, new system): full arc with decomposition at Phase 3. Fact-check and Challenger both run.
 
-Every task enters plan mode. Every task gets an approved design brief. The brief scales — not the process.
-
-Every plan, regardless of scale, answers: What, Order, Risks, Done.
+Every plan answers: What, Order, Risks, Done.
 
 ---
 
