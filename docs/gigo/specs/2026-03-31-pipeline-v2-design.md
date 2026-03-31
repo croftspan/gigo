@@ -319,3 +319,5 @@ Each skill saves its artifact to disk before offering the handoff. Any step can 
 - **Handoff pattern:** Save artifact → ask "Want me to run /[next] now?" → Yes = invoke directly, No = file persists.
 - **Prompt templates:** Subagent prompts live in `references/` directories, not inline in SKILL.md. Dispatching code reads the template and fills placeholders.
 - **Language handling:** Skills read `.claude/references/language.md` for interface and output languages. Worker prompts stay in English.
+
+<!-- approved: spec 2026-03-30T00:00:00 by:Eaven -->
