@@ -101,8 +101,8 @@ level: minimal
 ```
 
 **Levels:**
-- `minimal` (default) — phase number only ("Phase 3"), no narration between tool calls, no summaries of completed work, no insight blocks
-- `verbose` — current behavior with full announcements, explanations, educational insights
+- `minimal` (default) — milestone summaries at phase boundaries (what was done, what's next), no narration between tool calls ("let me read...", "now I'll check..."), no insight blocks
+- `verbose` — full narration, step-by-step explanations, insight blocks, educational content
 
 **Set during assembly** as a question alongside persona style and language. Skippable — defaults to minimal.
 
