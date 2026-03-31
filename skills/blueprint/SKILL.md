@@ -1,15 +1,15 @@
 ---
 name: blueprint
-description: "Brainstorm, write specs, and produce ordered implementation plans. Use when the user has an idea, feature, or task that needs planning — from vague intent to detailed execution-ready plan. Handles the full arc: explore → design → spec → plan. Use gigo:blueprint."
+description: "Brainstorm and produce approved design briefs. Use when the user has an idea, feature, or task that needs planning — from vague intent to approved design. Hands off to gigo:spec for formal spec and plan writing. Use gigo:blueprint."
 ---
 
 # Plan
 
 You turn ideas into execution-ready plans. No character voice. Direct, opinionated, efficient.
 
-You own the full arc from "I have an idea" to "here's exactly what to build, in what order." That arc is: explore context, ask a few questions, propose approaches, design, spec, plan. One continuous flow — not separate skills stitched together.
+You own the arc from "I have an idea" to "approved design brief." That arc is: explore context, ask a few questions, propose approaches, design. After approval, hand off to /spec for formal documentation and planning.
 
-**Announce every phase.** As you work, tell the operator what's happening: "Phase 1: Exploring project context...", "Phase 2: Clarifying questions...", "Phase 3: Proposing approaches...", "Phase 4.25: Fact-checking design brief...", "Phase 5: Writing spec...", "Phase 8: Writing plan..." Don't work silently.
+**Announce every phase.** As you work, tell the operator what's happening: "Phase 1: Exploring project context...", "Phase 2: Clarifying questions...", "Phase 3: Proposing approaches...", "Phase 4: Presenting design...", "Phase 4.25: Fact-checking design brief..." Don't work silently.
 
 ## The Hard Gate
 
@@ -37,6 +37,7 @@ The plan file is the **design brief** — the thinking, exploration findings, an
 Check the current project state before asking anything:
 - Read `CLAUDE.md` — who's on the team, what's the project
 - Read `.claude/references/language.md` if it exists — conduct all conversation in the interface language. If the file doesn't exist, default to English.
+- Read `.claude/references/verbosity.md` if it exists. If `level: minimal`, announce phase names only — skip exploration narration, intermediate findings, and restating file contents. If `level: verbose` or the file doesn't exist, narrate fully. Default to minimal.
 - Skim `.claude/rules/` — constraints and standards
 - Check recent git history — what's been happening
 - Scan existing docs, tests, related files
@@ -66,6 +67,14 @@ Bad questions:
 **Write to plan file:** Record each question and the operator's answer. These decisions shouldn't live only in conversation context.
 
 ### Phase 3: Propose 2-3 Approaches
+
+**Verb-listing gate.** Before proposing approaches, extract and list the user's action verbs explicitly:
+
+> Action verbs from your request: [list verbs]
+>
+> Each approach below accounts for all verbs. If an approach drops a verb, I'll explain why.
+
+Each proposed approach must account for every verb. Dropped verbs require explicit justification. This catches intent drift before the design brief is even written.
 
 Before settling on a design, present 2-3 different approaches with trade-offs:
 - Lead with your recommended option and explain why
@@ -105,25 +114,20 @@ For existing codebases: read `references/fact-checker-prompt.md`, fill the templ
 ## Post-Approval: What Happens Next
 
 This is a DESIGN BRIEF, not an implementation plan. After approval:
-1. Write formal spec to docs/gigo/specs/ (Phase 5)
-2. Self-review spec (Phase 6)
-3. Challenger adversarial review of spec (Phase 6.5)
-4. Operator reviews spec (Phase 7)
-5. Write implementation plan to docs/gigo/plans/ (Phase 8)
-6. Self-review plan (Phase 9)
-7. Challenger adversarial review of plan (Phase 9.5)
-8. Operator reviews plan (Phase 10)
-9. Offer execution via gigo:execute (Phase 11)
+1. Run /spec to formalize this brief into a spec and implementation plan
+2. /spec handles: spec writing, self-review, Challenger, operator approval, plan writing, plan review
+3. Run /execute to build from the approved plan
+4. Run /verify or /audit after execution
 
-DO NOT start writing code after this plan is approved.
-The next step is formalizing this brief into a spec document.
+DO NOT start writing code after this brief is approved.
+The next step is /spec.
 ```
 
 **Then call `ExitPlanMode`.** The operator reviews the design brief and approves.
 
 If the operator requests changes: they stay in plan mode, you revise the plan file, and ExitPlanMode is called again.
 
-**CRITICAL — after plan mode approval:** You are now back in normal execution mode. The approved plan file is a DESIGN BRIEF. Do NOT start writing code. Do NOT start implementing. Proceed directly to Phase 5: Write Spec. Read the plan file you just wrote and formalize it into a spec document.
+**CRITICAL — after plan mode approval:** You are now back in normal execution mode. The approved plan file is a DESIGN BRIEF. Do NOT start writing code. Do NOT start implementing. Compact the conversation to shed blueprint's exploration context. The design brief on disk is the durable record. Then ask the operator: "Want me to run /spec now?" If yes, invoke `gigo:spec`. If no, the brief persists on disk for later.
 
 **Write approval marker.** After the operator approves, run `git config user.name` to get the approver's identity, then append this marker to the plan file:
 ```
@@ -131,27 +135,6 @@ If the operator requests changes: they stay in plan mode, you revise the plan fi
 ```
 Example: `<!-- approved: design-brief 2026-03-28T21:15:00 by:eaven -->`
 This marker is checked by the gate-check hook — specs cannot be written without it. The `by:` field creates an audit trail of who approved each phase.
-
-### Phases 5-10: Formalize and Review
-
-After the brief is approved, read `references/formal-phases.md` for the full procedure. Summary:
-
-1. **Phase 5: Write spec** — formalize the brief into `docs/gigo/specs/YYYY-MM-DD-<topic>-design.md`. Include a Conventions section. Commit.
-2. **Phase 6: Self-review spec** — placeholder scan, consistency, ambiguity, bare-worker test. Fix inline.
-3. **Phase 6.5: Challenger spec review** — large tasks only. Dispatch via `gigo:verify`'s `references/spec-plan-reviewer-prompt.md`. Operator can request for any task.
-4. **Phase 7: Operator reviews spec** — wait for approval. Write `<!-- approved: spec [timestamp] by:[name] -->` marker.
-5. **Phase 8: Write implementation plan** — break spec into ordered tasks. Save to `docs/gigo/plans/YYYY-MM-DD-<feature>.md`. Read `references/planning-procedure.md` and `references/example-plan.md`.
-6. **Phase 9: Self-review plan** — spec coverage, placeholder scan, type consistency. Fix inline.
-7. **Phase 9.5: Challenger plan review** — large tasks only. Same dispatch as 6.5.
-8. **Phase 10: Operator reviews plan** — wait for approval. Write `<!-- approved: plan [timestamp] by:[name] -->` marker.
-
-**CRITICAL:** Do NOT start writing code after the brief is approved. The next step is always Phase 5 (spec), not implementation.
-
-### Phase 11: Offer Execution
-
-> "Plan ready. Want me to start execution?"
-
-If yes, invoke `gigo:execute`.
 
 ---
 
@@ -167,9 +150,9 @@ Example: "This plan needs deep Stripe integration knowledge and I don't see a pa
 
 Not every idea needs all phases at full depth. Scale:
 
-- **Small task** (bug fix, config change): brief is 5-10 lines. Skip fact-check (4.25) and Challenger (6.5/9.5). Skip to Phase 8 after approval.
-- **Medium task** (feature, refactor): full arc but brief sections are concise. Skip fact-check for greenfield. Self-review sufficient — Challenger on request.
-- **Large task** (architecture, new system): full arc with decomposition at Phase 3. Fact-check and Challenger both run.
+- **Small task** (bug fix, config change): brief is 5-10 lines. Skip fact-check (4.25). Hand off to /spec after approval.
+- **Medium task** (feature, refactor): full arc but brief sections are concise. Skip fact-check for greenfield. Hand off to /spec after approval.
+- **Large task** (architecture, new system): full arc with decomposition at Phase 3. Fact-check runs. Hand off to /spec after approval.
 
 Every plan answers: What, Order, Risks, Done.
 
@@ -177,6 +160,4 @@ Every plan answers: What, Order, Risks, Done.
 
 ## Pointers
 
-Read `references/planning-procedure.md` for the detailed step-by-step on file structure mapping, task format, dependency graphs, and the no-placeholder rules.
-
-Read `references/example-plan.md` for worked examples at small, medium, and large scale.
+Read `references/fact-checker-prompt.md` for the Phase 4.25 fact-check template (existing codebases only).
