@@ -30,7 +30,7 @@ Currently blueprint owns 11 phases. Split into skills with one job each:
 
 Each skill reads its input artifact from disk, not from conversation memory. Any step can be a session boundary. Users can enter at any point with their own artifact.
 
-**Handoff behavior:** Each skill saves its artifact, then asks "Want me to run /[next] now?" Yes = invoke directly. No = file persists for later.
+**Handoff behavior:** Each skill saves its artifact to disk, compacts the conversation (artifact is persisted so history is safely compressible), then asks "Want me to run /[next] now?" Yes = next skill reads the artifact fresh into lean context. No = file persists for later. Same session, clean context — no forcing new tabs.
 
 **Files:**
 - `skills/blueprint/SKILL.md` — strip to Phases 0-4.5 only (design brief)
