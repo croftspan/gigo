@@ -94,6 +94,8 @@ Blueprint currently owns 11 phases. By Phase 8 context is compressed and the use
 
 **Operator flow:** `/blueprint` → approve brief → `/spec` → approve spec → approve plan → `/execute`
 
+**Handoff between skills:** Each skill ends by saving its artifact to disk and asking "Want me to run /[next] now?" If yes, invoke the next skill directly. If no, the file persists — user picks it up whenever. No copy-pasting prompts.
+
 **Why this works:**
 - Each skill starts with a clean context window
 - The spec skill reads the brief fresh — user's intent (with anchor from Fix 1) isn't compressed
