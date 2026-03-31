@@ -7,8 +7,7 @@ Reference material for the Conductor persona. This explains the "why" behind the
 | Phase | Skill | Context | Why |
 |---|---|---|---|
 | Design brief (plan mode, Phases 0-4) | `/blueprint` | Assembled ON, read-only | Explore, question, design in plan mode. Operator approves thinking before formal docs. |
-| Formal documentation (Phases 5-10) | `/spec` | Assembled ON, normal mode | Spec and implementation plan written from approved design brief. Absorbed from blueprint. |
-| Spec/Plan Challenge (adversarial) | `/spec` → `/verify` | Document + repo + quality bar checklist | Independent agent tests feasibility, alternatives, failure modes. Blind-first, intent-second. Intent mismatch = hard stop. |
+| Formal documentation (Phases 5-10) | `/spec` | Assembled ON, normal mode | Spec and implementation plan written from approved design brief. Includes adversarial Challenger review for large tasks — intent mismatch is a hard stop. |
 | Execution (subagents, primary) | `/execute` | Bare | Lead dispatches fresh subagents per task. Workers produce best output with training alone + good spec (Phase 7). Parallel dispatch for independent tasks. |
 | Review Stage 1 (spec compliance) | `/verify` | Spec as context | Catches "you built the wrong thing" (Phase 8) |
 | Review Stage 2 (engineering quality) | `/verify` | Bare workers | Catches "you built it wrong" — race conditions, lock ordering, test quality (Phase 8) |
