@@ -269,9 +269,80 @@ The version field is left as `[Unreleased]` unless the operator specifies a vers
 
 ---
 
-## 6. Skill Count and Documentation Updates
+## 6. Verbosity Control
 
-### 6.1 Skill Count
+### 6.1 Configuration File
+
+**Create `.claude/references/verbosity.md` during assembly** (`skills/gigo/SKILL.md`).
+
+```markdown
+# Verbosity
+
+level: minimal
+```
+
+Two levels:
+- **minimal** (default) — Phase announcements, decisions that need input, final results. No intermediate reasoning, no exploration narration, no restating what was just read.
+- **verbose** — Full narration: what's being read, why, what was found, intermediate reasoning. Useful for debugging the pipeline or learning how it works.
+
+### 6.2 Assembly Integration
+
+Add a verbosity question to `skills/gigo/SKILL.md` during the Language Configuration block (after language questions, before Step 1). Use `AskUserQuestion`:
+
+> "How much detail do you want from the pipeline?"
+>
+> - **Minimal** (recommended) — just decisions and results
+> - **Verbose** — full narration of every step
+
+Skippable — default to **minimal**. Write the choice to `.claude/references/verbosity.md` immediately.
+
+### 6.3 Skill Behavior
+
+Every skill that announces phases reads `.claude/references/verbosity.md` at startup (alongside `language.md`):
+
+- **If `minimal`:** Announce phase names only. Skip exploration narration ("I'm reading file X..."), skip intermediate findings ("I found 3 patterns..."), skip restating file contents. Report decisions, questions, and results.
+- **If `verbose`:** Full narration as skills currently behave.
+- **If file doesn't exist:** Default to minimal.
+
+Skills affected: blueprint, spec, execute, verify, audit. (Gigo, maintain, snap, retro are conversational by nature — verbosity doesn't apply.)
+
+---
+
+## 7. Compact at Skill Handoffs
+
+### 7.1 The Problem
+
+When skills invoke each other in the same session, conversation context accumulates. By the time `/execute` starts, the conversation carries blueprint's exploration + spec's formalization — context the execution lead doesn't need and that consumes tokens and attention.
+
+### 7.2 The Fix
+
+**After saving the artifact and before offering the handoff**, each skill compacts the conversation. The sequence is:
+
+1. Save artifact to disk (spec, plan, brief, etc.)
+2. Commit the artifact
+3. Compact the conversation (implementation-dependent — use whatever context management is available in the Claude Code environment, e.g., `/compact` or equivalent programmatic call)
+4. Ask "Want me to run /[next] now?"
+
+This ensures the next skill starts with a lean conversation — the artifact on disk is the durable record, not the conversation history.
+
+### 7.3 Skills Affected
+
+Every skill that hands off to another:
+- **Blueprint** → compacts before offering `/spec`
+- **Spec** → compacts before offering `/execute`
+- **Execute** → compacts before offering `/verify` or `/audit`
+
+Terminal skills (verify, audit) don't compact — there's no downstream skill.
+
+### 7.4 Graceful Degradation
+
+If compaction is not available (older Claude Code versions, non-interactive contexts), skip it and proceed with the handoff. The pipeline works without compaction — it's an optimization, not a requirement.
+
+---
+
+## 8. Skill Count and Documentation Updates
+
+### 8.1 Skill Count
 
 | Current (7) | v2 (9) | Change |
 |---|---|---|
@@ -285,7 +356,7 @@ The version field is left as `[Unreleased]` unless the operator specifies a vers
 | — | **spec** | new: spec + plan writing + review |
 | — | **audit** | new: 3 parallel auditors |
 
-### 6.2 Files That Need Updating
+### 8.2 Files That Need Updating
 
 - `CLAUDE.md` — Update "Seven skills" to "Nine skills" in Quick Reference, add `gigo:spec` and `gigo:audit` descriptions
 - `skills/gigo/SKILL.md` — Update Step 7 handoff table to include `/spec` and `/audit`
@@ -293,7 +364,7 @@ The version field is left as `[Unreleased]` unless the operator specifies a vers
 - `CHANGELOG.md` — Entry for v2 changes (auto-generated if auto-changelog lands, otherwise manual)
 - Plugin metadata files (if they exist) — update skill count
 
-### 6.3 Handoff Table (new, replaces blueprint's Phase 11)
+### 8.3 Handoff Table (new, replaces blueprint's Phase 11)
 
 The pipeline's handoff chain:
 
@@ -319,5 +390,7 @@ Each skill saves its artifact to disk before offering the handoff. Any step can 
 - **Handoff pattern:** Save artifact → ask "Want me to run /[next] now?" → Yes = invoke directly, No = file persists.
 - **Prompt templates:** Subagent prompts live in `references/` directories, not inline in SKILL.md. Dispatching code reads the template and fills placeholders.
 - **Language handling:** Skills read `.claude/references/language.md` for interface and output languages. Worker prompts stay in English.
+- **Verbosity:** Skills read `.claude/references/verbosity.md` at startup. Default `minimal` — phase names + decisions + results only. `verbose` — full narration.
+- **Compact at handoff:** After saving artifact and committing, compact conversation before offering the next skill. Graceful degradation if compaction unavailable.
 
 <!-- approved: spec 2026-03-30T00:00:00 by:Eaven -->
