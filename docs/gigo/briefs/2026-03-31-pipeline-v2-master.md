@@ -101,7 +101,7 @@ level: minimal
 ```
 
 **Levels:**
-- `minimal` (default) — milestone summaries at phase boundaries (what was done, what's next), no narration between tool calls ("let me read...", "now I'll check..."), no insight blocks
+- `minimal` (default) — milestone summaries at phase boundaries (what was done, what's next), no narration between tool calls ("let me read...", "now I'll check..."), no insight blocks, self-review results only shown when issues are found (clean pass = silent)
 - `verbose` — full narration, step-by-step explanations, insight blocks, educational content
 
 **Set during assembly** as a question alongside persona style and language. Skippable — defaults to minimal.
