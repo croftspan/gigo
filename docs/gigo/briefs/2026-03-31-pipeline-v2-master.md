@@ -90,13 +90,32 @@ README, site, and skill descriptions all need updating to reflect the new count 
 
 ---
 
+### 7. Verbosity Control
+
+Skills narrate too much — phase announcements with explanations, "let me read...", post-phase summaries, insight blocks. Burns tokens in context for no user value.
+
+**Config:** `.claude/references/verbosity.md`
+```markdown
+# Verbosity
+level: minimal
+```
+
+**Levels:**
+- `minimal` (default) — phase number only ("Phase 3"), no narration between tool calls, no summaries of completed work, no insight blocks
+- `verbose` — current behavior with full announcements, explanations, educational insights
+
+**Set during assembly** as a question alongside persona style and language. Skippable — defaults to minimal.
+
+**All skills check this file** before generating output. If missing, default to minimal.
+
 ## Build Order
 
 1. **Pipeline split** (blueprint strip + new spec skill + execute adjustment) — this is the core architecture change. Everything else layers on top.
 2. **Intent fidelity fixes** — applied during the pipeline split, not separately.
-3. **Audit command** — independent, can be built in parallel.
-4. **Auto-changelog** — small addition to execute, can be last.
-5. **README/site/docs update** — after everything works.
+3. **Verbosity control** — applied during the pipeline split, small addition to each skill.
+4. **Audit command** — independent, can be built in parallel.
+5. **Auto-changelog** — small addition to execute, can be last.
+6. **README/site/docs update** — after everything works.
 
 ## Validation
 
