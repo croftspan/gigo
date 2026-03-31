@@ -85,18 +85,16 @@ Read the operator's initial description. Ask follow-up questions **one at a time
 
 If the initial description is rich enough, skip straight to research.
 
-### Step 2: Choose Research Depth
+### Step 2: Research Depth
 
-Present this clearly — not as a flag, not buried in options:
+**Default to quick.** Use training knowledge. Don't ask — just do it. Most domains (web dev, game dev, writing, design) have stable enough standards that web search adds minutes without changing the team.
 
-> "Want me to do a quick setup from what I know, or deep-research this domain first?"
+Only do deep research when:
+- The operator explicitly asks for it ("research this thoroughly")
+- The domain is genuinely unfamiliar or niche (not React, not Rails, not "build a dashboard")
+- The domain's tools changed in the last 12 months and you know your knowledge is stale
 
-| Mode | What happens | Best for |
-|---|---|---|
-| **Quick** (default) | Use training knowledge to identify authorities and best practices | Domain has stable standards (Rails, React, novel writing), operator has some familiarity, side projects |
-| **Deep research** | Web search for current authorities, community consensus, recent tools, living practitioners | Domain's tools or practices changed in last 12 months, operator is unfamiliar, production-grade work |
-
-For deep research, use WebSearch and WebFetch to find current state of the art — active communities, recent style guides, current tool versions, canonical examples.
+If none of those apply, skip web search entirely and go straight to Step 3 with training knowledge.
 
 ### Step 3: Research the Domain
 

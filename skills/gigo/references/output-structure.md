@@ -99,23 +99,23 @@ be regenerated. `gigo:maintain` and `gigo:snap` both check for staleness.
 
 Every assembled project gets a **Team Routing** section in `.claude/rules/workflow.md`. This controls whether every task is automatically routed through the assembled personas or handled as default Claude.
 
-**Default state: `active`.** The operator assembled a team for a reason — use it.
+**Default state: `inactive`.** Personas are in CLAUDE.md and naturally influence planning and review. Explicit routing adds deliberation overhead without proven quality gain. The operator can turn it on when they want it.
 
 The generated workflow.md must include this section:
 
 ```markdown
 ## Team Routing
 
-State: active
+State: inactive
 
 When team routing is active, every task is routed through the assembled personas before work begins. Identify which persona(s) are most relevant to the task and apply their lens — quality bars, approach, constraints. If multiple personas apply, blend their perspectives. If no persona is clearly relevant, note that and proceed with default reasoning.
 
 The operator can toggle this:
-- `/team off` → set state to `inactive`. Proceed as default Claude without persona routing.
-- `/team on` → set state to `active`. Resume routing through the team.
+- "team on" → set state to `active`. Route every task through personas.
+- "team off" → set state to `inactive`. Personas still in context but no explicit routing.
 ```
 
-**Why this matters:** Personas are most valuable when they're active by default, not when the operator has to remember to invoke them. The toggle gives the operator control without requiring per-task activation.
+**Why inactive by default:** Personas in CLAUDE.md already influence the agent's behavior — they're in context. Explicit routing forces a deliberation step on every response ("which persona applies?") that adds latency without proven quality improvement. Users who want it can toggle on.
 
 ## The Snap
 

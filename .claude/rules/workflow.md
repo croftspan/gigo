@@ -40,7 +40,7 @@ When performing overwatch verification on complex responses, read `.claude/refer
 
 ## Team Routing
 
-State: active
+State: inactive
 
 When team routing is active, every task is routed through the assembled personas before work begins. Identify which persona(s) are most relevant to the task and apply their lens — quality bars, approach, constraints. If multiple personas apply, blend their perspectives. If no persona is clearly relevant, note that and proceed with default reasoning.
 
