@@ -71,9 +71,24 @@ Before asking any follow-up questions, configure the conversation and output lan
 
 Both questions are skippable. If the operator skips or says "pass," default to English for both.
 
+6. **Ask verbosity.** Use `AskUserQuestion` in the interface language:
+   > "How much detail do you want from the pipeline?"
+   >
+   > - **Minimal** (recommended) — just decisions and results
+   > - **Verbose** — full narration of every step
+
+   Skippable — default to **minimal**. Write the choice to `.claude/references/verbosity.md` immediately:
+   ```markdown
+   # Verbosity
+
+   level: minimal
+   ```
+
 ### Step 1: Listen and Ask (lightly)
 
 Read the operator's initial description. Ask follow-up questions **one at a time** — only what's genuinely missing:
+
+**Task description is optional during assembly.** If the operator provides a task alongside "set up my project," capture it for the Step 7 handoff prompt but don't let it bias team composition. If they don't provide a task, proceed with project-scanning alone. The team is assembled for the project's domain, not a specific task.
 
 - What is this thing?
 - Who is it for?
@@ -210,7 +225,7 @@ Keep going until the operator says "lock it in" or you sense alignment and ask: 
 
 Once locked, run the **pre-write dedup pass** — scan all proposed content for the same rule appearing in more than two auto-loaded files. Then write everything to disk. Don't ask where — follow the structure below.
 
-When presenting the "files written" summary to the operator, include `.claude/references/language.md` and `.claude/references/persona-style.md` (both already written during earlier steps — listed here for operator awareness, not re-written).
+When presenting the "files written" summary to the operator, include `.claude/references/language.md`, `.claude/references/persona-style.md`, and `.claude/references/verbosity.md` (all already written during earlier steps — listed here for operator awareness, not re-written).
 
 ### Step 6.5: Generate Review Criteria
 
@@ -247,15 +262,17 @@ Your team is assembled. Team routing is on — every task goes through your pers
 
 | Command | What it does |
 |---|---|
-| `/blueprint` | Plan a feature or task — brainstorm → spec → implementation plan |
+| `/blueprint` | Brainstorm a feature or task — produces an approved design brief |
+| `/spec` | Formalize a design brief into spec and implementation plan |
 | `/execute` | Execute an approved plan with the full pipeline |
 | `/verify` | Review any work — spec compliance then craft quality |
+| `/audit` | Deep code sweep — security, stubs, code quality |
 | `/maintain` | Add expertise, audit the team, or restructure |
 | `/snap` | End-of-session audit — protects the project |
 
 Team routing is on by default. Say "team off" in conversation to switch to vanilla Claude, "team on" to switch back.
 
-**What's next:** Run `/blueprint` to start planning. Here's a starter prompt based on what we discussed — paste it after `/blueprint`, or write your own:
+**What's next:** Run `/blueprint` to start planning. It'll produce a design brief, then hand off to `/spec` for the formal spec and plan. Here's a starter prompt based on what we discussed — paste it after `/blueprint`, or write your own:
 
 > [Synthesized prompt that captures the project's core goal, key constraints,
 > and a concrete first deliverable. Written in the operator's voice/style,
