@@ -42,7 +42,9 @@ The operator reacts, you adjust. Keep going until they approve.
 
 ## Step 5: Merge
 
-Write the changes. This is a merge, not a rewrite. Start by consulting `change-impact-matrix.md` (sibling reference) to identify which downstream files the change affects. **The matrix is required** — if it's missing, error loudly and stop. Do not fall back to a hardcoded ripple list.
+Write the changes. This is a merge, not a rewrite. Start by consulting `change-impact-matrix.md` (sibling reference) to identify which downstream files the change affects.
+
+**`change-impact-matrix.md` is required** — if it's missing, error loudly and stop. Do not fall back to a hardcoded ripple list.
 
 For a persona addition (the common case this procedure handles), the matrix row **CT-1: Persona added** specifies:
 
