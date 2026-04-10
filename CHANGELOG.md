@@ -8,6 +8,13 @@
 - **Project-specific boundary criteria.** `gigo:gigo` Step 6.5 now reads the boundary taxonomy during assembly, matches the project's tech stack against detection heuristics, and generates 1-2 concrete criteria per relevant boundary type (e.g., "API response wrapper shapes match frontend type definitions"). Criteria land under a "Boundary Coherence" subsection of Craft Review in `review-criteria.md`.
 - **Regeneration support.** `gigo:maintain` regenerates boundary coherence criteria alongside other review criteria when the team or standards change.
 
+### Change Impact Matrix
+
+- **Proactive ripple detection.** New reference `skills/maintain/references/change-impact-matrix.md` maps 10 change types (persona add/modify/remove, rule add/modify/remove, reference add/remove, extension, pipeline) to downstream files and Snap audit checks. Acts as the single source of truth for ripple logic.
+- **Maintain consults the matrix.** `gigo:maintain` targeted-addition mode now reads the matrix at Step 5 to identify which downstream files a change affects. Auto-run items (mechanical `review-criteria.md` regeneration, line budget checks) execute without confirmation. Judgment items are reported to the operator for approval.
+- **Snap pre-audit.** `gigo:snap` runs a `git status --short` reverse-lookup against the matrix before the 14-point protocol. Classifies uncommitted changes by change type (CT-1..CT-10) and flags downstream files that haven't been touched as potential ripples. Baseline is uncommitted delta only — snap before committing for best coverage.
+- **Deferred for v2:** matrix consultation from `restructure.md` and `upgrade-checklist.md` (they currently regenerate `review-criteria.md` independently); semantic drift detection; multi-commit session baseline.
+
 ### Spec Writing
 
 - **Boundaries nudge.** `/spec` Conventions Section now prompts spec writers to list integration boundaries (API-to-consumer, DB-to-API, config-to-code) under a "Boundaries" heading so reviewers know which seams to check.
