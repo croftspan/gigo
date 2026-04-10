@@ -20,7 +20,7 @@
 **Files:**
 - Create: `.claude/references/boundary-mismatch-patterns.md`
 
-- [ ] **Step 1: Write the taxonomy reference file**
+- [x] **Step 1: Write the taxonomy reference file**
 
 ```markdown
 # Boundary Mismatch Patterns
@@ -125,16 +125,21 @@ During assembly (gigo:gigo Step 6.5), use these heuristics to determine which pa
 When generating criteria, produce 1-2 concrete, project-specific checks per relevant pattern. Use the project's actual layer names and technology (e.g., "Prisma model field names transform consistently to GraphQL response fields" not "naming is consistent").
 ```
 
-- [ ] **Step 2: Verify file is within GIGO plugin source**
+- [x] **Step 2: Verify file is within GIGO plugin source**
 
 Confirm the file was written to `~/projects/gigo/.claude/references/`, NOT `~/.claude/plugins/`.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add .claude/references/boundary-mismatch-patterns.md
 git commit -m "feat: add boundary-mismatch pattern taxonomy reference"
 ```
+
+#### What Was Built
+- **Deviations:** None. File written verbatim from plan spec, confirmed inside gigo source worktree (not `~/.claude/plugins/`).
+- **Review changes:** None. Stage 1 spec-compliant. Stage 2 flagged two confidence-80/82 phrasing concerns (BM-4 "N-M of them", BM-5 scope), both triaged as accept — they critique the approved plan text, not the implementation.
+- **Notes for downstream:** Task 4 can now read `.claude/references/boundary-mismatch-patterns.md` — the Detection Heuristics table (the 9-row mapping) is the key input for Step 6.5's boundary-type matching. The closing instruction about project-specific layer names is what Step 6.5 should honor when generating criteria.
 
 ---
 
