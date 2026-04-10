@@ -42,7 +42,20 @@ The operator reacts, you adjust. Keep going until they approve.
 
 ## Step 5: Merge
 
-Write the changes. This is a merge, not a rewrite:
+Write the changes. This is a merge, not a rewrite. Start by consulting `change-impact-matrix.md` (sibling reference) to identify which downstream files the change affects. **The matrix is required** — if it's missing, error loudly and stop. Do not fall back to a hardcoded ripple list.
+
+For a persona addition (the common case this procedure handles), the matrix row **CT-1: Persona added** specifies:
+
+- **CLAUDE.md:** update (judgment) — add the new persona entry
+- **rules/:** check line budget before writing
+- **references/:** verify `authorities.md` only if new research was used
+- **review-criteria.md:** regenerate mechanically (auto-run, no operator confirmation)
+- **Snap audit checks affected:** coverage + calibration
+
+Execute the auto-run items. Report the judgment items to the operator in your proposal before writing.
+
+Then perform the persona-specific work that the matrix doesn't cover:
+
 - Add new persona(s) to `CLAUDE.md`
 - Add/update extension files in `.claude/rules/`
 - Add new reference files to `.claude/references/`
@@ -54,4 +67,5 @@ When creating personas or extensions, read the templates from the gigo skill's b
 **Match persona style.** Read `.claude/references/persona-style.md` (or default to Lenses). New personas must match the project's chosen style — Characters get evocative names and may include Personality in the lean tier; Lenses get functional names and Personality goes only in the rich tier reference file.
 
 When designing the new persona, separate alignment signal from knowledge signal. The lean tier entry in CLAUDE.md should contain only alignment content — quality bars, approach, constraints, what to push back on. Domain-specific knowledge (factual details, implementation patterns, technical specifics) belongs in `.claude/references/personas/` or a reference file, loaded on demand. See `gigo/references/persona-template.md` for the "Alignment vs Knowledge Signal" section.
-- **Regenerate review criteria.** After writing all changes, regenerate `.claude/references/review-criteria.md` using the same algorithm as gigo:gigo Step 6.5. If the file doesn't exist, create it. If it does, regenerate from scratch (don't append). This includes boundary coherence criteria — re-detect boundary types against the current project state.
+
+**Regenerate review criteria.** After writing all changes, regenerate `.claude/references/review-criteria.md` using the same algorithm as gigo:gigo Step 6.5. If the file doesn't exist, create it. If it does, regenerate from scratch (don't append). This includes boundary coherence criteria — re-detect boundary types against the current project state.
