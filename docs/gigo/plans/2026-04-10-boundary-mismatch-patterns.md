@@ -152,7 +152,7 @@ git commit -m "feat: add boundary-mismatch pattern taxonomy reference"
 **Files:**
 - Modify: `skills/verify/references/craft-reviewer-prompt.md`
 
-- [ ] **Step 1: Insert Boundary Coherence section into review checklist**
+- [x] **Step 1: Insert Boundary Coherence section into review checklist**
 
 In the template (inside the `~~~` block), insert the following after the **Structure:** section (after line 34 "Did this change create or significantly grow large units?" — the last Structure bullet) and before the **CLAUDE.md Compliance:** section (line 36):
 
@@ -171,12 +171,17 @@ Focus on boundaries this change introduces or modifies. Don't audit the
 entire codebase — check that this change's seams are coherent.
 ```
 
-- [ ] **Step 2: Commit**
+- [x] **Step 2: Commit**
 
 ```bash
 git add skills/verify/references/craft-reviewer-prompt.md
 git commit -m "feat: add boundary coherence section to craft reviewer prompt"
 ```
+
+#### What Was Built
+- **Deviations:** None. Block inserted verbatim between Structure and CLAUDE.md Compliance using text anchors.
+- **Review changes:** None. Both review stages clean on first pass.
+- **Notes for downstream:** Craft reviewer now has an always-on Boundary Coherence section with 6 question-style bullets mapping to BM-1 through BM-6. Projects without `review-criteria.md` still get this baseline; projects with it also get the injected `{DOMAIN_CRITERIA}` underneath. When Task 4 classifies generated criteria into the Craft Review section, the "Boundary Coherence" subsection header it uses should align with this prompt's wording.
 
 ---
 
@@ -189,7 +194,7 @@ git commit -m "feat: add boundary coherence section to craft reviewer prompt"
 **Files:**
 - Modify: `skills/sweep/references/quality-auditor-prompt.md`
 
-- [ ] **Step 1: Insert Boundary Coherence section into audit checklist**
+- [x] **Step 1: Insert Boundary Coherence section into audit checklist**
 
 Inside the code block, insert the following after the **Consistency** section (after line 45 "for the same kind of operation)" — the end of the wrapped bullet) and before the **Output Format** section (line 47):
 
@@ -203,12 +208,17 @@ Inside the code block, insert the following after the **Consistency** section (a
 - Existence-without-connection (component exists but interface doesn't match callers)
 ```
 
-- [ ] **Step 2: Commit**
+- [x] **Step 2: Commit**
 
 ```bash
 git add skills/sweep/references/quality-auditor-prompt.md
 git commit -m "feat: add boundary coherence section to quality auditor prompt"
 ```
+
+#### What Was Built
+- **Deviations:** None to the specified insertion.
+- **Review changes:** One auto-fix applied. Stage 2 craft review (conf 88) caught a partial-contract gap: the `**Type:**` enum in `## Output Format` listed `dead-code / error-handling / duplication / complexity / consistency` but not `boundary-coherence`. Fix commit appended `/ boundary-coherence` to that line — findings from the new section now have a valid type slug to report under.
+- **Notes for downstream:** The sweep quality auditor prompt now has both (a) a Boundary Coherence checklist section and (b) `boundary-coherence` in the Type enum. Any future checklist additions to this prompt must also update the enum — Task 5's docs updates don't touch this file, but it's worth remembering for Snap audits. Meta note: the finding is itself a BM-4 (Contract Gap) — the review caught boundary-mismatch pattern #4 inside the very task implementing boundary-mismatch detection.
 
 ---
 
