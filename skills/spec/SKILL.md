@@ -67,6 +67,8 @@ Do NOT proceed to Phase 6 with unresolved verb gaps.
 
 Include a Conventions section. During design, the team's personas surface convention decisions — error message formats, output patterns, naming schemes, exit code discipline, durability patterns. These must be explicit in the spec. A bare worker won't have the personas; the spec is all they get.
 
+If the spec introduces or modifies integration boundaries (API-to-consumer, DB-to-API, config-to-code), list them under a "Boundaries" heading in the Conventions section so reviewers know which seams to check.
+
 ---
 
 ## Phase 6: Spec Self-Review
