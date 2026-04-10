@@ -139,7 +139,7 @@ git commit -m "feat: add boundary-mismatch pattern taxonomy reference"
 #### What Was Built
 - **Deviations:** None. File written verbatim from plan spec, confirmed inside gigo source worktree (not `~/.claude/plugins/`).
 - **Review changes:** None. Stage 1 spec-compliant. Stage 2 flagged two confidence-80/82 phrasing concerns (BM-4 "N-M of them", BM-5 scope), both triaged as accept — they critique the approved plan text, not the implementation.
-- **Notes for downstream:** Task 4 can now read `.claude/references/boundary-mismatch-patterns.md` — the Detection Heuristics table (the 9-row mapping) is the key input for Step 6.5's boundary-type matching. The closing instruction about project-specific layer names is what Step 6.5 should honor when generating criteria.
+- **Notes for downstream:** Taxonomy file is consumed by Step 6.5 — the `## Detection Heuristics` section (9-row mapping) is the key input for boundary-type matching, and the closing instruction about project-specific layer names is what Step 6.5 should honor when generating criteria. **Amendment after Task 4:** file was relocated to `skills/gigo/references/boundary-mismatch-patterns.md` during Task 4's fix cycle — Step 6.5's relative path must resolve inside the skill, not the operator project. Task 5 docs must use the new path.
 
 ---
 
@@ -231,7 +231,7 @@ git commit -m "feat: add boundary coherence section to quality auditor prompt"
 **Files:**
 - Modify: `skills/gigo/SKILL.md`
 
-- [ ] **Step 1: Insert boundary detection step into Step 6.5**
+- [x] **Step 1: Insert boundary detection step into Step 6.5**
 
 In the Step 6.5 section (starting at line 230), insert a new step between existing step 3 ("Read bullets under `## The Standard` from any domain extension files") and step 4 ("Classify each criterion"). Renumber subsequent steps.
 
@@ -263,12 +263,20 @@ After the existing classification bullets, add:
    - **Boundary Coherence** (subsection of Craft Review) — about whether layers/boundaries agree
 ```
 
-- [ ] **Step 2: Commit**
+- [x] **Step 2: Commit**
 
 ```bash
 git add skills/gigo/SKILL.md
 git commit -m "feat: extend Step 6.5 to generate boundary coherence criteria"
 ```
+
+#### What Was Built
+- **Deviations:** None at implementation time. Step 6.5 got the new numbered step 4 and renumbered 5/6/7, plus the Boundary Coherence classification bullet.
+- **Review changes:** Three fixes applied in a follow-up commit after Stage 2 craft review.
+  1. **Critical (conf 95, ask-operator → Option A chosen):** The inserted path `.claude/references/boundary-mismatch-patterns.md` wouldn't resolve at runtime — `gigo:gigo` executes inside the operator project, so a relative `.claude/` path lands on the operator's tree (which has no taxonomy file). Fix: relocated the taxonomy from `.claude/references/` to `skills/gigo/references/boundary-mismatch-patterns.md` (colocated with its only consumer) and rewrote Step 6.5 to use the skill-relative path `references/boundary-mismatch-patterns.md`. This matches how every other reference in `skills/gigo/SKILL.md` is read (enforcement-mode.md, output-structure.md, snap-template.md, etc.).
+  2. **Important (conf 80, auto-fix):** Changed "the Detection Heuristics table" to reference the `## Detection Heuristics` section by exact heading.
+  3. **Important (conf 82, auto-fix):** Rewrote the classification bullet from `**Boundary Coherence** (subsection of Craft Review) — about whether layers/boundaries agree` to `**Boundary Coherence** — about whether layers/boundaries agree (file under Craft Review)` to restore parallel structure with the three sibling bullets.
+- **Notes for downstream:** The taxonomy file is now at `skills/gigo/references/boundary-mismatch-patterns.md`, NOT `.claude/references/`. Task 5's output-structure.md update must reflect this — the plan's original Step 1 text (line 291) pointed to the old path and has been corrected below. The meta-lesson: this task was a BM-1 (Shape Mismatch) between "where SKILL.md's relative paths resolve in theory" and "where they resolve at runtime inside the plugin" — caught by craft review before it shipped.
 
 ---
 
@@ -288,11 +296,13 @@ git commit -m "feat: extend Step 6.5 to generate boundary coherence criteria"
 In the "Review Criteria File" section (starting at line 87), after the paragraph ending with "`gigo:maintain` and `gigo:snap` both check for staleness." (line 96 — end of that paragraph), insert:
 
 ```
-During generation, also read `.claude/references/boundary-mismatch-patterns.md` to
-detect which boundary types apply to this project. Add concrete boundary coherence
-criteria to the Craft Review section under a "Boundary Coherence" subsection. See
-SKILL.md Step 6.5 for the detection procedure.
+During generation, also read `skills/gigo/references/boundary-mismatch-patterns.md`
+(colocated with the gigo skill) to detect which boundary types apply to this project.
+Add concrete boundary coherence criteria to the Craft Review section under a
+"Boundary Coherence" subsection. See SKILL.md Step 6.5 for the detection procedure.
 ```
+
+> **Note after Task 4:** The taxonomy file lives at `skills/gigo/references/boundary-mismatch-patterns.md`, not `.claude/references/`. This Step 1 text was corrected during Task 4's fix cycle to use the new location.
 
 - [ ] **Step 2: Extend maintain targeted-addition.md (R6)**
 
