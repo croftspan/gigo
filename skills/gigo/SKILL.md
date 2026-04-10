@@ -234,12 +234,12 @@ After writing all files, extract domain-specific review criteria for the review 
 1. Read each persona's `Quality bar:` line from the just-written CLAUDE.md
 2. Read bullets under `## Quality Gates` from the just-written `.claude/rules/standards.md`
 3. Read bullets under `## The Standard` from any domain extension files
-4. Read `.claude/references/boundary-mismatch-patterns.md` from the GIGO plugin. Match the project's tech stack and layers against the Detection Heuristics table. For each relevant boundary type, generate 1-2 concrete, project-specific criteria using the project's actual layer and technology names. These join the criteria pool.
+4. Read `references/boundary-mismatch-patterns.md` (colocated with this skill). Match the project's tech stack and layers against the `## Detection Heuristics` section. For each relevant boundary type, generate 1-2 concrete, project-specific criteria using the project's actual layer and technology names. These join the criteria pool.
 5. Classify each criterion:
    - **Spec Compliance** — about whether the right thing was built (completeness, correctness)
    - **Craft Review** — about whether the work is well-built (craft, robustness, structure)
    - **Challenger** — about whether an approach will succeed (feasibility, design soundness)
-   - **Boundary Coherence** (subsection of Craft Review) — about whether layers/boundaries agree
+   - **Boundary Coherence** — about whether layers/boundaries agree (file under Craft Review)
    - Some criteria belong in multiple sections
 6. Deduplicate within each section
 7. Write to `.claude/references/review-criteria.md`
