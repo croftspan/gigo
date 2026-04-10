@@ -291,7 +291,7 @@ git commit -m "feat: extend Step 6.5 to generate boundary coherence criteria"
 - Modify: `skills/maintain/references/targeted-addition.md`
 - Modify: `skills/spec/SKILL.md`
 
-- [ ] **Step 1: Extend output-structure.md Review Criteria File section (R5)**
+- [x] **Step 1: Extend output-structure.md Review Criteria File section (R5)**
 
 In the "Review Criteria File" section (starting at line 87), after the paragraph ending with "`gigo:maintain` and `gigo:snap` both check for staleness." (line 96 — end of that paragraph), insert:
 
@@ -304,7 +304,7 @@ Add concrete boundary coherence criteria to the Craft Review section under a
 
 > **Note after Task 4:** The taxonomy file lives at `skills/gigo/references/boundary-mismatch-patterns.md`, not `.claude/references/`. This Step 1 text was corrected during Task 4's fix cycle to use the new location.
 
-- [ ] **Step 2: Extend maintain targeted-addition.md (R6)**
+- [x] **Step 2: Extend maintain targeted-addition.md (R6)**
 
 On line 57, the current text reads:
 ```
@@ -316,7 +316,7 @@ Append to the end of this line (same bullet):
  This includes boundary coherence criteria — re-detect boundary types against the current project state.
 ```
 
-- [ ] **Step 3: Add boundary map nudge to spec/SKILL.md (R7)**
+- [x] **Step 3: Add boundary map nudge to spec/SKILL.md (R7)**
 
 In the Conventions Section (lines 66-68), after the paragraph ending with "the spec is all they get.", add:
 
@@ -324,12 +324,17 @@ In the Conventions Section (lines 66-68), after the paragraph ending with "the s
 If the spec introduces or modifies integration boundaries (API-to-consumer, DB-to-API, config-to-code), list them under a "Boundaries" heading in the Conventions section so reviewers know which seams to check.
 ```
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add skills/gigo/references/output-structure.md skills/maintain/references/targeted-addition.md skills/spec/SKILL.md
 git commit -m "docs: update supporting files for boundary coherence integration"
 ```
+
+#### What Was Built
+- **Deviations:** None. Three surgical insertions made verbatim against the plan's updated text (which was corrected during Task 4's fix cycle to use `skills/gigo/references/boundary-mismatch-patterns.md`).
+- **Review changes:** None. Both review stages clean on first pass.
+- **Notes for downstream:** `output-structure.md` now documents the boundary step inside the Review Criteria File section; `targeted-addition.md` single-line bullet preserved; `spec/SKILL.md` nudge lives inside the Conventions Section subsection. Two below-threshold observations from craft review (both ~55 confidence, accept): (1) `output-structure.md:91-92` still says "Classifies each into three sections: Spec Compliance Criteria, Craft Review Criteria, Challenger Criteria" — Boundary Coherence is a subsection of Craft Review, so this isn't wrong, but a future Snap could consider tightening that phrasing; (2) the new paragraph uses repo-relative `skills/gigo/references/...` while SKILL.md Step 6.5 uses skill-relative `references/...` — mitigated by the "colocated with the gigo skill" parenthetical.
 
 ---
 
