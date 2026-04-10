@@ -1,5 +1,21 @@
 # Changelog
 
+## [Unreleased]
+
+### Review Pipeline
+
+- **Boundary coherence checking.** Both `/verify` (craft reviewer) and `/sweep` (quality auditor) now check for cross-boundary mismatches — bugs where two representations of the same concept disagree across layers. Catches shape mismatches, convention drift, reference mismatches, contract gaps, temporal shape mismatches, and false positive integrations. Generalized from a competitive analysis of revfactory/harness's battle-tested taxonomy.
+- **Project-specific boundary criteria.** `gigo:gigo` Step 6.5 now reads the boundary taxonomy during assembly, matches the project's tech stack against detection heuristics, and generates 1-2 concrete criteria per relevant boundary type (e.g., "API response wrapper shapes match frontend type definitions"). Criteria land under a "Boundary Coherence" subsection of Craft Review in `review-criteria.md`.
+- **Regeneration support.** `gigo:maintain` regenerates boundary coherence criteria alongside other review criteria when the team or standards change.
+
+### Spec Writing
+
+- **Boundaries nudge.** `/spec` Conventions Section now prompts spec writers to list integration boundaries (API-to-consumer, DB-to-API, config-to-code) under a "Boundaries" heading so reviewers know which seams to check.
+
+### New References
+
+- `skills/gigo/references/boundary-mismatch-patterns.md` — Canonical taxonomy of 6 boundary-mismatch pattern categories (BM-1 Shape Mismatch, BM-2 Convention Drift, BM-3 Reference Mismatch, BM-4 Contract Gap, BM-5 Temporal Shape Mismatch, BM-6 False Positive Integration) with a 9-row detection heuristics table. Colocated with the gigo skill so Step 6.5's skill-relative path resolves at runtime.
+
 ## v0.11.0-beta (2026-03-31)
 
 ### New Skills
