@@ -169,3 +169,5 @@ This is a planning-time nudge that feeds forward into review-time checking.
 - A dedicated boundary auditor for sweep (decided against in design brief — fold into quality)
 - Runtime detection of boundary types (detection happens at assembly time, not review time)
 - Changes to target projects' files (all changes are GIGO-internal)
+
+<!-- approved: spec 2026-04-10T18:24:48 by:Eaven -->
