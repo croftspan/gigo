@@ -44,11 +44,19 @@ with its own patterns.
 - Inconsistent patterns (some modules use pattern A, others use pattern B
   for the same kind of operation)
 
+### Boundary Coherence
+- Cross-layer type/schema mismatches (producer returns X, consumer expects Y)
+- Naming convention drift at layer boundaries (different cases or conventions)
+- Reference mismatches (paths, routes, keys, IDs pointing to non-existent targets)
+- Partial contract implementation (defined transitions/variants/methods not all implemented)
+- Async boundary confusion (accessing fields from response states not yet reached)
+- Existence-without-connection (component exists but interface doesn't match callers)
+
 ## Output Format
 
 For each finding:
 - **File:** `path/to/file.ext:LINE`
-- **Type:** dead-code / error-handling / duplication / complexity / consistency
+- **Type:** dead-code / error-handling / duplication / complexity / consistency / boundary-coherence
 - **Issue:** [description]
 - **Severity:** High / Medium / Low
 - **Fix:** [specific suggestion]

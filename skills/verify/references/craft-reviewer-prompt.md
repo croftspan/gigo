@@ -33,6 +33,19 @@ failure cases. Focus on correctness and robustness, not style.
 - Easy to understand and modify in 6 months?
 - Did this change create or significantly grow large units?
 
+**Boundary Coherence:**
+Look for mismatches between different representations of the same concept
+across layers or boundaries that this change touches:
+- Do types/schemas match what the producing layer actually returns?
+- Do names stay consistent (or consistently transform) across boundaries?
+- Do references (paths, routes, keys, IDs) point to things that exist?
+- If contracts are defined (state machines, interfaces, enums), are they fully implemented?
+- At async boundaries, does the consumer handle all response states (not just the final one)?
+- Does "it exists" also mean "it connects correctly"?
+
+Focus on boundaries this change introduces or modifies. Don't audit the
+entire codebase — check that this change's seams are coherent.
+
 **CLAUDE.md Compliance:**
 - Read the project's CLAUDE.md and .claude/rules/ if they exist
 - Are project-specific standards followed?
