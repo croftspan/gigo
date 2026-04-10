@@ -95,6 +95,11 @@ This file is a REFERENCE (tier 2) — zero token cost. The review pipeline reads
 on demand when dispatching reviewers. If personas or standards change, the file must
 be regenerated. `gigo:maintain` and `gigo:snap` both check for staleness.
 
+During generation, also read `skills/gigo/references/boundary-mismatch-patterns.md`
+(colocated with the gigo skill) to detect which boundary types apply to this project.
+Add concrete boundary coherence criteria to the Craft Review section under a
+"Boundary Coherence" subsection. See SKILL.md Step 6.5 for the detection procedure.
+
 ## Team Routing
 
 Every assembled project gets a **Team Routing** section in `.claude/rules/workflow.md`. This controls whether every task is automatically routed through the assembled personas or handled as default Claude.
