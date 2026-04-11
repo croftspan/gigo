@@ -51,7 +51,7 @@ Snap consults this matrix at session end for uncommitted changes only. Procedure
 2. For each entry matching `CLAUDE.md`, `.claude/rules/*.md`, or `.claude/references/*.md`, classify by change type:
     - `A` (added) → CT-4 (rule), CT-7 (reference), or CT-9 (extension if the file contains a `## The Standard` section)
     - `D` (deleted) → CT-6 (rule) or CT-8 (reference)
-    - `M` on a rules file → CT-5; on `workflow.md` with phase-structure edits → CT-10
+    - `M` on a rules file containing `## The Standard` → CT-9 (extension modification); on `workflow.md` with phase-structure edits → CT-10; on any other rules file → CT-5
     - `M` on `CLAUDE.md` → run `git diff CLAUDE.md`; new persona header → CT-1; removed persona header → CT-3; edit to existing entry → CT-2
 3. Look up each change type's row in the matrix. Any downstream cells with non-empty values become "potential ripples."
 4. For each potential ripple, check whether the downstream file also appears in `git status --short`. If yes, the operator has already touched it — no flag. If no, flag as "potential ripple — verify."
