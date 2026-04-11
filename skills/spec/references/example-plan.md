@@ -19,6 +19,8 @@ Three examples at different scales showing how plans look in practice.
 
 **Goal:** Fix login page rendering on mobile viewports
 
+**Execution Pattern:** Supervisor
+
 **Architecture:** CSS fix targeting responsive breakpoints in the login component
 
 ---
@@ -43,6 +45,83 @@ Three examples at different scales showing how plans look in practice.
 
 ---
 
+## Fan-out/Fan-in Example
+
+**User says:** "Draft a three-section market report on AI code tools, then merge into a single doc"
+
+**Plan:**
+
+```markdown
+# Market Report — Implementation Plan
+
+**Spec:** (inline) | **Goal:** Three-section market report on AI code tools
+**Execution Pattern:** Fan-out/Fan-in | **Architecture:** Three parallel drafts → merge
+
+---
+### Task 1: Draft Section A — Market Overview
+**blocks:** 4 | **blocked-by:** [] | **parallelizable:** true (with Tasks 2, 3)
+- [ ] Gather market size and growth data
+- [ ] Write overview (~600 words)
+- [ ] Commit
+
+### Task 2: Draft Section B — Competitor Landscape
+**blocks:** 4 | **blocked-by:** [] | **parallelizable:** true (with Tasks 1, 3)
+- [ ] Research 5-8 competitors
+- [ ] Write landscape section (~800 words)
+- [ ] Commit
+
+### Task 3: Draft Section C — User Interviews
+**blocks:** 4 | **blocked-by:** [] | **parallelizable:** true (with Tasks 1, 2)
+- [ ] Synthesize 10 user interviews into themes
+- [ ] Write interviews section (~700 words)
+- [ ] Commit
+
+### Task 4: Merge and Cross-Reference
+**blocks:** [] | **blocked-by:** 1, 2, 3 | **parallelizable:** false
+- [ ] Merge three sections into a single doc
+- [ ] Reconcile overlapping claims
+- [ ] Write cross-section summary
+- [ ] Commit
+```
+
+---
+
+## Pipeline Example
+
+**User says:** "Synthesize 20 academic papers on distributed consensus into a single literature review"
+
+**Plan:**
+
+```markdown
+# Literature Review — Implementation Plan
+
+**Spec:** (inline) | **Goal:** Literature review of 20 papers on distributed consensus
+**Execution Pattern:** Pipeline | **Architecture:** gather → extract → synthesize → write
+
+---
+### Task 1: Gather Papers
+**blocks:** 2 | **blocked-by:** [] | **parallelizable:** false
+- [ ] Download 20 papers matching search criteria
+- [ ] Commit bibliography
+
+### Task 2: Extract Claims
+**blocks:** 3 | **blocked-by:** 1 | **parallelizable:** false
+- [ ] Extract 3-5 key claims per paper
+- [ ] Commit claims table
+
+### Task 3: Synthesize Themes
+**blocks:** 4 | **blocked-by:** 2 | **parallelizable:** false
+- [ ] Cluster claims into 4-6 themes
+- [ ] Commit themes outline
+
+### Task 4: Write Review
+**blocks:** [] | **blocked-by:** 3 | **parallelizable:** false
+- [ ] Write review section-by-section, one theme per section
+- [ ] Commit final review
+```
+
+---
+
 ## Medium Task
 
 **User says:** "We need to add Stripe subscriptions with a free trial"
@@ -58,6 +137,8 @@ Three examples at different scales showing how plans look in practice.
 **Spec:** `docs/gigo/specs/2026-03-27-stripe-subscriptions-design.md`
 
 **Goal:** Add Stripe subscription billing with free trial support
+
+**Execution Pattern:** Supervisor
 
 **Architecture:** Stripe Checkout for payment flow, webhooks for lifecycle events, subscription status gated on user model
 
@@ -170,6 +251,8 @@ Three examples at different scales showing how plans look in practice.
 
 **Goal:** Migrate frontend from legacy framework to [chosen framework]
 
+**Execution Pattern:** Supervisor
+
 **Architecture:** Incremental migration using feature flags, both frontends run in parallel during cutover
 
 **Tech Stack:** [Chosen framework], feature flags, existing API layer
@@ -177,6 +260,8 @@ Three examples at different scales showing how plans look in practice.
 ---
 
 ## Phase 1: Foundation (unblocks everything)
+
+**Execution Pattern:** Pipeline
 
 ### Task 1: Framework Spike
 
@@ -197,6 +282,8 @@ Validate the framework handles the most complex page. Set up build pipeline, lin
 CI/CD pipeline, dev server, test runner, linting config for the new framework.
 
 ## Phase 2: Core Pages (parallelizable)
+
+**Execution Pattern:** Fan-out/Fan-in
 
 ### Task 3: Auth Flow Migration
 
@@ -224,6 +311,8 @@ Migrate settings and account pages.
 
 ## Phase 3: Features (sequential, depends on Phase 2)
 
+**Execution Pattern:** Supervisor
+
 ### Task 6: Remaining Pages
 
 **blocks:** 7
@@ -235,6 +324,8 @@ Migrate remaining feature pages and shared components.
 *Risk: shared components may need redesign, not just migration.*
 
 ## Phase 4: Cutover
+
+**Execution Pattern:** Supervisor
 
 ### Task 7: Parallel Run and Rollout
 
