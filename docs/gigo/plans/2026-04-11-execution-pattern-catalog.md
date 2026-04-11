@@ -26,7 +26,7 @@
 
 This task produces the complete catalog file per spec requirements R1, R2, R3, and R7. The file has 8 top-level sections in a fixed order. Every pattern entry uses the uniform 5-field layout. The fact-check constraints in R7 are enforced by the grep check in step 13 before commit.
 
-- [ ] **Step 1: Create the file with the title and Purpose section**
+- [x] **Step 1: Create the file with the title and Purpose section**
 
   Open `skills/spec/references/execution-patterns.md` and write the top of the file:
 
@@ -40,7 +40,7 @@ This task produces the complete catalog file per spec requirements R1, R2, R3, a
 
   Keep Purpose to ≤5 lines. Do not describe *how* to use the catalog here — that belongs in "How to use" (step 4).
 
-- [ ] **Step 2: Add the lineage note**
+- [x] **Step 2: Add the lineage note**
 
   Add a second top-level section `## Lineage` (or a prominent note block directly under Purpose) with the substance:
 
@@ -48,7 +48,7 @@ This task produces the complete catalog file per spec requirements R1, R2, R3, a
 
   The exact wording may vary for flow, but the note must credit harness, state the six→five adaptation, name Hierarchical Delegation as the omission, and leave the door open to revisiting. See spec R1.2 and R7.c.
 
-- [ ] **Step 3: Add the "When to consult this file" section**
+- [x] **Step 3: Add the "When to consult this file" section**
 
   ```markdown
   ## When to consult this file
@@ -58,7 +58,7 @@ This task produces the complete catalog file per spec requirements R1, R2, R3, a
 
   **CRITICAL:** This section must use the phrase "during plan writing" or "when decomposing tasks". It must **not** contain "Phase 8" or "Phase 7" as standalone phase references. The catalog is read by readers outside `gigo:spec`'s phase namespace, where a bare "Phase 7" would collide with the bare-worker research finding. See spec R7.b.
 
-- [ ] **Step 4: Add the "How to use" section with exactly 3 numbered steps**
+- [x] **Step 4: Add the "How to use" section with exactly 3 numbered steps**
 
   ```markdown
   ## How to use
@@ -70,7 +70,7 @@ This task produces the complete catalog file per spec requirements R1, R2, R3, a
 
   Exactly three steps. See spec R1.4.
 
-- [ ] **Step 5: Add the Decision Tree section**
+- [x] **Step 5: Add the Decision Tree section**
 
   Write a compact scannable rule set in ≤10 lines. Plain text, indented bullets or arrow strings — no diagrams. Example shape:
 
@@ -86,7 +86,7 @@ This task produces the complete catalog file per spec requirements R1, R2, R3, a
 
   Keep it under 10 lines. Plain markdown. No Mermaid, no ASCII art. See spec R1.5.
 
-- [ ] **Step 6: Add the Supervisor pattern entry**
+- [x] **Step 6: Add the Supervisor pattern entry**
 
   Open `## The Patterns` as a section heading, then write the Supervisor entry with the uniform 5-field layout (bold field names, not H3 headers — see spec R2 and conventions R2 "Catalog layout uniformity"):
 
@@ -132,7 +132,7 @@ This task produces the complete catalog file per spec requirements R1, R2, R3, a
 
   Use a non-code example if one makes the Definition land faster (e.g., a research project lead delegating sub-studies). See spec R2 and the "Domain-agnostic examples" list in Conventions.
 
-- [ ] **Step 7: Add the Pipeline pattern entry**
+- [x] **Step 7: Add the Pipeline pattern entry**
 
   Follow the same 5-field layout. Definition should convey strict sequencing where each stage feeds the next. GIGO mapping states: every task `parallelizable: false`, `blocked-by` forms a linear chain.
 
@@ -140,7 +140,7 @@ This task produces the complete catalog file per spec requirements R1, R2, R3, a
 
   Gotchas to name: false parallelism (tasks that look independent but share hidden state are actually Pipeline); skipping a stage because it "seems fast" leads to broken dependencies downstream.
 
-- [ ] **Step 8: Add the Fan-out/Fan-in pattern entry**
+- [x] **Step 8: Add the Fan-out/Fan-in pattern entry**
 
   Follow the 5-field layout. Definition should convey independent parallel workers producing artifacts, followed by a single merge task.
 
@@ -152,7 +152,7 @@ This task produces the complete catalog file per spec requirements R1, R2, R3, a
 
   Gotchas to name: missing fan-in (parallel work with no merge step produces disjointed output); treating the merge task as a "nice-to-have" optimization when it's structural.
 
-- [ ] **Step 9: Add the Producer-Reviewer pattern entry**
+- [x] **Step 9: Add the Producer-Reviewer pattern entry**
 
   Follow the 5-field layout. Definition should convey: a producer task generates an artifact; a separate reviewer task validates it; optional iteration on feedback. This generalizes `gigo:verify`'s two-stage review to the task level inside a plan.
 
@@ -164,7 +164,7 @@ This task produces the complete catalog file per spec requirements R1, R2, R3, a
 
   Gotchas to name: self-review (omitting the reviewer task because "the producer will check its own work" violates the separation that makes review effective).
 
-- [ ] **Step 10: Add the Expert Pool pattern entry — with required clarification**
+- [x] **Step 10: Add the Expert Pool pattern entry — with required clarification**
 
   Follow the 5-field layout. Definition should convey: tasks routed to different **review lenses** by domain. Workers stay bare — the lens applied during review changes based on the task's domain tag.
 
@@ -186,7 +186,7 @@ This task produces the complete catalog file per spec requirements R1, R2, R3, a
 
   See spec R2 (Expert Pool row) and R2's "Expert Pool — required clarification".
 
-- [ ] **Step 11: Add the Combining Patterns section**
+- [x] **Step 11: Add the Combining Patterns section**
 
   ```markdown
   ## Combining patterns
@@ -213,7 +213,7 @@ This task produces the complete catalog file per spec requirements R1, R2, R3, a
 
   See spec R1.7.
 
-- [ ] **Step 12: Add the Anti-patterns section with all 5 mistakes**
+- [x] **Step 12: Add the Anti-patterns section with all 5 mistakes**
 
   ```markdown
   ## Anti-patterns
@@ -241,7 +241,7 @@ This task produces the complete catalog file per spec requirements R1, R2, R3, a
 
   See spec R3. The phrasing for the "Worker-level expert routing" entry must use a qualified bare-worker reference (see R7.d): "bare-worker research finding" is used above.
 
-- [ ] **Step 13: Grep-check for forbidden strings before committing**
+- [x] **Step 13: Grep-check for forbidden strings before committing**
 
   Run these greps from the repo root to verify R7 constraints:
 
@@ -258,7 +258,7 @@ This task produces the complete catalog file per spec requirements R1, R2, R3, a
 
   **Note on the Phase 7/8 grep:** ripgrep's `\b` is a word boundary, so `\bPhase 7\b` matches "Phase 7" as a standalone word. "Phase 7 research finding" contains "Phase 7" as a standalone word too — so if you wrote "the Phase 7 research finding" in the Expert Pool entry or the Worker-level anti-pattern, it WILL match and you need to rewrite to "the bare-worker research finding" or "the research finding that bare workers produce better code" instead. The grep is deliberately strict to force the semantic form.
 
-- [ ] **Step 14: Commit**
+- [x] **Step 14: Commit**
 
   ```bash
   git add skills/spec/references/execution-patterns.md
@@ -272,6 +272,11 @@ This task produces the complete catalog file per spec requirements R1, R2, R3, a
   ```
 
 **Done when:** `skills/spec/references/execution-patterns.md` exists with all 8 top-level sections, all 5 patterns present with the uniform 5-field layout, Anti-patterns section names all 5 mistakes, lineage note present, Expert Pool entry explicitly states workers stay bare and `review-lens:` is metadata-only, grep-checks return 0 for `_workspace` and for standalone `Phase 7`/`Phase 8`.
+
+#### What Was Built
+- **Deviations:** None. Catalog shipped with all 8 sections, 5 patterns, and the uniform 5-field per-pattern layout. Final size 298 lines — within the ~200-line target's reasonable margin.
+- **Review changes:** Stage 2 craft review flagged two dangling-dependency defects in example snippets: (1) Supervisor Plan shape referenced a Task 4 that was never defined — fix added an explicit "Task 4: Collect and synthesize" blocked-by [2, 3]; (2) Expert Pool Plan shape started at Task 2 with tasks declaring `blocked-by: 1` but Task 1 was never shown — fix added a Task 1 Setup stub. Both landed in commit `a4bd1b9`.
+- **Notes for downstream:** The catalog's pattern names (Supervisor, Pipeline, Fan-out/Fan-in, Producer-Reviewer, Expert Pool) are the canonical strings the `**Execution Pattern:**` plan header field expects. Task 2 (planning-procedure.md) and Task 3 (example-plan.md) must match these names verbatim — `Fan-out/Fan-in` uses a hyphen and a slash, not "Fanout" or "Fan Out". Expert Pool's `review-lens:` field is documented as metadata-only today.
 
 ---
 
