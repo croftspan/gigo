@@ -387,7 +387,7 @@ Adds the catalog-consultation step and updates the Plan Document Header template
 
 Adds the `**Execution Pattern:**` header to all three existing worked examples and inserts two new short examples (one Fan-out/Fan-in, one Pipeline). See spec R5.
 
-- [ ] **Step 1: Add header field to the Small Task example**
+- [x] **Step 1: Add header field to the Small Task example**
 
   Find the Small Task example (currently around line 14-42). The plan's header currently has:
 
@@ -411,7 +411,7 @@ Adds the `**Execution Pattern:**` header to all three existing worked examples a
   **Architecture:** CSS fix targeting responsive breakpoints in the login component
   ```
 
-- [ ] **Step 2: Add header field to the Medium Task example**
+- [x] **Step 2: Add header field to the Medium Task example**
 
   Find the Medium Task example (currently around line 52-153). Insert `**Execution Pattern:** Supervisor` between `**Goal:**` and `**Architecture:**`:
 
@@ -423,7 +423,7 @@ Adds the `**Execution Pattern:**` header to all three existing worked examples a
   **Architecture:** Stripe Checkout for payment flow, webhooks for lifecycle events, subscription status gated on user model
   ```
 
-- [ ] **Step 3: Add header field to the Large Task example (with per-phase declarations)**
+- [x] **Step 3: Add header field to the Large Task example (with per-phase declarations)**
 
   Find the Large Task example (currently around line 163-248). At the top header level, insert `**Execution Pattern:** Supervisor` between `**Goal:**` and `**Architecture:**`:
 
@@ -455,7 +455,7 @@ Adds the `**Execution Pattern:**` header to all three existing worked examples a
 
   *Note: if you judge the Phase 2/3 split differently while editing — e.g., treating Phase 2 as pure Fan-out and Phase 3 as the explicit fan-in — pick whichever reading makes the example clearer. The point is to demonstrate per-phase declarations work, not to force one specific labeling.*
 
-- [ ] **Step 4: Add a new short Fan-out/Fan-in example**
+- [x] **Step 4: Add a new short Fan-out/Fan-in example**
 
   Insert a new `## Fan-out/Fan-in Example` section after the Small Task example (around the current line 43). Pick a non-software domain to prove domain-agnosticism — e.g., a multi-section report writing plan.
 
@@ -534,7 +534,7 @@ Adds the `**Execution Pattern:**` header to all three existing worked examples a
 
   **Verify the ≤30 line constraint** by counting the lines inside the plan code block (between the opening ```markdown and closing ```). If over 30, trim step detail without dropping steps.
 
-- [ ] **Step 5: Add a new short Pipeline example**
+- [x] **Step 5: Add a new short Pipeline example**
 
   Insert a new `## Pipeline Example` section after the Fan-out/Fan-in example. Again, pick a non-software domain — e.g., a research synthesis pipeline.
 
@@ -604,7 +604,7 @@ Adds the `**Execution Pattern:**` header to all three existing worked examples a
   ---
   ```
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
   ```bash
   git add skills/spec/references/example-plan.md
@@ -619,6 +619,11 @@ Adds the `**Execution Pattern:**` header to all three existing worked examples a
   ```
 
 **Done when:** All three existing examples carry the `**Execution Pattern:**` header. The Large Task example has per-phase declarations under each phase heading. Two new short examples exist (Fan-out/Fan-in ≤30 lines task content, Pipeline ≤25 lines task content), placed after the Small Task example and before the Medium Task example.
+
+#### What Was Built
+- **Deviations:** The initial worker used verbatim task-text examples (56 lines Fan-out/Fan-in, 49 lines Pipeline) which exceeded the R5.7 hard line caps (≤30, ≤25). Worker's reasoning: the task text's example snippet was already over-budget, so trimming step detail felt unjustified. Correct call by the verifier — R5.7 is a hard gate and "trim step detail without dropping steps" explicitly permitted the fix.
+- **Review changes:** Stage 1 first pass FAILED on R5.7. Fix subagent trimmed both examples to exactly 30/25 lines by (1) pipe-delimiting the `**blocks:**/**blocked-by:**/**parallelizable:**` fields onto single lines, (2) collapsing `**Spec:**` and `**Goal:**` onto one line, (3) removing `**For agentic workers:**` scaffolding notes, (4) removing `**Done when:**` from both new examples, (5) dropping `**Step N:**` prefixes from checkboxes. Re-verify PASSED both stages (confidence 87%). Large Task per-phase declarations: Phase 1 → Pipeline, Phase 2 → Fan-out/Fan-in, Phase 3 → Supervisor, Phase 4 → Supervisor.
+- **Notes for downstream:** The new Fan-out/Fan-in and Pipeline examples use a **pipe-delimited field layout** that differs stylistically from the multi-line layout in the Small/Medium/Large examples. This is an acceptable minor inconsistency the reviewer accepted — both layouts expose the `blocks`/`blocked-by`/`parallelizable` vocabulary. If a future edit normalizes the style (either direction), it needs to respect the line caps on the two new examples. Task 5's verification sweep should confirm the line caps hold on the merged file.
 
 ---
 
