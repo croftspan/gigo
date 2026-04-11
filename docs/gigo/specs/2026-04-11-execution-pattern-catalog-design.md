@@ -300,3 +300,5 @@ Cycle 1 is done when all of the following are true. Each item is independently c
 - When in doubt about a pattern's example, pick a non-software example. The catalog must remain useful for assembled projects that don't write code.
 - If a step says "use wording X" and you find wording Y reads better, prefer the substance of X over the exact letters — unless X is specifically called out as "required verbatim" (only the forbidden phrasings in R7 are verbatim).
 - The catalog is reference-tier. Do not add it to any rules file. Do not auto-load it from any skill's entry point.
+
+<!-- approved: spec 2026-04-11T01:07:00 by:Eaven -->
