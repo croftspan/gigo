@@ -55,12 +55,20 @@ Four distinct edits:
 
 > Execute implementation plans. Lead dispatches bare worker subagents per task, invokes gigo:verify after each, tracks progress via checkpoints. Falls back to inline if subagents unavailable. Use when you have an approved plan from gigo:blueprint.
 
-**R2.2. Tier presentation in "Before Starting".** The section currently presents three options. Remove the Tier 3 option (the third numbered bullet starting with `3. **Agent teams** (experimental opt-in)...`). After the edit, the presentation must offer exactly two numbered options:
+**R2.2. Tier presentation in "Before Starting".** The section currently presents three options inside a multi-line blockquote. Remove the Tier 3 option (the third numbered bullet starting with `3. **Agent teams** (experimental opt-in)...`). After the edit, the blockquote must contain exactly two numbered options:
 
 > 1. **Subagents** (recommended) — fresh worker per task, parallel dispatch for independent tasks, lead-managed review.
 > 2. **Inline** — sequential in this session, no isolation. Good for small plans or debugging.
 
-The blank line before `> Which route?"` must be preserved.
+The **empty blockquote separator line** (a line whose content is only the `>` marker with surrounding whitespace, used inside the blockquote to create visual spacing before `> Which route?"`) must be preserved. Do NOT convert it to a true blank markdown line — doing so would break the blockquote and split the tier list from `Which route?"`. After R2.2, lines 29–34 of SKILL.md (approximately; exact line numbers may shift) should read:
+
+```
+   > "Ready to execute. Available options:
+   > 1. **Subagents** (recommended) — fresh worker per task, parallel dispatch for independent tasks, lead-managed review.
+   > 2. **Inline** — sequential in this session, no isolation. Good for small plans or debugging.
+   >
+   > Which route?"
+```
 
 **R2.3. Delete the entire Tier 3 section.** Remove everything from the `## Tier 3: Agent Teams (Experimental Opt-In)` heading through (and including) the closing `---` separator that precedes `## After Review Passes`. The `---` separator that *preceded* the Tier 3 section (between Tier 2 Inline content and the Tier 3 heading) must be preserved — it will later serve as the separator before the `## Future: Agent Teams` section added by R7.
 
@@ -176,7 +184,7 @@ Add a new reference-tier file at `skills/execute/references/agent-teams-design.m
 
 Must include an explicit caveat that these benefits do not apply to single-pass code generation, and that where they DO apply is non-code workflows with iterative refinement or cross-agent negotiation.
 
-**§3 Decision Tree (35–50 lines).** A scannable decision tree. The top-level question must be `Is the task producing code?`. The code-producing (YES) branch must route to Subagents unconditionally. The non-code (NO) branch must have additional gates: API stability, plan size, single-session requirement. Any of those additional gates failing routes work away from teams.
+**§3 Decision Tree (35–45 lines).** A scannable decision tree. The top-level question must be `Is the task producing code?`. The code-producing (YES) branch must route to Subagents unconditionally — this is the enforcement point for the bare-worker research finding. The non-code (NO) branch then gates on a second question: `Is the Claude Code Agent Teams API stable?` If YES, route to a team; if NO, route to Subagents as a fallback. Only these two questions are required by this target-state doc. Additional operational gates (plan size, single-session requirement, etc.) are deliberately left undefined — they become concrete design decisions only when implementation begins, and adding them here without thresholds would be under-specification.
 
 **§4 Team Composition (25–40 lines).** Must state:
 - One team per execution (no mid-execution recomposition).
@@ -223,7 +231,7 @@ The literal string `_workspace/` may appear in this file ONLY in the context of 
 An optional fifth entry about non-code team sizing is permitted but not required.
 
 **§9 Audit Trail (15–25 lines).** Must include:
-- List of files that were removed or stripped in Cycle 2 (from R1–R5 of this spec).
+- List of files that were removed or stripped in Cycle 2 (from R1–R5 and R8 of this spec — six files total: `review-hook.md` deleted, `SKILL.md`, `teammate-prompts.md`, `model-selection.md`, `README.md`, `checkpoint-format.md` stripped).
 - A pointer to Cycle 2 ship date ("shipped 2026-04-11" or the actual ship date from execution).
 - A `git log` hint (example: `` `git log --all --diff-filter=D -- skills/execute/references/review-hook.md` ``) that surfaces the deletion.
 - Reasons for removal (the four documented issues + the Phase 7 (research) bare-worker tension).
@@ -263,6 +271,42 @@ The pointer section must not describe what teams do — its job is to redirect c
 - `references/agent-teams-design.md` — Target-state design doc. Not shipped, not wired up. Loaded on demand when a reader follows the Future pointer.
 ```
 
+### R8. Strip Tier 3 from `skills/execute/references/checkpoint-format.md`
+
+This file was missed in the original brief's file-scope and surfaced by the spec-review Challenger. It contains three distinct Tier 3 artifacts that must be removed so AC17's Tier 3 coverage grep stays clean. R8 has three sub-edits.
+
+**R8.1. Update the `tier` field row in the Fields table.** The table currently contains the row:
+
+```
+| `tier` | `1`, `2`, `3` | Which execution tier was running |
+```
+
+Replace the values column to drop `3`:
+
+```
+| `tier` | `1`, `2` | Which execution tier was running |
+```
+
+The `Field`, `Values`, and `Purpose` column headers are preserved verbatim; only the values cell of the `tier` row changes. The checkpoint example blocks earlier in the file (which use `tier=1` and `tier=2` only) are preserved verbatim — no `tier=3` appears in any example block.
+
+**R8.2. Delete the `### Agent Teams (Tier 3, if used)` subsection under `## Reconciliation on Resume`.** The section `## Reconciliation on Resume` currently contains a single paragraph about the primary execution path followed by a subsection `### Agent Teams (Tier 3, if used)` with a 5-item numbered list about shared-task-list reconciliation. Remove the entire `### Agent Teams (Tier 3, if used)` subsection: the `###` heading, the blank line, the introductory sentence, the numbered list, and any trailing blank line up to the next top-level section heading.
+
+After deletion, `## Reconciliation on Resume` contains only its opening paragraph ("For the primary execution path (subagents and inline), there's no shared state to reconcile. Checkpoints in the plan file are the sole source of truth. The lead reads them and picks up where it left off.") and then flows directly into `## Edge Cases`.
+
+**R8.3. Delete the `**Agent teams race window (Tier 3 only):**` edge case from `## Edge Cases`.** The `## Edge Cases` section is a sequence of bold-prefixed paragraphs. Remove the entire paragraph whose first line begins with `**Agent teams race window (Tier 3 only):**`. The deletion covers the bold-prefixed line and all continuation lines through (but not including) the next `**` bullet. The surrounding edge cases must be preserved verbatim:
+
+- `**Partial checkpoint (crash mid-write):**` — appears before the deleted paragraph; preserved.
+- `**Operator decided, worker implementing:**` — appears after the deleted paragraph; preserved.
+
+After R8.1–R8.3, `skills/execute/references/checkpoint-format.md` must contain none of the following strings:
+
+- `Tier 3`
+- `Agent Teams` (case-insensitive)
+- `agent teams` (the lowercase phrase also occurs in the race-window edge case)
+- `shared task list` (only appeared inside the deleted subsection)
+
+The file must still contain the strings `Reconciliation on Resume`, `Edge Cases`, `Partial checkpoint`, and `Operator decided` (these mark the load-bearing structure that survives R8).
+
 ---
 
 ## Architecture
@@ -274,7 +318,7 @@ skills/execute/
 ├── SKILL.md                              ← modified (R2, R7)
 └── references/
     ├── agent-teams-design.md             ← NEW (R6, 220–280 lines)
-    ├── checkpoint-format.md              ← unchanged
+    ├── checkpoint-format.md              ← modified (R8)
     ├── model-selection.md                ← modified (R4)
     ├── review-hook.md                    ← DELETED (R1)
     └── teammate-prompts.md               ← modified (R3)
@@ -291,7 +335,16 @@ skills/execute/
 
 ### Execution pattern for Cycle 2 itself (for the plan phase)
 
-**Fan-out/Fan-in** (from Cycle 1's execution-patterns catalog). R1–R5 are five independent file operations that fan out in parallel; R6 (design doc creation) runs sequentially after the rip-out; a verification sweep fans in at the end.
+**Fan-out/Fan-in** (from Cycle 1's execution-patterns catalog). The rip-out wave fans out six tasks in parallel:
+
+- **One SKILL.md task** batching R2.1, R2.2, R2.3, R2.4, and R7 together (all five edits touch the same file and cannot parallelize within that file; they must run in a single task).
+- **R1**: delete `skills/execute/references/review-hook.md`.
+- **R3**: strip `skills/execute/references/teammate-prompts.md`.
+- **R4**: strip `skills/execute/references/model-selection.md`.
+- **R5**: fix `README.md` line 72.
+- **R8**: strip `skills/execute/references/checkpoint-format.md`.
+
+R6 (design doc creation) runs sequentially AFTER the rip-out wave completes — the design doc's §9 Audit Trail references the files removed or stripped in the rip-out wave, so it needs the wave's commits to exist. A verification sweep fans in at the end.
 
 ---
 
@@ -439,13 +492,46 @@ The file deletion in R1 (`skills/execute/references/review-hook.md`) must use a 
 
 ### AC16. Future pointer in SKILL.md (R7)
 - `skills/execute/SKILL.md` contains a `## Future: Agent Teams` section between the Inline tier section and the `## After Review Passes` section.
-- The Future section body is a single short paragraph (1–4 rendered lines) and points to `references/agent-teams-design.md`.
+- The Future section body is a single short paragraph (2–4 rendered lines) and points to `references/agent-teams-design.md`.
 - The Future section does not describe the team mechanism — it only redirects.
 - A new `---` separator exists between the end of the Future section body and the `## After Review Passes` heading (per R7's separator placement diagram).
 - `skills/execute/SKILL.md`'s `## References` list contains a bullet for `agent-teams-design.md` (added by R7) at the end of the list.
 
 ### AC17. Verification grep is clean (global convention)
 - Running the Tier 3 coverage grep from the Conventions section returns matches ONLY in `skills/execute/references/agent-teams-design.md`. Zero matches in any other file under `skills/`, `README.md`, or `CLAUDE.md`.
+
+### AC18. `checkpoint-format.md` cleaned (R8)
+- `skills/execute/references/checkpoint-format.md` contains no heading matching the regex `^### Agent Teams`.
+- The file contains no `**Agent teams race window` substring.
+- The file does not contain the strings `Tier 3`, `shared task list`, or the phrase `agent teams` (case-insensitive).
+- The `tier` field row of the Fields table has values column `` `1`, `2` `` — no `3`.
+- The file still contains the strings `Reconciliation on Resume`, `Edge Cases`, `Partial checkpoint`, and `Operator decided` (load-bearing structure preserved).
+
+### AC19. Why Teams section names three mechanisms (R6.2 §2)
+- `agent-teams-design.md` §2 body contains all three: `SendMessage` (or `Message` protocol language), `shared task` (or `task state visibility`), and `cross-review` (or equivalent phrase naming review at the team level).
+- §2 contains an explicit caveat that these benefits do NOT apply to single-pass code generation (grep for a phrase like `does not apply` or `do not apply` or `not for code`).
+
+### AC20. Team Composition load-bearing claims (R6.2 §4)
+- §4 contains the phrase `one team per execution` (or close paraphrase like `one team per execute run`).
+- §4 contains the phrase `auto-loads` and `CLAUDE.md` in the same paragraph, naming the cost.
+- §4 contains the explicit statement that team members are NOT bare (look for `not bare`, `NOT bare`, or `cannot be bare`).
+- §4 names the leader as the lead persona from `gigo:execute` (or equivalent).
+
+### AC21. Team Lifecycle names load-bearing primitives (R6.2 §6)
+- §6 contains all five of: `TeamCreate`, `TaskCompleted`, `TeamDelete`, `crash`, and a phrase meaning `no mid-execution recomposition` (e.g., `no recomposition` or `cannot be recomposed`).
+
+### AC22. Open Questions has at least four items (R6.2 §8)
+- §8 contains at least 4 bulleted or numbered items.
+- §8 names at minimum: `selectively-bare` (or `selectively bare`), `auto-claim` (or `pre-assignment`), `crash recovery` (or `crash` with `recovery`), and `hook integration`.
+
+### AC23. Audit Trail completeness (R6.2 §9)
+- §9 lists all six files touched by Cycle 2: `review-hook.md`, `SKILL.md`, `teammate-prompts.md`, `model-selection.md`, `README.md`, and `checkpoint-format.md`.
+- §9 contains a `git log` command example (search for `git log`).
+- §9 points to `briefs/03-execution-architecture-catalog.md`, `briefs/04-agent-teams-rebuild.md`, and the path of this spec file.
+
+### AC24. Reference-tier discipline (R6.4)
+- `skills/execute/SKILL.md` does NOT contain the substring `TARGET-STATE DESIGN` (the sentinel phrase that appears only in `agent-teams-design.md` §1 Status). If SKILL.md contains that phrase, the design doc content was inlined rather than referenced by pointer, violating the reference-tier contract.
+- `skills/execute/SKILL.md` DOES contain the path `references/agent-teams-design.md` (the pointer from R7).
 
 ---
 
@@ -471,9 +557,10 @@ Action verbs extracted from the Original Request, traced to requirements:
 
 | Verb | Requirement | Status |
 |---|---|---|
-| rip out (Tier 3 from `skills/execute/`) | R1, R2, R3, R4 | ✅ |
+| rip out (Tier 3 from `skills/execute/`) | R1, R2, R3, R4, R8 | ✅ |
 | strip (`review-hook.md`) | R1 (full file delete) | ✅ |
 | strip (Tier 3 templates in `teammate-prompts.md`) | R3 | ✅ |
+| strip (Tier 3 content in `checkpoint-format.md`) | R8 (three sub-edits — Challenger-discovered) | ✅ |
 | simplify (`SKILL.md` to two tiers) | R2 (four sub-edits) + R7 (Future pointer completes the simplification story by redirecting curious readers to the design doc) | ✅ |
 | add (new `agent-teams-design.md`) | R6 | ✅ |
 | blueprint (how `gigo:execute` would use Agent Teams API) | R6 (nine-section target-state doc) | ✅ |
