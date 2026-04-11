@@ -54,60 +54,34 @@ Three examples at different scales showing how plans look in practice.
 ```markdown
 # Market Report — Implementation Plan
 
-> **For agentic workers:** Use gigo:execute to implement this plan task-by-task.
-
-**Spec:** (inline)
-
-**Goal:** Produce a three-section market report on AI code tools
-
-**Execution Pattern:** Fan-out/Fan-in
-
-**Architecture:** Three parallel section drafts followed by a single merge pass that reconciles overlaps and adds a cross-section summary
+**Spec:** (inline) | **Goal:** Three-section market report on AI code tools
+**Execution Pattern:** Fan-out/Fan-in | **Architecture:** Three parallel drafts → merge
 
 ---
-
 ### Task 1: Draft Section A — Market Overview
-
-**blocks:** 4
-**blocked-by:** []
-**parallelizable:** true (with Tasks 2, 3)
-
-- [ ] **Step 1:** Gather market size and growth data
-- [ ] **Step 2:** Write the overview section (~600 words)
-- [ ] **Step 3:** Commit
+**blocks:** 4 | **blocked-by:** [] | **parallelizable:** true (with Tasks 2, 3)
+- [ ] Gather market size and growth data
+- [ ] Write overview (~600 words)
+- [ ] Commit
 
 ### Task 2: Draft Section B — Competitor Landscape
-
-**blocks:** 4
-**blocked-by:** []
-**parallelizable:** true (with Tasks 1, 3)
-
-- [ ] **Step 1:** Research 5-8 competitors
-- [ ] **Step 2:** Write the landscape section (~800 words)
-- [ ] **Step 3:** Commit
+**blocks:** 4 | **blocked-by:** [] | **parallelizable:** true (with Tasks 1, 3)
+- [ ] Research 5-8 competitors
+- [ ] Write landscape section (~800 words)
+- [ ] Commit
 
 ### Task 3: Draft Section C — User Interviews
-
-**blocks:** 4
-**blocked-by:** []
-**parallelizable:** true (with Tasks 1, 2)
-
-- [ ] **Step 1:** Synthesize 10 user interviews into themes
-- [ ] **Step 2:** Write the interviews section (~700 words)
-- [ ] **Step 3:** Commit
+**blocks:** 4 | **blocked-by:** [] | **parallelizable:** true (with Tasks 1, 2)
+- [ ] Synthesize 10 user interviews into themes
+- [ ] Write interviews section (~700 words)
+- [ ] Commit
 
 ### Task 4: Merge and Cross-Reference
-
-**blocks:** []
-**blocked-by:** 1, 2, 3
-**parallelizable:** false
-
-- [ ] **Step 1:** Merge the three sections into a single doc
-- [ ] **Step 2:** Reconcile overlapping claims between sections
-- [ ] **Step 3:** Write a cross-section summary
-- [ ] **Step 4:** Commit
-
-**Done when:** Single report doc exists with all three sections merged, overlaps reconciled, summary added.
+**blocks:** [] | **blocked-by:** 1, 2, 3 | **parallelizable:** false
+- [ ] Merge three sections into a single doc
+- [ ] Reconcile overlapping claims
+- [ ] Write cross-section summary
+- [ ] Commit
 ```
 
 ---
@@ -121,53 +95,29 @@ Three examples at different scales showing how plans look in practice.
 ```markdown
 # Literature Review — Implementation Plan
 
-> **For agentic workers:** Use gigo:execute to implement this plan task-by-task.
-
-**Spec:** (inline)
-
-**Goal:** Produce a literature review covering 20 papers on distributed consensus
-
-**Execution Pattern:** Pipeline
-
-**Architecture:** Strict sequence: gather papers → extract claims → synthesize themes → write review. Each stage's output feeds the next.
+**Spec:** (inline) | **Goal:** Literature review of 20 papers on distributed consensus
+**Execution Pattern:** Pipeline | **Architecture:** gather → extract → synthesize → write
 
 ---
-
 ### Task 1: Gather Papers
-
-**blocks:** 2
-**blocked-by:** []
-**parallelizable:** false
-
-- [ ] **Step 1:** Download 20 papers matching the search criteria
-- [ ] **Step 2:** Commit bibliography
+**blocks:** 2 | **blocked-by:** [] | **parallelizable:** false
+- [ ] Download 20 papers matching search criteria
+- [ ] Commit bibliography
 
 ### Task 2: Extract Claims
-
-**blocks:** 3
-**blocked-by:** 1
-**parallelizable:** false
-
-- [ ] **Step 1:** Read each paper, extract 3-5 key claims per paper
-- [ ] **Step 2:** Commit extracted claims table
+**blocks:** 3 | **blocked-by:** 1 | **parallelizable:** false
+- [ ] Extract 3-5 key claims per paper
+- [ ] Commit claims table
 
 ### Task 3: Synthesize Themes
-
-**blocks:** 4
-**blocked-by:** 2
-**parallelizable:** false
-
-- [ ] **Step 1:** Cluster claims into 4-6 themes
-- [ ] **Step 2:** Commit themes outline
+**blocks:** 4 | **blocked-by:** 2 | **parallelizable:** false
+- [ ] Cluster claims into 4-6 themes
+- [ ] Commit themes outline
 
 ### Task 4: Write Review
-
-**blocks:** []
-**blocked-by:** 3
-**parallelizable:** false
-
-- [ ] **Step 1:** Write the review section-by-section, one theme per section
-- [ ] **Step 2:** Commit final review
+**blocks:** [] | **blocked-by:** 3 | **parallelizable:** false
+- [ ] Write review section-by-section, one theme per section
+- [ ] Commit final review
 ```
 
 ---
