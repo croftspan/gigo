@@ -19,6 +19,8 @@ Three examples at different scales showing how plans look in practice.
 
 **Goal:** Fix login page rendering on mobile viewports
 
+**Execution Pattern:** Supervisor
+
 **Architecture:** CSS fix targeting responsive breakpoints in the login component
 
 ---
@@ -43,6 +45,133 @@ Three examples at different scales showing how plans look in practice.
 
 ---
 
+## Fan-out/Fan-in Example
+
+**User says:** "Draft a three-section market report on AI code tools, then merge into a single doc"
+
+**Plan:**
+
+```markdown
+# Market Report — Implementation Plan
+
+> **For agentic workers:** Use gigo:execute to implement this plan task-by-task.
+
+**Spec:** (inline)
+
+**Goal:** Produce a three-section market report on AI code tools
+
+**Execution Pattern:** Fan-out/Fan-in
+
+**Architecture:** Three parallel section drafts followed by a single merge pass that reconciles overlaps and adds a cross-section summary
+
+---
+
+### Task 1: Draft Section A — Market Overview
+
+**blocks:** 4
+**blocked-by:** []
+**parallelizable:** true (with Tasks 2, 3)
+
+- [ ] **Step 1:** Gather market size and growth data
+- [ ] **Step 2:** Write the overview section (~600 words)
+- [ ] **Step 3:** Commit
+
+### Task 2: Draft Section B — Competitor Landscape
+
+**blocks:** 4
+**blocked-by:** []
+**parallelizable:** true (with Tasks 1, 3)
+
+- [ ] **Step 1:** Research 5-8 competitors
+- [ ] **Step 2:** Write the landscape section (~800 words)
+- [ ] **Step 3:** Commit
+
+### Task 3: Draft Section C — User Interviews
+
+**blocks:** 4
+**blocked-by:** []
+**parallelizable:** true (with Tasks 1, 2)
+
+- [ ] **Step 1:** Synthesize 10 user interviews into themes
+- [ ] **Step 2:** Write the interviews section (~700 words)
+- [ ] **Step 3:** Commit
+
+### Task 4: Merge and Cross-Reference
+
+**blocks:** []
+**blocked-by:** 1, 2, 3
+**parallelizable:** false
+
+- [ ] **Step 1:** Merge the three sections into a single doc
+- [ ] **Step 2:** Reconcile overlapping claims between sections
+- [ ] **Step 3:** Write a cross-section summary
+- [ ] **Step 4:** Commit
+
+**Done when:** Single report doc exists with all three sections merged, overlaps reconciled, summary added.
+```
+
+---
+
+## Pipeline Example
+
+**User says:** "Synthesize 20 academic papers on distributed consensus into a single literature review"
+
+**Plan:**
+
+```markdown
+# Literature Review — Implementation Plan
+
+> **For agentic workers:** Use gigo:execute to implement this plan task-by-task.
+
+**Spec:** (inline)
+
+**Goal:** Produce a literature review covering 20 papers on distributed consensus
+
+**Execution Pattern:** Pipeline
+
+**Architecture:** Strict sequence: gather papers → extract claims → synthesize themes → write review. Each stage's output feeds the next.
+
+---
+
+### Task 1: Gather Papers
+
+**blocks:** 2
+**blocked-by:** []
+**parallelizable:** false
+
+- [ ] **Step 1:** Download 20 papers matching the search criteria
+- [ ] **Step 2:** Commit bibliography
+
+### Task 2: Extract Claims
+
+**blocks:** 3
+**blocked-by:** 1
+**parallelizable:** false
+
+- [ ] **Step 1:** Read each paper, extract 3-5 key claims per paper
+- [ ] **Step 2:** Commit extracted claims table
+
+### Task 3: Synthesize Themes
+
+**blocks:** 4
+**blocked-by:** 2
+**parallelizable:** false
+
+- [ ] **Step 1:** Cluster claims into 4-6 themes
+- [ ] **Step 2:** Commit themes outline
+
+### Task 4: Write Review
+
+**blocks:** []
+**blocked-by:** 3
+**parallelizable:** false
+
+- [ ] **Step 1:** Write the review section-by-section, one theme per section
+- [ ] **Step 2:** Commit final review
+```
+
+---
+
 ## Medium Task
 
 **User says:** "We need to add Stripe subscriptions with a free trial"
@@ -58,6 +187,8 @@ Three examples at different scales showing how plans look in practice.
 **Spec:** `docs/gigo/specs/2026-03-27-stripe-subscriptions-design.md`
 
 **Goal:** Add Stripe subscription billing with free trial support
+
+**Execution Pattern:** Supervisor
 
 **Architecture:** Stripe Checkout for payment flow, webhooks for lifecycle events, subscription status gated on user model
 
@@ -170,6 +301,8 @@ Three examples at different scales showing how plans look in practice.
 
 **Goal:** Migrate frontend from legacy framework to [chosen framework]
 
+**Execution Pattern:** Supervisor
+
 **Architecture:** Incremental migration using feature flags, both frontends run in parallel during cutover
 
 **Tech Stack:** [Chosen framework], feature flags, existing API layer
@@ -177,6 +310,8 @@ Three examples at different scales showing how plans look in practice.
 ---
 
 ## Phase 1: Foundation (unblocks everything)
+
+**Execution Pattern:** Pipeline
 
 ### Task 1: Framework Spike
 
@@ -197,6 +332,8 @@ Validate the framework handles the most complex page. Set up build pipeline, lin
 CI/CD pipeline, dev server, test runner, linting config for the new framework.
 
 ## Phase 2: Core Pages (parallelizable)
+
+**Execution Pattern:** Fan-out/Fan-in
 
 ### Task 3: Auth Flow Migration
 
@@ -224,6 +361,8 @@ Migrate settings and account pages.
 
 ## Phase 3: Features (sequential, depends on Phase 2)
 
+**Execution Pattern:** Supervisor
+
 ### Task 6: Remaining Pages
 
 **blocks:** 7
@@ -235,6 +374,8 @@ Migrate remaining feature pages and shared components.
 *Risk: shared components may need redesign, not just migration.*
 
 ## Phase 4: Cutover
+
+**Execution Pattern:** Supervisor
 
 ### Task 7: Parallel Run and Rollout
 
