@@ -291,7 +291,7 @@ This task produces the complete catalog file per spec requirements R1, R2, R3, a
 
 Adds the catalog-consultation step and updates the Plan Document Header template with the new `**Execution Pattern:**` field. See spec R4.
 
-- [ ] **Step 1: Add the catalog-consultation step as a new section 2**
+- [x] **Step 1: Add the catalog-consultation step as a new section 2**
 
   Open `skills/spec/references/planning-procedure.md`. Current sections: 0 (Design Brief chain), 1 (Scope Check), 2 (Map File Structure), 3 (Plan Document Header), 4 (Task Format), ..., 10 (File Locations).
 
@@ -305,7 +305,7 @@ Adds the catalog-consultation step and updates the Plan Document Header template
 
   Renumber all downstream sections by +1: old section 2 (Map File Structure) → new section 3, old 3 → new 4, ..., old 10 → new 11.
 
-- [ ] **Step 2: Renumber downstream section headings**
+- [x] **Step 2: Renumber downstream section headings**
 
   Update section headings:
   - `## 2. Map File Structure` → `## 3. Map File Structure`
@@ -322,7 +322,7 @@ Adds the catalog-consultation step and updates the Plan Document Header template
 
   Scan the file for any cross-references that name a section number (e.g., "section 7 above") and update them. The current content references "section 7 above" inside the Plan Self-Review section's placeholder-scan subsection — that becomes "section 8 above" after renumbering.
 
-- [ ] **Step 3: Update the Plan Document Header template**
+- [x] **Step 3: Update the Plan Document Header template**
 
   Inside the (newly renumbered) section 4 "Plan Document Header", find the template code block. It currently contains:
 
@@ -350,11 +350,11 @@ Adds the catalog-consultation step and updates the Plan Document Header template
   **Tech Stack:** [Key technologies/libraries]
   ```
 
-- [ ] **Step 4: Verify "Phase 8" usage is still acceptable here**
+- [x] **Step 4: Verify "Phase 8" usage is still acceptable here**
 
   `planning-procedure.md` is internal to `gigo:spec` where "Phase 8" unambiguously means plan writing. Any "Phase 8" reference inside this file is acceptable (see spec R4, last paragraph). Do not remove existing "Phase 8" references from this file. The R7.b constraint applies only to `execution-patterns.md`, not this file.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
   ```bash
   git add skills/spec/references/planning-procedure.md
@@ -368,6 +368,11 @@ Adds the catalog-consultation step and updates the Plan Document Header template
   ```
 
 **Done when:** `planning-procedure.md` has a new section 2 "Pick Execution Pattern", all downstream sections are renumbered consistently (including cross-references), and the Plan Document Header template shows `**Execution Pattern:**` between `**Goal:**` and `**Architecture:**`.
+
+#### What Was Built
+- **Deviations:** None. Worker implemented all 5 steps exactly as specified.
+- **Review changes:** None. Stage 1 R4.1–R4.9 all PASS; Stage 2 PASS with no craft issues. Clean merge.
+- **Notes for downstream:** The `**Execution Pattern:**` field in the Plan Document Header template lives between `**Goal:**` and `**Architecture:**`. The subsection labels `9a/9b/9c` (formerly `8a/8b/8c`) are inside the renumbered section 9 "Plan Self-Review". The catalog-consultation step is section 2 "Pick Execution Pattern" — future edits to planning-procedure.md must respect this new numbering scheme.
 
 ---
 
@@ -628,11 +633,11 @@ Adds the `**Execution Pattern:**` header to all three existing worked examples a
 
 Adds a one-line pointer near the Phase 8 section directing readers to the new catalog. See spec R6.
 
-- [ ] **Step 1: Locate the Phase 8 section**
+- [x] **Step 1: Locate the Phase 8 section**
 
   Open `skills/spec/SKILL.md`. Find the section that starts with `## Phase 8: Write Implementation Plan` (currently around line 122).
 
-- [ ] **Step 2: Add the pointer inline in the Phase 8 body**
+- [x] **Step 2: Add the pointer inline in the Phase 8 body**
 
   The current Phase 8 body contains these lines near the end:
 
@@ -651,7 +656,7 @@ Adds a one-line pointer near the Phase 8 section directing readers to the new ca
 
   The phrasing "plan-writing phase (Phase 8)" anchors the phase number to its meaning on first mention. Subsequent references to "Phase 8" in SKILL.md (which already exist elsewhere in the file — do not change them) are then unambiguous. See spec R6, "Phase 7/8 disambiguation".
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
   ```bash
   git add skills/spec/SKILL.md
@@ -664,6 +669,11 @@ Adds a one-line pointer near the Phase 8 section directing readers to the new ca
   ```
 
 **Done when:** `skills/spec/SKILL.md` contains a one-line pointer to `references/execution-patterns.md` inside the Phase 8 body, using the form "plan-writing phase (Phase 8)" to anchor the phase number.
+
+#### What Was Built
+- **Deviations:** None on content. Worker implemented all 3 steps exactly as specified. The `references/execution-patterns.md` pointer is at line 131 of `skills/spec/SKILL.md`, between the `planning-procedure.md` and `example-plan.md` pointers, using the exact phrasing "plan-writing phase (Phase 8)".
+- **Review changes:** None. Stage 1 R6.1–R6.6 all PASS; Stage 2 PASS with no craft issues.
+- **Notes for downstream:** **Lead-level note, not a code change:** the Task 4 worker (dispatched on haiku) appears to have bypassed its worktree and committed directly to main via commit `9122512`, rather than (or in addition to) committing on the isolated branch `worktree-agent-a3c22d36`. The worker branch had an independent functionally-identical commit (`5ef8aff`). Main now holds the correct Task 4 content; the redundant branch and worktree were cleaned up. This is a worktree-isolation escape that should be investigated for the haiku model dispatch path — future dispatches should log the worker's effective CWD before trusting isolation. Does not affect the correctness of Cycle 1.
 
 ---
 
