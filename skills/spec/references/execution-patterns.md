@@ -182,22 +182,22 @@ Read this catalog during plan writing, before decomposing tasks into a dependenc
 
 **Plan shape.**
 ```markdown
-### Task 3: Draft content
+### Task 1: Draft content
 
-**blocks:** 4
+**blocks:** 2
+**blocked-by:** []
+**parallelizable:** false
+
+### Task 2: Fact-check draft
+
+**blocks:** 3
+**blocked-by:** 1
+**parallelizable:** false
+
+### Task 3: Revise based on fact-check
+
+**blocks:** []
 **blocked-by:** 2
-**parallelizable:** false
-
-### Task 4: Fact-check draft
-
-**blocks:** 5
-**blocked-by:** 3
-**parallelizable:** false
-
-### Task 5: Revise based on fact-check
-
-**blocks:** 6
-**blocked-by:** 4
 **parallelizable:** false
 ```
 
@@ -247,6 +247,13 @@ Read this catalog during plan writing, before decomposing tasks into a dependenc
 **blocked-by:** 1
 **parallelizable:** true (with Task 3)
 **review-lens:** data
+
+### Task 5: Integrate and verify all domains
+
+**blocks:** []
+**blocked-by:** 2, 3, 4
+**parallelizable:** false
+**review-lens:** (none — integration task spans all domains)
 ```
 
 **Gotchas.**
