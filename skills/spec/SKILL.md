@@ -128,6 +128,7 @@ Save to `docs/gigo/plans/YYYY-MM-DD-<feature-name>.md`.
 Plans are always in English. For tasks producing user-facing deliverables, include `**Output languages:** {codes from language.md}`.
 
 Read `references/planning-procedure.md` for the full procedure.
+Read `references/execution-patterns.md` to pick an execution pattern during the plan-writing phase (Phase 8).
 Read `references/example-plan.md` for worked examples.
 
 ---
