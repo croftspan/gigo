@@ -692,7 +692,7 @@ Adds a one-line pointer near the Phase 8 section directing readers to the new ca
 
 Runs the spec's 15 acceptance criteria as a single verification pass. Any failure returns to the task that produced the failing artifact for a fix.
 
-- [ ] **Step 1: Verify catalog file structure (AC1, AC2, AC3, AC4, AC5)**
+- [x] **Step 1: Verify catalog file structure (AC1, AC2, AC3, AC4, AC5)**
 
   ```bash
   rg -c "^## " skills/spec/references/execution-patterns.md
@@ -707,7 +707,7 @@ Runs the spec's 15 acceptance criteria as a single verification pass. Any failur
   - Expert Pool entry explicitly states workers stay bare + `review-lens:` is metadata-only
   - Anti-patterns section names all 5 mistakes
 
-- [ ] **Step 2: Verify forbidden strings are absent (AC6, AC7)**
+- [x] **Step 2: Verify forbidden strings are absent (AC6, AC7)**
 
   ```bash
   rg -c "_workspace" skills/spec/references/execution-patterns.md
@@ -716,14 +716,14 @@ Runs the spec's 15 acceptance criteria as a single verification pass. Any failur
 
   Both must return `0` (or ripgrep's "No matches" exit code — treat absence as pass).
 
-- [ ] **Step 3: Verify planning-procedure.md integration (AC8, AC9)**
+- [x] **Step 3: Verify planning-procedure.md integration (AC8, AC9)**
 
   Open `skills/spec/references/planning-procedure.md` and confirm:
   - A new section titled "Pick Execution Pattern" exists between section 1 (Scope Check) and the old section 2 (now renumbered to 3, Map File Structure)
   - The Plan Document Header template contains `**Execution Pattern:**` between `**Goal:**` and `**Architecture:**`
   - All downstream section numbers and internal cross-references are consistent
 
-- [ ] **Step 4: Verify example-plan.md updates (AC10, AC11)**
+- [x] **Step 4: Verify example-plan.md updates (AC10, AC11)**
 
   Open `skills/spec/references/example-plan.md` and confirm:
   - Small, Medium, and Large Task examples all contain `**Execution Pattern:**` in their plan headers
@@ -739,7 +739,7 @@ Runs the spec's 15 acceptance criteria as a single verification pass. Any failur
 
   Confirm the Fan-out/Fan-in example's task content is ≤30 lines and the Pipeline example's task content is ≤25 lines. (Counting the lines between the opening `### Task` and closing of the plan block.)
 
-- [ ] **Step 5: Verify SKILL.md pointer (AC12)**
+- [x] **Step 5: Verify SKILL.md pointer (AC12)**
 
   ```bash
   rg "execution-patterns" skills/spec/SKILL.md
@@ -747,7 +747,7 @@ Runs the spec's 15 acceptance criteria as a single verification pass. Any failur
 
   Expected: at least one hit inside the Phase 8 section, referencing the catalog by the relative path `references/execution-patterns.md`.
 
-- [ ] **Step 6: Verify gigo:execute is untouched (AC13)**
+- [x] **Step 6: Verify gigo:execute is untouched (AC13)**
 
   ```bash
   git diff --stat main -- skills/execute/
@@ -755,7 +755,7 @@ Runs the spec's 15 acceptance criteria as a single verification pass. Any failur
 
   Expected: no changes shown. If any file under `skills/execute/` appears in the diff, the cycle violated R8 — return to whichever task touched it and revert.
 
-- [ ] **Step 7: Verify backwards compatibility with an existing plan (AC14)**
+- [x] **Step 7: Verify backwards compatibility with an existing plan (AC14)**
 
   Pick any plan under `docs/gigo/plans/` that predates Cycle 1 — for example, `docs/gigo/plans/2026-04-10-phase-selection-matrix.md` if it exists, or the most recent plan committed before this cycle's changes.
 
@@ -767,7 +767,7 @@ Runs the spec's 15 acceptance criteria as a single verification pass. Any failur
 
   Expected: the task format flags are still recognizable. The absence of an `**Execution Pattern:**` header does not invalidate the plan (R9).
 
-- [ ] **Step 8: Verify forward compatibility — a new plan declares the field (AC15)**
+- [x] **Step 8: Verify forward compatibility — a new plan declares the field (AC15)**
 
   Any plan written after Cycle 1 (including this plan itself) must declare an `**Execution Pattern:**` header. Confirm this plan declares it:
 
@@ -777,7 +777,7 @@ Runs the spec's 15 acceptance criteria as a single verification pass. Any failur
 
   Expected: at least one match (the header declaration: `**Execution Pattern:** Fan-out/Fan-in`).
 
-- [ ] **Step 9: Final commit (if any verification found issues, commit fixes)**
+- [x] **Step 9: Final commit (if any verification found issues, commit fixes)**
 
   If all 8 verification steps passed with no changes, no commit is needed — just report success. If any step required a fix, commit the fix:
 
@@ -787,6 +787,11 @@ Runs the spec's 15 acceptance criteria as a single verification pass. Any failur
   ```
 
 **Done when:** All 15 acceptance criteria pass verification. Any failures have been fixed and committed. The execute agent returns to the lead with a pass report and pointers to the commits.
+
+#### What Was Built
+- **Deviations:** None. Read-only verification sweep; no files modified, no fixes needed — all 15 ACs passed on the first run. Step 9 (final commit) was a no-op.
+- **Review changes:** None. Task 5 is itself the verification gate — skipping `gigo:verify` is correct here because there is no artifact to judge against spec or craft criteria. The lead spot-checked AC6, AC7, AC11, AC13 against the merged state on main to confirm the subagent's report before accepting.
+- **Notes for downstream:** One incidental finding worth recording for future spec authors: the plan's Step 7 verification command `rg "^\*\*blocks:\*\*|^\*\*blocked-by:\*\*|^\*\*parallelizable:\*\*"` does not reliably match when run as a combined alternation because shell escaping interacts with rg's pattern parser. Running each pattern individually works. This is a command defect in the plan, not an artifact defect — the backwards-compatibility guarantee itself holds. Consider splitting multi-pattern rg commands into per-pattern runs in future plans.
 
 ---
 
