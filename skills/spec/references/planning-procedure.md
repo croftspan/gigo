@@ -30,7 +30,11 @@ Before writing tasks, confirm the spec is appropriately scoped:
 - If it wasn't, suggest breaking into separate plans — one per subsystem
 - Each plan should produce working, testable software on its own
 
-## 2. Map File Structure
+## 2. Pick Execution Pattern
+
+Before mapping file structure, read `references/execution-patterns.md` and pick the pattern that matches the work's shape. Declare the chosen pattern in the plan header as `**Execution Pattern:** <name>`. For multi-phase plans, declare a pattern per phase under each phase heading. **Supervisor is the default** when nothing else fits — but don't name a pattern just to name something.
+
+## 3. Map File Structure
 
 Before defining tasks, map out which files will be created or modified and what each one is responsible for. This is where decomposition decisions get locked in.
 
@@ -41,7 +45,7 @@ Before defining tasks, map out which files will be created or modified and what 
 
 This structure informs task decomposition. Each task should produce self-contained changes that make sense independently.
 
-## 3. Plan Document Header
+## 4. Plan Document Header
 
 Every plan starts with this header:
 
@@ -55,6 +59,8 @@ Every plan starts with this header:
 
 **Goal:** [One sentence describing what this builds]
 
+**Execution Pattern:** [Pattern name — see references/execution-patterns.md]
+
 **Architecture:** [2-3 sentences about approach]
 
 **Tech Stack:** [Key technologies/libraries]
@@ -62,7 +68,7 @@ Every plan starts with this header:
 ---
 ```
 
-## 4. Task Format
+## 5. Task Format
 
 Each task follows this structure:
 
@@ -99,7 +105,7 @@ git commit -m "feat: add specific feature"
 ```
 ````
 
-## 5. Dependency Graph Rules
+## 6. Dependency Graph Rules
 
 Every task declares its dependencies:
 
@@ -109,7 +115,7 @@ Every task declares its dependencies:
 
 The dependency graph determines execution order. `gigo:execute` uses it to dispatch tasks — potentially in parallel when tasks are independent.
 
-## 6. Bite-Sized Task Granularity
+## 7. Bite-Sized Task Granularity
 
 Each step is one action (2-5 minutes of work):
 
@@ -121,7 +127,7 @@ Each step is one action (2-5 minutes of work):
 
 If a step takes longer than 5 minutes, it's too big. Break it down.
 
-## 7. No Placeholders
+## 8. No Placeholders
 
 Every step must contain the actual content a worker needs. These are plan failures — never write them:
 
@@ -132,19 +138,19 @@ Every step must contain the actual content a worker needs. These are plan failur
 - Steps that describe what to do without showing how (code blocks required for code steps)
 - References to types, functions, or methods not defined in any task
 
-## 8. Plan Self-Review
+## 9. Plan Self-Review
 
 After writing the complete plan, review it against the spec:
 
-**8a. Spec coverage:** Skim each section/requirement in the spec. Can you point to a task that implements it? If a requirement has no task, add the task.
+**9a. Spec coverage:** Skim each section/requirement in the spec. Can you point to a task that implements it? If a requirement has no task, add the task.
 
-**8b. Placeholder scan:** Search the plan for any of the patterns from section 7 above. Fix them.
+**9b. Placeholder scan:** Search the plan for any of the patterns from section 8 above. Fix them.
 
-**8c. Type consistency:** Do the types, method signatures, and property names used in later tasks match what you defined in earlier tasks? A function called `clearLayers()` in Task 3 but `clearFullLayers()` in Task 7 is a bug.
+**9c. Type consistency:** Do the types, method signatures, and property names used in later tasks match what you defined in earlier tasks? A function called `clearLayers()` in Task 3 but `clearFullLayers()` in Task 7 is a bug.
 
 Fix issues inline. No need to re-review — just fix and move on.
 
-## 9. Execution Handoff
+## 10. Execution Handoff
 
 After saving the plan and getting user approval:
 
@@ -152,7 +158,7 @@ After saving the plan and getting user approval:
 
 If yes, invoke `gigo:execute`.
 
-## 10. Specs and Plans File Locations
+## 11. Specs and Plans File Locations
 
 - Specs save to: `docs/gigo/specs/YYYY-MM-DD-<topic>-design.md`
 - Plans save to: `docs/gigo/plans/YYYY-MM-DD-<feature-name>.md`
