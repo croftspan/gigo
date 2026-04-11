@@ -59,6 +59,12 @@ Read this catalog during plan writing, before decomposing tasks into a dependenc
 **blocks:** 4
 **blocked-by:** 1
 **parallelizable:** true (with Task 2)
+
+### Task 4: Collect and synthesize
+
+**blocks:** []
+**blocked-by:** 2, 3
+**parallelizable:** false
 ```
 
 **Gotchas.**
@@ -214,6 +220,13 @@ Read this catalog during plan writing, before decomposing tasks into a dependenc
 
 **Plan shape.**
 ```markdown
+### Task 1: Setup
+
+**blocks:** 2, 3, 4
+**blocked-by:** []
+**parallelizable:** false
+**review-lens:** (none — setup task)
+
 ### Task 2: Build authentication flow
 
 **blocks:** 5
