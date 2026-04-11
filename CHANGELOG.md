@@ -19,9 +19,18 @@
 
 - **Boundaries nudge.** `/spec` Conventions Section now prompts spec writers to list integration boundaries (API-to-consumer, DB-to-API, config-to-code) under a "Boundaries" heading so reviewers know which seams to check.
 
+### Execution Pattern Catalog
+
+- **Five named execution patterns.** New reference `skills/spec/references/execution-patterns.md` documents Supervisor, Pipeline, Fan-out/Fan-in, Producer-Reviewer, and Expert Pool with uniform entries (Definition, When to use, GIGO mapping, Plan shape, Gotchas). Plans now have vocabulary for their execution shape instead of implicitly defaulting to Supervisor. Adapted from harness's six-pattern catalog, omitting Hierarchical Delegation.
+- **Plans declare their shape.** `gigo:spec`'s planning procedure gained a "Pick Execution Pattern" step, and the plan document template now includes a `**Execution Pattern:**` header field between `**Goal:**` and `**Architecture:**`. Multi-phase plans can declare per-phase patterns. `gigo:execute` is untouched — the field is metadata that existing execution ignores, preserving backwards compatibility for plans written before the catalog landed.
+- **Two new worked examples.** `example-plan.md` gained a Fan-out/Fan-in example (market report writing) and a Pipeline example (literature review synthesis), both in non-software domains to reinforce that patterns are domain-agnostic. The three existing examples got their new header field, and the Large Task example demonstrates per-phase declarations (Phase 1 Pipeline → Phase 2 Fan-out/Fan-in → Phase 3-4 Supervisor).
+- **Expert Pool routes review, not workers.** The Expert Pool entry explicitly states workers stay bare (Phase 7 research finding holds) — the pattern introduces a `review-lens:` task tag that `gigo:verify` will later consume to apply the matching persona's quality bars. For Cycle 1 the tag is metadata-only; enforcement is a future enhancement.
+- **Cycle 1 of 2.** This catalog is Part A of a two-cycle proposal. Part B (Agent Teams rebuild in `gigo:execute`) is a separate future spec run.
+
 ### New References
 
 - `skills/gigo/references/boundary-mismatch-patterns.md` — Canonical taxonomy of 6 boundary-mismatch pattern categories (BM-1 Shape Mismatch, BM-2 Convention Drift, BM-3 Reference Mismatch, BM-4 Contract Gap, BM-5 Temporal Shape Mismatch, BM-6 False Positive Integration) with a 9-row detection heuristics table. Colocated with the gigo skill so Step 6.5's skill-relative path resolves at runtime.
+- `skills/spec/references/execution-patterns.md` — 5-pattern execution catalog (Supervisor, Pipeline, Fan-out/Fan-in, Producer-Reviewer, Expert Pool) loaded on demand during plan writing. Domain-agnostic — applies to code, writing, and research alike.
 
 ## v0.11.0-beta (2026-03-31)
 
