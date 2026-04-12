@@ -1,6 +1,6 @@
 ---
 name: execute
-description: "Execute implementation plans. Lead dispatches bare worker subagents per task, invokes gigo:verify after each, tracks progress via checkpoints. Falls back to inline if subagents unavailable. Agent teams available as experimental opt-in. Use when you have an approved plan from gigo:blueprint."
+description: "Execute implementation plans. Lead dispatches bare worker subagents per task, invokes gigo:verify after each, tracks progress via checkpoints. Falls back to inline if subagents unavailable. Use when you have an approved plan from gigo:blueprint."
 ---
 
 # Execute
@@ -29,7 +29,6 @@ Read `.claude/references/verbosity.md` if it exists. If `level: minimal`, announ
    > "Ready to execute. Available options:
    > 1. **Subagents** (recommended) — fresh worker per task, parallel dispatch for independent tasks, lead-managed review.
    > 2. **Inline** — sequential in this session, no isolation. Good for small plans or debugging.
-   > 3. **Agent teams** (experimental opt-in) — full parallelization via shared task list, hook-enforced review. Requires `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS`.
    >
    > Which route?"
 
@@ -130,27 +129,9 @@ Do NOT skip this step. Do NOT move to the next task without review passing.
 
 ---
 
-## Tier 3: Agent Teams (Experimental Opt-In)
+## Future: Agent Teams
 
-Available when the operator specifically wants it and `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` is enabled. Not recommended as default due to: auto-claim race conditions, forced CLAUDE.md loading on teammates, significantly higher token cost, no session resume, and unproven hook integration.
-
-**If the operator chooses agent teams:**
-
-1. **Set up review hook.** The hook must exist BEFORE tasks are dispatched — see `references/review-hook.md`.
-2. **Create tasks in shared task list.** Use `TaskCreate` with full task text in description.
-3. **Pre-assign tasks** to specific workers using `TaskUpdate` with `owner`. Do NOT rely on auto-claim — it defeats parallelism (one fast worker grabs everything).
-4. **Set dependencies.** Use `addBlocks`/`addBlockedBy` to match the plan's dependency graph.
-5. **Spawn teammates** with the agent team prompt from `references/teammate-prompts.md` (Tier 3 variant). Select model per task complexity. Team sizing: ~5-6 tasks per teammate.
-6. **TaskCompleted hook** invokes `gigo:verify` before any task can be marked done.
-
-See `references/review-hook.md` for hook configuration and the full agent teams flow.
-
-**Known issues:**
-- Auto-claim lets one fast worker grab all tasks (mitigated by pre-assignment)
-- CLAUDE.md auto-loads on all teammates (can't make them truly bare)
-- No session resume — teammates die on crash, task list has stale state
-- Significantly more tokens than subagents
-- Hook integration with gigo:verify is unproven
+Agent Teams are not a tier. See `references/agent-teams-design.md` for the target-state design — how teams would fit when the Claude Code Agent Teams API stabilizes and the bare-worker research tension resolves. Not shipped. Not wired up.
 
 ---
 
@@ -219,7 +200,7 @@ After a task passes both review stages, update the plan document before moving t
 
 ## References
 
-- `references/teammate-prompts.md` — Implementation and fix prompt templates (all tiers)
+- `references/teammate-prompts.md` — Implementation and fix prompt templates for Subagents (Inline has no template — the lead executes directly)
 - `references/model-selection.md` — When to use which model tier
-- `references/review-hook.md` — TaskCompleted hook configuration (agent teams only)
 - `references/checkpoint-format.md` — Checkpoint syntax, resume procedure, edge cases
+- `references/agent-teams-design.md` — Target-state design doc. Not shipped, not wired up. Loaded on demand when a reader follows the Future pointer.
