@@ -19,6 +19,13 @@
 
 - **Boundaries nudge.** `/spec` Conventions Section now prompts spec writers to list integration boundaries (API-to-consumer, DB-to-API, config-to-code) under a "Boundaries" heading so reviewers know which seams to check.
 
+### Agent Teams Rebuild (Cycle 2 of Execution Architecture Catalog)
+
+- **Tier 3 removed from `/execute`.** Ripped out the experimental Agent Teams opt-in from `SKILL.md`, `teammate-prompts.md`, `model-selection.md`, and `checkpoint-format.md`. Deleted `review-hook.md` entirely. Execute now presents two tiers: Subagents (primary) and Inline (fallback). Four documented issues drove the removal: auto-claim race conditions, forced `CLAUDE.md` loading on teammates (violating the bare-worker research finding), no session resume on crash, and higher token cost.
+- **Target-state design doc.** New `skills/execute/references/agent-teams-design.md` (279 lines, reference tier) blueprints how Agent Teams would integrate when the Claude Code API stabilizes. Nine sections: Status, Why Teams, Decision Tree, Team Composition, Data-Passing Protocols, Team Lifecycle, Phase 7 (research) Reconciliation, Open Questions, Audit Trail. Not shipped, not wired up — loaded on demand via a `## Future: Agent Teams` pointer in SKILL.md.
+- **Code stays on subagents.** The design doc's decision tree routes all code-producing tasks to Subagents unconditionally — enforcing the bare-worker research finding that bare workers produce better code. Teams are restricted to non-code workflows (research synthesis, multi-perspective review, iterative refinement).
+- **Cycle 2 of 2.** Completes the Execution Architecture Catalog proposal. Cycle 1 (Execution Pattern Catalog) shipped the five-pattern catalog for `gigo:spec`; Cycle 2 cleaned up `gigo:execute`'s experimental debt and preserved the Agent Teams design for future implementation.
+
 ### Execution Pattern Catalog
 
 - **Five named execution patterns.** New reference `skills/spec/references/execution-patterns.md` documents Supervisor, Pipeline, Fan-out/Fan-in, Producer-Reviewer, and Expert Pool with uniform entries (Definition, When to use, GIGO mapping, Plan shape, Gotchas). Plans now have vocabulary for their execution shape instead of implicitly defaulting to Supervisor. Adapted from harness's six-pattern catalog, omitting Hierarchical Delegation.
