@@ -69,7 +69,7 @@ Every improvement to GIGO's review system was reviewed by GIGO's review system. 
 |---|---|
 | `gigo` | Builds your expert team from scratch. Active by default from the first message |
 | `gigo:blueprint` | Turns ideas into specs and implementation plans |
-| `gigo:execute` | Runs plans with agent teams. Workers get the spec, not the rules |
+| `gigo:execute` | Runs plans by dispatching parallel subagents. Workers get the spec, not the rules |
 | `gigo:verify` | Two-stage review: spec compliance + output quality |
 | `gigo:snap` | Session-end audit. Projects get sharper, not bigger |
 | `gigo:retro` | Turns session friction into project improvements. Every session teaches your project to be better |
