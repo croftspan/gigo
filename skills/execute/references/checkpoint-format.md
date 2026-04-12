@@ -36,7 +36,7 @@ After each task's last step, append a checkpoint comment:
 | `sha` | Short git commit hash | Verify the work still exists on disk |
 | `status` | `done`, `in-review`, `in-progress`, `blocked` | Where the task was when interrupted |
 | `reviewed` | `pass`, `issues-found`, `ask-operator-pending`, `ask-operator-resolved`, `pending` | Review state at interruption |
-| `tier` | `1`, `2`, `3` | Which execution tier was running |
+| `tier` | `1`, `2` | Which execution tier was running |
 
 ## Resume Detection Procedure
 
@@ -91,16 +91,6 @@ Wait for operator decision before proceeding.
 
 For the primary execution path (subagents and inline), there's no shared state to reconcile. Checkpoints in the plan file are the sole source of truth. The lead reads them and picks up where it left off.
 
-### Agent Teams (Tier 3, if used)
-
-On resume, the shared task list may have stale state from a previous session. Reconciliation rules:
-
-1. Checkpoint state wins over task list state.
-2. Update the task list to match checkpoints before spawning teammates.
-3. Mark `done` tasks as complete in the task list.
-4. Mark `in-review` and `in-progress` tasks as available for claiming.
-5. Rebuild the dependency graph from the plan — don't trust the previous session's task list dependencies.
-
 ## Edge Cases
 
 **Plan file modified between sessions:** If the plan document was edited (tasks added, reordered, or descriptions changed) since checkpoints were written, warn the operator. Checkpoint task numbers may not match current task numbers. The lead should verify by matching task *names*, not numbers.
@@ -110,8 +100,6 @@ On resume, the shared task list may have stale state from a previous session. Re
 **A `done` task's tests now fail:** This can happen if a later task introduced a regression, or if external dependencies changed. The checkpoint says "done" but the code is broken. The lead should run the full test suite before resuming and flag any failures in completed tasks.
 
 **Partial checkpoint (crash mid-write):** If the checkpoint comment is malformed or incomplete, treat the task as `in-progress`. Better to re-do work than to skip a broken task.
-
-**Agent teams race window (Tier 3 only):** In agent teams, the review hook passes (task marked complete in task list) before the lead writes the addendum and checkpoint. If the session crashes in this window, the task list says "complete" but no checkpoint exists. On resume, "checkpoint state wins" means this task would be treated as not started and re-dispatched. This is wasteful but not destructive — the work exists in git. This race window doesn't exist in the subagent tier since the lead controls the full cycle.
 
 **Operator decided, worker implementing:** When the operator resolves an ask-operator item and the worker starts implementing the decision, write a checkpoint with `reviewed=ask-operator-resolved`. This distinguishes "operator hasn't responded yet" (`ask-operator-pending`) from "operator decided, implementation in progress" (`ask-operator-resolved`). On resume, `ask-operator-resolved` means dispatch the worker with the operator's decision — don't re-ask the operator.
 
