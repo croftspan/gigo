@@ -32,7 +32,6 @@ AUDIT_TEXT=$(echo "$AUDIT_OUTPUT" | jq -r '.result // "ERROR: no result"')
 echo "$AUDIT_OUTPUT" > "$RESULTS_DIR/boundary-audit-raw.json"
 
 echo "Running judge..."
-DEFECT_MANIFEST=$(cat "$FIXTURE_DIR/DEFECT-MANIFEST.md")
 RUBRIC_TEXT=$(cat "$RUBRIC")
 JUDGE_TEMPLATE=$(cat "$JUDGE_PROMPT")
 JUDGE_INPUT="${JUDGE_TEMPLATE//\{AUDIT_OUTPUT\}/$AUDIT_TEXT}"

@@ -34,8 +34,8 @@ Before saving anything new, audit the existing rules. This runs every time.
 
 | Learning type | Where it goes |
 |---|---|
-| Migration gotcha | `.claude/rules/standards.md` → Anti-Patterns |
-| API pattern | `.claude/references/rails-patterns.md` |
+| Integration gotcha | `.claude/rules/standards.md` → Anti-Patterns |
+| API pattern | `.claude/references/integration-patterns.md` |
 | Test insight | `.claude/rules/standards.md` → Quality Gates |
 | Workflow improvement | `.claude/rules/workflow.md` |
 | Deep reference material | `.claude/references/{topic}.md` |
