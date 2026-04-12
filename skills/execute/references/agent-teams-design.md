@@ -41,7 +41,7 @@ directly — reviewer-in-the-loop without lead dispatch overhead.
 
 These three capabilities add value in non-code workflows with iterative refinement or
 cross-agent negotiation: long-form writing, research synthesis, multi-perspective review.
-They do NOT add value in single-pass code generation. Code benefits from bare workers —
+These benefits do not apply to single-pass code generation. Code benefits from bare workers —
 teams cannot be bare (see §7). Routing code tasks through a team adds persona loading
 cost with no quality gain.
 
