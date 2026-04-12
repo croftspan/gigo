@@ -316,4 +316,4 @@ Results saved to: evals/results/validation-YYYY-MM-DD-HHMMSS/
 - Modifications to existing eval scripts (`run-eval.sh`, `score-eval.sh`, `judge-prompt.md`).
 - Changes to the 4 feature files themselves.
 
-<!-- approved: spec PENDING -->
+<!-- approved: spec 2026-04-12T06:14:22 by:Eaven -->
