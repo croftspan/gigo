@@ -135,7 +135,7 @@ directory. A workspace convention could be introduced later if teams need it. Th
 
 **Return-value**
 Not applicable inside teams. Return values are the subagent model's output channel. Team
-members communicate through the three channels above, not return values.
+members communicate through the three active channels above (Message, Task, File), not return values.
 
 ---
 
