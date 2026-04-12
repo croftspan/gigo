@@ -946,3 +946,59 @@ Return the report. Do NOT commit anything from this task — it is read-only.
 - The Phase 7 (research) bare-worker rationale in `teammate-prompts.md` is preserved verbatim
 
 <!-- approved: plan 2026-04-12T04:32:15Z by:Eaven -->
+
+---
+
+## Execution Results
+
+**Executed:** 2026-04-12 | **Tier:** Subagents (worktree isolation) | **Verification:** 24/24 AC PASS
+
+### Task 1 — SKILL.md strip + Future pointer (R2+R7)
+#### What Was Built
+- **Deviations:** None
+- **Review changes:** None
+- **Notes for downstream:** SKILL.md 225→207 lines. `## Future: Agent Teams` at line 132 with `---` separators. References bullet for `agent-teams-design.md` at line 206.
+
+### Task 2 — Delete review-hook.md (R1)
+#### What Was Built
+- **Deviations:** None
+- **Review changes:** None
+- **Notes for downstream:** File deleted via `git rm`. Commit `bdcc0d7`.
+
+### Task 3 — Strip teammate-prompts.md (R3)
+#### What Was Built
+- **Deviations:** None
+- **Review changes:** None
+- **Notes for downstream:** 150→109 lines. Phase 7 research KEEP block preserved at lines 105-109. "Why explicit task assignment (Tier 3)" bullet removed.
+
+### Task 4 — Strip model-selection.md (R4)
+#### What Was Built
+- **Deviations:** None — line count 42→29 (plan predicted 30; actual 29 due to trailing blank line handling).
+- **Review changes:** None
+- **Notes for downstream:** File now ends with `## For Review Subagents` section.
+
+### Task 5 — Fix README.md line 72 (R5)
+#### What Was Built
+- **Deviations:** None
+- **Review changes:** None
+- **Notes for downstream:** Line 72 now reads "Runs plans by dispatching parallel subagents."
+
+### Task 6 — Strip checkpoint-format.md (R8)
+#### What Was Built
+- **Deviations:** None — line count 125→113 (plan predicted ~113; exact).
+- **Review changes:** None
+- **Notes for downstream:** `tier` field values now `1, 2`. Agent Teams subsection and race-window edge case removed.
+
+### Task 7 — Create agent-teams-design.md (R6)
+#### What Was Built
+- **Deviations:** None
+- **Review changes:** AC19 wording fix — "They do NOT add value" changed to "These benefits do not apply" to align with spec's verification grep pattern.
+- **Notes for downstream:** 279 lines, 9 sections, all Phase 7 references qualified. Reference-tier only — not auto-loaded.
+
+### Task 8 — Verification sweep (24 ACs)
+#### What Was Built
+- **Deviations:** AC19 initially returned PARTIAL FAIL (grep pattern mismatch, substance correct). Auto-fixed in Task 7 addendum.
+- **Review changes:** None
+- **Notes for downstream:** 24/24 PASS after AC19 fix.
+
+<!-- checkpoint: all-tasks-complete sha=fc9e27d tier=1 wave=complete tasks=1,2,3,4,5,6,7,8 -->
