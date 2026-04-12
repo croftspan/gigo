@@ -24,7 +24,7 @@
 - Create: `evals/fixtures/integration-api/src/api/tasks.ts`
 - Create: `evals/fixtures/integration-api/src/api/projects.ts`
 
-- [ ] **Step 1: Create shared types**
+- [x] **Step 1: Create shared types**
 
 Write `evals/fixtures/integration-api/src/types.ts` — the shared type definitions. Note: `created_at` is snake_case here (BM-2 setup — API will serialize as camelCase).
 
@@ -62,7 +62,7 @@ export interface PaginationParams {
 }
 ```
 
-- [ ] **Step 2: Create tasks API**
+- [x] **Step 2: Create tasks API**
 
 Write `evals/fixtures/integration-api/src/api/tasks.ts`. Contains BM-1 (returns envelope `{ data, total }`), BM-2 (serializes `createdAt` camelCase), and BM-6 (DELETE returns `{ deleted: true }` not the task object).
 
@@ -125,7 +125,7 @@ export async function deleteTask(id: string): Promise<{ deleted: boolean }> {
 }
 ```
 
-- [ ] **Step 3: Create projects API**
+- [x] **Step 3: Create projects API**
 
 Write `evals/fixtures/integration-api/src/api/projects.ts`. Contains BM-5 (POST returns 202 with `{ id, status: 'creating' }` — no `memberCount` field until status is `ready`).
 
@@ -167,7 +167,7 @@ export async function listProjects(): Promise<Project[]> {
 }
 ```
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add evals/fixtures/integration-api/src/types.ts \
@@ -192,7 +192,7 @@ git commit -m "evals: add integration-api fixture — types and API layer"
 - Create: `evals/fixtures/integration-api/src/models/task-status.ts`
 - Create: `evals/fixtures/integration-api/src/models/task-service.ts`
 
-- [ ] **Step 1: Create useTasks hook**
+- [x] **Step 1: Create useTasks hook**
 
 Write `evals/fixtures/integration-api/src/hooks/useTasks.ts`. Contains consumer side of BM-1 (expects `Task[]` not envelope), BM-2 (accesses `task.created_at` but API sends `createdAt`), and BM-6 (accesses `response.task` after DELETE but API returns `{ deleted: true }`).
 
@@ -240,7 +240,7 @@ export function useTasks(page: number = 1, limit: number = 25) {
 }
 ```
 
-- [ ] **Step 2: Create useProjects hook**
+- [x] **Step 2: Create useProjects hook**
 
 Write `evals/fixtures/integration-api/src/hooks/useProjects.ts`. Contains consumer side of BM-5 (immediately accesses `response.memberCount` after POST, but POST only returns `{ id, status: 'creating' }`).
 
@@ -282,7 +282,7 @@ export function useProjects() {
 }
 ```
 
-- [ ] **Step 3: Create Sidebar component**
+- [x] **Step 3: Create Sidebar component**
 
 Write `evals/fixtures/integration-api/src/components/Sidebar.tsx`. Contains BM-3 (links to `/tasks/new` but the actual page is at `/dashboard/tasks/new`).
 
@@ -321,7 +321,7 @@ export function Sidebar({ currentPath }: SidebarProps) {
 }
 ```
 
-- [ ] **Step 4: Create task creation page**
+- [x] **Step 4: Create task creation page**
 
 Write `evals/fixtures/integration-api/src/app/dashboard/tasks/new/page.tsx`. The actual page route — URL is `/dashboard/tasks/new`, not `/tasks/new` (BM-3 target).
 
@@ -360,7 +360,7 @@ export default function NewTaskPage() {
 }
 ```
 
-- [ ] **Step 5: Create status model and service**
+- [x] **Step 5: Create status model and service**
 
 Write `evals/fixtures/integration-api/src/models/task-status.ts`. Defines 5 statuses and the transition map (BM-4 setup).
 
@@ -413,7 +413,7 @@ export class TaskService {
 }
 ```
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add evals/fixtures/integration-api/src/hooks/ \
@@ -440,7 +440,7 @@ git commit -m "evals: add integration-api fixture — hooks, components, models"
 - Create: `evals/fixtures/integration-api/.claude/references/integration-patterns.md`
 - Create: `evals/fixtures/integration-api/DEFECT-MANIFEST.md`
 
-- [ ] **Step 1: Create CLAUDE.md**
+- [x] **Step 1: Create CLAUDE.md**
 
 Write `evals/fixtures/integration-api/CLAUDE.md`. 3 personas following existing fixture pattern (~62 lines).
 
@@ -497,7 +497,7 @@ A Next.js app with typed API routes, React hooks, and a status-driven task model
 - **Line cap:** ~60 lines per rules file. Deep patterns go in `.claude/references/`.
 ```
 
-- [ ] **Step 2: Create rules files**
+- [x] **Step 2: Create rules files**
 
 Write `evals/fixtures/integration-api/.claude/rules/standards.md`:
 
@@ -549,7 +549,7 @@ Before finalizing any response, step back and verify:
 
 Write `evals/fixtures/integration-api/.claude/rules/snap.md` — copy from the existing rails-api fixture's snap.md (already read in system context, same content applies).
 
-- [ ] **Step 3: Create reference files**
+- [x] **Step 3: Create reference files**
 
 Write `evals/fixtures/integration-api/.claude/references/review-criteria.md`:
 
@@ -595,7 +595,7 @@ Consumers must handle the lifecycle stage they're in, not assume the final shape
 When a model defines N statuses, the service layer must handle transitions for all N statuses. A status that exists in the type but has no transition logic is a contract gap — code that tries to transition through it will fail at runtime.
 ```
 
-- [ ] **Step 4: Create DEFECT-MANIFEST.md**
+- [x] **Step 4: Create DEFECT-MANIFEST.md**
 
 Write `evals/fixtures/integration-api/DEFECT-MANIFEST.md`. This file is the test key — excluded from Claude's context during testing.
 
@@ -643,7 +643,7 @@ This file documents the 6 seeded boundary-mismatch bugs planted in this fixture.
 **Runtime effect:** `response.task` is `undefined`. Undo feature silently fails — no error thrown, but the deleted task data is lost.
 ```
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add evals/fixtures/integration-api/CLAUDE.md \
@@ -666,7 +666,7 @@ git commit -m "evals: add integration-api fixture — assembly and defect manife
 - Create: `evals/validation/pattern-judge.md`
 - Create: `evals/validation/matrix-judge.md`
 
-- [ ] **Step 1: Create boundary-mismatch judge prompt**
+- [x] **Step 1: Create boundary-mismatch judge prompt**
 
 Write `evals/validation/boundary-judge.md`:
 
@@ -711,7 +711,7 @@ Respond with ONLY a JSON array. No other text, no markdown fences.
 ]
 ```
 
-- [ ] **Step 2: Create boundary-mismatch rubric**
+- [x] **Step 2: Create boundary-mismatch rubric**
 
 Write `evals/validation/boundary-mismatch-rubric.md`. This is the defect manifest reformatted for the judge — the content matches Task 3's DEFECT-MANIFEST.md but is structured as a rubric for scoring.
 
@@ -745,7 +745,7 @@ Write `evals/validation/boundary-mismatch-rubric.md`. This is the defect manifes
 **Minimum evidence:** Must identify that the DELETE response shape doesn't match what the hook expects.
 ```
 
-- [ ] **Step 3: Create execution pattern judge prompt**
+- [x] **Step 3: Create execution pattern judge prompt**
 
 Write `evals/validation/pattern-judge.md`:
 
@@ -785,7 +785,7 @@ Respond with ONLY a JSON object. No other text, no markdown fences.
 { "pattern": "Pipeline", "correct": true, "evidence": "The plan describes sequential execution where each step depends on the previous step's output" }
 ```
 
-- [ ] **Step 4: Create phase selection matrix judge prompt**
+- [x] **Step 4: Create phase selection matrix judge prompt**
 
 Write `evals/validation/matrix-judge.md`:
 
@@ -833,7 +833,7 @@ Respond with ONLY a JSON array. No other text, no markdown fences.
 ]
 ```
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add evals/validation/boundary-judge.md \
@@ -854,7 +854,7 @@ git commit -m "evals: add judge prompts and rubric for feature validation"
 **Files:**
 - Create: `evals/prompts/execution-patterns.txt`
 
-- [ ] **Step 1: Create prompts file**
+- [x] **Step 1: Create prompts file**
 
 Write `evals/prompts/execution-patterns.txt`. Three prompts, one per pattern. Uses `P|` axis prefix matching existing format.
 
@@ -864,7 +864,7 @@ P|Plan how to execute this work: Audit this codebase for three independent conce
 P|Plan how to execute this work: Write the new payment processing endpoint with full implementation including validation, error handling, and database operations. Then have the implementation independently reviewed against the API design spec and the project's quality gates to identify any issues before making revisions.
 ```
 
-- [ ] **Step 2: Commit**
+- [x] **Step 2: Commit**
 
 ```bash
 git add evals/prompts/execution-patterns.txt
@@ -882,7 +882,7 @@ git commit -m "evals: add execution pattern planning prompts"
 **Files:**
 - Create: `evals/validation/run-boundary-test.sh`
 
-- [ ] **Step 1: Write the script**
+- [x] **Step 1: Write the script**
 
 Write `evals/validation/run-boundary-test.sh`:
 
@@ -966,7 +966,7 @@ echo "{\"test\": \"boundary-mismatch\", \"detected\": $DETECTED, \"total\": $TOT
 [ "$RESULT" = "PASS" ] && exit 0 || exit 1
 ```
 
-- [ ] **Step 2: Make executable and commit**
+- [x] **Step 2: Make executable and commit**
 
 ```bash
 chmod +x evals/validation/run-boundary-test.sh
@@ -985,7 +985,7 @@ git commit -m "evals: add boundary-mismatch test script"
 **Files:**
 - Create: `evals/validation/run-pattern-test.sh`
 
-- [ ] **Step 1: Write the script**
+- [x] **Step 1: Write the script**
 
 Write `evals/validation/run-pattern-test.sh`:
 
@@ -1083,7 +1083,7 @@ echo "{\"test\": \"execution-patterns\", \"correct\": $CORRECT, \"total\": $TOTA
 [ "$RESULT" = "PASS" ] && exit 0 || exit 1
 ```
 
-- [ ] **Step 2: Make executable and commit**
+- [x] **Step 2: Make executable and commit**
 
 ```bash
 chmod +x evals/validation/run-pattern-test.sh
@@ -1102,7 +1102,7 @@ git commit -m "evals: add execution pattern test script"
 **Files:**
 - Create: `evals/validation/run-matrix-test.sh`
 
-- [ ] **Step 1: Write the script**
+- [x] **Step 1: Write the script**
 
 Write `evals/validation/run-matrix-test.sh`:
 
@@ -1196,7 +1196,7 @@ echo "{\"test\": \"phase-matrix\", \"identified\": $IDENTIFIED, \"total\": $TOTA
 [ "$RESULT" = "PASS" ] && exit 0 || exit 1
 ```
 
-- [ ] **Step 2: Make executable and commit**
+- [x] **Step 2: Make executable and commit**
 
 ```bash
 chmod +x evals/validation/run-matrix-test.sh
@@ -1215,7 +1215,7 @@ git commit -m "evals: add phase selection matrix test script"
 **Files:**
 - Create: `evals/validation/run-cleanup-verify.sh`
 
-- [ ] **Step 1: Write the script**
+- [x] **Step 1: Write the script**
 
 Write `evals/validation/run-cleanup-verify.sh`:
 
@@ -1312,7 +1312,7 @@ echo "{\"test\": \"cleanup-verify\", \"passed\": $CHECKS_PASSED, \"total\": $CHE
 [ "$RESULT" = "PASS" ] && exit 0 || exit 1
 ```
 
-- [ ] **Step 2: Make executable and commit**
+- [x] **Step 2: Make executable and commit**
 
 ```bash
 chmod +x evals/validation/run-cleanup-verify.sh
@@ -1331,7 +1331,7 @@ git commit -m "evals: add Agent Teams cleanup verification script"
 **Files:**
 - Create: `evals/validation/run-all.sh`
 
-- [ ] **Step 1: Write the script**
+- [x] **Step 1: Write the script**
 
 Write `evals/validation/run-all.sh`:
 
@@ -1457,7 +1457,7 @@ echo "Results saved to: $RESULTS_DIR"
 [ "$TESTS_PASSED" -eq "$TESTS_TOTAL" ] && exit 0 || exit 1
 ```
 
-- [ ] **Step 2: Make executable and commit**
+- [x] **Step 2: Make executable and commit**
 
 ```bash
 chmod +x evals/validation/run-all.sh

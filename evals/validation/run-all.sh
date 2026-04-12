@@ -72,7 +72,7 @@ if "$EVALS_DIR/run-eval.sh" 2>&1; then
     "$EVALS_DIR/score-eval.sh" "$LATEST_EVAL" 2>&1
     cp "$LATEST_EVAL/summary.md" "$REGRESSION_DIR/" 2>/dev/null || true
 
-    WIN_PCT=$(grep -oE '[0-9]+%' "$LATEST_EVAL/summary.md" 2>/dev/null | tail -1 | tr -d '%' || echo 0)
+    WIN_PCT=$(grep -oE '[0-9]+%' "$LATEST_EVAL/summary.md" 2>/dev/null | tail -1 | tr -d '%') || WIN_PCT=0
     if [ "$WIN_PCT" -ge 90 ]; then
       TESTS_PASSED=$((TESTS_PASSED + 1))
       RG_RESULT="PASS"

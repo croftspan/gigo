@@ -16,7 +16,7 @@ CHECKS_TOTAL=5
 DETAILS=""
 
 # Check 1: No Tier 3 in execute SKILL.md production sections
-TIER3_HITS=$(grep -c "Tier 3" "$PROJECT_DIR/skills/execute/SKILL.md" 2>/dev/null || echo 0)
+TIER3_HITS=$(grep -c "Tier 3" "$PROJECT_DIR/skills/execute/SKILL.md" 2>/dev/null) || TIER3_HITS=0
 if [ "$TIER3_HITS" -eq 0 ]; then
   echo "  Check 1: No 'Tier 3' in SKILL.md              [CLEAN]"
   CHECKS_PASSED=$((CHECKS_PASSED + 1))
@@ -27,7 +27,7 @@ else
 fi
 
 # Check 2: No TeamCreate or team-scoped SendMessage in SKILL.md
-TEAM_API_HITS=$(grep -cE "TeamCreate|SendMessage.*team" "$PROJECT_DIR/skills/execute/SKILL.md" 2>/dev/null || echo 0)
+TEAM_API_HITS=$(grep -cE "TeamCreate|SendMessage.*team" "$PROJECT_DIR/skills/execute/SKILL.md" 2>/dev/null) || TEAM_API_HITS=0
 if [ "$TEAM_API_HITS" -eq 0 ]; then
   echo "  Check 2: No TeamCreate/SendMessage in SKILL.md [CLEAN]"
   CHECKS_PASSED=$((CHECKS_PASSED + 1))
@@ -38,7 +38,7 @@ else
 fi
 
 # Check 3: No Tier 3 templates in teammate-prompts.md
-TEMPLATE_HITS=$(grep -cE "Tier 3|team\.prompt|team\.template" "$PROJECT_DIR/skills/execute/references/teammate-prompts.md" 2>/dev/null || echo 0)
+TEMPLATE_HITS=$(grep -cE "Tier 3|team\.prompt|team\.template" "$PROJECT_DIR/skills/execute/references/teammate-prompts.md" 2>/dev/null) || TEMPLATE_HITS=0
 if [ "$TEMPLATE_HITS" -eq 0 ]; then
   echo "  Check 3: No Tier 3 templates in prompts         [CLEAN]"
   CHECKS_PASSED=$((CHECKS_PASSED + 1))
@@ -51,7 +51,7 @@ fi
 # Check 4: Design doc exists with status banner
 DESIGN_DOC="$PROJECT_DIR/skills/execute/references/agent-teams-design.md"
 if [ -f "$DESIGN_DOC" ]; then
-  HAS_BANNER=$(head -10 "$DESIGN_DOC" | grep -ciE "not shipped|target.state" 2>/dev/null || echo 0)
+  HAS_BANNER=$(head -10 "$DESIGN_DOC" | grep -ciE "not shipped|target.state" 2>/dev/null) || HAS_BANNER=0
   if [ "$HAS_BANNER" -gt 0 ]; then
     echo "  Check 4: Design doc exists with status banner    [CLEAN]"
     CHECKS_PASSED=$((CHECKS_PASSED + 1))
@@ -66,7 +66,7 @@ else
 fi
 
 # Check 5: No AGENT_TEAMS env var in SKILL.md
-ENV_HITS=$(grep -cE "AGENT_TEAMS|EXPERIMENTAL_AGENT" "$PROJECT_DIR/skills/execute/SKILL.md" 2>/dev/null || echo 0)
+ENV_HITS=$(grep -cE "AGENT_TEAMS|EXPERIMENTAL_AGENT" "$PROJECT_DIR/skills/execute/SKILL.md" 2>/dev/null) || ENV_HITS=0
 if [ "$ENV_HITS" -eq 0 ]; then
   echo "  Check 5: No AGENT_TEAMS env var in SKILL.md     [CLEAN]"
   CHECKS_PASSED=$((CHECKS_PASSED + 1))
