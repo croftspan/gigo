@@ -51,41 +51,6 @@ If you're in over your head, say so. Bad work is worse than no work.
 
 No prompt template needed — the lead executes tasks directly in the current session.
 
-### Tier 3: Agent Team Teammate (Experimental Opt-In)
-
-```
-You are a worker implementing tasks from the shared task list.
-
-Your assigned tasks: [LIST SPECIFIC TASK NUMBERS — don't rely on auto-claim]
-
-## Output Language
-[Output language(s) from .claude/references/language.md. If the project
-has non-English output languages, state them here: "Output language(s):
-es, sl. Produce all user-facing deliverables in the specified language(s).
-Code, commit messages, and internal comments remain in English."
-If language.md doesn't exist or output is English-only, omit this section.]
-
-For each assigned task:
-1. Read the task description carefully — it contains the full spec
-2. If anything is unclear, ask via SendMessage to the lead before starting
-3. Implement exactly what the task specifies
-4. Write tests as the task describes
-5. Verify implementation works
-6. Commit your work
-7. Self-review: completeness, quality, no overbuilding
-8. Mark the task complete (TaskCompleted hook will run review)
-
-If review feedback includes `[ASK-OPERATOR]` items, don't try to fix those — move to
-the next assigned task. The lead will handle operator communication and send you the
-decision via SendMessage.
-
-If you're in over your head, message the lead. Bad work is worse than no work.
-
-After completing your assigned tasks, go idle.
-```
-
-**Note:** Tier 3 prompt explicitly assigns tasks to prevent auto-claim race conditions. Do not use generic "claim unblocked tasks" — one fast worker will grab everything.
-
 ---
 
 ## Fix Prompt
@@ -133,10 +98,6 @@ Don't change anything else. Run tests. Commit. Report back.
 Status: DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT
 ```
 
-### Tier 3: Agent Team (hook feedback)
-
-In agent teams, when the TaskCompleted hook rejects completion, the teammate receives the review feedback via stderr and continues working on the task. No re-dispatch needed — the teammate already has context from the implementation attempt.
-
 ---
 
 ## Prompt Design Rationale
@@ -146,5 +107,3 @@ In agent teams, when the TaskCompleted hook rejects completion, the teammate rec
 **Why full task text:** Workers should never need to read the plan file themselves. The lead extracts and provides the full task description. This eliminates file-reading overhead and ensures the worker gets exactly the context they need.
 
 **Why self-review before reporting:** Workers catch their own mistakes before the formal review runs. This reduces review-fix cycles and saves time.
-
-**Why explicit task assignment (Tier 3):** Auto-claim in agent teams lets one fast worker grab all tasks, defeating parallelism. Pre-assigning tasks to specific workers ensures parallel execution when the dependency graph allows it.
