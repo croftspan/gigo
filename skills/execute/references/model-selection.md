@@ -27,16 +27,3 @@ When in doubt, go one tier up. A slightly over-powered model wastes tokens; an u
 ## For Review Subagents
 
 Use sonnet — review needs judgment but has focused scope.
-
-## For Agent Teams (Tier 3, Opt-In)
-
-Same model guidance applies. Specify model when spawning teammates. Team sizing: ~5-6 tasks per teammate.
-
-| Plan size | Teammates |
-|---|---|
-| 3-6 tasks | 1-2 |
-| 7-12 tasks | 2-3 |
-| 13-18 tasks | 3-4 |
-| 19+ tasks | 4-5 |
-
-Start small. 3 focused teammates outperform 5 scattered ones.
