@@ -43,12 +43,13 @@ for domain in "${DOMAINS[@]}"; do
   cp -r "$DOMAIN_DIR"/* "$ASSEMBLED_TMPDIR/" 2>/dev/null || true
   cp -r "$DOMAIN_DIR"/.claude "$ASSEMBLED_TMPDIR/" 2>/dev/null || true
 
-  # Bare gets source files only — no .claude/ or CLAUDE.md
+  # Bare gets source files only — no .claude/ or CLAUDE.md*
   for f in "$DOMAIN_DIR"/*; do
     fname=$(basename "$f")
-    if [ "$fname" != "CLAUDE.md" ]; then
-      cp -r "$f" "$BARE_TMPDIR/" 2>/dev/null || true
-    fi
+    case "$fname" in
+      CLAUDE.md*) continue ;;
+    esac
+    cp -r "$f" "$BARE_TMPDIR/" 2>/dev/null || true
   done
 
   echo "[$domain] Bare dir: $BARE_TMPDIR"
