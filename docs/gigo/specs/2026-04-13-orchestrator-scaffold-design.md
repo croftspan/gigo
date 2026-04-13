@@ -56,7 +56,7 @@ Before generating files, detect four things:
    - `.flake8`, `pyproject.toml` with `[tool.ruff]` → `ruff`
    - None found → `null`
 
-4. **Local model:** `GET http://localhost:8080/v1/models`. On success, extract `data[0].id` as the model name. On failure (connection refused, timeout), write placeholder config with setup instructions. Same detection as Brief 07 (`skills/execute/references/local-model-routing.md` line 8).
+4. **Local model:** `GET http://localhost:8080/v1/models`. On success, extract `data[0].id` as the model name. On failure (connection refused, timeout), write placeholder config with setup instructions. Same detection as Brief 07 (`skills/execute/references/local-model-routing.md`, Detection section).
 
 #### R3.2: Vault Directory Structure
 
@@ -195,7 +195,7 @@ Contains the ticket frontmatter schema and domain-aware proof-of-work configurat
 
 ```yaml
 type: ticket
-id: TCK-XXXX                        # format: TCK-{phase_number}-{sequence}
+id: TCK-0-000                        # format: TCK-{phase_number}-{zero_padded_sequence}
 title: "..."
 phase: "..."                         # name of the phase this ticket belongs to
 depends_on: []                       # array of ticket IDs this ticket is blocked by
@@ -208,7 +208,7 @@ permission_mode: acceptEdits         # Claude Code permission mode for escalatio
 exit_criteria:                       # concrete, testable criteria (from plan task)
   - "Criterion 1"
 
-produced_files: []                   # file paths created/modified (filled on completion)
+produced_files: []                   # file paths expected to be created/modified (pre-populated from plan, updated on completion)
 model_history: []                    # array of {model, timestamp, result, session_id?}
 
 proof_of_work:
@@ -278,7 +278,7 @@ The skill body is a 10-step state machine written in mechanical, imperative lang
 3. Select next ticket: `status == "ready"` AND every ticket in `depends_on` has `status == "done"`. If multiple qualify, pick the one with the lowest sequence number in its ID.
 4. Update selected ticket: set `status: in_progress`. Append to `model_history`: `{model: "{model_id}", timestamp: "{ISO 8601}", result: "started"}`.
 5. Construct prompt:
-   - System message: read `.claude/references/gemma-harness.md`, extract content after `---` divider
+   - System message: read `.claude/references/gemma-harness.md`, extract content after `---` divider. If `gemma-harness.md` does not exist (assembly ran without `--include-gemma`), use `vault/_governance/PROJECT_RULES.md` as the system message instead.
    - User message: ticket body (Summary through Notes from Prior Attempts) + inlined source files from the project (selected by `skill_hints` and `produced_files` fields)
 6. Send prompt to the model (Hermes handles the API call via the configured provider).
 7. Parse response: extract code blocks. Each code block with a file path header (`// filepath: path/to/file.ext` or `# filepath: path/to/file.ext`) maps to a file write.
@@ -295,7 +295,7 @@ The skill body is a 10-step state machine written in mechanical, imperative lang
 
 After step 3, if multiple tickets qualify (independent — no shared `depends_on` paths), dispatch up to 3 in parallel using Hermes `delegate_task()`. Each parallel dispatch gets its own isolated context (Hermes enforces this — `MAX_CONCURRENT_CHILDREN = 3`, `MAX_DEPTH = 2`).
 
-**File overlap guard:** Before dispatching parallel tickets, check if their `produced_files` arrays overlap. Overlapping tickets are serialized — only one dispatches; the other stays `ready` for the next cycle.
+**File overlap guard:** Before dispatching parallel tickets, check if their `produced_files` arrays overlap. `produced_files` is pre-populated at ticket generation time (R8.1 step 3) from the plan's `Files: Create:` and `Files: Modify:` entries. Overlapping tickets are serialized — only one dispatches; the other stays `ready` for the next cycle.
 
 #### R5.4: Budget Discipline
 
@@ -327,7 +327,7 @@ metadata:
 3. For each entry in `proof_of_work.required`:
    - `test_output`: read test command from `vault/_schema/proof-of-work.md`. Run command via Hermes `execute_command` tool. Capture output to `vault/agents/model/{ticket-id}-test.log`. If exit code 0, set `proof_of_work.produced.test_output` to the log path. If non-zero, report failure with the last 20 lines of output.
    - `lint_output`: same pattern with lint command. Log to `{ticket-id}-lint.log`.
-   - `reviewer_verdict`: check if file exists at `vault/agents/reviewer/{ticket-id}.md`. If exists, set `proof_of_work.produced.reviewer_verdict` to the file path. If not, report missing. (For autonomous execution, the vault-dispatcher generates this after a successful review subagent run.)
+   - `reviewer_verdict`: check if file exists at `vault/agents/reviewer/{ticket-id}.md`. If exists, set `proof_of_work.produced.reviewer_verdict` to the file path. If not, report missing. (See R6.4 for how verdicts are produced.)
 4. For each entry in `proof_of_work.conditional`: evaluate the `required_when` condition against ticket frontmatter fields. If true, validate the same way as required entries.
 5. Write updated `proof_of_work.produced` to the ticket's frontmatter.
 6. Return: `{pass: true/false, missing: [list of field names], failures: [list of {field, exit_code, last_20_lines}]}`.
@@ -335,6 +335,27 @@ metadata:
 #### R6.3: No Side Effects Beyond Logging
 
 The proof-of-work skill NEVER changes ticket `status`. It only updates `proof_of_work.produced` and returns a result. The caller (vault-dispatcher) decides what to do with the result (mark done, retry, or escalate).
+
+#### R6.4: Reviewer Verdict Production
+
+The `reviewer_verdict` artifact is produced by the vault-dispatcher after test and lint both pass. The dispatcher generates a minimal verdict file at `vault/agents/reviewer/{ticket-id}.md`:
+
+```markdown
+# Reviewer Verdict — {ticket-id}
+
+**Status:** auto-approved
+**Timestamp:** {ISO 8601}
+**Model:** {model that produced the code}
+**Test result:** pass
+**Lint result:** pass
+
+All required proof-of-work artifacts passed automated checks.
+```
+
+This is a structural pass — the code compiled, tests passed, linting passed. It does NOT substitute for human review. Operators who want human-gated review can:
+- Set `assignee: human` on tickets requiring manual verdict
+- Use `gigo:verify` to review completed tickets after the dispatch cycle
+- Replace the auto-generated verdict file with a manual review note
 
 ### R7: Circuit-Breaker Skill Template
 
@@ -436,8 +457,8 @@ For each task in the approved plan:
    - `produced_files`: from task "Files: Create:" and "Files: Modify:" entries
    - `proof_of_work`: copy from `vault/_schema/proof-of-work.md` (domain-detected during assembly)
    - `assignee`: `local_model` (default)
-   - `status`: `ready` if all `depends_on` tickets exist with `status: done`; otherwise `ready` (the dispatcher handles dependency checking at runtime)
-   - `skill_hints`: extracted from task content — key domain terms, framework names, pattern names
+   - `status`: always `ready` (the dispatcher evaluates dependency readiness at runtime by checking `depends_on` tickets)
+   - `skill_hints`: extracted from task content — key domain terms, framework names, pattern names. Examples: for a Rails migration task `[activerecord, migration, postgresql]`; for a React component task `[react, component, state-management]`; for a Luau module task `[luau, module-script, server-authoritative]`
    - `permission_mode`: `acceptEdits` (default)
 
 4. **Body generation:** Map task steps to the ticket body structure (R4.3):
@@ -519,7 +540,11 @@ Hermes skill files use YAML frontmatter with these fields: `name` (kebab-case), 
 
 ### Ticket ID Format
 
-`TCK-{phase}-{sequence}` where phase is a 1-2 digit number and sequence is zero-padded to 3 digits. Examples: `TCK-1-001`, `TCK-2-015`, `TCK-0-003` (no-phase plans). The ID is unique within a vault.
+`TCK-{phase}-{sequence}` where phase is a 1-2 digit number and sequence is zero-padded to 3 digits. Examples: `TCK-1-001`, `TCK-2-015`, `TCK-0-003` (no-phase plans). The ID is unique within a vault. The ticket filename is `{id}.md` — e.g., `vault/tickets/TCK-1-001.md`.
+
+### YAML Frontmatter Delimiter
+
+All ticket files and Hermes skill files use `---` as the YAML frontmatter delimiter (opening and closing). This matches Hermes's SKILL.md format and standard markdown frontmatter conventions.
 
 ### Status Transitions
 
