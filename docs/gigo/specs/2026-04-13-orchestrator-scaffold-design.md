@@ -618,3 +618,5 @@ The three Hermes skills are prompts that a local model must follow correctly. St
 ### Risk 5: Hermes Version Drift
 
 Generated skills target Hermes v0.8.0 skill format. R3.4 includes `_config_version: 16` in hermes-config.yaml (the actual Hermes config version field). gigo:maintain can detect version drift during health checks. If Hermes changes its skill format or config schema, the skill templates (R5, R6, R7) and config template need updating — this is a manual maintenance task.
+
+<!-- approved: spec 2026-04-13T06:12:00 by:Eaven -->
