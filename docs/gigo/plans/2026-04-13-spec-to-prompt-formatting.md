@@ -22,7 +22,7 @@
 **Files:**
 - Modify: `skills/spec/references/planning-procedure.md`
 
-- [ ] **Step 1: Add section 8b after section 8**
+- [x] **Step 1: Add section 8b after section 8**
 
 Insert the following after the existing section 8 ("No Placeholders") block, before section 9:
 
@@ -39,7 +39,7 @@ Every task must be executable by a model that cannot read files or ask questions
 Section 8 catches placeholders ("TBD", "add appropriate error handling"). This section catches subtler ambiguity that passes section 8 but fails when no agent can ask "which validations?"
 ```
 
-- [ ] **Step 2: Add section 9d to the self-review**
+- [x] **Step 2: Add section 9d to the self-review**
 
 Insert after the existing `**9c. Type consistency:**` paragraph, before the "Fix issues inline" line:
 
@@ -47,12 +47,19 @@ Insert after the existing `**9c. Type consistency:**` paragraph, before the "Fix
 **9d. Explicitness check:** For each task, read only the task text (ignore the plan header and other tasks). Could a model execute it without reading any project files or asking questions? If a step says "update with validations" without naming the validations, fix it. Apply section 8b.
 ```
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add skills/spec/references/planning-procedure.md
 git commit -m "feat: add explicitness quality gate to planning procedure (R1)"
 ```
+
+#### What Was Built
+- **Deviations:** None
+- **Review changes:** None
+- **Notes for downstream:** Section 8b and 9d are now live in planning-procedure.md. Section 8b defines the explicitness bar; 9d adds it to the self-review checklist.
+
+<!-- checkpoint: sha=083fed4 status=done reviewed=pass tier=1 -->
 
 ---
 
@@ -65,7 +72,7 @@ git commit -m "feat: add explicitness quality gate to planning procedure (R1)"
 **Files:**
 - Modify: `skills/execute/references/local-model-routing.md`
 
-- [ ] **Step 1: Replace the User Message section**
+- [x] **Step 1: Replace the User Message section**
 
 Replace the current "User Message" section (lines 39-44 of local-model-routing.md):
 
@@ -109,7 +116,7 @@ Format the task description for single-turn execution:
    - `## Output Files` section listing paths to produce
 ```
 
-- [ ] **Step 2: Update the File Selection section**
+- [x] **Step 2: Update the File Selection section**
 
 Replace the current line (line 55):
 ```
@@ -121,7 +128,7 @@ With:
 Do not include config files or files the task doesn't reference. Include test helper and factory files (e.g., `spec/rails_helper.rb`, `spec/factories/*.rb`, `test/test_helper.*`, `conftest.py`) when the task includes writing tests — Gemma needs the project's test setup to produce compatible specs. Only include if the files exist.
 ```
 
-- [ ] **Step 3: Add file ordering guidance**
+- [x] **Step 3: Add file ordering guidance**
 
 After the updated file selection exclusion line (from Step 2), add:
 
@@ -133,7 +140,7 @@ After the updated file selection exclusion line (from Step 2), add:
 4. Test helpers (only if task has test steps)
 ```
 
-- [ ] **Step 4: Add schema truncation to the Context Budget section**
+- [x] **Step 4: Add schema truncation to the Context Budget section**
 
 After the existing priority list (lines 67-72, ending with "If still over → skip local routing for this task, dispatch to Claude"), add:
 
@@ -141,12 +148,19 @@ After the existing priority list (lines 67-72, ending with "If still over → sk
 **Schema truncation:** When a schema/type definition file exceeds ~2000 tokens (~8000 characters), truncate to the table(s) or model(s) relevant to the current task. For example, if the task adds a column to `orders`, include only the `create_table "orders"` block from `schema.rb`, not the entire file. The execute lead (Claude) judges which sections are relevant — this varies by schema format (ActiveRecord, Prisma, TypeORM, etc.).
 ```
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add skills/execute/references/local-model-routing.md
 git commit -m "feat: add task formatting procedure and enhanced file selection (R2, R3)"
 ```
+
+#### What Was Built
+- **Deviations:** None
+- **Review changes:** None
+- **Notes for downstream:** The "User Message" section in local-model-routing.md now has a 6-step formatting procedure (strip metadata, flatten checkboxes, drop non-execution content, preserve code blocks, prepend addendum context, assemble). File selection now conditionally includes test helpers. File ordering and schema truncation guidance added to Context Budget section. Task 3 should reference "per local-model-routing.md formatting procedure" in the fix prompt.
+
+<!-- checkpoint: sha=01e9e21 status=done reviewed=pass tier=1 -->
 
 ---
 
