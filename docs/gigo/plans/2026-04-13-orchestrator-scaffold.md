@@ -687,3 +687,5 @@ Verify across all new files:
 All 9 requirements covered.
 
 **Done when:** All 6 reference files exist, both SKILL.md files are modified, cross-references resolve, line counts are within caps, and all spec requirements map to a file.
+
+<!-- approved: plan 2026-04-13T06:45:00 by:Eaven -->
