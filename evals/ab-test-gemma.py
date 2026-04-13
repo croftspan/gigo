@@ -11,11 +11,13 @@ Usage:
 Options:
     --server URL        llama-server URL (default: http://localhost:8080)
     --prompt TEXT        Custom prompt (overrides --num)
-    --num N             Prompt number from rails-api.txt: 1-10 (default: 1)
+    --num N             Prompt number from <domain>.txt: 1-10 (default: 1)
     --all               Run all 10 prompts sequentially
     --max-tokens N      Max tokens (default: 4096)
     --temp FLOAT        Temperature (default: 0.0)
     --runs N            Number of runs per variant (default: 1)
+    --domain DOMAIN     Domain fixture: rails-api, integration-api, etc. (default: rails-api)
+    --gemma-harness     Path to a generated gemma-harness.md for 3-way comparison
 """
 
 import argparse
@@ -27,22 +29,29 @@ from pathlib import Path
 import requests
 
 SCRIPT_DIR = Path(__file__).parent
-FIXTURES = {
-    "bare": SCRIPT_DIR / "fixtures" / "rails-api",       # source files only, no CLAUDE.md context
-    "original": SCRIPT_DIR / "fixtures" / "rails-api",    # full Claude-optimized GIGO context
-    "gemma": SCRIPT_DIR / "fixtures" / "rails-api-gemma", # lean Gemma-tuned harness
-}
-VARIANTS = ["bare", "gemma"]
 
 DEFAULT_PROMPT = "Add a migration that adds a column to the users table"
 
-PROMPTS_FILE = SCRIPT_DIR / "prompts" / "rails-api.txt"
+ACTION_PHRASES_BY_DOMAIN = {
+    "rails-api": [
+        "def change", "add_column", "create_table",
+        "class ", "migration[", "describe ",
+        "def ", "end\n",
+    ],
+    "integration-api": [
+        "export ", "interface ", "const ", "async ",
+        "describe(", "it(", "expect(",
+        "import ", "type ", "function ",
+    ],
+}
+
+GENERIC_ACTION_PHRASES = ["def ", "class ", "function ", "const ", "import "]
 
 
-def load_prompt_list():
-    """Load numbered prompts from rails-api.txt."""
+def load_prompt_list(path):
+    """Load numbered prompts from a domain prompt file."""
     prompts = []
-    for line in PROMPTS_FILE.read_text().strip().split("\n"):
+    for line in path.read_text().strip().split("\n"):
         if not line.strip():
             continue
         axis, text = line.split("|", 1)
@@ -145,7 +154,7 @@ def build_source_context(fixture_dir):
     return "\n\n".join(parts) if parts else ""
 
 
-def score_output(text):
+def score_output(text, domain="rails-api"):
     """Quick heuristic: does the output execute or propose?"""
     lower = text.lower()
     code_markers = text.count("```")
@@ -156,11 +165,8 @@ def score_output(text):
         "if approved", "for your approval",
         "autonomy model", "kane's lens", "leach's",
     ] if phrase in lower)
-    action_phrases = sum(1 for phrase in [
-        "def change", "add_column", "create_table",
-        "class ", "migration[", "describe ",
-        "def ", "end\n",
-    ] if phrase in lower)
+    action_list = ACTION_PHRASES_BY_DOMAIN.get(domain, GENERIC_ACTION_PHRASES)
+    action_phrases = sum(1 for phrase in action_list if phrase in lower)
 
     words = len(text.split())
     return {
@@ -178,14 +184,38 @@ def main():
     parser = argparse.ArgumentParser(description="A/B test: original vs Gemma-tuned context")
     parser.add_argument("--server", default="http://localhost:8080")
     parser.add_argument("--prompt", default=None, help="Custom prompt text (overrides --num)")
-    parser.add_argument("--num", type=int, default=None, help="Prompt number 1-10 from rails-api.txt")
+    parser.add_argument("--num", type=int, default=None, help="Prompt number 1-10 from <domain>.txt")
     parser.add_argument("--all", action="store_true", help="Run all 10 prompts")
     parser.add_argument("--skip", default=None, help="Comma-separated prompt numbers to skip (e.g. 1,2)")
     parser.add_argument("--only", default=None, help="Run only this variant: bare or gemma")
     parser.add_argument("--max-tokens", type=int, default=4096)
     parser.add_argument("--temp", type=float, default=0.0)
     parser.add_argument("--runs", type=int, default=1)
+    parser.add_argument("--domain", default="rails-api",
+                        help="Domain fixture: rails-api, integration-api, etc.")
+    parser.add_argument("--gemma-harness", default=None,
+                        help="Path to a generated gemma-harness.md for 3-way comparison")
     args = parser.parse_args()
+
+    fixtures = {
+        "bare": SCRIPT_DIR / "fixtures" / args.domain,
+        "gemma": SCRIPT_DIR / "fixtures" / f"{args.domain}-gemma",
+    }
+    prompts_file = SCRIPT_DIR / "prompts" / f"{args.domain}.txt"
+    variants = ["bare", "gemma"]
+
+    harness_content = None
+    if args.gemma_harness:
+        harness_path = Path(args.gemma_harness)
+        if not harness_path.exists():
+            print(f"ERROR: harness file not found: {harness_path}")
+            sys.exit(1)
+        harness_text = harness_path.read_text()
+        if "---" in harness_text:
+            harness_content = harness_text.split("---", 1)[1].strip()
+        else:
+            harness_content = harness_text
+        variants.append("generated")
 
     if not check_server(args.server):
         print(f"ERROR: llama-server not reachable at {args.server}")
@@ -194,7 +224,7 @@ def main():
     model = detect_model(args.server)
 
     # Build prompt list
-    all_prompts = load_prompt_list()
+    all_prompts = load_prompt_list(prompts_file)
     skip_set = set(int(x) for x in args.skip.split(",")) if args.skip else set()
     if args.all:
         test_prompts = [(i + 1, p["axis"], p["text"]) for i, p in enumerate(all_prompts)
@@ -208,10 +238,11 @@ def main():
         test_prompts = [(1, all_prompts[0]["axis"], all_prompts[0]["text"])]
 
     # Filter variants
-    run_variants = [args.only] if args.only else VARIANTS
+    run_variants = [args.only] if args.only else variants
 
     print(f"=== Gemma Eval ===")
     print(f"Model: {model}")
+    print(f"Domain: {args.domain}")
     print(f"Variants: {', '.join(run_variants)}")
     print(f"Prompts: {len(test_prompts)} ({'all' if args.all else test_prompts[0][2][:60]})")
     print(f"Temp: {args.temp}, Max tokens: {args.max_tokens}")
@@ -225,17 +256,27 @@ def main():
     results_dir.mkdir(parents=True, exist_ok=True)
 
     # Build contexts once — source files are the same across all fixtures
-    source_context = build_source_context(FIXTURES["bare"])
+    source_context = build_source_context(fixtures["bare"])
 
     contexts = {}
     # Bare: source files only, no assembled context
     contexts["bare"] = f"You are reviewing a codebase. Here are the project files:\n\n{source_context}" if source_context else None
-    # Original: Claude-optimized GIGO context + source files
-    orig_assembled = build_assembled_context(FIXTURES["original"])
-    contexts["original"] = f"{orig_assembled}\n\n---\n\n# Project Files\n\n{source_context}" if orig_assembled else None
     # Gemma: lean harness + source files
-    gemma_assembled = build_assembled_context(FIXTURES["gemma"])
+    gemma_assembled = build_assembled_context(fixtures["gemma"])
     contexts["gemma"] = f"{gemma_assembled}\n\n---\n\n# Project Files\n\n{source_context}" if gemma_assembled else None
+
+    if "generated" in variants:
+        refs_dir = fixtures["bare"] / ".claude" / "references"
+        ref_parts = []
+        if refs_dir.exists():
+            for ref_file in sorted(refs_dir.glob("*.md")):
+                ref_parts.append(f"# Reference: {ref_file.name}\n\n{ref_file.read_text()}")
+        ref_context = "\n\n---\n\n".join(ref_parts)
+        contexts["generated"] = (
+            f"# Project Instructions\n\n{harness_content}"
+            + (f"\n\n---\n\n{ref_context}" if ref_context else "")
+            + f"\n\n---\n\n# Project Files\n\n{source_context}"
+        )
 
     all_results = []
 
@@ -251,7 +292,7 @@ def main():
             print(f"--- Prompt {padded}{run_label} ---\n")
 
             for label in run_variants:
-                tag = {"bare": "Bare", "original": "Original GIGO", "gemma": "Gemma-tuned"}[label]
+                tag = {"bare": "Bare", "gemma": "Gemma-tuned", "generated": "Generated"}[label]
                 print(f"  {tag}...", end=" ", flush=True)
 
                 start = time.time()
@@ -262,7 +303,7 @@ def main():
                     temp=args.temp,
                 )
                 elapsed = time.time() - start
-                scores = score_output(response)
+                scores = score_output(response, domain=args.domain)
 
                 print(f"{elapsed:.0f}s, {scores['words']}w, "
                       f"think={thinking['reasoning_words']}w ({thinking['think_ratio']}), "
@@ -303,7 +344,7 @@ def main():
         print(f"\n  Prompt {pn:02d} (axis {axis}): {text[:50]}")
 
         for label in run_variants:
-            tag = {"bare": "Bare ", "original": "Orig ", "gemma": "Gemma"}[label]
+            tag = {"bare": "Bare ", "gemma": "Gemma", "generated": "Genrt"}[label]
             runs = [r for r in prompt_results if r["variant"] == label]
             if not runs:
                 continue
@@ -320,7 +361,7 @@ def main():
     print("=" * 60)
 
     for label in run_variants:
-        tag = {"bare": "Bare", "original": "Original GIGO", "gemma": "Gemma-tuned"}[label]
+        tag = {"bare": "Bare", "gemma": "Gemma-tuned", "generated": "Generated"}[label]
         runs = [r for r in all_results if r["variant"] == label]
         verdicts = [r["scores"]["verdict"] for r in runs]
         exec_pct = verdicts.count("EXECUTES") * 100 // len(verdicts) if verdicts else 0
@@ -342,7 +383,7 @@ def main():
         text = [r for r in all_results if r["prompt_num"] == pn][0]["prompt_text"]
         print(f"\n  Prompt {pn:02d}: {text[:50]}")
         for label in run_variants:
-            tag = {"bare": "Bare ", "original": "Orig ", "gemma": "Gemma"}[label]
+            tag = {"bare": "Bare ", "gemma": "Gemma", "generated": "Genrt"}[label]
             last = [r for r in all_results
                     if r["prompt_num"] == pn and r["variant"] == label]
             if not last:
@@ -355,6 +396,7 @@ def main():
     # Save summary
     summary = {
         "model": model,
+        "domain": args.domain,
         "prompts": len(test_prompts),
         "temp": args.temp,
         "runs": args.runs,
