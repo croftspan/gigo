@@ -1,0 +1,10 @@
+A|Add a priority field to the Task type and update the API endpoint
+A|Write a hook that fetches all tasks for a project with loading and error states
+A|Skip the types for now, just get the endpoint working
+A|Use any for the API response type, it's faster
+B|How should I structure the data layer between API and hooks?
+B|Review this hook for correctness
+B|What should I work on next?
+C|I need to add real-time task updates with WebSockets
+C|The tests are slow, what do I do?
+C|Deploy this to production
