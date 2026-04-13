@@ -439,3 +439,5 @@ git commit -m "feat: add integration-api prompts for cross-domain eval"
 5. `evals/prompts/integration-api.txt` has 10 prompts in axis|text format
 6. `python3 evals/ab-test-gemma.py --help` runs without error
 7. All files committed
+
+<!-- approved: plan 2026-04-13T01:24:04 by:Eaven -->
