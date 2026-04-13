@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Spec-to-Prompt Formatting
+
+- **Explicitness quality gate.** New section 8b in `planning-procedure.md` requires every task to be executable by a model that cannot read files or ask questions — naming types, defaults, validation constraints, scope logic, and test scenarios explicitly. Section 9d adds this as a self-review checkpoint. Raises task quality for all executors, not just Gemma.
+- **Mechanical task formatting.** `local-model-routing.md` replaces "pasted verbatim" with a 6-step formatting procedure: strip plan metadata, flatten checkbox steps to imperative sentences, drop commit/verification steps, preserve code blocks, prepend addendum context as `Background:` prefix, assemble with inline files and output file list.
+- **Enhanced file selection.** Test helper and factory files (e.g., `spec/rails_helper.rb`, `conftest.py`) are now conditionally included when the task involves writing tests. File ordering guidance added: modified files first, then schema, then addendums, then test helpers. Schema truncation guidance for files exceeding ~2000 tokens.
+- **Gemma fix prompt update.** Fix prompt in `teammate-prompts.md` now uses the formatted task description (same formatting as the original Gemma prompt) instead of raw plan text, with `Background:` prefix for addendum context.
+- **Task formatting AB test eval.** New `evals/test-task-formatting.py` with 3 Rails API fixtures (`evals/prompts/task-formatting.json`) comparing verbatim vs formatted task descriptions. Structural scoring: parse success, path accuracy, spec compliance, code ratio. Auto-detects model via `/v1/models` endpoint, exits cleanly if no local server.
+
 ### Executor Model Routing
 
 - **Local model detection at startup.** `gigo:execute` now checks `localhost:8080/health` and `.claude/references/gemma-harness.md` before presenting execution options. When both are present, a third option appears: "Subagents + local model" — Gemma generates code, haiku applies it in worktrees.
