@@ -1,7 +1,7 @@
 ---
 name: gigo
 description: "Assembles an expert team and scaffolds a Claude Code project for any domain — software, writing, game dev, research, design, anything. Researches the best practitioners in the field, blends their philosophies into focused personas, and writes lean .claude/ project structure with rules, standards, and workflow. Use this skill when the user wants to start a new project, set up Claude Code for a project, kick off work in an unfamiliar field, or says 'gigo.' This is the initial assembly — for adding expertise or auditing an existing project, use gigo:maintain instead."
-argument-hint: "[--include-gemma]"
+argument-hint: "[--include-gemma] [--include-orchestrator]"
 ---
 
 # GIGO — First Assembly
@@ -25,6 +25,10 @@ Before anything else, check the project:
 ### Gemma Harness Flag
 
 If `$ARGUMENTS` contains `--include-gemma`, activate Gemma harness generation. After Step 6.5 writes the review criteria, Step 6.75 generates a lean harness for Gemma-class local models. Read `references/gemma-harness-generator.md` for the full algorithm. This flag only applies during first assembly.
+
+### Orchestrator Flag
+
+If `$ARGUMENTS` contains `--include-orchestrator`, activate orchestrator scaffold generation. After Step 6.75 (or after Step 6.5 if Gemma flag is not set), Step 6.8 scaffolds the autonomous execution vault. Read `references/orchestrator-scaffold.md` for the full algorithm. This flag only applies during first assembly.
 
 **Domain asset scan.** Regardless of CLAUDE.md status, scan the project for existing domain expertise:
 
@@ -261,6 +265,15 @@ Output: `.claude/references/gemma-harness.md` — Tier 2, zero token cost on nor
 
 This is a mechanical transformation of already-approved content. No additional operator approval needed. Include the file in the Step 7 summary.
 
+### Step 6.8: Scaffold Orchestrator Vault (if flagged)
+
+If the `--include-orchestrator` flag was set, scaffold the autonomous execution vault from the just-completed assembly. Read `references/orchestrator-scaffold.md` and follow the algorithm.
+
+Input: project domain (from team assembly), `.claude/rules/standards.md`, project files (test/lint detection), local model (localhost:8080).
+Output: `vault/` directory with schemas, governance, orchestration config, Hermes skills, ticket template, and runbooks.
+
+This is infrastructure generation from already-approved assembly content. No additional operator approval needed. Include the vault location in the Step 7 summary.
+
 ### Step 7: The Handoff
 
 Close with two things:
@@ -290,6 +303,9 @@ Run `/blueprint` with what you want to build.
 
 If `--include-gemma` was used, also mention:
 > Gemma harness generated at `.claude/references/gemma-harness.md` — use as system prompt for local Gemma-class models.
+
+If `--include-orchestrator` was used, also mention:
+> Orchestrator vault scaffolded at `vault/`. See `vault/runbooks/daemon-setup.md` to install and start the Hermes daemon.
 
 ---
 
