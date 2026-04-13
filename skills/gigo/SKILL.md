@@ -1,6 +1,7 @@
 ---
 name: gigo
 description: "Assembles an expert team and scaffolds a Claude Code project for any domain — software, writing, game dev, research, design, anything. Researches the best practitioners in the field, blends their philosophies into focused personas, and writes lean .claude/ project structure with rules, standards, and workflow. Use this skill when the user wants to start a new project, set up Claude Code for a project, kick off work in an unfamiliar field, or says 'gigo.' This is the initial assembly — for adding expertise or auditing an existing project, use gigo:maintain instead."
+argument-hint: "[--include-gemma]"
 ---
 
 # GIGO — First Assembly
@@ -20,6 +21,10 @@ Before anything else, check the project:
 - **Existing non-GIGO setup** (hand-written CLAUDE.md, another tool's output, old Avengers Assemble format) → "Found an existing setup. I can assess what you have and either upgrade it to GIGO's pipeline or start fresh. Which do you prefer?" Upgrade → invoke `gigo:maintain` with upgrade mode. Fresh → warn about overwriting, then proceed with full assembly.
 
 **This skill is for first assembly only** — when nothing exists yet or the operator chose to start fresh. For everything else, `gigo:maintain` handles it.
+
+### Gemma Harness Flag
+
+If `$ARGUMENTS` contains `--include-gemma`, activate Gemma harness generation. After Step 6.5 writes the review criteria, Step 6.75 generates a lean harness for Gemma-class local models. Read `references/gemma-harness-generator.md` for the full algorithm. This flag only applies during first assembly.
 
 **Domain asset scan.** Regardless of CLAUDE.md status, scan the project for existing domain expertise:
 
@@ -247,6 +252,15 @@ After writing all files, extract domain-specific review criteria for the review 
 This step is mechanical — no operator approval needed. The criteria are derived
 directly from the approved team, not invented.
 
+### Step 6.75: Generate Gemma Harness (if flagged)
+
+If the `--include-gemma` flag was set, generate a lean Gemma-compatible harness from the just-written assembly. Read `references/gemma-harness-generator.md` and follow the algorithm.
+
+Input: the just-written CLAUDE.md, `.claude/rules/standards.md`, and any domain extension files.
+Output: `.claude/references/gemma-harness.md` — Tier 2, zero token cost on normal Claude conversations.
+
+This is a mechanical transformation of already-approved content. No additional operator approval needed. Include the file in the Step 7 summary.
+
 ### Step 7: The Handoff
 
 Close with two things:
@@ -273,6 +287,9 @@ Your team is ready.
 
 Run `/blueprint` with what you want to build.
 ```
+
+If `--include-gemma` was used, also mention:
+> Gemma harness generated at `.claude/references/gemma-harness.md` — use as system prompt for local Gemma-class models.
 
 ---
 
