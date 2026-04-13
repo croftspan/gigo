@@ -121,9 +121,8 @@ model: "{detected_model_id or 'PLACEHOLDER — run llama-server then re-run asse
 
 providers:
   local:
-    base_url: "http://localhost:8080/v1"
-    api_key: ""
-    context_length: 65536
+    api: "http://localhost:8080/v1"
+    # context_length is controlled by llama-server -c flag, not this config
 
 agent:
   max_turns: 90
@@ -136,7 +135,7 @@ terminal:
 _config_version: 16
 ```
 
-If model detection failed, `model:` is set to the placeholder string. The runbook explains how to update it. `context_length: 65536` matches the minimum required by Hermes and the `-c 65536` flag on llama-server.
+If model detection failed, `model:` is set to the placeholder string. The runbook explains how to update it. The `api` key is the canonical provider URL field (per Hermes config version 12+ migration). No `api_key` is needed for local llama-server endpoints.
 
 **dispatch-rules.md:** Specifies the vault-dispatcher's operating rules — ticket selection criteria, parallelism limits (max 3 concurrent via Hermes `delegate_task()`), file overlap serialization rule, retry budget (1 retry per ticket), escalation trigger (2 consecutive failures).
 
@@ -287,7 +286,7 @@ The skill body is a 10-step state machine written in mechanical, imperative lang
 8. Apply changes: write each extracted code block to the corresponding file path using Hermes `write_file` tool.
 9. Run proof-of-work: read `vault/_schema/proof-of-work.md` for test and lint commands. Execute test command, capture output to `vault/agents/model/{ticket-id}-test.log`. Execute lint command, capture output to `vault/agents/model/{ticket-id}-lint.log`. Update ticket `proof_of_work.produced` fields with log paths.
 10. Route on results:
-    - All required proof-of-work artifacts exist and commands returned exit code 0: set `status: done`, update `model_history` with `result: "passed"`, proceed to step 1.
+    - Proof-of-work returned `pass: true` (test + lint passed): generate reviewer verdict file at `vault/agents/reviewer/{ticket-id}.md` (R6.4), update `proof_of_work.produced.reviewer_verdict` with the file path, set `status: done`, update `model_history` with `result: "passed"`, proceed to step 1.
     - Any proof-of-work failed: retry ONCE — append error output to the user message, re-send to model (steps 6-9). If retry also fails: set `status: escalated`, update `model_history` with `result: "escalated"`, read `vault/_orchestration/escalation-protocol.md`, invoke Hermes's built-in `claude-code` skill with the escalation prompt.
     - After Claude Code escalation: re-run proof-of-work (step 9). If pass: set `status: done` with `model: "claude-code"` in history. If fail: set `status: failed`, log to `vault/agents/claude-code/{ticket-id}/`, proceed to step 1.
 
@@ -335,13 +334,14 @@ metadata:
 
 1. Accept ticket ID as input.
 2. Read `vault/tickets/{ticket-id}.md`, parse `proof_of_work` from frontmatter.
-3. For each entry in `proof_of_work.required`:
-   - `test_output`: read test command from `vault/_schema/proof-of-work.md`. Run command via Hermes `execute_command` tool. Capture output to `vault/agents/model/{ticket-id}-test.log`. If exit code 0, set `proof_of_work.produced.test_output` to the log path. If non-zero, report failure with the last 20 lines of output.
+3. For each entry in `proof_of_work.required` (excluding `reviewer_verdict` — handled by the vault-dispatcher, see R6.4):
+   - `test_output`: read test command from `vault/_schema/proof-of-work.md`. Run command via Hermes `terminal` tool. Capture output to `vault/agents/model/{ticket-id}-test.log`. If exit code 0, set `proof_of_work.produced.test_output` to the log path. If non-zero, report failure with the last 20 lines of output.
    - `lint_output`: same pattern with lint command. Log to `{ticket-id}-lint.log`.
-   - `reviewer_verdict`: check if file exists at `vault/agents/reviewer/{ticket-id}.md`. If exists, set `proof_of_work.produced.reviewer_verdict` to the file path. If not, report missing. (See R6.4 for how verdicts are produced.)
 4. For each entry in `proof_of_work.conditional`: evaluate the `required_when` condition against ticket frontmatter fields. If true, validate the same way as required entries.
 5. Write updated `proof_of_work.produced` to the ticket's frontmatter.
 6. Return: `{pass: true/false, missing: [list of field names], failures: [list of {field, exit_code, last_20_lines}]}`.
+
+**Note:** `reviewer_verdict` is intentionally excluded from this skill's checks. The dispatcher generates the verdict file AFTER proof-of-work returns a pass result (R6.4). Including it here would create a sequencing deadlock — proof-of-work checks for a file that doesn't exist until after it returns.
 
 #### R6.3: No Side Effects Beyond Logging
 
@@ -349,7 +349,7 @@ The proof-of-work skill NEVER changes ticket `status`. It only updates `proof_of
 
 #### R6.4: Reviewer Verdict Production
 
-The `reviewer_verdict` artifact is produced by the vault-dispatcher after test and lint both pass. The dispatcher generates a minimal verdict file at `vault/agents/reviewer/{ticket-id}.md`:
+The `reviewer_verdict` artifact is produced by the vault-dispatcher (R5.2 step 10) AFTER proof-of-work returns `pass: true` for test and lint. The sequencing is: proof-of-work runs test+lint → returns pass → dispatcher generates verdict → dispatcher updates `proof_of_work.produced.reviewer_verdict` → dispatcher sets `status: done`. The dispatcher generates a minimal verdict file at `vault/agents/reviewer/{ticket-id}.md`:
 
 ```markdown
 # Reviewer Verdict — {ticket-id}

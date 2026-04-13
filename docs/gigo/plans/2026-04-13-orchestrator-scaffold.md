@@ -151,7 +151,7 @@ Steps 6-8: Send to model, parse response (file path headers: `// filepath:` or `
 Step 9: Run proof-of-work — read test/lint commands from `vault/_schema/proof-of-work.md`, execute, capture output to `vault/agents/model/{ticket-id}-test.log` and `{ticket-id}-lint.log`. Update `proof_of_work.produced`.
 
 Step 10: Route on results:
-- All pass → `status: done`, `result: "passed"`, generate reviewer verdict at `vault/agents/reviewer/{ticket-id}.md` (spec R6.4), next ticket.
+- Proof-of-work returned `pass: true` (test+lint passed) → generate reviewer verdict at `vault/agents/reviewer/{ticket-id}.md` (spec R6.4), update `proof_of_work.produced.reviewer_verdict` with file path, set `status: done`, `result: "passed"`, next ticket.
 - Fail → retry once with error context appended.
 - Still fail → `status: escalated`, read `vault/_orchestration/escalation-protocol.md`, invoke claude-code skill.
 - Claude Code pass → `status: done` with `model: "claude-code"`.
@@ -213,15 +213,17 @@ metadata:
 6-step procedure:
 1. Accept ticket ID as input.
 2. Read `vault/tickets/{ticket-id}.md`, parse `proof_of_work` from frontmatter.
-3. For each `required` entry:
-   - `test_output`: read command from `vault/_schema/proof-of-work.md`. Run via `execute_command`. Capture to `vault/agents/model/{ticket-id}-test.log`. Exit 0 → set produced path. Non-zero → report failure with last 20 lines.
+3. For each `required` entry (excluding `reviewer_verdict` — handled by vault-dispatcher after this skill returns):
+   - `test_output`: read command from `vault/_schema/proof-of-work.md`. Run via Hermes `terminal` tool. Capture to `vault/agents/model/{ticket-id}-test.log`. Exit 0 → set produced path. Non-zero → report failure with last 20 lines.
    - `lint_output`: same pattern, log to `{ticket-id}-lint.log`.
-   - `reviewer_verdict`: check `vault/agents/reviewer/{ticket-id}.md` exists.
 4. For each `conditional` entry: evaluate `required_when`, validate if true.
 5. Write updated `proof_of_work.produced` to ticket frontmatter.
 6. Return: `{pass: true/false, missing: [...], failures: [{field, exit_code, last_20_lines}]}`.
 
-**Key constraint** (spec R6.3): This skill NEVER changes ticket `status`. Only updates `proof_of_work.produced` and returns a result. The caller (vault-dispatcher) decides pass/retry/escalate.
+**Key constraints:**
+- (spec R6.3): This skill NEVER changes ticket `status`. Only updates `proof_of_work.produced` and returns a result. The caller (vault-dispatcher) decides pass/retry/escalate.
+- `reviewer_verdict` is excluded from this skill's checks. The dispatcher generates the verdict AFTER this skill returns `pass: true`. Including it here would create a sequencing deadlock.
+- Use Hermes `terminal` tool for command execution (not `execute_command`, which doesn't exist in Hermes).
 
 - [ ] **Step 2: Verify**
 
@@ -410,9 +412,8 @@ The generation steps:
    
    providers:
      local:
-       base_url: "http://localhost:8080/v1"
-       api_key: ""
-       context_length: 65536
+       api: "http://localhost:8080/v1"
+       # context_length is controlled by llama-server -c flag, not this config
    
    agent:
      max_turns: 90
