@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+### Autonomous Orchestrator Scaffold
+
+- **`--include-orchestrator` flag for `gigo:gigo`.** New flag activates vault scaffold generation during first assembly. After Step 6.75 (Gemma harness), Step 6.8 reads `references/orchestrator-scaffold.md` and generates the full `vault/` directory: schemas, governance rules, Hermes config, custom skills, ticket template, and runbooks. Mirrors the `--include-gemma` pattern.
+- **Vault scaffold algorithm.** New `skills/gigo/references/orchestrator-scaffold.md` (299 lines) contains the complete generation procedure: 4-step detection (domain, test framework, linter, local model at localhost:8080), 12-step file generation (G1-G12). Generates Hermes config using actual v0.8.0 schema (`_config_version: 16`, `providers` dict with `api` key).
+- **Ticket schema reference.** New `skills/gigo/references/ticket-schema.md` (81 lines) defines ticket frontmatter (TCK-{phase}-{sequence} IDs, status transitions, proof-of-work gates) and domain-aware proof-of-work configuration across 6 domains (software, game-roblox, game-other, writing, research, other).
+- **Three custom Hermes skills.** Templates copied verbatim into target project's `vault/skills/` during scaffold:
+  - `vault-dispatcher` (56 lines) — 10-step state machine: read tickets, build DAG, dispatch, apply changes, run proof-of-work, generate reviewer verdict, route pass/retry/escalate. Max 3 parallel via `delegate_task()`.
+  - `proof-of-work` (42 lines) — validates test+lint artifacts via Hermes `terminal` tool. Never mutates ticket status. Excludes `reviewer_verdict` (dispatcher handles it post-pass).
+  - `circuit-breaker` (73 lines) — dual-trigger design: rate trigger (30% over 10-ticket window) for chronic model gaps, burst trigger (3 consecutive in 5 min) for acute health issues. Returns result to caller; does NOT call `send_message` (blocked for delegated children).
+- **Ticket generation bridge.** New Phase 10.5 in `gigo:spec` converts approved plan tasks to vault tickets with DAG validation (orphan check + cycle check). Conditional on `vault/_schema/ticket.md` existence — no vault means standard `/execute` path. Procedure in `skills/spec/references/ticket-generation.md` (71 lines).
+
 ### Spec-to-Prompt Formatting
 
 - **Explicitness quality gate.** New section 8b in `planning-procedure.md` requires every task to be executable by a model that cannot read files or ask questions — naming types, defaults, validation constraints, scope logic, and test scenarios explicitly. Section 9d adds this as a self-review checkpoint. Raises task quality for all executors, not just Gemma.

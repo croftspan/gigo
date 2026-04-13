@@ -24,7 +24,7 @@ Foundation file — defines the ticket frontmatter schema and domain-aware proof
 **Files:**
 - Create: `skills/gigo/references/ticket-schema.md`
 
-- [ ] **Step 1: Create ticket-schema.md**
+- [x] **Step 1: Create ticket-schema.md**
 
 Write `skills/gigo/references/ticket-schema.md` (~80 lines). Four sections:
 
@@ -97,16 +97,23 @@ Include the placeholder rule: when detection returns null, set command to `"PLAC
 
 The 8-section body order from spec R4.3: Summary, Context, Implementation Notes, Acceptance Tests, Closure Proof-of-Work, Out of Scope, Judgment Calls, Notes from Prior Attempts.
 
-- [ ] **Step 2: Verify**
+- [x] **Step 2: Verify**
 
 Confirm file exists, has ~80 lines, contains all three sections. Confirm the YAML schema block parses correctly. Confirm the domain table has all 6 domain rows.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add skills/gigo/references/ticket-schema.md
 git commit -m "feat: add ticket schema reference for orchestrator scaffold (R4)"
 ```
+
+#### What Was Built
+- **Deviations:** None. 81 lines, 4 sections as planned.
+- **Review changes:** None.
+- **Notes for downstream:** Ticket schema uses `TCK-{phase_number}-{zero_padded_sequence}` format. Domain table has 6 rows. `reviewer_verdict` is in `required` for all domains but handled by vault-dispatcher, not proof-of-work skill.
+
+<!-- checkpoint: task-1 7f90e21 -->
 
 ---
 
@@ -119,7 +126,7 @@ git commit -m "feat: add ticket schema reference for orchestrator scaffold (R4)"
 **Files:**
 - Create: `skills/gigo/references/hermes-skills/vault-dispatcher.md`
 
-- [ ] **Step 1: Create directory and file**
+- [x] **Step 1: Create directory and file**
 
 Create `skills/gigo/references/hermes-skills/` directory. Write `vault-dispatcher.md` (~80 lines). This file IS the Hermes SKILL.md that gets copied to `vault/skills/vault-dispatcher/SKILL.md` in target projects. Must stay under 100 lines (R5.4 budget discipline).
 
@@ -169,16 +176,23 @@ Check `vault/agents/circuit-breaker/state.md` for `paused: true`. If paused, wai
 
 **Parallelism section** (~5 lines, spec R5.3): After step 3, if multiple tickets qualify (independent), dispatch up to 3 via `delegate_task()`. Check `produced_files` overlap — overlapping tickets serialize.
 
-- [ ] **Step 2: Verify line count and voice**
+- [x] **Step 2: Verify line count and voice**
 
 Count lines. Must be under 100 (frontmatter + body). Verify imperative voice — no "you should", no "consider", no rationale text. Every sentence is an instruction.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add skills/gigo/references/hermes-skills/vault-dispatcher.md
 git commit -m "feat: add vault-dispatcher Hermes skill template (R5)"
 ```
+
+#### What Was Built
+- **Deviations:** 56 lines vs ~80 estimated — tighter than planned, well within 100-line cap.
+- **Review changes:** None.
+- **Notes for downstream:** Dispatcher generates reviewer verdict at `vault/agents/reviewer/{ticket-id}.md` after proof-of-work passes (step 10). Dispatcher sends `send_message` alert on circuit-breaker trigger (top-level, has access). Uses `write_file` for applying changes, `terminal` for commands.
+
+<!-- checkpoint: task-2 6dff285 -->
 
 ---
 
@@ -191,7 +205,7 @@ git commit -m "feat: add vault-dispatcher Hermes skill template (R5)"
 **Files:**
 - Create: `skills/gigo/references/hermes-skills/proof-of-work.md`
 
-- [ ] **Step 1: Create proof-of-work.md**
+- [x] **Step 1: Create proof-of-work.md**
 
 Write `skills/gigo/references/hermes-skills/proof-of-work.md` (~50 lines). This is the Hermes SKILL.md for `vault/skills/proof-of-work/SKILL.md`.
 
@@ -225,16 +239,23 @@ metadata:
 - `reviewer_verdict` is excluded from this skill's checks. The dispatcher generates the verdict AFTER this skill returns `pass: true`. Including it here would create a sequencing deadlock.
 - Use Hermes `terminal` tool for command execution (not `execute_command`, which doesn't exist in Hermes).
 
-- [ ] **Step 2: Verify**
+- [x] **Step 2: Verify**
 
 Under 100 lines. No status mutations in the body. Return value format matches what vault-dispatcher expects.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add skills/gigo/references/hermes-skills/proof-of-work.md
 git commit -m "feat: add proof-of-work Hermes skill template (R6)"
 ```
+
+#### What Was Built
+- **Deviations:** 42 lines vs ~50 estimated — lean and clean.
+- **Review changes:** None.
+- **Notes for downstream:** Excludes `reviewer_verdict` from checks (dispatcher handles it). Uses `terminal` tool, not `execute_command`. Never mutates ticket status. Returns `{pass, missing, failures}`.
+
+<!-- checkpoint: task-3 7b82c86 -->
 
 ---
 
@@ -247,7 +268,7 @@ git commit -m "feat: add proof-of-work Hermes skill template (R6)"
 **Files:**
 - Create: `skills/gigo/references/hermes-skills/circuit-breaker.md`
 
-- [ ] **Step 1: Create circuit-breaker.md**
+- [x] **Step 1: Create circuit-breaker.md**
 
 Write `skills/gigo/references/hermes-skills/circuit-breaker.md` (~60 lines). This is the Hermes SKILL.md for `vault/skills/circuit-breaker/SKILL.md`.
 
@@ -300,16 +321,23 @@ window_size: 10
 threshold: 0.30
 ```
 
-- [ ] **Step 2: Verify**
+- [x] **Step 2: Verify**
 
 Under 100 lines. No `send_message` calls in the body. Returns result to caller. State file format matches what vault-dispatcher reads.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add skills/gigo/references/hermes-skills/circuit-breaker.md
 git commit -m "feat: add circuit-breaker Hermes skill template (R7)"
 ```
+
+#### What Was Built
+- **Deviations:** 73 lines vs ~60 estimated — slightly longer due to explicit state initialization and on-resume sections. Still within 100-line cap.
+- **Review changes:** None.
+- **Notes for downstream:** Explicit `Do NOT call send_message` constraint at line 61. Dual triggers (rate + burst). Returns result to caller, does not alert directly.
+
+<!-- checkpoint: task-4 fc2c38d -->
 
 ---
 
@@ -324,7 +352,7 @@ The master procedure. Step 6.8 reads this at runtime to generate the entire vaul
 **Files:**
 - Create: `skills/gigo/references/orchestrator-scaffold.md`
 
-- [ ] **Step 1: Create orchestrator-scaffold.md**
+- [x] **Step 1: Create orchestrator-scaffold.md**
 
 Write `skills/gigo/references/orchestrator-scaffold.md` (~200 lines). Follow the same structure as `references/gemma-harness-generator.md`: Input → Output → Algorithm.
 
@@ -446,7 +474,7 @@ The generation steps:
 
 12. **Create empty `vault/agents/` subdirs** — `model/`, `claude-code/`, `circuit-breaker/`.
 
-- [ ] **Step 2: Verify cross-references**
+- [x] **Step 2: Verify cross-references**
 
 Verify every reference path in the file points to a file that exists (from Tasks 1-4):
 - `references/ticket-schema.md` — exists (Task 1)
@@ -456,12 +484,19 @@ Verify every reference path in the file points to a file that exists (from Tasks
 
 Verify file is ~200 lines. Verify detection patterns match spec R3.1 exactly.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add skills/gigo/references/orchestrator-scaffold.md
 git commit -m "feat: add orchestrator scaffold reference — master vault generation algorithm (R3)"
 ```
+
+#### What Was Built
+- **Deviations:** 299 lines vs ~200 estimated — longer due to inline code blocks for generated files (hermes-config, dispatch-rules, escalation-protocol, llama-server, runbooks). Uses 4-backtick fencing for nested code blocks.
+- **Review changes:** Fixed escaped backticks that rendered literally — switched to 4-backtick fencing for sections containing inner code blocks.
+- **Notes for downstream:** 12 generation steps (G1-G12), 4 detection steps (D1-D4). References all 4 template files from Tasks 1-4. Hermes config uses `api` key (not `base_url`), `_config_version: 16`.
+
+<!-- checkpoint: task-5 146d5a4 -->
 
 ---
 
@@ -477,7 +512,7 @@ git commit -m "feat: add orchestrator scaffold reference — master vault genera
 - Modify: `skills/gigo/SKILL.md:262` (after Step 6.75, before Step 7)
 - Modify: `skills/gigo/SKILL.md:264` (Step 7 handoff)
 
-- [ ] **Step 1: Update argument-hint frontmatter (R1)**
+- [x] **Step 1: Update argument-hint frontmatter (R1)**
 
 Change line 4 from:
 ```yaml
@@ -488,7 +523,7 @@ to:
 argument-hint: "[--include-gemma] [--include-orchestrator]"
 ```
 
-- [ ] **Step 2: Add Orchestrator Flag paragraph (R2)**
+- [x] **Step 2: Add Orchestrator Flag paragraph (R2)**
 
 Insert after the Gemma Harness Flag paragraph (after line 27, before the "Domain asset scan" paragraph). ~5 lines:
 
@@ -498,7 +533,7 @@ Insert after the Gemma Harness Flag paragraph (after line 27, before the "Domain
 If `$ARGUMENTS` contains `--include-orchestrator`, activate orchestrator scaffold generation. After Step 6.75 (or after Step 6.5 if Gemma flag is not set), Step 6.8 scaffolds the autonomous execution vault. Read `references/orchestrator-scaffold.md` for the full algorithm. This flag only applies during first assembly.
 ```
 
-- [ ] **Step 3: Add Step 6.8 (R2)**
+- [x] **Step 3: Add Step 6.8 (R2)**
 
 Insert after Step 6.75 (after line 262), before Step 7 (The Handoff). ~10 lines:
 
@@ -513,7 +548,7 @@ Output: `vault/` directory with schemas, governance, orchestration config, Herme
 This is infrastructure generation from already-approved assembly content. No additional operator approval needed. Include the vault location in the Step 7 summary.
 ```
 
-- [ ] **Step 4: Update Step 7 handoff (R2)**
+- [x] **Step 4: Update Step 7 handoff (R2)**
 
 In the Step 7 format block (the command table), add a line after the existing content (inside the closing triple-backtick block, after the "Run `/blueprint`" line). The line only appears when `--include-orchestrator` was used:
 
@@ -524,16 +559,23 @@ If `--include-orchestrator` was used, add to the "What just happened" section:
 > Orchestrator vault scaffolded at `vault/`. See `vault/runbooks/daemon-setup.md` to install and start the Hermes daemon.
 ```
 
-- [ ] **Step 5: Verify line count**
+- [x] **Step 5: Verify line count**
 
 SKILL.md was ~325 lines. Adding ~18 lines puts it at ~343. Verify still under 500-line cap.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add skills/gigo/SKILL.md
 git commit -m "feat: add --include-orchestrator flag and Step 6.8 to gigo:gigo (R1, R2)"
 ```
+
+#### What Was Built
+- **Deviations:** 340 lines vs ~343 estimated — on target. All 4 changes applied as planned.
+- **Review changes:** None.
+- **Notes for downstream:** Step 6.8 placed after 6.75, mirrors `--include-gemma` pattern. Step 7 handoff mention follows same pattern as Gemma mention (conditional note after format block).
+
+<!-- checkpoint: task-6 54eebee -->
 
 ---
 
@@ -547,7 +589,7 @@ git commit -m "feat: add --include-orchestrator flag and Step 6.8 to gigo:gigo (
 - Create: `skills/spec/references/ticket-generation.md`
 - Modify: `skills/spec/SKILL.md:165-168` (between Phase 10 approval marker and Handoff section)
 
-- [ ] **Step 1: Create ticket-generation.md (R8)**
+- [x] **Step 1: Create ticket-generation.md (R8)**
 
 Write `skills/spec/references/ticket-generation.md` (~60 lines). Three sections:
 
@@ -598,7 +640,7 @@ Vault location: vault/tickets/
 DAG: valid (no cycles, no orphaned refs)
 ```
 
-- [ ] **Step 2: Add Phase 10.5 to spec SKILL.md (R9)**
+- [x] **Step 2: Add Phase 10.5 to spec SKILL.md (R9)**
 
 Insert between the Phase 10 approval marker code block (line 165: ` ``` `) and the `---` separator before the Handoff section (line 167). ~12 lines:
 
@@ -616,16 +658,23 @@ If the vault schema doesn't exist, skip this phase entirely. The standard /execu
 After generation, include the ticket summary in the handoff message.
 ```
 
-- [ ] **Step 3: Verify**
+- [x] **Step 3: Verify**
 
 Confirm `ticket-generation.md` exists with ~60 lines. Confirm spec SKILL.md has Phase 10.5 between Phase 10 and Handoff. Confirm SKILL.md is still under 500 lines (~196 + 12 = ~208).
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add skills/spec/references/ticket-generation.md skills/spec/SKILL.md
 git commit -m "feat: add ticket generation reference and Phase 10.5 to gigo:spec (R8, R9)"
 ```
+
+#### What Was Built
+- **Deviations:** ticket-generation.md is 71 lines vs ~60 estimated. spec SKILL.md is 209 lines vs ~208 estimated. Both on target.
+- **Review changes:** None.
+- **Notes for downstream:** Phase 10.5 is conditional on `vault/_schema/ticket.md` existence. DAG validation has orphan check + cycle check. Ticket IDs use `TCK-{phase}-{sequence}` with 3-digit padding.
+
+<!-- checkpoint: task-7 d457277 -->
 
 ---
 
@@ -638,7 +687,7 @@ git commit -m "feat: add ticket generation reference and Phase 10.5 to gigo:spec
 **Files:**
 - (no files created — verification only)
 
-- [ ] **Step 1: Cross-reference audit**
+- [x] **Step 1: Cross-reference audit**
 
 Verify all internal references resolve:
 - `skills/gigo/SKILL.md` references `references/orchestrator-scaffold.md` → exists
@@ -648,7 +697,7 @@ Verify all internal references resolve:
 - `orchestrator-scaffold.md` references `references/hermes-skills/circuit-breaker.md` → exists
 - `skills/spec/SKILL.md` references `references/ticket-generation.md` → exists
 
-- [ ] **Step 2: Line count audit**
+- [x] **Step 2: Line count audit**
 
 | File | Expected | Cap |
 |---|---|---|
@@ -661,7 +710,7 @@ Verify all internal references resolve:
 | `skills/gigo/references/hermes-skills/circuit-breaker.md` | ~60 | 100 |
 | `skills/spec/references/ticket-generation.md` | ~60 | — |
 
-- [ ] **Step 3: Convention compliance**
+- [x] **Step 3: Convention compliance**
 
 Verify across all new files:
 - Hermes skill templates use imperative voice exclusively (no "you should", no rationale)
@@ -670,7 +719,7 @@ Verify across all new files:
 - No references to Hermes `send_message` inside delegated skills (vault-dispatcher handles alerting)
 - All YAML examples parse without errors
 
-- [ ] **Step 4: Spec coverage check**
+- [x] **Step 4: Spec coverage check**
 
 | Requirement | Task | File |
 |---|---|---|
@@ -687,5 +736,12 @@ Verify across all new files:
 All 9 requirements covered.
 
 **Done when:** All 6 reference files exist, both SKILL.md files are modified, cross-references resolve, line counts are within caps, and all spec requirements map to a file.
+
+#### What Was Built
+- **Deviations:** None. All 4 checks passed clean.
+- **Review changes:** None.
+- **Notes for downstream:** Actual line counts: gigo SKILL.md 340, spec SKILL.md 209, orchestrator-scaffold 299, ticket-schema 81, vault-dispatcher 56, proof-of-work 42, circuit-breaker 73, ticket-generation 71. All under caps. All 9 spec requirements (R1-R9) have corresponding implementations.
+
+<!-- checkpoint: task-8 54eebee -->
 
 <!-- approved: plan 2026-04-13T06:45:00 by:Eaven -->
