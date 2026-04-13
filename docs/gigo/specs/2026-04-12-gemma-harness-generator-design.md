@@ -109,8 +109,8 @@ Write to `.claude/references/gemma-harness.md` in the target project.
 ```markdown
 # Gemma Harness — {Project Name}
 
-Use this as the system prompt when running this project with Gemma-class models
-(27B, 12B). Copy everything below the line into the system context.
+Use this as the system prompt when running this project with Gemma-class models.
+Copy everything below the line into the system context.
 Domain patterns from .claude/references/ should also be included in context.
 
 ---
@@ -215,3 +215,5 @@ The quoted bad request uses the operator's likely phrasing. The correction is a 
 2. **Flattening loses important rules.** Mitigation: 8-12 budget matches the proven harness (8 rules). Extraction prioritizes quality bars and quality gates — already the highest-signal content.
 
 3. **Cross-domain harness structure varies.** Mitigation: the template is domain-agnostic (role, format, rules, example). Only the content varies. Proven on Rails; tested on TypeScript via integration-api fixture.
+
+<!-- approved: spec 2026-04-13T01:10:05 by:Eaven -->
