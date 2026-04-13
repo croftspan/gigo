@@ -1,5 +1,6 @@
 gigo-workspace/
 .local/
+.claude/worktrees/
 
 # Eval results (keep scripts, ignore outputs)
 evals/blueprint-flow-test/results/

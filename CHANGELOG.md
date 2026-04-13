@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [0.12.0-beta] — 2026-04-12
 
 ### Autonomous Orchestrator Scaffold
 
