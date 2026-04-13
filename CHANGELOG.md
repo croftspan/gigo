@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+### Executor Model Routing
+
+- **Local model detection at startup.** `gigo:execute` now checks `localhost:8080/health` and `.claude/references/gemma-harness.md` before presenting execution options. When both are present, a third option appears: "Subagents + local model" — Gemma generates code, haiku applies it in worktrees.
+- **Routing reference.** New `skills/execute/references/local-model-routing.md` (178 lines) covers the full lifecycle: 3-step detection, prompt formatting with context budgeting (32K total, ~22K usable for task + inline files), JSON serialization via Write tool (not shell), response parsing with 5 edge-case handlers, and 4-layer escalation (API failure → parse failure → test failure → review failure, each falling back to Claude).
+- **Applier and fix prompt templates.** Two new templates in `teammate-prompts.md`: the haiku applier (writes Gemma's code blocks verbatim in a worktree) and the Gemma fix prompt (re-prompts on failure with test output or review feedback).
+- **Checkpoint model tracing.** Optional `model` field in checkpoint comments tracks which model generated each task's code (`gemma-26b`, `claude-sonnet`, etc.). Informational only — resume logic ignores it.
+- **Model selection override.** When local routing is active, all tasks route to Gemma first regardless of complexity tier. The existing complexity table applies only to Claude fallback and escalation (one tier above recommendation).
+- **Routing stats in completion summary.** When local routing was active, the post-execution summary includes per-model breakdown: tasks via Gemma vs Claude, with reasons for any escalations.
+
 ### Gemma Harness Generator
 
 - **`--include-gemma` flag for `gigo:gigo`.** New flag activates automatic Gemma-compatible harness generation during first assembly. After Step 6.5 writes review criteria, Step 6.75 reads the generator reference and produces a lean harness at `.claude/references/gemma-harness.md` — Tier 2, zero token cost on normal Claude conversations.
