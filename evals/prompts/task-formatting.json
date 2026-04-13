@@ -1,0 +1,52 @@
+[
+  {
+    "name": "Add payment status column",
+    "task_verbatim": "## Task: Add payment status column to orders\n\nblocks: none\nblocked-by: none\nparallelizable: false\n\n**Files:**\n- `db/migrate/add_payment_status_to_orders.rb`\n- `app/models/order.rb`\n- `spec/requests/orders_spec.rb`\n\n- [ ] **Step 1:** Create a migration that adds the `payment_status` column to the `orders` table.\n- [ ] **Step 2:** Update the Order model with validations.\n- [ ] **Step 3:** Add a scope for paid orders.\n- [ ] **Step 4:** Write request specs covering the happy path and error cases.\n- [ ] **Step 5:** Commit changes.\n\nRun: `bundle exec rspec spec/requests/orders_spec.rb`\nExpected: All examples pass, no failures.",
+    "task_formatted": "Add a `payment_status` string column to the `orders` table.\n\n- Migration: use `change` method. Add column with no default (metadata-only, no lock). Allowed values: `['unpaid', 'paid', 'failed', 'refunded']`.\n- Model: Validate: inclusion of `payment_status` in `['unpaid', 'paid', 'failed', 'refunded']`. Presence validation required.\n- Add scope `paid` \u2192 `where(payment_status: 'paid')`.\n- Spec: request spec with happy path (create order with valid status) and one error case (invalid status returns 422).",
+    "output_files": [
+      "db/migrate/add_payment_status_to_orders.rb",
+      "app/models/order.rb",
+      "spec/requests/orders_spec.rb"
+    ],
+    "spec_checks": [
+      "payment_status",
+      "validates",
+      "scope :paid",
+      "def change",
+      "add_column"
+    ]
+  },
+  {
+    "name": "Add email validation to users",
+    "task_verbatim": "## Task: Add email validation to users\n\nblocks: none\nblocked-by: none\nparallelizable: true\n\n**Files:**\n- `app/models/user.rb`\n- `spec/requests/users_spec.rb`\n\n- [ ] **Step 1:** Add validations to the User model.\n- [ ] **Step 2:** Write request specs to cover the new validations.\n- [ ] **Step 3:** Commit changes.\n\nRun: `bundle exec rspec spec/requests/users_spec.rb`\nExpected: All examples pass, no failures.",
+    "task_formatted": "Add email validations to the `User` model.\n\n- Validate: presence of `email`.\n- Validate: format with `URI::MailTo::EMAIL_REGEXP`.\n- Validate: uniqueness (case-insensitive, `case_sensitive: false`).\n- Spec: request spec with `describe \"POST /users\"`. Include happy path (valid email) and error cases (missing email, duplicate email, malformed email).",
+    "output_files": [
+      "app/models/user.rb",
+      "spec/requests/users_spec.rb"
+    ],
+    "spec_checks": [
+      "validates",
+      "email",
+      "uniqueness",
+      "format",
+      "describe"
+    ]
+  },
+  {
+    "name": "Add pagination to orders index",
+    "task_verbatim": "## Task: Add pagination to orders index\n\nblocks: none\nblocked-by: none\nparallelizable: false\n\n**Files:**\n- `app/controllers/orders_controller.rb`\n- `spec/requests/orders_spec.rb`\n\n- [ ] **Step 1:** Add pagination to the index action.\n- [ ] **Step 2:** Update specs to cover pagination behavior.\n- [ ] **Step 3:** Commit changes.\n\nRun: `bundle exec rspec spec/requests/orders_spec.rb`\nExpected: All examples pass, no failures.",
+    "task_formatted": "Add pagination to the `GET /orders` index action.\n\n- Accept `page` param (integer, default: 1) and `per_page` param (integer, default: 25, max: 100).\n- Use `.limit(per_page).offset((page - 1) * per_page)` for query construction.\n- Return `X-Total-Count` header with the total record count (before pagination).\n- Use `includes`/`preload` to avoid N+1 queries.\n- Spec: request spec with `describe \"GET /orders\"`. Cover default pagination, custom page/per_page, per_page cap at 100, and presence of `X-Total-Count` header.",
+    "output_files": [
+      "app/controllers/orders_controller.rb",
+      "spec/requests/orders_spec.rb"
+    ],
+    "spec_checks": [
+      "page",
+      "per_page",
+      "limit",
+      "offset",
+      "X-Total-Count",
+      "describe"
+    ]
+  }
+]
