@@ -142,7 +142,7 @@ When a Gemma-generated task fails (test failure or review issues), re-prompt Gem
 The previous code had issues.
 
 ## Original Task
-{original task description from plan}
+{formatted task description — same formatting as the original Gemma prompt (plan metadata stripped, checkboxes flattened, non-execution content dropped per local-model-routing.md formatting procedure). If the original task had addendum context, include the same Background: prefix.}
 
 ## Issue
 {test failure output OR review feedback — pasted verbatim}
