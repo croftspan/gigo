@@ -24,7 +24,7 @@
 
 This is the authoritative reference for the entire local routing system. SKILL.md will point here; this file contains all procedural detail.
 
-- [ ] **Step 1: Write the detection section**
+- [x] **Step 1: Write the detection section**
 
 ```markdown
 # Local Model Routing
@@ -56,7 +56,7 @@ After reading the plan, before presenting execution options:
 All three must pass. Detection runs once — not per-task.
 ```
 
-- [ ] **Step 2: Write the prompt formatting section**
+- [x] **Step 2: Write the prompt formatting section**
 
 ```markdown
 ## Prompt Formatting
@@ -113,7 +113,7 @@ Estimate tokens at 4 characters per token. If files exceed ~22K:
 5. If still over → skip local routing for this task, dispatch to Claude
 ```
 
-- [ ] **Step 3: Write the API call section**
+- [x] **Step 3: Write the API call section**
 
 ```markdown
 ## API Call
@@ -152,7 +152,7 @@ rm -f /tmp/gigo-gemma-task-{N}.json
 ```
 ```
 
-- [ ] **Step 4: Write the response parsing section**
+- [x] **Step 4: Write the response parsing section**
 
 ```markdown
 ## Response Parsing
@@ -187,7 +187,7 @@ If validation fails → escalate to Claude (Layer 2).
 | Multiple blocks for same file | Use last occurrence. |
 ```
 
-- [ ] **Step 5: Write the error handling section**
+- [x] **Step 5: Write the error handling section**
 
 ```markdown
 ## Error Handling & Escalation
@@ -225,7 +225,7 @@ If the API fails on the first task, disable local routing for all remaining task
 **Announce escalation:** "Gemma couldn't resolve review feedback for Task {N}, dispatching Claude fix."
 ```
 
-- [ ] **Step 6: Verify and commit**
+- [x] **Step 6: Verify and commit**
 
 Verify the file:
 - Is under 200 lines
@@ -237,6 +237,13 @@ Verify the file:
 git add skills/execute/references/local-model-routing.md
 git commit -m "feat: add local model routing reference for gigo:execute"
 ```
+
+#### What Was Built
+- **Deviations:** None
+- **Review changes:** None
+- **Notes for downstream:** `local-model-routing.md` created (178 lines). Five sections: Detection, Prompt Formatting, API Call, Response Parsing, Error Handling & Escalation. Task 5 will add a pointer from SKILL.md.
+
+<!-- checkpoint: sha=03358e7 status=done reviewed=pass tier=1 model=claude-sonnet -->
 
 ---
 
@@ -251,7 +258,7 @@ git commit -m "feat: add local model routing reference for gigo:execute"
 
 Add two new templates: the applier prompt (haiku writes Gemma's output) and the Gemma fix prompt (re-prompt on failure).
 
-- [ ] **Step 1: Add applier prompt template**
+- [x] **Step 1: Add applier prompt template**
 
 After the existing "Tier 1: Operator-Resolved Re-dispatch" section (after line 99), add a new top-level section:
 
@@ -293,7 +300,7 @@ Status: DONE | BLOCKED (with reason — include full test output if tests failed
 ```
 ```
 
-- [ ] **Step 2: Add Gemma fix prompt template**
+- [x] **Step 2: Add Gemma fix prompt template**
 
 After the applier prompt section, add:
 
@@ -321,7 +328,7 @@ Fix the issues. Output corrected code blocks only.
 ```
 ```
 
-- [ ] **Step 3: Verify and commit**
+- [x] **Step 3: Verify and commit**
 
 Verify:
 - Both templates are after the existing sections
@@ -332,6 +339,13 @@ Verify:
 git add skills/execute/references/teammate-prompts.md
 git commit -m "feat: add applier and Gemma fix prompt templates"
 ```
+
+#### What Was Built
+- **Deviations:** Haiku worker committed directly to main (known worktree escape). Content verified correct.
+- **Review changes:** None
+- **Notes for downstream:** Two new templates: Applier Prompt (haiku writes Gemma output) and Gemma Fix Prompt (re-prompt on failure). Placed after existing sections, before Prompt Design Rationale.
+
+<!-- checkpoint: sha=199797f status=done reviewed=pass tier=1 model=claude-haiku -->
 
 ---
 
@@ -346,7 +360,7 @@ git commit -m "feat: add applier and Gemma fix prompt templates"
 
 Add the optional `model` field for production tracing.
 
-- [ ] **Step 1: Add model to the Fields table**
+- [x] **Step 1: Add model to the Fields table**
 
 In the `## Fields` table (after the `tier` row at line 39), add:
 
@@ -354,7 +368,7 @@ In the `## Fields` table (after the `tier` row at line 39), add:
 | `model` | `gemma-26b`, `gemma-31b`, `claude-haiku`, `claude-sonnet`, `claude-opus` | Which model generated the code (optional, omit when local routing disabled) |
 ```
 
-- [ ] **Step 2: Add an example showing the model field**
+- [x] **Step 2: Add an example showing the model field**
 
 After the "Task blocked on operator decision" example (line 30), add:
 
@@ -367,7 +381,7 @@ After the "Task blocked on operator decision" example (line 30), add:
 ```
 ```
 
-- [ ] **Step 3: Add resume note**
+- [x] **Step 3: Add resume note**
 
 At the end of the `## Resume Detection Procedure` section (after line 87), add a paragraph:
 
@@ -375,7 +389,7 @@ At the end of the `## Resume Detection Procedure` section (after line 87), add a
 **Model field on resume:** The `model` field is informational only. Resume logic ignores it — it doesn't affect which model handles a retry. Its purpose is production tracing: when a task's output quality is questioned, the model field answers "who wrote this?"
 ```
 
-- [ ] **Step 4: Verify and commit**
+- [x] **Step 4: Verify and commit**
 
 Verify:
 - Fields table has 5 rows (sha, status, reviewed, tier, model)
@@ -386,6 +400,13 @@ Verify:
 git add skills/execute/references/checkpoint-format.md
 git commit -m "feat: add model field to checkpoint format for routing traceability"
 ```
+
+#### What Was Built
+- **Deviations:** Haiku worker committed directly to main (known worktree escape). Content verified correct.
+- **Review changes:** None
+- **Notes for downstream:** `model` field added to checkpoint format. Values: `gemma-26b`, `gemma-31b`, `claude-haiku`, `claude-sonnet`, `claude-opus`. Fields table now has 5 rows. Resume logic ignores model field — informational for tracing only.
+
+<!-- checkpoint: sha=6a430aa status=done reviewed=pass tier=1 model=claude-haiku -->
 
 ---
 
@@ -400,7 +421,7 @@ git commit -m "feat: add model field to checkpoint format for routing traceabili
 
 Add a section documenting the local model override.
 
-- [ ] **Step 1: Add local model override section**
+- [x] **Step 1: Add local model override section**
 
 Before the existing `## Task Complexity → Model` heading (line 3), insert:
 
@@ -424,7 +445,7 @@ See `references/local-model-routing.md` for the full routing procedure.
 
 ```
 
-- [ ] **Step 2: Verify and commit**
+- [x] **Step 2: Verify and commit**
 
 Verify:
 - New section appears before the existing table
@@ -435,6 +456,13 @@ Verify:
 git add skills/execute/references/model-selection.md
 git commit -m "feat: add local model override to model selection reference"
 ```
+
+#### What Was Built
+- **Deviations:** None
+- **Review changes:** None
+- **Notes for downstream:** "Local Model Override" section added before existing complexity table. All tasks route to Gemma first; complexity table used only for Claude fallback. Escalation: one tier above table recommendation.
+
+<!-- checkpoint: sha=cb1a685 status=done reviewed=pass tier=1 model=claude-sonnet -->
 
 ---
 
