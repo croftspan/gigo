@@ -21,10 +21,10 @@ metadata:
 6. Send prompt to the model via the configured provider.
 7. Parse response. Extract code blocks with file path headers (`// filepath: path/to/file` or `# filepath: path/to/file`). Each maps to a file write.
 8. Write each extracted code block to its file path using `write_file`.
-9. Run proof-of-work. Read `vault/_schema/proof-of-work.md` for test and lint commands. Execute test command via `terminal`, capture output to `vault/agents/model/{ticket-id}-test.log`. Execute lint command, capture to `vault/agents/model/{ticket-id}-lint.log`. Update `proof_of_work.produced.test_output` and `proof_of_work.produced.lint_output` with log paths.
+9. Invoke `proof-of-work` skill with the ticket ID. The skill runs test, lint, and any conditional checks (domain-dependent), updates `proof_of_work.produced`, and returns `{pass, missing, failures}`.
 10. Route on results:
-    - Test and lint both exit 0: generate reviewer verdict at `vault/agents/reviewer/{ticket-id}.md` (see Reviewer Verdict below). Set `proof_of_work.produced.reviewer_verdict` to the file path. Set `status: done`. Append `{result: "passed"}` to `model_history`. Go to step 1.
-    - Any failure: append error output (last 20 lines) to the user message. Re-send to model (steps 6-9). One retry only.
+    - `pass: true`: generate reviewer verdict at `vault/agents/reviewer/{ticket-id}.md` (see Reviewer Verdict below). Set `proof_of_work.produced.reviewer_verdict` to the file path. Set `status: done`. Append `{result: "passed"}` to `model_history`. Go to step 1.
+    - `pass: false`: append `failures` (last 20 lines per entry) to the user message. Re-send to model (steps 6-9). One retry only.
     - Retry also fails: set `status: escalated`. Append `{result: "escalated"}` to `model_history`. Read `vault/_orchestration/escalation-protocol.md`. Invoke `claude-code` skill with the escalation prompt.
     - Claude Code succeeds (proof-of-work passes): set `status: done` with `model: "claude-code"` in history.
     - Claude Code fails: set `status: failed`. Log to `vault/agents/claude-code/{ticket-id}/`. Go to step 1.
