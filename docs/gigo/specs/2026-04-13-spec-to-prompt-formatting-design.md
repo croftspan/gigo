@@ -152,3 +152,5 @@ The formatting procedure (R2) is a structural transformation the execute lead (C
 - Claude-rewrites-for-Gemma translation step — rejected: defeats cost savings of local routing
 - Import chain following — deferred: cross-language code analysis is separate scope
 - Eval CI integration — deferred: requires GPU hardware not available in CI
+
+<!-- approved: spec 2026-04-13T03:20:22 by:Eaven -->
