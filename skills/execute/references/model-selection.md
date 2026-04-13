@@ -2,6 +2,23 @@
 
 Use the least powerful model that can handle each task to conserve cost and increase speed.
 
+## Local Model Override
+
+When local routing is enabled (local model detected at startup, operator chose "Subagents + local model"):
+
+- **All tasks route to the local Gemma model first**, regardless of complexity tier
+- The complexity table below is used ONLY for Claude fallback and escalation
+- On escalation (Gemma fails after retry), use one tier above the table's recommendation:
+  - Table says haiku → escalate to sonnet
+  - Table says sonnet → escalate to opus
+  - Table says opus → escalate to opus (ceiling)
+
+When local routing is disabled (no local model, or operator chose "Subagents only"), use the table below as current behavior — no change.
+
+See `references/local-model-routing.md` for the full routing procedure.
+
+---
+
 ## Task Complexity → Model
 
 | Task complexity | Signals | Model |
