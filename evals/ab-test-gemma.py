@@ -204,6 +204,15 @@ def main():
     prompts_file = SCRIPT_DIR / "prompts" / f"{args.domain}.txt"
     variants = ["bare", "gemma"]
 
+    # Skip variants whose fixture directory doesn't exist
+    missing = [v for v in variants if not fixtures[v].exists()]
+    for v in missing:
+        print(f"WARNING: fixture directory not found for '{v}': {fixtures[v]} — skipping variant")
+        variants.remove(v)
+
+    if args.only == "generated" and not args.gemma_harness:
+        parser.error("--only generated requires --gemma-harness")
+
     harness_content = None
     if args.gemma_harness:
         harness_path = Path(args.gemma_harness)
