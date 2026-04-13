@@ -62,6 +62,8 @@ These go in `.claude/references/`. They are read when needed, not every conversa
 
 **Persona style:** `.claude/references/persona-style.md` stores the operator's preference for persona presentation. One field: `style:` (`characters` or `lenses`). Written during gigo:gigo assembly. Characters get named personas with personality and voice. Lenses get functional descriptors that work silently. If the file doesn't exist, default to `lenses`.
 
+**Gemma harness (optional):** `.claude/references/gemma-harness.md` — generated when `--include-gemma` flag is used during first assembly. Self-contained context block for Gemma-class local models. Contains role statement, output format, flattened rules, and one example. Domain patterns reference stays as a separate file. See `gemma-harness-generator.md` for the generation algorithm.
+
 Rules files tell the agent WHEN to read specific reference files. This creates task-aware context loading.
 
 ## Pre-Write Dedup Pass
