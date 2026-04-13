@@ -166,6 +166,18 @@ Wait for approval.
 
 ---
 
+## Phase 10.5: Generate Vault Tickets (Conditional)
+
+If `vault/_schema/ticket.md` exists in the project (indicating orchestrator scaffold is present), convert the approved plan's tasks into vault tickets.
+
+Read `references/ticket-generation.md` for the full conversion procedure. This is a mechanical translation — no new decisions, no operator approval needed.
+
+If the vault schema doesn't exist, skip this phase entirely. The standard /execute path proceeds as normal.
+
+After generation, include the ticket summary in the handoff message.
+
+---
+
 ## Handoff
 
 After the plan is approved, compact the conversation to shed spec-writing context. The plan and spec on disk are the durable records. Then ask:
