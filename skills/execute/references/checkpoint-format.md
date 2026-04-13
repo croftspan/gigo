@@ -33,7 +33,7 @@ After each task's last step, append a checkpoint comment:
 
 ```
 - [x] **Step 5: Write endpoint**
-<!-- checkpoint: sha=jkl3456 status=done reviewed=pass tier=1 model=gemma-26b -->
+<!-- checkpoint: sha=jkl3456 status=done reviewed=pass tier=1 model=gemma-4-26b-a4b -->
 ```
 
 ## Fields
@@ -44,7 +44,7 @@ After each task's last step, append a checkpoint comment:
 | `status` | `done`, `in-review`, `in-progress`, `blocked` | Where the task was when interrupted |
 | `reviewed` | `pass`, `issues-found`, `ask-operator-pending`, `ask-operator-resolved`, `pending` | Review state at interruption |
 | `tier` | `1`, `2` | Which execution tier was running |
-| `model` | `gemma-26b`, `gemma-31b`, `claude-haiku`, `claude-sonnet`, `claude-opus` | Which model generated the code (optional, omit when local routing disabled) |
+| `model` | Model ID as reported by `/v1/models` (e.g., `gemma-4-26b-a4b`) or `claude-haiku`, `claude-sonnet`, `claude-opus` | Which model generated the code (optional, omit when local routing disabled) |
 
 ## Resume Detection Procedure
 

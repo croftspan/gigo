@@ -161,6 +161,9 @@ If the API fails on the first task, disable local routing for all remaining task
 **Action:** Route to Claude subagent.
 **Announce:** "Gemma response couldn't be parsed for Task {N}, routing to Claude ({model})."
 
+Track consecutive parse failures. If 2 consecutive tasks fail parsing, disable local routing for all remaining tasks — parse failures are usually systematic (wrong harness, model mismatch), not per-task. Reset the counter on any successful parse.
+**Announce disable:** "Local model disabled — 2 consecutive parse failures. Remaining tasks use Claude."
+
 ### Layer 3: Test Failure
 
 **Trigger:** Applier reports BLOCKED with test output.

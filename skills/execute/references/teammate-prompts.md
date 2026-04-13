@@ -104,7 +104,7 @@ Status: DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT
 
 ### Local Model Routing: Haiku Applier
 
-When a task is routed through a local model (see `references/local-model-routing.md`), the local model generates code and a haiku subagent applies it. Dispatch with `model: "haiku"` and `isolation: "worktree"`:
+When a task is routed through a local model (see `references/local-model-routing.md`), the local model generates code and a haiku subagent applies it. Dispatch with `model: "haiku"` and `isolation: "worktree"`. The `{test_command}` comes from the plan's task description (if it specifies a test step) or from the project's test configuration. If neither exists, omit the test block.
 
 ```
 You are applying pre-generated code to files. Write each file exactly as provided.

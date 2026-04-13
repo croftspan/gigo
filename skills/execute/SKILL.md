@@ -183,7 +183,7 @@ After a task passes both review stages, update the plan document before moving t
 
 1. Synthesize results — read the "What Was Built" addendums across all tasks for a complete picture of deviations, review changes, and observations
    1.5. **Routing stats** (when local routing was active). Include in the summary:
-      > "N tasks completed. M via Gemma {model_id} (avg Xs generation), K via Claude (reasons: {per-task reasons})."
+      > "N tasks completed. M via Gemma {model_id}, K via Claude (reasons: {per-task escalation reasons})."
       Only report this when local routing was used. When all tasks ran via Claude, omit.
 2. Report to operator with a summary: what was built, what deviated from plan, what the review cycle caught, and any "accept" observations worth noting
 3. **Auto-changelog.** Generate a changelog entry:
