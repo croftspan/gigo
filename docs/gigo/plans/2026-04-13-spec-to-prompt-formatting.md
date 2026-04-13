@@ -241,7 +241,7 @@ git commit -m "feat: update Gemma fix prompt to use formatted task text (R4)"
 - Create: `evals/test-task-formatting.py`
 - Create: `evals/prompts/task-formatting.json`
 
-- [ ] **Step 1: Create the task fixtures file**
+- [x] **Step 1: Create the task fixtures file**
 
 Create `evals/prompts/task-formatting.json` with 3 fixtures based on Rails API tasks that exercise different formatting gaps. Each fixture has:
 - `name`: descriptive identifier
@@ -268,7 +268,7 @@ Fixture 3 — "Add pagination to orders index":
 - spec_checks: `["page", "per_page", "limit", "offset", "X-Total-Count", "describe"]`
 - output_files: `["app/controllers/orders_controller.rb", "spec/requests/orders_spec.rb"]`
 
-- [ ] **Step 2: Create the eval script**
+- [x] **Step 2: Create the eval script**
 
 Create `evals/test-task-formatting.py` following the `ab-test-gemma.py` pattern:
 
@@ -319,18 +319,25 @@ parser.add_argument("--runs", type=int, default=1)
 parser.add_argument("--fixture", type=int, default=None, help="Run single fixture by index (1-based)")
 ```
 
-- [ ] **Step 3: Verify the script runs**
+- [x] **Step 3: Verify the script runs**
 
 Run: `python3 evals/test-task-formatting.py --server http://localhost:8080 --fixture 1`
 
 If llama-server is not running, verify the script exits cleanly with "ERROR: llama-server not reachable at http://localhost:8080" (matching ab-test-gemma.py's error handling).
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add evals/test-task-formatting.py evals/prompts/task-formatting.json
 git commit -m "feat: add task formatting AB test eval (R5)"
 ```
+
+#### What Was Built
+- **Deviations:** None
+- **Review changes:** Removed duplicate `## Output Files` sections from all 3 `task_formatted` fields in task-formatting.json — `build_user_message()` already appends output files, so having them in the fixture text produced a confound (formatted variant had output files listed twice). Fixed in commit 0c1fac2.
+- **Notes for downstream:** Eval script (`evals/test-task-formatting.py`) follows the `ab-test-gemma.py` pattern — same `check_server`, `detect_model`, `generate` functions. Auto-detects model via `/v1/models` endpoint. Exits cleanly if llama-server is not running. Fixtures are in `evals/prompts/task-formatting.json`.
+
+<!-- checkpoint: sha=0c1fac2 status=done reviewed=pass tier=1 -->
 
 ---
 
