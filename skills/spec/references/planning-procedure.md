@@ -138,6 +138,17 @@ Every step must contain the actual content a worker needs. These are plan failur
 - Steps that describe what to do without showing how (code blocks required for code steps)
 - References to types, functions, or methods not defined in any task
 
+## 8b. Explicitness Check
+
+Every task must be executable by a model that cannot read files or ask questions. After writing each task, verify:
+
+- Every field, column, or property names its type and default — not "add a status column" but "add `payment_status` column (string, default: 'unpaid')"
+- Every validation names its constraint — not "add validations" but "validate: inclusion of `payment_status` in `['unpaid', 'paid', 'failed', 'refunded']`"
+- Every scope or method names its logic — not "add a scope for paid orders" but "add scope `paid` → `where(payment_status: 'paid')`"
+- Every test case names its scenario — not "write specs covering transitions" but "spec: happy path (create with status 'paid') + error case (status 'invalid' rejected)"
+
+Section 8 catches placeholders ("TBD", "add appropriate error handling"). This section catches subtler ambiguity that passes section 8 but fails when no agent can ask "which validations?"
+
 ## 9. Plan Self-Review
 
 After writing the complete plan, review it against the spec:
@@ -147,6 +158,8 @@ After writing the complete plan, review it against the spec:
 **9b. Placeholder scan:** Search the plan for any of the patterns from section 8 above. Fix them.
 
 **9c. Type consistency:** Do the types, method signatures, and property names used in later tasks match what you defined in earlier tasks? A function called `clearLayers()` in Task 3 but `clearFullLayers()` in Task 7 is a bug.
+
+**9d. Explicitness check:** For each task, read only the task text (ignore the plan header and other tasks). Could a model execute it without reading any project files or asking questions? If a step says "update with validations" without naming the validations, fix it. Apply section 8b.
 
 Fix issues inline. No need to re-review — just fix and move on.
 
