@@ -408,3 +408,5 @@ Pattern: `/tmp/gigo-gemma-task-{N}.json` where N is the task number from the pla
 4. **Haiku applier modifies code instead of applying verbatim.** Haiku might "improve" the code or add error handling. Mitigation: the applier prompt explicitly says "Do not modify, improve, or add to the code. Apply it verbatim." Review (gigo:verify) would catch any deviation from the spec.
 
 5. **Context budget estimation is wrong, causing truncation.** If the 4 chars/token estimate is too generous, large files might get truncated in the llama-server context. Mitigation: the budget check in R3.2 is conservative (22K tokens out of 32K available), and the fallback skips local routing for over-budget tasks.
+
+<!-- approved: spec 2026-04-13T02:10:42 by:Eaven -->
