@@ -77,7 +77,9 @@ def generate(url, prompt, system=None, max_tokens=4096, temp=0.0):
             "reasoning_chars": len(reasoning),
             "reasoning_words": len(reasoning.split()),
             "output_chars": 0,
+            "output_words": 0,
             "tokens_total": usage.get("completion_tokens", 0),
+            "think_ratio": "inf",
         }
 
     if "<channel|>" in content:
