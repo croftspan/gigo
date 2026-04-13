@@ -173,7 +173,7 @@ git commit -m "feat: add task formatting procedure and enhanced file selection (
 **Files:**
 - Modify: `skills/execute/references/teammate-prompts.md`
 
-- [ ] **Step 1: Update the Gemma Fix Prompt template**
+- [x] **Step 1: Update the Gemma Fix Prompt template**
 
 Replace the current Gemma Fix Prompt template (lines 141-157 of teammate-prompts.md):
 
@@ -215,12 +215,19 @@ The previous code had issues.
 Fix the issues. Output corrected code blocks only.
 ```
 
-- [ ] **Step 2: Commit**
+- [x] **Step 2: Commit**
 
 ```bash
 git add skills/execute/references/teammate-prompts.md
 git commit -m "feat: update Gemma fix prompt to use formatted task text (R4)"
 ```
+
+#### What Was Built
+- **Deviations:** None
+- **Review changes:** None
+- **Notes for downstream:** The Gemma Fix Prompt now references the formatting procedure in local-model-routing.md and includes the Background: prefix for addendum context. Task 4's eval fixtures should produce formatted task text consistent with this procedure.
+
+<!-- checkpoint: sha=52042c7 status=done reviewed=pass tier=1 -->
 
 ---
 
