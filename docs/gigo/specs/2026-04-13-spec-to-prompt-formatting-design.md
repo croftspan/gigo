@@ -61,7 +61,7 @@ This replaces the separate "Context" section used in Claude subagent prompts (fr
 
 Extend the file selection heuristic in `skills/execute/references/local-model-routing.md`.
 
-**R3.1: Conditional test helper inclusion.** Include test helper and factory files when the task includes writing tests. Examples: `spec/rails_helper.rb`, `spec/factories/*.rb`, `test/test_helper.*`, `conftest.py`, `jest.config.*`. Only include if the files exist. This replaces the current blanket exclusion "Do not include test helpers."
+**R3.1: Conditional test helper inclusion.** Include test helper and factory files when the task includes writing tests. Examples: `spec/rails_helper.rb`, `spec/factories/*.rb`, `test/test_helper.*`, `conftest.py`, `jest.config.*`. Only include if the files exist. The current line "Do not include test helpers, config files, or files the task doesn't reference" becomes "Do not include config files or files the task doesn't reference. Include test helper and factory files when the task includes writing tests." Config file and unreferenced file exclusions are preserved.
 
 **R3.2: Schema truncation.** When a schema/type definition file exceeds ~2000 tokens (~8000 characters), truncate to the table(s) or model(s) relevant to the current task. This is guidance for the execute lead (Claude), not a rigid algorithm — different schema formats (ActiveRecord, Prisma, TypeORM) have different structures.
 
@@ -110,7 +110,7 @@ Source files for `## Current Files` are loaded at runtime from the rails-api-gem
 - **Spec compliance** (float 0-1): fraction of `spec_checks` strings found in the output
 - **Code ratio** (float 0-1): (lines inside code blocks) / (total output lines)
 
-**R5.4:** CLI follows the pattern of `evals/ab-test-gemma.py`: argparse with `--server` (default `http://localhost:8080`), `--max-tokens` (default 4096), `--temp` (default 0.0), `--runs` (default 1). Adds `--fixture N` to run a single fixture by index.
+**R5.4:** CLI follows the pattern of `evals/ab-test-gemma.py`: argparse with `--server` (default `http://localhost:8080`), `--max-tokens` (default 4096), `--temp` (default 0.0), `--runs` (default 1). Adds `--fixture N` to run a single fixture by index. Model name for R5.5's results directory is auto-detected by querying `GET {server}/v1/models` at startup (same `detect_model()` pattern as `ab-test-gemma.py`), not a CLI argument.
 
 **R5.5:** Results saved to `evals/results/task-formatting-{model}-temp{temp}/` directory with per-fixture JSON files containing both responses and scores.
 
