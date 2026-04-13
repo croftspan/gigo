@@ -22,7 +22,7 @@
 **Files:**
 - Create: `skills/gigo/references/gemma-harness-generator.md`
 
-- [ ] **Step 1: Write the generator reference**
+- [x] **Step 1: Write the generator reference**
 
 Create `skills/gigo/references/gemma-harness-generator.md` with the following structure. This is the complete generation algorithm that Step 6.75 in SKILL.md will point to.
 
@@ -115,7 +115,7 @@ Six checks before writing:
 
 The actual file should expand each section with the full detail from the spec (R3.1-R3.6). The content above shows structure — the written file should include the complete role statement template, the complete output format template, the full flattening algorithm with all 8 steps spelled out, the full example generation algorithm with 5 steps, the complete exclusions list with reasons, and the complete quality checks with verification criteria. Target: ~140-160 lines.
 
-- [ ] **Step 2: Verify file content**
+- [x] **Step 2: Verify file content**
 
 Read the file back. Confirm:
 - All six quality check criteria documented with verification method
@@ -125,12 +125,17 @@ Read the file back. Confirm:
 - Preservation note explicitly says "SEPARATE file" and "Do NOT embed"
 - File is 130-170 lines
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add skills/gigo/references/gemma-harness-generator.md
 git commit -m "feat: add gemma harness generator reference for gigo:gigo"
 ```
+
+#### What Was Built
+- **Deviations:** None. File is 149 lines (within 130-170 target). All spec requirements (R3.1-R3.6) covered.
+- **Review changes:** None.
+- **Notes for downstream:** The generator reference includes a note that workflow.md should be skipped entirely ("workflow content hurts Gemma execution") — this is stricter than the plan's description which listed it as an input. The file also includes explicit domain mappings for pushback rules (Rails → ActiveRecord, TypeScript → typed interface, Python → ORM, Go → return error).
 
 ---
 
@@ -148,7 +153,7 @@ git commit -m "feat: add gemma harness generator reference for gigo:gigo"
 
 **Important:** Line numbers are approximate. Read the file fresh before editing — insertions from earlier steps shift later lines.
 
-- [ ] **Step 1: Add argument-hint to frontmatter**
+- [x] **Step 1: Add argument-hint to frontmatter**
 
 At `skills/gigo/SKILL.md:1-4`, change:
 ```yaml
@@ -166,7 +171,7 @@ argument-hint: "[--include-gemma]"
 ---
 ```
 
-- [ ] **Step 2: Add flag detection paragraph**
+- [x] **Step 2: Add flag detection paragraph**
 
 After the line `**This skill is for first assembly only**...` (currently line 22), insert:
 
@@ -177,7 +182,7 @@ After the line `**This skill is for first assembly only**...` (currently line 22
 If `$ARGUMENTS` contains `--include-gemma`, activate Gemma harness generation. After Step 6.5 writes the review criteria, Step 6.75 generates a lean harness for Gemma-class local models. Read `references/gemma-harness-generator.md` for the full algorithm. This flag only applies during first assembly.
 ```
 
-- [ ] **Step 3: Add Step 6.75**
+- [x] **Step 3: Add Step 6.75**
 
 After Step 6.5's closing line (`directly from the approved team, not invented.`), insert:
 
@@ -193,7 +198,7 @@ Output: `.claude/references/gemma-harness.md` — Tier 2, zero token cost on nor
 This is a mechanical transformation of already-approved content. No additional operator approval needed. Include the file in the Step 7 summary.
 ```
 
-- [ ] **Step 4: Add handoff mention**
+- [x] **Step 4: Add handoff mention**
 
 After the Step 7 command table's closing line (`Run `/blueprint` with what you want to build.`), insert:
 
@@ -203,16 +208,21 @@ If `--include-gemma` was used, also mention:
 > Gemma harness generated at `.claude/references/gemma-harness.md` — use as system prompt for local Gemma-class models.
 ```
 
-- [ ] **Step 5: Verify line count**
+- [x] **Step 5: Verify line count**
 
 Count total lines in SKILL.md. Should be ~323 (was 308, added ~15). Confirm under 500.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add skills/gigo/SKILL.md
 git commit -m "feat: add --include-gemma flag to gigo:gigo assembly"
 ```
+
+#### What Was Built
+- **Deviations:** None. SKILL.md is 324 lines (target ~323). All 4 insertions match plan exactly.
+- **Review changes:** None.
+- **Notes for downstream:** The `argument-hint` is at line 4, flag detection at lines 25-27, Step 6.75 at lines 255-262, handoff mention at lines 291-292.
 
 ---
 
@@ -225,7 +235,7 @@ git commit -m "feat: add --include-gemma flag to gigo:gigo assembly"
 **Files:**
 - Modify: `skills/gigo/references/output-structure.md:63` (after Persona style paragraph in Tier 2 section)
 
-- [ ] **Step 1: Add gemma harness note**
+- [x] **Step 1: Add gemma harness note**
 
 After the paragraph ending `...default to \`lenses\`.` (line 63), insert:
 
@@ -234,12 +244,17 @@ After the paragraph ending `...default to \`lenses\`.` (line 63), insert:
 **Gemma harness (optional):** `.claude/references/gemma-harness.md` — generated when `--include-gemma` flag is used during first assembly. Self-contained context block for Gemma-class local models. Contains role statement, output format, flattened rules, and one example. Domain patterns reference stays as a separate file. See `gemma-harness-generator.md` for the generation algorithm.
 ```
 
-- [ ] **Step 2: Commit**
+- [x] **Step 2: Commit**
 
 ```bash
 git add skills/gigo/references/output-structure.md
 git commit -m "docs: add gemma harness to output structure reference"
 ```
+
+#### What Was Built
+- **Deviations:** None. Single paragraph inserted at line 65, after persona style paragraph.
+- **Review changes:** None.
+- **Notes for downstream:** None.
 
 ---
 
@@ -252,7 +267,7 @@ git commit -m "docs: add gemma harness to output structure reference"
 **Files:**
 - Modify: `evals/ab-test-gemma.py`
 
-- [ ] **Step 1: Add domain-aware action phrases as module-level constants**
+- [x] **Step 1: Add domain-aware action phrases as module-level constants**
 
 After `SCRIPT_DIR = Path(__file__).parent` (line 29), replace the hardcoded `FIXTURES`, `VARIANTS`, `DEFAULT_PROMPT`, and `PROMPTS_FILE` block (lines 30-39) with:
 
@@ -275,7 +290,7 @@ ACTION_PHRASES_BY_DOMAIN = {
 GENERIC_ACTION_PHRASES = ["def ", "class ", "function ", "const ", "import "]
 ```
 
-- [ ] **Step 2: Make score_output domain-aware**
+- [x] **Step 2: Make score_output domain-aware**
 
 Change the `score_output` function signature from `def score_output(text):` to `def score_output(text, domain="rails-api"):`. Replace the hardcoded `action_phrases` list with:
 
@@ -284,7 +299,7 @@ action_list = ACTION_PHRASES_BY_DOMAIN.get(domain, GENERIC_ACTION_PHRASES)
 action_phrases = sum(1 for phrase in action_list if phrase in lower)
 ```
 
-- [ ] **Step 3: Add --domain and --gemma-harness CLI arguments**
+- [x] **Step 3: Add --domain and --gemma-harness CLI arguments**
 
 In `main()`, add to the argparse block (before `args = parser.parse_args()`):
 
@@ -295,7 +310,7 @@ parser.add_argument("--gemma-harness", default=None,
                     help="Path to a generated gemma-harness.md for 3-way comparison")
 ```
 
-- [ ] **Step 4: Build fixtures and variants dynamically**
+- [x] **Step 4: Build fixtures and variants dynamically**
 
 After `args = parser.parse_args()`, add:
 
@@ -308,7 +323,7 @@ prompts_file = SCRIPT_DIR / "prompts" / f"{args.domain}.txt"
 variants = ["bare", "gemma"]
 ```
 
-- [ ] **Step 5: Add generated variant support**
+- [x] **Step 5: Add generated variant support**
 
 After building the variants list:
 
@@ -327,7 +342,7 @@ if args.gemma_harness:
     variants.append("generated")
 ```
 
-- [ ] **Step 6: Build generated context**
+- [x] **Step 6: Build generated context**
 
 In the context-building section, after building `contexts["gemma"]`, add:
 
@@ -346,7 +361,7 @@ if "generated" in variants:
     )
 ```
 
-- [ ] **Step 7: Update all references to old module-level constants**
+- [x] **Step 7: Update all references to old module-level constants**
 
 Replace throughout `main()`:
 - `FIXTURES` → `fixtures`
@@ -357,7 +372,7 @@ Replace throughout `main()`:
 - Display tags dict — add `"generated": "Generated"` to both tag dicts
 - **Remove dead `contexts["original"]` block.** The 3 lines that build `orig_assembled` and `contexts["original"]` (lines 233-235) are dead code — `"original"` was already absent from the `VARIANTS` list before this change, and the new `fixtures` dict has no `"original"` key. Delete them to prevent a KeyError.
 
-- [ ] **Step 8: Handle --only with new variant**
+- [x] **Step 8: Handle --only with new variant**
 
 Update the `--only` validation to accept "generated" as well. The existing code:
 ```python
@@ -368,7 +383,7 @@ becomes:
 run_variants = [args.only] if args.only else variants
 ```
 
-- [ ] **Step 9: Verify no import errors**
+- [x] **Step 9: Verify no import errors**
 
 ```bash
 python3 evals/ab-test-gemma.py --help
@@ -376,12 +391,17 @@ python3 evals/ab-test-gemma.py --help
 
 Confirm: `--domain` and `--gemma-harness` appear in help output, no errors.
 
-- [ ] **Step 10: Commit**
+- [x] **Step 10: Commit**
 
 ```bash
 git add evals/ab-test-gemma.py
 git commit -m "feat: add --domain and --gemma-harness flags to AB test runner"
 ```
+
+#### What Was Built
+- **Deviations:** None. All 10 steps implemented as specified. Dead `contexts["original"]` block removed per plan.
+- **Review changes:** None.
+- **Notes for downstream:** `--help` confirms both new flags present. `load_prompt_list()` now requires a `path` argument.
 
 ---
 
@@ -394,7 +414,7 @@ git commit -m "feat: add --domain and --gemma-harness flags to AB test runner"
 **Files:**
 - Create: `evals/prompts/integration-api.txt`
 
-- [ ] **Step 1: Write prompts file**
+- [x] **Step 1: Write prompts file**
 
 Create `evals/prompts/integration-api.txt`:
 
@@ -415,12 +435,17 @@ Axis A (1-4): straightforward coding tasks. Prompts 3-4 are "bad" requests testi
 Axis B (5-7): open-ended questions testing voice and expertise.
 Axis C (8-10): scope challenges testing boundaries.
 
-- [ ] **Step 2: Commit**
+- [x] **Step 2: Commit**
 
 ```bash
 git add evals/prompts/integration-api.txt
 git commit -m "feat: add integration-api prompts for cross-domain eval"
 ```
+
+#### What Was Built
+- **Deviations:** None. 10 prompts in axis|text format matching the plan exactly.
+- **Review changes:** None.
+- **Notes for downstream:** None.
 
 ---
 
@@ -432,12 +457,12 @@ git commit -m "feat: add integration-api prompts for cross-domain eval"
 
 ## Done When
 
-1. `skills/gigo/references/gemma-harness-generator.md` exists with complete algorithm (~140-160 lines)
-2. `skills/gigo/SKILL.md` has `argument-hint`, flag detection, Step 6.75, and handoff mention (~323 lines total)
-3. `skills/gigo/references/output-structure.md` documents the optional gemma-harness.md
-4. `evals/ab-test-gemma.py` accepts `--domain` and `--gemma-harness` flags, scores domain-aware
-5. `evals/prompts/integration-api.txt` has 10 prompts in axis|text format
-6. `python3 evals/ab-test-gemma.py --help` runs without error
-7. All files committed
+1. ~~`skills/gigo/references/gemma-harness-generator.md` exists with complete algorithm (~140-160 lines)~~ ✅ 149 lines
+2. ~~`skills/gigo/SKILL.md` has `argument-hint`, flag detection, Step 6.75, and handoff mention (~323 lines total)~~ ✅ 324 lines
+3. ~~`skills/gigo/references/output-structure.md` documents the optional gemma-harness.md~~ ✅
+4. ~~`evals/ab-test-gemma.py` accepts `--domain` and `--gemma-harness` flags, scores domain-aware~~ ✅
+5. ~~`evals/prompts/integration-api.txt` has 10 prompts in axis|text format~~ ✅
+6. ~~`python3 evals/ab-test-gemma.py --help` runs without error~~ ✅
+7. ~~All files committed~~ ✅
 
 <!-- approved: plan 2026-04-13T01:24:04 by:Eaven -->

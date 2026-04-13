@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+### Gemma Harness Generator
+
+- **`--include-gemma` flag for `gigo:gigo`.** New flag activates automatic Gemma-compatible harness generation during first assembly. After Step 6.5 writes review criteria, Step 6.75 reads the generator reference and produces a lean harness at `.claude/references/gemma-harness.md` — Tier 2, zero token cost on normal Claude conversations.
+- **Generator reference.** New `skills/gigo/references/gemma-harness-generator.md` (149 lines) contains the full generation algorithm: 5-section template (header, role+constraint, output format, rules, example), 8-step flattening algorithm for converting personas into imperative rules, example generation procedure, 7 exclusion items with rationale, and 6 quality checks. Domain patterns stay as separate reference files — not embedded in the harness.
+- **Domain-aware eval runner.** `evals/ab-test-gemma.py` now accepts `--domain` (default: rails-api) and `--gemma-harness` (path to generated harness) flags. Scoring uses domain-specific action phrases (Rails vs TypeScript vs generic fallback). Supports 3-way comparison: bare vs hand-tuned vs generated.
+- **Cross-domain eval prompts.** New `evals/prompts/integration-api.txt` with 10 TypeScript/Next.js prompts across three axes: coding tasks (including pushback tests), open-ended questions, and scope challenges.
+
 ### Review Pipeline
 
 - **Boundary coherence checking.** Both `/verify` (craft reviewer) and `/sweep` (quality auditor) now check for cross-boundary mismatches — bugs where two representations of the same concept disagree across layers. Catches shape mismatches, convention drift, reference mismatches, contract gaps, temporal shape mismatches, and false positive integrations. Generalized from a competitive analysis of revfactory/harness's battle-tested taxonomy.
