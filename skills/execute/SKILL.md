@@ -24,15 +24,25 @@ Read `.claude/references/verbosity.md` if it exists. If `level: minimal`, announ
    - **Check for checkpoints.** Scan for `<!-- checkpoint: ... -->` comments in the plan.
    - **If checkpoints found:** Report progress to the operator, verify SHAs exist, and resume from the appropriate point. See `references/checkpoint-format.md` for the full resume procedure.
    - **If no checkpoints:** Fresh execution — proceed normally.
+
+2.5. **Detect local model.** Check for a running local model and Gemma harness. If both present, local routing is available as an execution option. See `references/local-model-routing.md` for the detection procedure. Detection runs once — not per-task.
+
 3. **Present execution options.** Let the operator choose their tier:
 
+   **When local model detected (step 2.5 passed):**
+   > "Local model detected: {model_id} at localhost:8080. Choose:
+   > 1. **Subagents + local model** (recommended) — Gemma generates, haiku applies in worktrees
+   > 2. **Subagents only** — Claude subagents (current behavior)
+   > 3. **Inline** — sequential in this session"
+
+   **When no local model detected:**
    > "Ready to execute. Available options:
    > 1. **Subagents** (recommended) — fresh worker per task, parallel dispatch for independent tasks, lead-managed review.
    > 2. **Inline** — sequential in this session, no isolation. Good for small plans or debugging.
    >
    > Which route?"
 
-   **Default behavior:** Use subagents for plans with 3+ tasks. Use inline for plans with 1-2 tasks. Present the choice to the operator only if they haven't already specified a preference. Do NOT silently choose inline for larger plans just because it's easier.
+   **Default behavior:** Use subagents + local model for plans with 3+ tasks when local is available. Use subagents for 3+ tasks when local is not available. Use inline for plans with 1-2 tasks. Present the choice to the operator only if they haven't already specified a preference. Do NOT silently choose inline for larger plans just because it's easier.
 
    **Announce your choice.** Before executing, announce which tier you're using and why:
    > "Executing with [Tier]: [reason]. [N] tasks, [M] parallelizable."
@@ -48,6 +58,14 @@ Fresh subagent per task. Lead controls dispatch, review, and triage.
 ### Execution Flow
 
 For each **wave** of unblocked tasks:
+
+   **If local routing is enabled** (operator chose option 1), the wave flow changes at step 3. See `references/local-model-routing.md` for the full procedure. Summary:
+   - Steps 1-2 (identify wave, pre-flight): unchanged
+   - Step 3 becomes: sequentially call the local model API for each task, parse responses
+   - Step 4 becomes: dispatch haiku applier subagents in parallel (for tasks with successful Gemma responses) alongside Claude subagents (for tasks that failed parsing). All use `isolation: "worktree"`.
+   - Steps 5-8 (review, triage, merge, update wave): unchanged
+
+   **If local routing is not enabled**, the existing dispatch flow below applies unchanged.
 
 1. **Identify the wave.** All tasks whose `blocked-by` dependencies are satisfied.
 2. **Pre-flight.** Verify readiness:
@@ -164,6 +182,9 @@ After a task passes both review stages, update the plan document before moving t
 ## When All Tasks Complete
 
 1. Synthesize results — read the "What Was Built" addendums across all tasks for a complete picture of deviations, review changes, and observations
+   1.5. **Routing stats** (when local routing was active). Include in the summary:
+      > "N tasks completed. M via Gemma {model_id} (avg Xs generation), K via Claude (reasons: {per-task reasons})."
+      Only report this when local routing was used. When all tasks ran via Claude, omit.
 2. Report to operator with a summary: what was built, what deviated from plan, what the review cycle caught, and any "accept" observations worth noting
 3. **Auto-changelog.** Generate a changelog entry:
    - Read the approved spec (linked in the plan header under `**Spec:**`)
@@ -204,3 +225,4 @@ After a task passes both review stages, update the plan document before moving t
 - `references/model-selection.md` — When to use which model tier
 - `references/checkpoint-format.md` — Checkpoint syntax, resume procedure, edge cases
 - `references/agent-teams-design.md` — Target-state design doc. Not shipped, not wired up. Loaded on demand when a reader follows the Future pointer.
+- `references/local-model-routing.md` — Local model detection, prompt formatting, API call, response parsing, and escalation protocol. Loaded when local routing is enabled.
