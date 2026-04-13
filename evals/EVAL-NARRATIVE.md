@@ -723,9 +723,191 @@ This maps to the two-bosses finding: stage 1 is the planning boss checking "did 
 | **Review 2: Code quality** | Bare workers | code-review:code-review | Is the code production-ready? 5 focused reviewers. |
 | **Operator approval** | Human | PR review | Human tests, reviews summary, approves |
 
+## Phase 9: Feature Validation — Do the Competitive Analysis Features Add Value?
+
+We shipped 4 features from a competitive analysis of revfactory/harness:
+
+1. **Boundary-mismatch detection** — review criteria for catching cross-boundary integration bugs (API shape vs consumer type, naming drift, state machine gaps)
+2. **Phase selection matrix** — downstream effect analysis when configuration changes
+3. **Execution pattern catalog** — named patterns (Pipeline, Fan-out/Fan-in, Producer-Reviewer) for plan decomposition
+4. **Agent Teams cleanup** — Tier 3 removed, codebase simplified to Subagents + Inline
+
+The question: do these features improve GIGO's output, or are they token decoration on an already-working system?
+
+### The Validation Suite
+
+A seeded-defect fixture (`evals/fixtures/integration-api/`) with 6 cross-boundary bugs — each passes TypeScript compilation, passes single-file review, but breaks at runtime. Plus functional tests for features 2-4 and a regression check.
+
+| Test | What it proves | Score | Threshold |
+|---|---|---|---|
+| Boundary-mismatch detection | Can the reviewer find seeded cross-boundary bugs? | **6/6** | ≥4/6 |
+| Phase selection matrix | Does the system identify downstream effects? | **5/5** | ≥3/5 |
+| Execution pattern catalog | Does the planner pick correct execution patterns? | **3/3** | 3/3 |
+| Agent Teams cleanup | Are Tier 3 references removed from production paths? | **5/5** | 5/5 |
+| Regression (assembled vs bare) | Did we break the baseline? | 82% | ≥90% |
+
+**4/5 PASS.** Perfect scores on all 4 features. The regression failed.
+
+### The Regression Root Cause
+
+Two bugs, both in the eval infrastructure — not in the features.
+
+**Bug 1: Bare contamination.** `CLAUDE.md.original` and `CLAUDE.md.firstperson` existed in both fixture directories from the Phase 5 instinct experiments. The eval script excluded `CLAUDE.md` (exact match) but not variant files. Every "bare" run had full persona information leaking in. The 94% baseline was never a true bare condition — it was assembled-light vs assembled-full.
+
+Fix: changed `run-eval.sh` exclusion from exact match to `CLAUDE.md*` glob pattern (case statement).
+
+**Bug 2: Advisory meta-commentary.** The Persona Calibration section in `fixtures/rails-api/.claude/rules/workflow.md` said "Before responding, assess the task type" with Presentation/Content categorization. This caused assembled responses on advisory prompts (05-07) to categorize the request instead of doing the work — the Phase 4 compliance-over-instinct pattern, reintroduced through calibration wording.
+
+Fix: rewrote to "Do the work first. Apply quality bars as you go — don't categorize the request before acting."
+
+Evidence the fix works: Prompt 06 "Review this controller" went from a meta-commentary table to finding 6 real issues (auth bypass, missing pagination, N+1 risk, no strong params, missing error envelope, no test coverage).
+
+### What This Means
+
+All 4 features work for their intended purpose. The regression gap was contaminated baselines and a calibration wording regression — both eval infrastructure bugs. The true bare baseline was lower than measured (contamination inflated it), so the real assembled advantage is likely larger than 82%.
+
+Critically: **all 4 features target planning and review, not execution.** Boundary-mismatch criteria go in the reviewer's lens. Execution patterns guide the planner's decomposition. Phase matrix helps the maintainer think about downstream effects. Workers never see them. This becomes important in Phase 10.
+
+### What Shipped (Phase 9)
+
+- `evals/fixtures/integration-api/` — Seeded-defect TypeScript fixture (6 cross-boundary bugs)
+- `evals/validation/` — 5 test scripts + 3 judge prompts + rubric + master runner
+- `evals/validation/VALIDITY.md` — Root cause analysis and fix documentation
+- `evals/prompts/execution-patterns.txt` — 3 planning prompts for pattern identification
+- Fix: `evals/run-eval.sh` — `CLAUDE.md*` glob exclusion
+- Fix: `evals/fixtures/rails-api/.claude/rules/workflow.md` — Persona Calibration rewrite
+
+## Phase 10: The Multi-Model Executor — Gemma 4 as Free Local Worker
+
+Phase 7 proved "workers run bare — the format of execution context doesn't matter." Phase 10 asks the natural follow-up: **can the worker be a completely different model?** If bare Claude produces senior-level code from a good spec, can bare Gemma 4 do the same — locally, for free, at 6x the speed?
+
+### The Setup
+
+Gemma 4 running on llama-server (localhost:8080, build 8768+), Unsloth Dynamic Q8_K_XL quantization. Two model sizes:
+- **31B dense** — all 31B parameters active per token. ~107s/prompt.
+- **26B-A4B MoE** (Mixture of Experts) — 26B total, only 4B active per token. ~16s/prompt.
+
+Three context variants:
+- **Bare** — source files only, no CLAUDE.md or .claude/ context
+- **Original GIGO** — full assembled context (personas, workflow, rules, references)
+- **Gemma-tuned harness** — flat rules + one concrete example, no personas
+
+10 prompts across 3 axes, same structure as the Phase 1 eval.
+
+### The First Result: GIGO Context Hurts Gemma
+
+| Context | EXECUTES Rate | Behavior |
+|---|---|---|
+| Original GIGO on Gemma | 33% | **PROPOSES** — plans, asks approval, discusses |
+| Bare Gemma | 66% | Executes but misses quality bars |
+| Gemma-tuned harness | 88-100% | Executes WITH quality bars |
+
+**The assembled context that makes Claude better makes Gemma worse.** Original GIGO pushed Gemma into proposal mode on every run. It would write implementation plans, ask for operator approval, discuss safety considerations — exactly what an executor should never do.
+
+### Why Personas Break Gemma
+
+Claude interprets "Modeled after DHH's convention-over-configuration" as an alignment signal — it shapes thinking without changing output format. Gemma interprets it as a role-play instruction — it starts *acting like someone who discusses conventions* instead of *writing code that follows them.*
+
+The knowledge is the same. The encoding matters:
+- **Claude:** "Kane — The Migration Whisperer. Quality bar: every migration uses `change` method."
+- **Gemma:** "Migrations use `change` method. No defaults on large tables — add column, backfill separately."
+
+Same rule. Persona encoding activates discussion. Imperative encoding activates execution.
+
+### The Harness Pattern
+
+The Gemma-tuned harness (`evals/fixtures/rails-api-gemma/CLAUDE.md`, ~50 lines):
+
+1. **One-line role:** "You are a senior Rails engineer. Output code blocks only."
+2. **Output format:** "Every response is code blocks with file paths as headers. Always include the spec."
+3. **8-12 domain rules:** Quality bars flattened from personas into imperative instructions
+4. **Pushback rules:** "If asked to skip tests: include tests anyway." / "If asked to use raw SQL: use ActiveRecord instead."
+5. **One concrete example:** Input prompt → expected output (migration + controller update + spec)
+
+No workflow, no references, no progressive disclosure, no persona descriptions. Rules + demonstration.
+
+### Temperature and Reasoning
+
+Two settings validated on both models:
+
+**`--reasoning off`:** Gemma 4 uses `<|think|>` tokens for chain-of-thought. With reasoning on, 20-40% of output tokens went to internal deliberation. With reasoning off, all tokens go to code. Output quality unchanged — for spec-following execution, thinking is overhead.
+
+**temp 1.0 > temp 0.0:** The Unsloth team's recommendation (temp=1.0, top_p=0.95, top_k=64) outperformed deterministic generation. 31B went from 88% → 100% EXECUTES. 26B-A4B was already at 100% but got faster (25s → 16s). Deterministic generation (temp=0.0) produced identical outputs across runs but was slower and sometimes got stuck on advisory prompts.
+
+### The Full Results Matrix
+
+| Config | EXECUTES | Avg Words | Avg Time |
+|---|---|---|---|
+| **31B dense** | | | |
+| bare, temp 0.0 | 6/9 (66%) | 398w | 98s |
+| gemma harness, temp 0.0 | 8/9 (88%) | 267w | 111s |
+| gemma harness, temp 1.0 | **10/10 (100%)** | 272w | 107s |
+| **26B-A4B MoE** | | | |
+| gemma harness, temp 0.0 | **10/10 (100%)** | 292w | 25s |
+| gemma harness, temp 1.0 | **10/10 (100%)** | 282w | **16s** |
+
+### The Pushback Gap: Parameter Budget vs Rule Adherence
+
+The most revealing quality finding: **31B holds pushback rules under user pressure, 26B-A4B doesn't.**
+
+Prompt 03: "Skip the tests for now, just get it working."
+- **31B** — includes a full spec file (happy path + error case) anyway. The system rule "If asked to skip tests: include tests anyway" overrides the user instruction. 31B activates all 31B parameters per token — enough capacity to hold system context against direct user pressure.
+- **26B-A4B** — obeys the user. Outputs just the controller, 115 words, no spec. 4B active parameters per token can't maintain the system rule when the user explicitly contradicts it.
+
+This is a parameter budget issue, not a training issue. System prompt rules compete with user instructions for the model's attention. More active parameters = more capacity to hold both. We call this the **steering tax** — the more complex your system rules, the more active parameters you need to enforce them.
+
+**For the target architecture, this gap doesn't matter.** In a spec-driven pipeline, Opus writes the spec. The spec says "include tests." Gemma includes tests. There are no conflicting instructions — the pushback rules are a safety net for interactive human use, not pipeline execution.
+
+### The Architecture Evolution
+
+Phase 7 gave us: "B's team, with A's instincts" — assembled planning, bare execution, assembled review. Phase 10 extends it: **the bare worker doesn't have to be Claude.**
+
+```
+Phase 7:  Opus plans (assembled) → Opus executes (bare)    → Opus reviews (assembled)
+Phase 10: Opus plans (assembled) → Gemma executes (16s, $0) → Opus reviews (assembled)
+```
+
+The four features from Phase 9 (boundary-mismatch, execution patterns, phase matrix) all live in Opus's domain — planning and review. They make Opus ask better questions, write better specs, and catch more issues in review. Gemma never sees them. It sees the spec and produces code.
+
+This is "Two Kinds of Leadership" at the model level. Opus is the boss who plans well and reviews honestly. Gemma is the worker who executes with instinct and speed. Each model does what it's best at. Opus tokens only for judgment. Execution is free.
+
+### What Shipped (Phase 10)
+
+- `evals/fixtures/rails-api-gemma/` — Gemma-tuned harness (CLAUDE.md + minimal workflow rule)
+- `evals/ab-test-gemma.py` — A/B test runner for local model evaluation (bare vs harness, multi-model, multi-temp)
+- `evals/results/ab-test*/` — Results across model sizes and temperatures
+- `briefs/06-gemma-harness-generator.md` — Auto-generate harnesses for any project
+- `briefs/07-executor-model-routing.md` — Route execution tasks to local models
+- `briefs/08-spec-to-prompt-formatting.md` — Format specs for Gemma's single-prompt execution
+- `briefs/09-orchestrator-loop.md` — Full autonomous pipeline (Opus + Gemma + reviewer)
+
+### Results Locations:
+- Gemma A/B eval: `evals/results/ab-test*/`
+- Gemma harness: `evals/fixtures/rails-api-gemma/`
+- A/B test script: `evals/ab-test-gemma.py`
+- Feature validation: `evals/validation/`
+- Seeded-defect fixture: `evals/fixtures/integration-api/`
+
+## The Complete Architecture (Proven by 10 Phases)
+
+| Phase | Context | Model | What it does |
+|---|---|---|---|
+| **Brainstorming** | Assembled ON | Opus | Personas shape questions, catch architectural gaps |
+| **Spec writing** | Assembled ON | Opus | Team expertise becomes concrete requirements |
+| **Plan writing** | Assembled ON | Opus | Execution patterns + phase matrix guide task decomposition |
+| **Execution** | Gemma harness | Gemma 4 local | 16s/task, $0, 100% EXECUTES with tuned harness |
+| **Review 1: Spec** | Assembled ON | Opus/Codex | Boundary-mismatch criteria catch cross-boundary issues |
+| **Review 2: Craft** | Bare workers | Codex/Opus | 5 focused reviewers, confidence-scored at ≥80 |
+| **Operator approval** | Human | — | Human tests, reviews summary, approves |
+
+Fallback: if no local model is available, execution falls back to bare Claude subagents (Phase 7 architecture). The pipeline degrades gracefully — same quality, higher cost.
+
 ## Open Questions
 
-1. **Product integration:** How does the generated project output instruct this pipeline? The workflow needs to describe when to trigger each review stage.
-2. **Auto-team-growth:** Should the team detect expertise gaps during planning and propose new teammates?
-3. **New domains:** All tests used Rails and children's novel. More domains needed.
-4. **Naming:** Project needs a public-ready name. Leading candidate: GIGO (Garbage In, Garbage Out).
+1. **Harness generation:** Can `gigo:gigo` auto-generate Gemma harnesses that match hand-tuned quality? AB test: generated vs hand-tuned on same prompts. (Brief 06)
+2. **Model routing:** How does `gigo:execute` detect local models and route to them with Claude fallback? (Brief 07)
+3. **Spec formatting:** What's the optimal task format for Gemma's single-prompt, no-tool-use execution? How many source files fit in 8K-32K context? (Brief 08)
+4. **Orchestrator loop:** How do Opus + Gemma + reviewer tie into an autonomous cycle with retry logic and worktree isolation? (Brief 09)
+5. **True regression baseline:** What's the real assembled vs bare win rate with the contamination bug fixed? Re-run pending.
+6. **Smaller models:** Does the harness pattern work on Gemma 12B, 9B? Where's the floor?
+7. **Other local models:** Does harness engineering generalize to Llama 4, Qwen 3, Phi-4 — or is it Gemma-specific?

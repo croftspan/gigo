@@ -29,6 +29,13 @@ After each task's last step, append a checkpoint comment:
 <!-- checkpoint: sha=ghi9012 status=in-review reviewed=ask-operator-pending tier=1 -->
 ```
 
+### Task completed via local model:
+
+```
+- [x] **Step 5: Write endpoint**
+<!-- checkpoint: sha=jkl3456 status=done reviewed=pass tier=1 model=gemma-26b -->
+```
+
 ## Fields
 
 | Field | Values | Purpose |
@@ -37,6 +44,7 @@ After each task's last step, append a checkpoint comment:
 | `status` | `done`, `in-review`, `in-progress`, `blocked` | Where the task was when interrupted |
 | `reviewed` | `pass`, `issues-found`, `ask-operator-pending`, `ask-operator-resolved`, `pending` | Review state at interruption |
 | `tier` | `1`, `2` | Which execution tier was running |
+| `model` | `gemma-26b`, `gemma-31b`, `claude-haiku`, `claude-sonnet`, `claude-opus` | Which model generated the code (optional, omit when local routing disabled) |
 
 ## Resume Detection Procedure
 
@@ -86,6 +94,8 @@ Wait for operator decision before proceeding.
 | `status=in-review, reviewed=ask-operator-resolved` | Operator already decided. Dispatch worker with the decision — don't re-ask. |
 | `status=in-progress` | Dispatch worker to continue. Provide addendum context from completed dependencies. |
 | `status=blocked` | Re-evaluate the blocker. Surface to operator if still blocked. |
+
+**Model field on resume:** The `model` field is informational only. Resume logic ignores it — it doesn't affect which model handles a retry. Its purpose is production tracing: when a task's output quality is questioned, the model field answers "who wrote this?"
 
 ## Reconciliation on Resume
 
