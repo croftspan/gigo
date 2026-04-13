@@ -477,7 +477,7 @@ git commit -m "feat: add local model override to model selection reference"
 
 Wire the routing into the execute skill. Four integration points: detection at startup, execution options, dispatch flow, and completion summary.
 
-- [ ] **Step 1: Add detection step to "Before Starting"**
+- [x] **Step 1: Add detection step to "Before Starting"**
 
 After step 2 ("Read the full plan", which ends with the checkpoint scanning bullet), add a new step 2.5. Insert after line 26 (the "If no checkpoints" bullet):
 
@@ -485,7 +485,7 @@ After step 2 ("Read the full plan", which ends with the checkpoint scanning bull
 2.5. **Detect local model.** Check for a running local model and Gemma harness. If both present, local routing is available as an execution option. See `references/local-model-routing.md` for the detection procedure. Detection runs once — not per-task.
 ```
 
-- [ ] **Step 2: Update execution options**
+- [x] **Step 2: Update execution options**
 
 Replace the current execution options block (lines 28-35, from "Present execution options" to the end of the quoted block) with:
 
@@ -508,7 +508,7 @@ Replace the current execution options block (lines 28-35, from "Present executio
    **Default behavior:** Use subagents + local model for plans with 3+ tasks when local is available. Use subagents for 3+ tasks when local is not available. Use inline for plans with 1-2 tasks. Present the choice to the operator only if they haven't already specified a preference. Do NOT silently choose inline for larger plans just because it's easier.
 ```
 
-- [ ] **Step 3: Add local routing to Tier 1 dispatch flow**
+- [x] **Step 3: Add local routing to Tier 1 dispatch flow**
 
 After the existing "Execution Flow" heading and before step 1 ("Identify the wave"), insert a conditional block. Add after line 49 (the "For each **wave** of unblocked tasks:" line):
 
@@ -522,7 +522,7 @@ After the existing "Execution Flow" heading and before step 1 ("Identify the wav
    **If local routing is not enabled**, the existing dispatch flow below applies unchanged.
 ```
 
-- [ ] **Step 4: Add routing stats to completion summary**
+- [x] **Step 4: Add routing stats to completion summary**
 
 In the "When All Tasks Complete" section (line 166), after bullet 1 ("Synthesize results"), add:
 
@@ -532,7 +532,7 @@ In the "When All Tasks Complete" section (line 166), after bullet 1 ("Synthesize
       Only report this when local routing was used. When all tasks ran via Claude, omit.
 ```
 
-- [ ] **Step 5: Add reference pointer**
+- [x] **Step 5: Add reference pointer**
 
 In the `## References` section at the end of the file, add:
 
@@ -540,7 +540,7 @@ In the `## References` section at the end of the file, add:
 - `references/local-model-routing.md` — Local model detection, prompt formatting, API call, response parsing, and escalation protocol. Loaded when local routing is enabled.
 ```
 
-- [ ] **Step 6: Verify and commit**
+- [x] **Step 6: Verify and commit**
 
 Verify:
 - SKILL.md is under 500 lines (was 206, adding ~40 lines → ~246)
@@ -554,6 +554,13 @@ Verify:
 git add skills/execute/SKILL.md
 git commit -m "feat: integrate local model routing into gigo:execute"
 ```
+
+#### What Was Built
+- **Deviations:** Worker expanded "Future: Agent Teams" stub to full Tier 3 content and changed frontmatter description — both reverted during merge conflict resolution. Git auto-resolved correctly, keeping main's versions.
+- **Review changes:** References section conflict resolved: kept both `agent-teams-design.md` (existing) and `local-model-routing.md` (new).
+- **Notes for downstream:** SKILL.md now 228 lines. Four integration points added: step 2.5 detection, branched execution options, local routing conditional in dispatch flow, routing stats in completion summary. Reference pointer added.
+
+<!-- checkpoint: sha=1a40eb4 status=done reviewed=pass tier=1 model=claude-sonnet -->
 
 ---
 
