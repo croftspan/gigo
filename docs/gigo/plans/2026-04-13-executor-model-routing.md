@@ -362,7 +362,7 @@ After the "Task blocked on operator decision" example (line 30), add:
 ### Task completed via local model:
 
 ```
-- [x] **Step 3: Commit**
+- [x] **Step 5: Write endpoint**
 <!-- checkpoint: sha=jkl3456 status=done reviewed=pass tier=1 model=gemma-26b -->
 ```
 ```
@@ -539,3 +539,5 @@ After all tasks are complete:
 4. **Backward compatibility** — when no local model is running, execute behaves identically to before this change. No detection errors, no missing options, no changed output.
 
 **Done when:** All five files are committed, the execute skill supports three tiers (subagents + local, subagents only, inline), and the routing reference covers detection through escalation.
+
+<!-- approved: plan 2026-04-13T02:15:11 by:Eaven -->
