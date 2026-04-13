@@ -355,6 +355,7 @@ Replace throughout `main()`:
 - `load_prompt_list()` — change to accept a `path` parameter: `def load_prompt_list(path):` and use `path.read_text()` instead of `PROMPTS_FILE.read_text()`. Call as `load_prompt_list(prompts_file)`.
 - `score_output(response)` → `score_output(response, domain=args.domain)`
 - Display tags dict — add `"generated": "Generated"` to both tag dicts
+- **Remove dead `contexts["original"]` block.** The 3 lines that build `orig_assembled` and `contexts["original"]` (lines 233-235) are dead code — `"original"` was already absent from the `VARIANTS` list before this change, and the new `fixtures` dict has no `"original"` key. Delete them to prevent a KeyError.
 
 - [ ] **Step 8: Handle --only with new variant**
 
