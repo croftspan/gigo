@@ -12,10 +12,6 @@ metadata:
 ## Accept Input
 
 Accept a ticket result: `{ticket_id, result: "passed"|"escalated"|"failed"}`.
-Append the entry to the `window` array in `vault/agents/circuit-breaker/state.md`.
-Include `timestamp` (ISO 8601) with each entry.
-
-## State Initialization
 
 If `vault/agents/circuit-breaker/state.md` does not exist, create it:
 ```yaml
@@ -24,6 +20,9 @@ window: []
 window_size: 10
 threshold: 0.30
 ```
+
+Append the entry to the `window` array in the state file.
+Include `timestamp` (ISO 8601) with each entry.
 
 ## Rate Trigger (Chronic)
 

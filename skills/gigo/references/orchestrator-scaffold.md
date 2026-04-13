@@ -40,7 +40,8 @@ vault/
 ├── agents/
 │   ├── model/
 │   ├── claude-code/
-│   └── circuit-breaker/
+│   ├── circuit-breaker/
+│   └── reviewer/
 └── runbooks/
     ├── daemon-setup.md
     ├── model-setup.md
@@ -296,4 +297,4 @@ Gateway commands (send via Telegram/Discord):
 
 ### Step G12: Create Empty Agent Directories
 
-Create `vault/agents/model/`, `vault/agents/claude-code/`, `vault/agents/circuit-breaker/`. These are populated during execution.
+Create `vault/agents/model/`, `vault/agents/claude-code/`, `vault/agents/circuit-breaker/`, `vault/agents/reviewer/`. These are populated during execution.
