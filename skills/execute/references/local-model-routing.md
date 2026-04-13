@@ -38,10 +38,30 @@ Read `.claude/references/gemma-harness.md`. Extract everything after the first `
 
 ### User Message
 
-Format:
-- Task description from plan (pasted verbatim, including all steps)
-- Then a "## Current Files" section with subsections for each file (`### {file_path}` followed by file contents)
-- Then a "## Output Files" section listing paths to produce
+Format the task description for single-turn execution:
+
+1. **Strip plan metadata.** Remove the `blocks:`, `blocked-by:`, `parallelizable:` lines and the `**Files:**` section (including all Create/Modify/Test lines). These are consumed by the execute lead for dispatch — Gemma doesn't need them.
+
+2. **Flatten checkbox steps.** Convert `- [ ] **Step N: Action**` to plain imperative sentences. Drop step numbering, bold formatting, and checkbox syntax. Keep the content.
+
+3. **Drop non-execution content.** Remove:
+   - Commit steps (any step whose content is only "Commit" or a git command)
+   - Verification commands (`Run: ...` lines)
+   - Expected result lines (`Expected: PASS` or similar)
+   Retain surrounding prose about what the code should do or how it should behave.
+
+4. **Preserve code blocks.** Code blocks inside steps are kept verbatim — they are the specification.
+
+5. **Prepend addendum context.** If prior tasks have "What Was Built" addendums with relevant context (interface changes, renamed exports, deviations), prepend as:
+   ```
+   Background: [relevant addendum content]
+   ```
+   This replaces the separate "Context" section used in Claude subagent prompts. Gemma processes a flat prompt better than structured sections.
+
+6. **Assemble.** The user message is:
+   - Formatted task description (steps 1-5 above)
+   - `## Current Files` section with subsections for each file (`### {file_path}` followed by file contents)
+   - `## Output Files` section listing paths to produce
 
 ### File Selection
 
@@ -52,7 +72,13 @@ Which files to inline:
 3. Dependency context — files listed in "What Was Built" addendums from prior tasks (only changed files, not full addendums).
 4. Imported modules — if the task mentions importing from or depending on specific modules, include those files.
 
-Do not include test helpers, config files, or files the task doesn't reference.
+Do not include config files or files the task doesn't reference. Include test helper and factory files (e.g., `spec/rails_helper.rb`, `spec/factories/*.rb`, `test/test_helper.*`, `conftest.py`) when the task includes writing tests — Gemma needs the project's test setup to produce compatible specs. Only include if the files exist.
+
+**File ordering** within `## Current Files`:
+1. Files the task creates or modifies (most relevant — Gemma needs to see what it's changing)
+2. Schema/type definitions (structural context)
+3. Files from prior task addendums (changed dependencies)
+4. Test helpers (only if task has test steps)
 
 ### Context Budget
 
@@ -70,6 +96,8 @@ Estimate tokens at 4 characters per token. If files exceed ~22K:
 3. Keep schema/type files
 4. Drop dependency files (largest first)
 5. If still over → skip local routing for this task, dispatch to Claude
+
+**Schema truncation:** When a schema/type definition file exceeds ~2000 tokens (~8000 characters), truncate to the table(s) or model(s) relevant to the current task. For example, if the task adds a column to `orders`, include only the `create_table "orders"` block from `schema.rb`, not the entire file. The execute lead (Claude) judges which sections are relevant — this varies by schema format (ActiveRecord, Prisma, TypeORM, etc.).
 
 ---
 
