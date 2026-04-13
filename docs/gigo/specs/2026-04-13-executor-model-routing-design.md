@@ -155,7 +155,7 @@ If validation fails: escalate to Claude subagent (Layer 2, R8).
 
 | Case | Handling |
 |---|---|
-| Code block has no file path header | Map to expected output files from task description (positional match). If no expected files listed, skip the block. |
+| Code block has no file path header | Map to expected output files from the task's "Output Files" list by position (first block → first expected file, second → second, etc.). If no expected files listed or position exceeds the list, skip the block. |
 | Nested code blocks (markdown in markdown) | Match outermost block delimiters only. Rare for code tasks. |
 | Empty code block | Skip — do not create an empty file. |
 | File path contains spaces | Preserve as-is — the applier must quote the path. |
