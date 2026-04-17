@@ -610,13 +610,13 @@ git commit -m "feat: add Gate 2 post-plan adversarial verification reference"
 **Files:**
 - Modify: `skills/spec/SKILL.md`
 
-- [ ] **Step 1: Update the announce line.**
+- [x] **Step 1: Update the announce line.**
 
 Find the line starting with `**Announce every phase.**` and replace its content with:
 
 `**Announce every phase.** "Phase 0: Researching platform targets...", "Phase 5: Writing spec...", "Phase 6: Self-reviewing spec...", "Phase 6.5: Running Challenger review...", "Phase 7: Spec ready for review...", "Phase 8: Writing implementation plan...", "Phase 9: Self-reviewing plan...", "Phase 9.75: Verifying plan against live docs...", "Phase 10: Plan ready for review..."`
 
-- [ ] **Step 2: Insert new Phase 0 section.**
+- [x] **Step 2: Insert new Phase 0 section.**
 
 Use the Edit tool on `skills/spec/SKILL.md` with this exact operation to avoid separator duplication:
 
@@ -659,7 +659,7 @@ Before writing the spec, verify the target runtime's API surface against live do
 
 (The `old_string` and `new_string` together preserve exactly ONE `---` separator before `## Phase 5`. Do not add an extra separator; the single one at the bottom of `new_string` replaces the original.)
 
-- [ ] **Step 3: Update Phase 5 to read tech-constraints.**
+- [x] **Step 3: Update Phase 5 to read tech-constraints.**
 
 Find the Phase 5 opening paragraph: `Read the approved design brief. Formalize it into a spec — don't recreate the design from conversation memory.`
 
@@ -671,7 +671,7 @@ Read the approved design brief. If Gate 1 ran, also read `docs/gigo/research/<da
 Formalize the brief into a spec — don't recreate the design from conversation memory.
 ```
 
-- [ ] **Step 4: Update Phase 8 to read tech-constraints.**
+- [x] **Step 4: Update Phase 8 to read tech-constraints.**
 
 Find the Phase 8 opening paragraph: `Read the approved design brief and spec. Break the spec into executable tasks.`
 
@@ -681,7 +681,7 @@ Replace with:
 Read the approved design brief and spec. If Gate 1 ran, also read `docs/gigo/research/<date>-<topic>-tech-constraints.md` — every API, method, or pattern named in task code blocks must come from the verified surface, not from training-data recall. Break the spec into executable tasks.
 ```
 
-- [ ] **Step 5: Insert Phase 9.75 between Phase 9.5 and Phase 10.**
+- [x] **Step 5: Insert Phase 9.75 between Phase 9.5 and Phase 10.**
 
 Use the Edit tool on `skills/spec/SKILL.md` with this exact operation to avoid separator duplication:
 
@@ -723,7 +723,7 @@ Adversarially verify that every specific API, method, library, or pattern the pl
 
 (The `old_string` and `new_string` together preserve exactly ONE `---` separator before `## Phase 10`. Do not add an extra separator.)
 
-- [ ] **Step 6: Update Phase 10 to present Gate 2 findings.**
+- [x] **Step 6: Update Phase 10 to present Gate 2 findings.**
 
 Find Phase 10 content starting with `> "Plan saved to \`<path>\`. Review the tasks and dependency order — I'll adjust before we start."` followed by `Wait for approval.` and then the approval marker block.
 
@@ -741,7 +741,7 @@ Wait for approval. On `fail` effective status, operator must either request plan
 **Write approval marker:**
 ```
 
-- [ ] **Step 7: Update Handoff.**
+- [x] **Step 7: Update Handoff.**
 
 Find the Handoff paragraph: `After the plan is approved, compact the conversation to shed spec-writing context. The plan and spec on disk are the durable records. Then ask:`
 
@@ -751,7 +751,7 @@ Replace with:
 After the plan is approved, compact the conversation to shed spec-writing context. The plan and spec on disk are the durable records. If Gate 2 ran, `plan-verification.md` is also a durable record — execute reads it at startup and refuses to dispatch tasks while unresolved ❌ findings remain. Then ask:
 ```
 
-- [ ] **Step 8: Update Pointers section.**
+- [x] **Step 8: Update Pointers section.**
 
 Find the Pointers section at the end of the file (after Scale-to-Task and Auto-Gap-Detection). Append two new entries AFTER the existing `Read references/example-plan.md...` entry:
 
@@ -762,7 +762,7 @@ Read `references/research-gate-1.md` when dispatching Phase 0 — the Pre-Spec R
 Read `references/research-gate-2.md` when dispatching Phase 9.75 — the Post-Plan Verification Gate. Covers the verbatim adversarial prompt template, append-only `plan-verification.md` schema, Derived Status Calculation with test matrix, override mechanism, block-on-❌ behavior, and independence rules.
 ```
 
-- [ ] **Step 9: Verify all edits applied cleanly.**
+- [x] **Step 9: Verify all edits applied cleanly.**
 
 Run: `wc -l skills/spec/SKILL.md`
 Expected: 240–275 lines (up from 194; must stay under 500). The net delta is approximately: +25 lines for Phase 0 section, +18 for Phase 9.75 section, +3 for Phase 5 edit, +1 for Phase 8 edit, +4 for Phase 10 edit, +1 for Handoff edit, +4 for Pointers additions, 0 for announce-line edit → ~+56 total. If the result is below 220 or above 290, an edit was likely missed or duplicated.
@@ -776,12 +776,17 @@ Expected: ≥4 (Phase 0 points to research-gate-1, Phase 9.75 points to research
 Run: `awk '/^---$/{c++}END{print c}' skills/spec/SKILL.md`
 Expected: same count as before (no double-separators introduced by Phase 0 / Phase 9.75 insertions). Count the `---` separators in the current SKILL.md BEFORE editing; after editing, the count must be identical.
 
-- [ ] **Step 10: Commit.**
+- [x] **Step 10: Commit.**
 
 ```bash
 git add skills/spec/SKILL.md
 git commit -m "feat: add spec Phase 0 (Gate 1) and Phase 9.75 (Gate 2)"
 ```
+
+#### What Was Built
+- **Deviations:** Phase 9.5 → Phase 9.75 separator was initially missing (plan's Step 5 old_string consumed the separator without replacing it on the 9.5 side). Fixed post-review with a follow-up commit `fix: add missing separator between Phase 9.5 and Phase 9.75`.
+- **Review changes:** Stage 1 ✅ (all 8 edits landed correctly). Stage 2 Ready with one cosmetic issue (missing separator), auto-fixed before merge.
+- **Notes for downstream:** File at `skills/spec/SKILL.md`, 251 lines (up from 194, +57). All 8 edits landed in correct locations. Phase 0 points to `references/research-gate-1.md`; Phase 9.75 points to `references/research-gate-2.md`. All phase boundaries now have separators. Announce line includes both new phases. Phase 5 and Phase 8 read `tech-constraints.md` when Gate 1 ran. Phase 10 presents Gate 2 findings. Handoff notes execute's block-on-❌ behavior.
 
 ---
 
@@ -794,7 +799,7 @@ git commit -m "feat: add spec Phase 0 (Gate 1) and Phase 9.75 (Gate 2)"
 **Files:**
 - Modify: `skills/execute/SKILL.md`
 
-- [ ] **Step 1: Insert new step 2 in "Before Starting" section.**
+- [x] **Step 1: Insert new step 2 in "Before Starting" section.**
 
 Find the numbered list in "## Before Starting" — step 1 "Verify the plan exists and is approved" and step 2 "Read the full plan." starting with `2. **Read the full plan.**`.
 
@@ -821,7 +826,7 @@ Renumber the existing TOP-LEVEL numbered items: "Read the full plan" from 2 → 
    **Why body-as-truth?** Frontmatter `status:` is written once by Gate 2 before any overrides exist. Overrides are added by the operator after; nobody updates frontmatter. Consumers derive effective status from body every time. See `skills/spec/references/research-gate-2.md` → Derived Status Calculation for the canonical algorithm and test matrix.
 ```
 
-- [ ] **Step 2: Update Red Flags section.**
+- [x] **Step 2: Update Red Flags section.**
 
 Find the `**Never:**` list in the `## Red Flags` section. Between the existing entry `- Start implementation without an approved plan` and `- Skip review on any task`, insert:
 
@@ -829,7 +834,7 @@ Find the `**Never:**` list in the `## Red Flags` section. Between the existing e
 - Dispatch tasks when `plan-verification.md` shows effective status `fail` with unresolved ❌ findings — the operator must revise the plan OR add override markers first
 ```
 
-- [ ] **Step 3: Verify edits.**
+- [x] **Step 3: Verify edits.**
 
 Run: `wc -l skills/execute/SKILL.md`
 Expected: ~245–260 lines (up from 226; under 500).
@@ -840,12 +845,17 @@ Expected: ≥2 (Before-Starting + Red Flag).
 Run: `grep -c "canonicalize\|Canonical" skills/execute/SKILL.md`
 Expected: ≥1 (absolute-path matching logic present).
 
-- [ ] **Step 4: Commit.**
+- [x] **Step 4: Commit.**
 
 ```bash
 git add skills/execute/SKILL.md
 git commit -m "feat: add plan-verification block-on-❌ check at execute startup"
 ```
+
+#### What Was Built
+- **Deviations:** None. Step numbering updated correctly (1 → 2 new → 3 → 4); nested "1. Subagents / 2. Inline / 3. Agent teams" list preserved unchanged.
+- **Review changes:** None. Stage 1 ✅ and Stage 2 Ready, both passed on first review.
+- **Notes for downstream:** File at `skills/execute/SKILL.md`, 242 lines (up from 226, +16). New Before-Starting step 2 resolves plan-verification artifact via frontmatter `plan:` field with canonical absolute-path comparison, computes effective status from body's latest `## Run N` section using the override regex from research-gate-2.md. MALFORMED-ARTIFACT, MALFORMED-OVERRIDE, and DUPLICATE-OVERRIDE all surfaced in refusal messages. Body-as-truth authority model documented inline with pointer to research-gate-2.md. Red Flag entry added between existing "Start without plan" and "Skip review" entries.
 
 ---
 
