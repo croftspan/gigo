@@ -173,6 +173,8 @@ Same dispatch method — use `{DOCUMENT_TYPE}` = "plan", include the approved sp
 
 Present findings to the operator. Same verdicts. Same intent escalation rule from Phase 6.5.
 
+---
+
 ## Phase 9.75: Post-Plan Verification Gate (Gate 2)
 
 **Skip if Gate 1 was skipped.** If no `docs/gigo/research/<date>-<topic>-tech-constraints.md` exists, Gate 2 also skips.
