@@ -20,11 +20,27 @@ Read `.claude/references/verbosity.md` if it exists. If `level: minimal`, announ
 ## Before Starting
 
 1. **Verify the plan exists and is approved.** If there's no approved plan, stop and tell the operator to run `gigo:blueprint` first.
-2. **Read the full plan.** Extract all tasks, their descriptions (full text), dependencies, and parallelization markers.
+2. **Check plan verification (if Gate 2 ran).** Resolve the matching artifact, then compute effective status from its body.
+   - **Resolve artifact:** scan `docs/gigo/research/*-plan-verification.md`. For each candidate, read frontmatter `plan:` field. Canonicalize BOTH the frontmatter value AND the plan being executed to absolute paths (resolve `~`, expand relative paths using `$CLAUDE_PROJECT_DIR` or current working directory, resolve symlinks via `realpath`). Compare canonicalized paths. If multiple candidates match after canonicalization, select the one with the most recent `run-at`. Do NOT match by filename convention — frontmatter `plan:` is authoritative.
+   - **Malformed candidates:** if a candidate artifact is missing the frontmatter `plan:` field or the field is empty, tag it as `MALFORMED-ARTIFACT` and skip it for matching. If NO valid candidate remains after scanning all files, include MALFORMED-ARTIFACT entries in the refusal message (step 3 below "(artifact exists but body table missing/malformed)" path) — don't silently treat as "no matching artifact." The operator needs to see which candidate files are unusable and why.
+   - **No matching artifact (all candidates either absent or MALFORMED-ARTIFACT with no valid match)** → treat as skipped gates ONLY if zero candidates existed at all (small task, pure design, gates explicitly off). If candidates existed but were all MALFORMED-ARTIFACT, REFUSE and list them. Proceed to step 3 only in the clean "no candidates" case.
+   - **Artifact found → compute effective status from body** (per `skills/spec/references/research-gate-2.md` → Derived Status Calculation):
+     - Find the LATEST `## Run N` section (scan for `## Run ` headers, pick highest N or latest timestamp).
+     - Count ❌ rows in `### Findings` → `N_fail`.
+     - Count valid override markers in `### Overrides (Run N)` matching regex `^<!-- override: finding-(\d+) reason:(.+?) approved-by:(.+?) timestamp:(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z) -->$` where finding-N matches an existing ❌ row AND capture groups are non-empty → `N_override_matched`. Track MALFORMED-OVERRIDE and DUPLICATE-OVERRIDE cases separately.
+     - **N_fail == 0** → `pass`. Proceed to step 3.
+     - **N_fail > 0 AND every ❌ covered by valid override** → `needs-override`. Announce: `"Executing with [N_override_matched] acknowledged API gaps per <artifact-path>"`. Proceed to step 3.
+     - **N_fail > 0 AND not all covered** → REFUSE. Report:
+       > "Plan verification has [N_fail - N_override_matched] unresolved ❌ findings at `<artifact-path>`. Resolve by revising the plan (Gate 2 re-runs on revision) or adding override markers in the `### Overrides (Run N)` sub-section. Format: `<!-- override: finding-N reason:... approved-by:... timestamp:... -->`. Re-run `/execute` after."
+       List each unresolved ❌ inline (finding number, named specific, target, suggested fix). Also list any MALFORMED-OVERRIDE or DUPLICATE-OVERRIDE details so operator sees near-miss overrides.
+   - **Body structure missing, latest run section malformed, or findings unparseable** → REFUSE. Report the specific parse issue with the artifact path.
+
+   **Why body-as-truth?** Frontmatter `status:` is written once by Gate 2 before any overrides exist. Overrides are added by the operator after; nobody updates frontmatter. Consumers derive effective status from body every time. See `skills/spec/references/research-gate-2.md` → Derived Status Calculation for the canonical algorithm and test matrix.
+3. **Read the full plan.** Extract all tasks, their descriptions (full text), dependencies, and parallelization markers.
    - **Check for checkpoints.** Scan for `<!-- checkpoint: ... -->` comments in the plan.
    - **If checkpoints found:** Report progress to the operator, verify SHAs exist, and resume from the appropriate point. See `references/checkpoint-format.md` for the full resume procedure.
    - **If no checkpoints:** Fresh execution — proceed normally.
-3. **Present execution options.** Let the operator choose their tier:
+4. **Present execution options.** Let the operator choose their tier:
 
    > "Ready to execute. Available options:
    > 1. **Subagents** (recommended) — fresh worker per task, parallel dispatch for independent tasks, lead-managed review.
@@ -205,6 +221,7 @@ After a task passes both review stages, update the plan document before moving t
 
 **Never:**
 - Start implementation without an approved plan
+- Dispatch tasks when `plan-verification.md` shows effective status `fail` with unresolved ❌ findings — the operator must revise the plan OR add override markers first
 - Skip review on any task
 - Proceed with unfixed review issues
 - Ignore worker escalations (BLOCKED, NEEDS_CONTEXT)
