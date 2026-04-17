@@ -9,7 +9,7 @@ You turn approved design briefs into formal specs and implementation plans. No c
 
 Your input is an approved design brief. Your output is an approved spec and an approved implementation plan — ready for execution.
 
-**Announce every phase.** "Phase 5: Writing spec...", "Phase 6: Self-reviewing spec...", "Phase 6.5: Running Challenger review...", "Phase 7: Spec ready for review...", "Phase 8: Writing implementation plan...", "Phase 9: Self-reviewing plan...", "Phase 10: Plan ready for review..."
+**Announce every phase.** "Phase 0: Researching platform targets...", "Phase 5: Writing spec...", "Phase 6: Self-reviewing spec...", "Phase 6.5: Running Challenger review...", "Phase 7: Spec ready for review...", "Phase 8: Writing implementation plan...", "Phase 9: Self-reviewing plan...", "Phase 9.75: Verifying plan against live docs...", "Phase 10: Plan ready for review..."
 
 ## The Hard Gate
 
@@ -32,9 +32,34 @@ Read `.claude/references/verbosity.md` if it exists. If `level: minimal`, announ
 
 ---
 
+## Phase 0: Pre-Spec Research Gate (Gate 1)
+
+Before writing the spec, verify the target runtime's API surface against live documentation via context7. Prevents the spec and plan from assuming APIs that don't exist — the class of failure that shipped weeks of Unity C# against .NET 5+ methods missing from Unity 6's .NET Standard 2.1 BCL.
+
+**When Gate 1 fires:**
+
+1. Read the approved design brief.
+2. **If the brief has a `## Platform & Runtime Targets` section:** extract target list, run Gate 1 with those targets.
+3. **If the brief declares `**Targets:** none`:** prompt the operator to confirm: *"The brief declares `Targets: none` — this will skip API verification gates. Confirm: is this a pure content/config project with NO shipped code that targets a runtime? [yes, skip gates / no, this ships code — let me name targets]."* Only skip on explicit confirmation.
+4. **If neither:** prompt default-skeptical: *"This is a code project. What runtime / platform / SDK does it target? Answer `none` only if this is pure content/config with no code output. Otherwise name the target(s)."*
+
+**Small-task handling:**
+
+- `**Scale:** small` + non-code output → skip both gates fully
+- `**Scale:** small` + code output → Gate 1 runs **host-shell detection only** (skip deep API discovery); Gate 2 still runs
+- Ambiguous → ask operator explicitly
+
+**When Gate 1 runs:** Read `references/research-gate-1.md` for the dispatch procedure, depth calibration, host-shell checklist, subagent prompt templates (variant-first and variant-subsequent), and artifact schema. Dispatch subagents SEQUENTIALLY (one target at a time) via `Agent` tool with `subagent_type: "general-purpose"`. Output: `docs/gigo/research/YYYY-MM-DD-<topic>-tech-constraints.md`.
+
+**Before proceeding to Phase 5:** verify the tech-constraints artifact was written. If any target shows `Host-Shell Requirement: MISSING` or `context7 library ID: unresolved`, surface to operator — they decide to proceed, adjust scope, or add missing project shell before spec writing.
+
+---
+
 ## Phase 5: Write Spec
 
-Read the approved design brief. Formalize it into a spec — don't recreate the design from conversation memory.
+Read the approved design brief. If Gate 1 ran, also read `docs/gigo/research/<date>-<topic>-tech-constraints.md` — the spec's Conventions section and Tech Stack references must reflect verified constraints, not assumed ones. If Gate 1 flagged `Host-Shell Requirement: MISSING`, include the host-shell addition (or an explicit `**External-consumer-only:** true` declaration) as a spec requirement.
+
+Formalize the brief into a spec — don't recreate the design from conversation memory.
 
 Save to `docs/gigo/specs/YYYY-MM-DD-<topic>-design.md` and commit.
 
@@ -119,7 +144,7 @@ Wait for approval. If changes requested, revise and re-run self-review.
 
 ## Phase 8: Write Implementation Plan
 
-Read the approved design brief and spec. Break the spec into executable tasks.
+Read the approved design brief and spec. If Gate 1 ran, also read `docs/gigo/research/<date>-<topic>-tech-constraints.md` — every API, method, or pattern named in task code blocks must come from the verified surface, not from training-data recall. Break the spec into executable tasks.
 
 Save to `docs/gigo/plans/YYYY-MM-DD-<feature-name>.md`.
 
@@ -148,13 +173,39 @@ Same dispatch method — use `{DOCUMENT_TYPE}` = "plan", include the approved sp
 
 Present findings to the operator. Same verdicts. Same intent escalation rule from Phase 6.5.
 
+## Phase 9.75: Post-Plan Verification Gate (Gate 2)
+
+**Skip if Gate 1 was skipped.** If no `docs/gigo/research/<date>-<topic>-tech-constraints.md` exists, Gate 2 also skips.
+
+Adversarially verify that every specific API, method, library, or pattern the plan names actually exists in the target runtime. This is a separate subagent with fresh context and via-negativa framing — *"find what's broken, default to skepticism, ✅ requires verbatim doc citation."* Cooperative verification would rubber-stamp the plan; hostile verification catches the specifics that Gate 1's discovery pass couldn't cover.
+
+**Execution:** Read `references/research-gate-2.md` for the dispatch procedure, verbatim adversarial prompt template, `plan-verification.md` append-only schema, Derived Status Calculation with test matrix, override mechanism, and independence rules. Output: `docs/gigo/research/YYYY-MM-DD-<topic>-plan-verification.md`.
+
+**Sequencing with Phase 9.5 Challenger:**
+
+- If Challenger (9.5) recommends plan revisions and operator accepts, revisions apply BEFORE Gate 2 dispatches.
+- If the plan is edited AFTER Gate 2 already ran (post-hoc acceptance, Phase 10 review edits), Gate 2 MUST re-run on the revised plan. Detect by: (a) plan mtime newer than latest artifact `run-at`, OR (b) plan lacks `<!-- approved: plan ... -->` marker.
+- If Gate 2 triggers its own plan revision (for ❌ fixes), Challenger does NOT re-run automatically; operator may explicitly request re-Challenger if the revision is structurally significant.
+
+**Exit handling (compute effective status per Derived Status Calculation in research-gate-2.md):**
+
+- `pass` → proceed to Phase 10 normally.
+- `fail` → present findings to operator at Phase 10 alongside the plan. Do NOT write the plan approval marker while any ❌ remains unaddressed. Operator must revise the plan (triggering Gate 2 re-run) or add override markers per `research-gate-2.md` Override Mechanism.
+- `needs-override` → proceed to Phase 10 with override count summarized.
+
+**Independence rule (non-negotiable):** Gate 2 runs as its own subagent with fresh context — NOT the spec author's session, NOT sharing context with Gate 1's subagent, NOT the Challenger's subagent. The via-negativa framing is load-bearing; shared context collapses the pattern back to single-pass verification (Shinn et al. Reflexion). Dispatch via `Agent` with `subagent_type: "general-purpose"` and the prompt template from `references/research-gate-2.md`.
+
 ---
 
 ## Phase 10: Operator Reviews Plan
 
 > "Plan saved to `<path>`. Review the tasks and dependency order — I'll adjust before we start."
 
-Wait for approval.
+If Gate 2 ran, also present the verification artifact:
+
+> "Plan verification saved to `docs/gigo/research/<date>-<topic>-plan-verification.md`. Effective status: [pass / needs-override / fail]. [Summary of ❌ findings if any.]"
+
+Wait for approval. On `fail` effective status, operator must either request plan revision (Gate 2 re-runs on revision) or add override markers per `references/research-gate-2.md`. Do NOT write the approval marker while any ❌ remains unaddressed.
 
 **Write approval marker:**
 ```
@@ -165,7 +216,7 @@ Wait for approval.
 
 ## Handoff
 
-After the plan is approved, compact the conversation to shed spec-writing context. The plan and spec on disk are the durable records. Then ask:
+After the plan is approved, compact the conversation to shed spec-writing context. The plan and spec on disk are the durable records. If Gate 2 ran, `plan-verification.md` is also a durable record — execute reads it at startup and refuses to dispatch tasks while unresolved ❌ findings remain. Then ask:
 
 > "Plan ready. Want me to run /execute now?"
 
@@ -192,3 +243,7 @@ During spec writing, if you discover the team lacks expertise for the domain bei
 Read `references/planning-procedure.md` for the detailed step-by-step on file structure mapping, task format, dependency graphs, and the no-placeholder rules.
 
 Read `references/example-plan.md` for worked examples at small, medium, and large scale.
+
+Read `references/research-gate-1.md` when dispatching Phase 0 — the Pre-Spec Research Gate. Covers trigger detection, depth calibration, host-shell checklist, `tech-constraints.md` schema, variant-first and variant-subsequent subagent prompt templates.
+
+Read `references/research-gate-2.md` when dispatching Phase 9.75 — the Post-Plan Verification Gate. Covers the verbatim adversarial prompt template, append-only `plan-verification.md` schema, Derived Status Calculation with test matrix, override mechanism, block-on-❌ behavior, and independence rules.
