@@ -90,13 +90,21 @@ Before settling on a design, present 2-3 different approaches with trade-offs:
 Once you know which direction, present the design in sections:
 - Scale each section to its complexity — a few sentences if straightforward, more if nuanced
 - Ask after each section whether it looks right so far
-- Cover: architecture, components, data flow, error handling
+- Cover: architecture, components, data flow, error handling, and — for code projects targeting specific runtimes/SDKs/platforms — Platform & Runtime Targets
 - Design for isolation: units with one clear purpose, well-defined interfaces, independently testable
 - **Don't validate weak design decisions to be agreeable.** If a section has a flaw — a component that's doing too much, missing error handling, an interface that will break under real use — say so directly and suggest the fix. Prioritize helping the operator build something that works over confirming their first instinct.
 
 In existing codebases, follow established patterns. Where existing code has problems that affect the work, include targeted improvements — don't propose unrelated refactoring.
 
-**Write to plan file:** The full design — architecture, components, data flow, error handling. This is the design brief that Phase 5 will formalize into a spec.
+**Platform & Runtime Targets.** When the project targets a specific runtime, platform, SDK, or external library (Unity, Unreal, iOS SDK, Android SDK, VSCode extension, browser extension, embedded runtime, managed-runtime host, etc.), capture a `## Platform & Runtime Targets` section in the brief. Include: target name + version, BCL/language surface notes, consuming host project shell (e.g., `Assets/` + `ProjectSettings/` for Unity, `.xcodeproj` for iOS), and any known runtime constraints. Spec's Phase 0 reads this section to run Gate 1 — the context7 research gate that verifies the target's API surface against live docs. Skipping this section for a runtime-targeted project means the spec has to re-derive targets or ask the operator again; catch it here.
+
+Skip this section for pure design/content projects, or code projects using only ubiquitous stable runtimes (Node 20 LTS, Python 3.11, etc. with no unusual constraints).
+
+**Blueprint Phase 4 self-check.** Before writing the Post-Approval section, verify:
+
+> "Is this a code project? If yes, does the brief include a `## Platform & Runtime Targets` section? If no, either add the section with the target list OR add an explicit `**Targets:** none` declaration to the brief header justifying why (pure content, pure config, etc.). Without one of these, spec Phase 0 will prompt for targets anyway — and if the operator misclassifies, the API verification gates skip when they shouldn't. This self-check is the first line of defense; spec Phase 0 is the safety net."
+
+**Write to plan file:** The full design — architecture, components, data flow, error handling, Platform & Runtime Targets (when applicable). This is the design brief that Phase 5 will formalize into a spec.
 
 ### Phase 4.25: Fact-Check Design Brief (existing codebases only)
 
