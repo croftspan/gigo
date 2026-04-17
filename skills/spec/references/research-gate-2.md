@@ -95,8 +95,8 @@ WORKFLOW (mandatory):
    - **Check file state against RUN_NUMBER first.** Read the file if it exists.
      - If the file does NOT exist AND RUN_NUMBER == 1: OK, proceed to CREATE path below.
      - If the file does NOT exist AND RUN_NUMBER > 1: contradiction — return STATUS=ERROR with message "RUN_NUMBER={RUN_NUMBER} but artifact file does not exist; lead's run-number logic is inconsistent." Do NOT write anything.
-     - If the file EXISTS AND contains the expected `(RUN_NUMBER - 1)` prior `## Run N` sections: OK, proceed to APPEND path below.
-     - If the file EXISTS AND contains zero `## Run ` sections (stale/corrupted from aborted run) AND RUN_NUMBER == 1: return STATUS=STALE with message "Artifact file exists but has no run sections; likely aborted prior run. Lead must clear or move the file before re-dispatch." Do NOT write anything.
+     - If the file EXISTS AND RUN_NUMBER > 1 AND contains the expected `(RUN_NUMBER - 1)` prior `## Run N` sections: OK, proceed to APPEND path below.
+     - If the file EXISTS AND contains zero `## Run ` sections (stale/corrupted from aborted run): return STATUS=STALE with message "Artifact file exists but has no run sections; likely aborted prior run. Lead must clear or move the file before re-dispatch." Do NOT write anything. (This branch covers both RUN_NUMBER==1 "file should not exist" and RUN_NUMBER>1 "file exists but empty" — STALE applies in either case since the file is not in a valid state to append to.)
      - If the file EXISTS AND RUN_NUMBER disagrees with actual section count: return STATUS=CONTRADICTION with the observed vs expected counts. Do NOT write anything.
    - **CREATE path** (RUN_NUMBER == 1, file does not exist): write frontmatter + `# Plan Verification: <topic>` + `**Target:** <target-summary>` + your `## Run 1 — {ISO_TIMESTAMP}` section containing `### Findings` table and empty `### Overrides (Run 1)` section.
    - **APPEND path** (RUN_NUMBER > 1, file exists with matching prior-run count): READ existing content, UPDATE frontmatter with new `run-number`, `run-at`, `status`, `total-findings`, `pass-findings`, `fail-findings` values, APPEND new `## Run {RUN_NUMBER} — {ISO_TIMESTAMP}` section at the end with your findings table and empty overrides sub-section. Do NOT touch prior `## Run N` sections.
@@ -168,10 +168,11 @@ Within that run's section:
    - Malformed markers NOT counted toward `N_override_matched` but surfaced to operator as MALFORMED-OVERRIDE
    - Call this `N_override_matched`
 3. **Derive effective status:**
-   - `N_fail == 0` → `pass`
+   - Findings table contains ZERO data rows (0 ✅ AND 0 ❌) → `fail` (Gate 2 extracted nothing; suspicious — few plans have zero verifiable items)
+   - `N_fail == 0 AND findings table has at least one row` → `pass`
    - `N_fail > 0 AND N_override_matched == N_fail AND every ❌ has a matching valid override` → `needs-override`
    - `N_fail > 0 AND not all ❌ covered` → `fail`
-   - Body structure missing, latest run section malformed, or findings unparseable → `fail` (safer default)
+   - Body structure missing, latest run section malformed, findings unparseable, OR findings table has zero rows → `fail` (safer default)
 
 Frontmatter `status:` is NEVER trusted alone. Body wins on disagreement.
 

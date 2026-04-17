@@ -28,12 +28,13 @@ Read `.claude/references/verbosity.md` if it exists. If `level: minimal`, announ
      - Find the LATEST `## Run N` section (scan for `## Run ` headers, pick highest N or latest timestamp).
      - Count ❌ rows in `### Findings` → `N_fail`.
      - Count valid override markers in `### Overrides (Run N)` matching regex `^<!-- override: finding-(\d+) reason:(.+?) approved-by:(.+?) timestamp:(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z) -->$` where finding-N matches an existing ❌ row AND capture groups are non-empty → `N_override_matched`. Track MALFORMED-OVERRIDE and DUPLICATE-OVERRIDE cases separately.
-     - **N_fail == 0** → `pass`. Proceed to step 3.
+     - **Findings table contains ZERO data rows** (0 ✅ AND 0 ❌) → REFUSE. Gate 2 extracted nothing from the plan — suspicious (few plans have zero verifiable items). Report: "Gate 2's findings table is empty at `<artifact-path>`. Either re-run Gate 2 with explicit re-read instruction or verify the plan file is intact." Do NOT silently proceed as `pass`.
+     - **N_fail == 0 AND findings table has at least one row** → `pass`. Proceed to step 3.
      - **N_fail > 0 AND every ❌ covered by valid override** → `needs-override`. Announce: `"Executing with [N_override_matched] acknowledged API gaps per <artifact-path>"`. Proceed to step 3.
      - **N_fail > 0 AND not all covered** → REFUSE. Report:
        > "Plan verification has [N_fail - N_override_matched] unresolved ❌ findings at `<artifact-path>`. Resolve by revising the plan (Gate 2 re-runs on revision) or adding override markers in the `### Overrides (Run N)` sub-section. Format: `<!-- override: finding-N reason:... approved-by:... timestamp:... -->`. Re-run `/execute` after."
        List each unresolved ❌ inline (finding number, named specific, target, suggested fix). Also list any MALFORMED-OVERRIDE or DUPLICATE-OVERRIDE details so operator sees near-miss overrides.
-   - **Body structure missing, latest run section malformed, or findings unparseable** → REFUSE. Report the specific parse issue with the artifact path.
+   - **Body structure missing, latest run section malformed, findings unparseable, OR findings table has zero rows** → REFUSE. Report the specific parse issue with the artifact path.
 
    **Why body-as-truth?** Frontmatter `status:` is written once by Gate 2 before any overrides exist. Overrides are added by the operator after; nobody updates frontmatter. Consumers derive effective status from body every time. See `skills/spec/references/research-gate-2.md` → Derived Status Calculation for the canonical algorithm and test matrix.
 3. **Read the full plan.** Extract all tasks, their descriptions (full text), dependencies, and parallelization markers.
