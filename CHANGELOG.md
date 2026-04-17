@@ -1,5 +1,35 @@
 # Changelog
 
+## [Unreleased] — 2026-04-17
+
+### Two-Gate context7 Research Pipeline
+
+Pipeline-wide safeguard against specs and plans that assume APIs the target runtime doesn't actually have. Triggered by a 2026-04-17 incident where a Unity package shipped weeks of Editor C# against .NET 5+ APIs (`Process.WaitForExitAsync`, `Task.WaitAsync(CancellationToken)`, `SHA256.ComputeHashAsync`, ~20 others) missing from Unity 6's .NET Standard 2.1 BCL. The package was uninstallable; 1820 vitest tests covered only the TypeScript sidecar, so the compile-surface mismatch went unnoticed for weeks.
+
+- **Gate 1 — Pre-Spec Research** (new spec Phase 0). Before the spec is written, an independent subagent grounds the target runtime's API surface via `context7` MCP (`resolve-library-id` → `query-docs`). Output: `docs/gigo/research/YYYY-MM-DD-<topic>-tech-constraints.md`. Spec Phase 5 (Write Spec) and Phase 8 (Write Plan) both read this as a hard input. Procedure in new `skills/spec/references/research-gate-1.md` (211 lines) — includes depth calibration heuristic (deep default for Unity/Unreal/iOS/Android/embedded/plugin APIs; light for Node/Python/stable web stacks), first-class host-shell checklist (flags missing `Assets/`+`ProjectSettings/` for Unity, `.xcodeproj` for iOS, etc.), sequential dispatch (avoids parallel-write race), and verbatim variant-first / variant-subsequent subagent prompt templates.
+
+- **Gate 2 — Post-Plan Adversarial Verification** (new spec Phase 9.75). After the plan is finalized (post-9.5 Challenger), an independent verification subagent runs with fresh context and via-negativa framing: *"Assume this plan is wrong. Find every API, method, library, or pattern it names and prove each one exists in [target] by citing context7 docs. ✅ requires a verbatim citation; 'looks right' is ❌. You are not helping the plan succeed; you are finding what's broken before it ships."* Output: `docs/gigo/research/YYYY-MM-DD-<topic>-plan-verification.md` — append-only `## Run N` sections preserve audit trail across re-runs. Procedure in new `skills/spec/references/research-gate-2.md` (268 lines). Reflexion pattern (Shinn et al.) applied as dispatch-time constraint; independence from the spec author, Gate 1 subagent, and Challenger subagent is non-negotiable.
+
+- **Block-on-❌ enforcement** at `gigo:execute` startup. Execute's Before-Starting gains a new step that resolves the plan-verification artifact via frontmatter `plan:` field (canonical absolute-path comparison — filename matching is not trusted), finds the latest `## Run N` section, computes effective status from the body (not the frontmatter `status:` — advisory only). `pass` → proceed. `needs-override` → announce gap count, proceed. `fail` → refuse to dispatch and list unresolved ❌ rows inline. MALFORMED-ARTIFACT, MALFORMED-OVERRIDE, and DUPLICATE-OVERRIDE cases all surfaced in refusal messages so operators see near-miss overrides, not silent bypass.
+
+- **Body-as-truth authority model.** Gate 2's `plan-verification.md` artifact uses the body as the source of truth for effective status. Frontmatter `status:` is advisory — written once by the subagent on first pass, never mutated after. Consumers (execute, spec Phase 10) derive effective status from body on every read using the canonical Derived Status Calculation algorithm: count ❌ rows in the latest run's `### Findings`, count valid override markers in `### Overrides (Run N)` matching the regex `^<!-- override: finding-(\d+) reason:(.+?) approved-by:(.+?) timestamp:(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z) -->$`. This closes the "who updates frontmatter after overrides are added" mutation-cycle problem.
+
+- **Append-only per-run structure** for `plan-verification.md`. Re-runs (plan revisions, explicit operator re-run) APPEND a new `## Run N` section — do NOT overwrite prior runs. Finding numbers are per-run; prior overrides preserved on disk but do not apply to new runs (operator re-adds against new finding numbers). Audit trail survives re-runs mechanically, not via git-commit discipline. 9-row Test Matrix in `research-gate-2.md` documents consumer-side derivation behavior for every edge case.
+
+- **Override mechanism.** Inline marker in the run's `### Overrides (Run N)` sub-section: `<!-- override: finding-N reason:<reason> approved-by:<username> timestamp:<ISO-8601> -->`. Auditable (named approver, reason, timestamp per override), consistent with existing approval-marker pattern. Malformed markers are flagged to operators, not silently ignored.
+
+- **Trigger scope.** Runs only for code projects with named runtime/platform/SDK/library targets. Detection: spec Phase 0 reads the design brief's `## Platform & Runtime Targets` section. If absent, checks for explicit `**Targets:** none` declaration (prompts for confirmation before skipping). If neither, default-skeptical fallback: *"This is a code project. What runtime / platform / SDK does it target? Answer `none` only if this is pure content/config with no code output."* Small-task handling: pure non-code tasks skip fully; code-producing small tasks STILL run host-shell detection (the 30-second cheap piece of Gate 1) — closes the Unity-incident bypass path.
+
+- **Blueprint Phase 4 — Platform & Runtime Targets capture.** Blueprint now captures a `## Platform & Runtime Targets` section in the design brief when applicable (Unity, Unreal, iOS/Android SDKs, VSCode/browser extensions, embedded runtimes, managed-runtime hosts). Includes target name+version, BCL/language surface notes, consuming host project shell requirements, runtime constraints. New Phase 4 self-check forces blueprint to either include the section OR add explicit `**Targets:** none` declaration before Post-Approval — first line of defense against blueprint misclassification.
+
+- **Graceful degradation when context7 MCP is unavailable.** Gate 1 runs in WebSearch-only mode with `depth: WebSearch-only` flagged in frontmatter. Gate 2 defaults context7-requiring items to ❌, operator can override with WebSearch citations. Pipeline degrades visibly, not silently.
+
+### Design references
+
+- Spec: `docs/gigo/specs/2026-04-17-two-gate-context7-research-pipeline-design.md`
+- Plan: `docs/gigo/plans/2026-04-17-two-gate-context7-research-pipeline.md`
+- Motivating memory: `feedback_blueprint_spec_platform_verification.md`, `project_research_gate_blueprint_to_spec.md`
+
 ## v0.11.0-beta (2026-03-31)
 
 ### New Skills
