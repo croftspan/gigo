@@ -52,7 +52,7 @@ Wave 2:         Task 3 (waits on 1 & 2)  Task 4 (waits on 2)
 **Files:**
 - Create: `skills/spec/references/research-gate-1.md`
 
-- [ ] **Step 1: Write the file with the complete content below.**
+- [x] **Step 1: Write the file with the complete content below.**
 
 Write `skills/spec/references/research-gate-1.md` with this structure. All prompt text is verbatim — preserve wording exactly.
 
@@ -270,7 +270,7 @@ YOUR ROLE: LATER subagent — the artifact file already exists. APPEND a new ## 
 - **Does not replace Challenger.** Challenger (6.5/9.5) checks engineering quality; Gate 1 checks platform reality.
 ```
 
-- [ ] **Step 2: Verify file exists and passes basic content check.**
+- [x] **Step 2: Verify file exists and passes basic content check.**
 
 Run: `wc -l skills/spec/references/research-gate-1.md`
 Expected: File exists, content approximately matches (target ~250 lines, not empty).
@@ -278,12 +278,17 @@ Expected: File exists, content approximately matches (target ~250 lines, not emp
 Run: `grep -c "VERBATIM" skills/spec/references/research-gate-1.md`
 Expected: ≥1 (confirms verbatim templates present).
 
-- [ ] **Step 3: Commit.**
+- [x] **Step 3: Commit.**
 
 ```bash
 git add skills/spec/references/research-gate-1.md
 git commit -m "feat: add Gate 1 pre-spec research reference template"
 ```
+
+#### What Was Built
+- **Deviations:** None. File produced verbatim per plan content.
+- **Review changes:** None. Spec compliance ✅ and craft quality ✅ both passed on first review.
+- **Notes for downstream:** File at `skills/spec/references/research-gate-1.md`, 211 lines. All sections present: Purpose, When Gate 1 Fires (with `Targets: none` confirmation), Depth Calibration table (3 rows), Host-Shell Checklist (8 rows), Dispatch Procedure, Variant-First and Variant-Subsequent prompt templates with correct nested fences (four-backtick outer wrapping three-backtick SCHEMA), Error Handling (7 rows), What This Gate Does NOT Do. Sequential dispatch specified. context7 MCP unavailable fallback to WebSearch-only documented. Task 3 will reference this file in spec/SKILL.md Phase 0 section.
 
 ---
 
@@ -296,7 +301,7 @@ git commit -m "feat: add Gate 1 pre-spec research reference template"
 **Files:**
 - Create: `skills/spec/references/research-gate-2.md`
 
-- [ ] **Step 1: Write the file with the complete content below.**
+- [x] **Step 1: Write the file with the complete content below.**
 
 Write `skills/spec/references/research-gate-2.md` with this structure. All prompt text and derivation algorithm is verbatim — preserve wording exactly.
 
@@ -571,7 +576,7 @@ Mechanism: separate `Agent` call with fresh context. The prompt template is the 
 - Does not skip based on "short plan" or "low risk" heuristics — if Gate 1 ran, Gate 2 runs
 ```
 
-- [ ] **Step 2: Verify file exists and content is substantial.**
+- [x] **Step 2: Verify file exists and content is substantial.**
 
 Run: `wc -l skills/spec/references/research-gate-2.md`
 Expected: File exists, ~350 lines.
@@ -582,12 +587,17 @@ Expected: ≥3 (framing present).
 Run: `grep -c "Test Matrix\|## Run" skills/spec/references/research-gate-2.md`
 Expected: ≥2 (test matrix + run structure both present).
 
-- [ ] **Step 3: Commit.**
+- [x] **Step 3: Commit.**
 
 ```bash
 git add skills/spec/references/research-gate-2.md
 git commit -m "feat: add Gate 2 post-plan adversarial verification reference"
 ```
+
+#### What Was Built
+- **Deviations:** None. Reviewer noted a minor review-prompt-side wording issue (review prompt said "9 data rows" in Test Matrix but the plan spec has 10 — implementer correctly followed the plan and produced 10 rows).
+- **Review changes:** None. Spec compliance ✅ and craft quality ✅ both passed on first review.
+- **Notes for downstream:** File at `skills/spec/references/research-gate-2.md`, 268 lines. All 5 file-state check branches present (STATUS=ERROR for missing file + RUN_NUMBER>1, STATUS=STALE for empty file + RUN_NUMBER=1, STATUS=CONTRADICTION for count mismatch, CREATE path, APPEND path). Adversarial framing verbatim (7 matches for adversarial/via-negativa keywords). Override regex `^<!-- override: finding-(\d+) reason:(.+?) approved-by:(.+?) timestamp:(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z) -->$` exact. Test Matrix has 10 rows (header + 9 scenarios + padding). Independence Rules names all three: spec author, Gate 1 subagent, Challenger subagent. Task 3 will reference this file in spec/SKILL.md Phase 9.75 section; Task 4 will use the Derived Status Calculation algorithm for execute startup check.
 
 ---
 
@@ -848,7 +858,7 @@ git commit -m "feat: add plan-verification block-on-❌ check at execute startup
 **Files:**
 - Modify: `skills/blueprint/SKILL.md`
 
-- [ ] **Step 1: Update Phase 4 "Cover:" bullet to include Platform & Runtime Targets.**
+- [x] **Step 1: Update Phase 4 "Cover:" bullet to include Platform & Runtime Targets.**
 
 Find the line in Phase 4 that begins `- Cover: architecture, components, data flow, error handling`.
 
@@ -858,7 +868,7 @@ Replace with:
 - Cover: architecture, components, data flow, error handling, and — for code projects targeting specific runtimes/SDKs/platforms — Platform & Runtime Targets
 ```
 
-- [ ] **Step 2: Add Platform & Runtime Targets guidance with self-check after the "existing codebases" paragraph.**
+- [x] **Step 2: Add Platform & Runtime Targets guidance with self-check after the "existing codebases" paragraph.**
 
 Find the paragraph: `In existing codebases, follow established patterns. Where existing code has problems that affect the work, include targeted improvements — don't propose unrelated refactoring.`
 
@@ -876,7 +886,7 @@ Skip this section for pure design/content projects, or code projects using only 
 
 ```
 
-- [ ] **Step 3: Update "Write to plan file" line to include Platform & Runtime Targets.**
+- [x] **Step 3: Update "Write to plan file" line to include Platform & Runtime Targets.**
 
 Find the line: `**Write to plan file:** The full design — architecture, components, data flow, error handling. This is the design brief that Phase 5 will formalize into a spec.`
 
@@ -886,7 +896,7 @@ Replace with:
 **Write to plan file:** The full design — architecture, components, data flow, error handling, Platform & Runtime Targets (when applicable). This is the design brief that Phase 5 will formalize into a spec.
 ```
 
-- [ ] **Step 4: Verify edits.**
+- [x] **Step 4: Verify edits.**
 
 Run: `wc -l skills/blueprint/SKILL.md`
 Expected: ~180–195 lines (up from 164; under 500).
@@ -897,12 +907,17 @@ Expected: ≥3 (Cover bullet + guidance paragraph + self-check + Write-to-plan-f
 Run: `grep -c "self-check\|Self-check" skills/blueprint/SKILL.md`
 Expected: ≥1 (new self-check present).
 
-- [ ] **Step 5: Commit.**
+- [x] **Step 5: Commit.**
 
 ```bash
 git add skills/blueprint/SKILL.md
 git commit -m "feat: capture Platform & Runtime Targets in blueprint Phase 4"
 ```
+
+#### What Was Built
+- **Deviations:** None. All 3 edits landed correctly in Phase 4 only; no other phases touched.
+- **Review changes:** None. Spec compliance ✅ and craft quality ✅ both passed on first review.
+- **Notes for downstream:** File at `skills/blueprint/SKILL.md`, 171 lines (was 164, +7 net). Cover bullet updated, Platform & Runtime Targets guidance paragraph inserted, self-check blockquote present, "Write to plan file" line updated — all within Phase 4 boundaries (lines 88–108). The three other "Write to plan file:" lines in Phases 1/2/3 (lines 47, 67, 86) correctly untouched. Task 3 will reference the `## Platform & Runtime Targets` section name in spec/SKILL.md Phase 0's brief-reading logic.
 
 ---
 
