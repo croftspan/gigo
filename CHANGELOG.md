@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased] — 2026-04-17
+## v0.13.0-beta (2026-04-17)
 
 ### Two-Gate context7 Research Pipeline
 
