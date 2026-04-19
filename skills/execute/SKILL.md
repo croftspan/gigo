@@ -37,11 +37,17 @@ Read `.claude/references/verbosity.md` if it exists. If `level: minimal`, announ
    - **Body structure missing, latest run section malformed, findings unparseable, OR findings table has zero rows** → REFUSE. Report the specific parse issue with the artifact path.
 
    **Why body-as-truth?** Frontmatter `status:` is written once by Gate 2 before any overrides exist. Overrides are added by the operator after; nobody updates frontmatter. Consumers derive effective status from body every time. See `skills/spec/references/research-gate-2.md` → Derived Status Calculation for the canonical algorithm and test matrix.
-3. **Read the full plan.** Extract all tasks, their descriptions (full text), dependencies, and parallelization markers.
+3. **Mission-control mode detection.** Run mc detection per `skills/spec/references/mc-detection.md`.
+   - If `mc_active` AND `$CLAUDE_PROJECT_DIR/vault/tickets/` contains ≥1 ticket file (`TCK-*.md`) → enter mc-mode (skip plan.md path; proceed to the Mc-Mode Work Loop section below).
+   - If `mc_active` AND `vault/tickets/` is empty → fall back to plan.md path (operator hasn't generated tickets yet).
+   - If NOT `mc_active` → existing plan.md path.
+
+   **Plan.md coexistence (R4.8):** if BOTH `vault/tickets/` (≥1 ticket) AND an approved plan file in `docs/gigo/plans/` exist, prompt operator once per project: *"This project has both a plan file and mission-control tickets. Which is the source of truth for this run? [tickets / plan / both (run plan tasks first, then tickets)]"*. Store decision in preference file as `tiebreak: tickets | plan | sequential`.
+4. **Read the full plan.** Extract all tasks, their descriptions (full text), dependencies, and parallelization markers.
    - **Check for checkpoints.** Scan for `<!-- checkpoint: ... -->` comments in the plan.
    - **If checkpoints found:** Report progress to the operator, verify SHAs exist, and resume from the appropriate point. See `references/checkpoint-format.md` for the full resume procedure.
    - **If no checkpoints:** Fresh execution — proceed normally.
-4. **Present execution options.** Let the operator choose their tier:
+5. **Present execution options.** Let the operator choose their tier:
 
    > "Ready to execute. Available options:
    > 1. **Subagents** (recommended) — fresh worker per task, parallel dispatch for independent tasks, lead-managed review.
@@ -218,6 +224,18 @@ After a task passes both review stages, update the plan document before moving t
 
 ---
 
+## Mc-Mode Work Loop
+
+When Before-Starting step 3 resolves to mc-mode (mc active + tickets present), read `skills/execute/references/mc-mode-work-loop.md` for the full procedure: two-pass crash recovery, main ticket loop with mandatory ticket-body read from `vault/tickets/{id}.md`, worker prompt contents, auto-changelog, and the non-mutation rule.
+
+Key constraints enforced by the reference:
+- One ticket at a time in v1 (parallel deferred to v2)
+- mc enforces DAG order via `mc-ticket-status --json`'s `unblocked` array; execute picks first-listed
+- Worker prompt is self-contained (ticket body from `vault/tickets/*.md`, not a plan file)
+- Execute NEVER writes to ticket frontmatter — state changes flow through signal files and verify verdicts
+
+---
+
 ## Red Flags
 
 **Never:**
@@ -228,6 +246,9 @@ After a task passes both review stages, update the plan document before moving t
 - Ignore worker escalations (BLOCKED, NEEDS_CONTEXT)
 - Silently skip a task
 - Make workers read the plan file — provide full task text in the dispatch prompt
+- Mutate ticket frontmatter in mc-mode (authority principle: mc owns ticket state, gigo emits signals)
+- Treat `mc-ticket-status --json` output as sufficient ticket context (ticket-body read from `vault/tickets/{id}.md` is MANDATORY before worker dispatch)
+- Use `mc-ticket-status`'s `by_status.in_progress` count as a ticket list (it's a count int, not an iterable — use `mc-ticket-ls --status in_progress --json` for enumeration)
 
 **If a worker reports concerns:** Read them before proceeding. Don't rush into review.
 
