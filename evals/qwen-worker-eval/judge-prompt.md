@@ -66,6 +66,10 @@ Did the worker respect the stated OUTPUT FORMAT precisely?
 - Stated "JSON array" and the worker gave a JSON object or a markdown table → `false`.
 - Leading/trailing whitespace or a single newline is acceptable — only penalize
   real deviations from the stated shape.
+- **Multi-file tasks:** if the OUTPUT FORMAT names multiple files (e.g.,
+  `### model.py`, `### migration.py`), every named file must be present with its
+  expected heading and fence. A missing file → `false`, even if the files that
+  are present look correct.
 
 ### 3. `fabrication_present` (boolean)
 Did the worker invent anything that wasn't provided in the ticket and isn't part
@@ -97,6 +101,12 @@ names, docstring adequacy, edge-case handling, idiom fit.
 - **4:** Clearly senior work. Good naming, idiomatic, tight.
 - **5:** Outstanding. Elegant, minimal, handles the edge cases the spec implied
   without being told.
+
+**Completeness:** large outputs can pass the deterministic check while silently
+dropping a required test case, skipping a named function, or truncating a file.
+If the spec names N items and only N-1 are present — even if what's present is
+correct — score `quality` down (3 → 2, or 2 → 1) and flag it in `notes`. Do not
+grade partial work as competent.
 
 ### 5. `notes` (one sentence)
 One sentence explaining the key quality observation or any flag. If there was

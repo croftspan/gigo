@@ -829,6 +829,47 @@ A different question: if Opus plans and Qwen executes, what does Qwen need to be
 
 **Writeup:** `docs/gigo/experiments/05-qwen36-worker-profile.md`. **Results:** `evals/qwen-worker-eval/results/2026-04-19-085822/`.
 
+## Phase 9-C: Qwen3.6 at Realistic Scale (Brief 17)
+
+Brief 16's win condition — **TF3 + thinking-off** — was proven on 10 toy tasks under 40 lines each. Brief 17 stress-tested it at realistic gigo-execution sizes: S (20-40 lines), M (80-150), L (250-400), XL (400-600 across 2-4 files). Single pinned condition, 9 tasks × 5 replicates = 45 runs. Same Qwen build, same Opus judge, same harness extended with pin flags and a size-bucket rollup. Run 2026-04-19.
+
+**Question:** Does the Brief 16 recipe survive at realistic sizes?
+
+**Headline:** Yes — unanimously.
+
+| Bucket | N | Pass rate | Mean quality | Fab rate | Mean walltime | Mean tokens |
+|---|---|---|---|---|---|---|
+| S  |  5 | **1.00** | 4.00 | 0.00 |  2.0s | 109 |
+| M  | 15 | **1.00** | 3.87 | 0.00 | 13.7s | 417 |
+| L  | 15 | **1.00** | 4.00 | 0.00 | 16.6s | 730 |
+| XL | 10 | **1.00** | 4.00 | 0.00 | 17.0s | 810 |
+
+**45/45 deterministic PASS, 45/45 judge PASS, 0 fabrication, 0 truncations, 0 judge errors.**
+
+**Three findings that settle the scale question:**
+
+1. **No degradation across 25× size range.** Pass rate stays 1.00 from 20-line toys through 500-line / 4-file refactors. Mean quality drifts ±0.13 with no trend. The recipe is production-ready for gigo:execute's current scope.
+2. **Walltime scales sub-linearly and stays tractable.** XL walltime (17s) is 8.5× S — roughly the completion-token ratio (7.4×), because thinking-off is emission-bound, not reasoning-bound. Full-loop iteration (plan + execute + review) fits comfortably under a minute on the biggest tasks in this sweep.
+3. **XL multi-file fences are not a weak point.** Heading-then-fence format (`### filename\n\`\`\`python...`) was respected 100% of the time. The extra judge check for missing files (added per Brief 17 §Judge) never fired. H3 ("XL will fail on format") was refuted.
+
+**Craft-level observations (not correctness failures):**
+
+- 43/45 runs scored quality 4; 2/45 scored quality 3. Both 3s were M-bucket runs with named defects: M1 r3 used a misleading class name (`TimestampDecorator` for something that wasn't a decorator); M3 r4 broke a caller contract while correctly fixing a mutable-default bug. Acceptance still passed both times.
+- **XL1 (rename) produced byte-identical output across all 5 replicates.** Not a sampling bug — temp=0.6 is low enough that a well-specified mechanical task converges to its canonical answer. A determinism signal, not a worry.
+
+**Harness shipped with Brief 17 (additive):**
+
+- `run_qwen_eval.py` — `--tasks-dir`, `--pin-format`, `--pin-thinking`, `--reps`, `--out` flags; manifest now records `size_bucket` and `finish_reason`.
+- `score_qwen_eval.py` — `--tasks-dir` / `--verifiers-dir` flags; new "Per size bucket × condition" section in summary.md.
+- `verifiers/extract.py` — `extract_named_fences()` helper for multi-file XL verifiers.
+- `judge-prompt.md` — completeness note in `quality`, multi-file rule in `format_adherence`.
+
+**Verdict:** **The Brief 16 recipe is the production Qwen worker recipe**, confirmed at gigo-execute-realistic scale. No changes needed before wiring TF3 + thinking-off as the Qwen Tier-2 inline default. The next unknowns move to multi-turn loops (Phase 2B) and the silent-non-completion tail from Brief 16's T7 anomaly (Phase 2C).
+
+**Cost:** Qwen local/free, ~11m20s sweep walltime. Opus judge ~7 minutes, cache-warmed, $10-ish.
+
+**Writeup:** `docs/gigo/experiments/06-qwen36-scale-trial.md`. **Results:** `evals/qwen-worker-eval/results/phase2a-sweep/`.
+
 ## Open Questions
 
 1. **Product integration:** How does the generated project output instruct this pipeline? The workflow needs to describe when to trigger each review stage.
@@ -845,4 +886,5 @@ A different question: if Opus plans and Qwen executes, what does Qwen need to be
 12. **Qwen thinking-loop failure mode (Brief 16 follow-up):** 2/30 TF3-thinking-on runs for T7 burned the full 32768 max_tokens in reasoning and produced empty content. Same pathology as Brief 15's empty Characters response. Reproduce with a targeted sweep (regex-from-examples × 20 replicates) to characterise the tail — is it T7-specific, TF3-specific, or thinking-on-general?
 13. **Phase 2 of the Qwen worker profile (Brief 16 deferred):** Sampling profile was pinned per task type from the Unsloth recommendations. Sweep it (temp/top_p/top_k/presence_penalty) against TF3-thinking-off to verify the pins are actually optimal.
 14. **Multi-turn Qwen with `preserve_thinking` (Brief 16 deferred):** Single-shot only in Brief 16. Multi-turn is where thinking-mode pays off in principle, so worth measuring against plan → execute → review loops specifically.
-15. **Local-worker bake-off (Brief 16 deferred, operator-prioritized):** Compare Qwen3.6 against **Gemma4** first, then DeepSeek-Coder, Qwen3-Coder, Codestral, Llama at the same TF3-off recipe to see if the harness is Qwen-specific or a general local-worker pattern. Scheduled after Phase 2A (scale) and Phase 2B/C (loop + loop-failure).
+15. **Local-worker bake-off (Brief 16 deferred, operator-prioritized):** Compare Qwen3.6 against **Gemma4** first, then DeepSeek-Coder, Qwen3-Coder, Codestral, Llama at the same TF3-off recipe to see if the harness is Qwen-specific or a general local-worker pattern. Phase 2A (scale) complete as of Brief 17 — recipe confirmed at up to 500-line / 4-file scope. Still scheduled after Phase 2B/C (loop + loop-failure).
+16. **Scale ceiling (Brief 17 follow-up):** Phase 2A found no ceiling at 600 lines / 4 files. Extend the sweep at 800-1200 lines and 6-10 files to locate where the recipe breaks, if it does.

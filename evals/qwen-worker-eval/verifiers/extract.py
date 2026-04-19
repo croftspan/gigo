@@ -26,6 +26,28 @@ def extract_fenced(content: str, lang: str | None = None) -> str:
     return content.strip()
 
 
+def extract_named_fences(content: str, filenames: list[str]) -> dict[str, str]:
+    """For each filename, find a `### {filename}` heading followed by a fenced
+    code block, and return the block body. Missing filenames are absent from
+    the returned dict.
+
+    Handles minor variations in heading level (##, ###, ####) and fence info
+    strings (```python, ```py, ```); the fence immediately after the heading is
+    what counts.
+    """
+    results: dict[str, str] = {}
+    for fn in filenames:
+        pattern = (
+            rf"#{{2,4}}\s+{re.escape(fn)}\s*\n+"  # ### filename
+            rf"```[a-zA-Z0-9_-]*\s*\n"            # opening fence
+            rf"(.*?)\n```"                         # body + closing fence
+        )
+        m = re.search(pattern, content, re.DOTALL)
+        if m:
+            results[fn] = m.group(1).rstrip()
+    return results
+
+
 def fail(msg: str) -> None:
     print(f"FAIL: {msg}", file=sys.stderr)
     sys.exit(1)

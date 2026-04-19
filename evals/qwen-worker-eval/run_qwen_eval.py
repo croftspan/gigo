@@ -8,16 +8,19 @@ JSON response, extracted content, and extracted reasoning per run.
 Sampling profile is pinned per task type (Fix 3 in brief 16). Does not sweep it.
 
 Usage:
-    run_qwen_eval.py                         # full sweep
-    run_qwen_eval.py --tasks T1              # subset
-    run_qwen_eval.py --tasks T1 --formats TF3 --thinks on --reps 1  # dry run
+    run_qwen_eval.py                                    # full sweep (Phase 1 tasks)
+    run_qwen_eval.py --tasks T1                         # subset
+    run_qwen_eval.py --tasks T1 --formats TF3 --thinks on --reps 1   # dry run
     run_qwen_eval.py --out results/custom-dir
+    run_qwen_eval.py --tasks-dir tasks/phase2a --pin-format TF3 \
+                     --pin-thinking off --reps 5       # Phase 2A single-cell
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import re
 import subprocess
 import sys
 import time
@@ -29,7 +32,7 @@ from pathlib import Path
 import yaml
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-TASKS_DIR = SCRIPT_DIR / "tasks"
+DEFAULT_TASKS_DIR = SCRIPT_DIR / "tasks"
 ENDPOINT = "http://127.0.0.1:8080/v1/chat/completions"
 MODEL = "unsloth/Qwen3.6-35B-A3B-MLX-8bit"
 MAX_TOKENS = 32768
@@ -43,24 +46,51 @@ SAMPLING = {
     "structured": {"temperature": 0.7, "top_p": 0.80, "top_k": 20, "presence_penalty": 1.5},
 }
 
-ALL_TASKS = [f"T{i}" for i in range(1, 11)]
 ALL_FORMATS = ["TF1", "TF2", "TF3"]
 ALL_THINKS = ["on", "off"]
 
 
-def load_task_meta(task_id: str) -> dict:
-    matches = list(TASKS_DIR.glob(f"{task_id}-*.md"))
+def discover_tasks(tasks_dir: Path) -> list[str]:
+    """Return task IDs (stems before the first `-`) found in tasks_dir, in a
+    stable order. Phase 1 uses T1..T10; Phase 2A uses S1/M*/L*/XL*.
+    """
+    ids = sorted(
+        {path.name.split("-")[0] for path in tasks_dir.glob("*.md")},
+        key=_task_sort_key,
+    )
+    return ids
+
+
+def _task_sort_key(task_id: str) -> tuple:
+    """Sort T1,T2,...T10 numerically; S/M/L/XL grouped then numerically."""
+    order = {"S": 0, "M": 1, "L": 2, "XL": 3, "T": 4}
+    m = re.match(r"([A-Z]+)(\d+)", task_id)
+    if not m:
+        return (9, task_id)
+    prefix, num = m.group(1), int(m.group(2))
+    return (order.get(prefix, 9), num)
+
+
+def load_task_meta(tasks_dir: Path, task_id: str) -> dict:
+    matches = list(tasks_dir.glob(f"{task_id}-*.md"))
     if not matches:
-        sys.exit(f"ERROR: no task file matching {task_id}")
+        sys.exit(f"ERROR: no task file matching {task_id} in {tasks_dir}")
     raw = matches[0].read_text()
     end = raw.find("\n---", 3)
     fm = yaml.safe_load(raw[3:end])
     return fm
 
 
-def build_ticket(fmt: str, task_id: str) -> str:
+def resolve_task_path(tasks_dir: Path, task_id: str) -> Path:
+    matches = list(tasks_dir.glob(f"{task_id}-*.md"))
+    if not matches:
+        sys.exit(f"ERROR: no task file matching {task_id} in {tasks_dir}")
+    return matches[0]
+
+
+def build_ticket(fmt: str, task_path: Path) -> str:
     proc = subprocess.run(
-        [str(SCRIPT_DIR / "build-ticket.sh"), fmt, task_id],
+        [str(SCRIPT_DIR / "build-ticket.sh"), fmt, str(task_path)],
         capture_output=True,
         text=True,
         check=True,
@@ -108,12 +138,54 @@ def call_qwen(ticket: str, task_type: str, thinking_on: bool) -> tuple[dict, str
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--tasks", nargs="+", default=ALL_TASKS)
+    ap.add_argument(
+        "--tasks-dir",
+        default=None,
+        help="task directory (relative to script or absolute); default = tasks/",
+    )
+    ap.add_argument(
+        "--tasks",
+        nargs="+",
+        default=None,
+        help="task IDs to run; defaults to every task file in --tasks-dir",
+    )
     ap.add_argument("--formats", nargs="+", default=ALL_FORMATS)
+    ap.add_argument(
+        "--pin-format",
+        default=None,
+        choices=ALL_FORMATS,
+        help="shorthand for `--formats TFx` — pin a single format",
+    )
     ap.add_argument("--thinks", nargs="+", default=ALL_THINKS, choices=ALL_THINKS)
+    ap.add_argument(
+        "--pin-thinking",
+        default=None,
+        choices=ALL_THINKS,
+        help="shorthand for `--thinks on|off` — pin a single thinking setting",
+    )
     ap.add_argument("--reps", type=int, default=3)
     ap.add_argument("--out", default=None, help="override results dir")
     args = ap.parse_args()
+
+    if args.tasks_dir:
+        tasks_dir = Path(args.tasks_dir)
+        if not tasks_dir.is_absolute():
+            tasks_dir = SCRIPT_DIR / tasks_dir
+    else:
+        tasks_dir = DEFAULT_TASKS_DIR
+
+    if not tasks_dir.is_dir():
+        sys.exit(f"ERROR: tasks dir not found: {tasks_dir}")
+
+    if args.pin_format:
+        args.formats = [args.pin_format]
+    if args.pin_thinking:
+        args.thinks = [args.pin_thinking]
+
+    if args.tasks is None:
+        args.tasks = discover_tasks(tasks_dir)
+        if not args.tasks:
+            sys.exit(f"ERROR: no task files found in {tasks_dir}")
 
     if args.out:
         out_dir = Path(args.out)
@@ -122,8 +194,9 @@ def main() -> None:
         out_dir = SCRIPT_DIR / "results" / stamp
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    # Preload task metadata
-    meta = {t: load_task_meta(t) for t in args.tasks}
+    # Preload task metadata + resolved paths
+    meta = {t: load_task_meta(tasks_dir, t) for t in args.tasks}
+    task_paths = {t: resolve_task_path(tasks_dir, t) for t in args.tasks}
 
     total = len(args.tasks) * len(args.formats) * len(args.thinks) * args.reps
     idx = 0
@@ -132,6 +205,7 @@ def main() -> None:
     manifest_path = out_dir / "manifest.jsonl"
     manifest = manifest_path.open("w")
     print(f"=== Qwen worker eval ===")
+    print(f"tasks_dir: {tasks_dir}")
     print(f"out: {out_dir}")
     print(f"runs: {total}")
     print()
@@ -139,7 +213,7 @@ def main() -> None:
     for task_id in args.tasks:
         task_type = meta[task_id]["task_type"]
         for fmt in args.formats:
-            ticket = build_ticket(fmt, task_id)
+            ticket = build_ticket(fmt, task_paths[task_id])
             for think in args.thinks:
                 cond = f"{fmt}-thinking-{think}"
                 thinking_on = think == "on"
@@ -172,17 +246,24 @@ def main() -> None:
                     (out_dir / f"{stem}.content.txt").write_text(content)
                     (out_dir / f"{stem}.reasoning.txt").write_text(reasoning)
 
+                    finish_reason = None
+                    if resp:
+                        choices = resp.get("choices") or [{}]
+                        finish_reason = choices[0].get("finish_reason")
+
                     manifest.write(
                         json.dumps(
                             {
                                 "stem": stem,
                                 "task": task_id,
                                 "task_type": task_type,
+                                "size_bucket": meta[task_id].get("size_bucket"),
                                 "format": fmt,
                                 "thinking": think,
                                 "rep": rep,
                                 "condition": cond,
                                 "error": err,
+                                "finish_reason": finish_reason,
                                 "elapsed_s": round(dt, 2),
                                 "ticket_chars": len(ticket),
                                 "content_chars": len(content),

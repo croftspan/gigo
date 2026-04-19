@@ -7,12 +7,15 @@ For each run in results/<stamp>/:
   3. Dispatch `claude -p --model claude-opus-4-7 --output-format json` with the prompt.
   4. Parse the YAML score block. Save as <stem>.score.json.
 
-Aggregate per condition and per task_type. Emit summary.md.
+Aggregate per condition and per task_type. If the manifest records size_bucket
+(Phase 2A), also aggregate per bucket. Emit summary.md.
 
 Usage:
     score_qwen_eval.py <results-dir>
-    score_qwen_eval.py <results-dir> --only T1 T2   # limit to some tasks
-    score_qwen_eval.py <results-dir> --skip-judge    # re-aggregate without re-running judge
+    score_qwen_eval.py <results-dir> --only T1 T2              # limit to some tasks
+    score_qwen_eval.py <results-dir> --skip-judge              # re-aggregate only
+    score_qwen_eval.py <results-dir> --tasks-dir tasks/phase2a \
+                                     --verifiers-dir verifiers/phase2a   # Phase 2A
 """
 
 from __future__ import annotations
@@ -29,22 +32,28 @@ from statistics import mean
 import yaml
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-TASKS_DIR = SCRIPT_DIR / "tasks"
-VERIFIERS_DIR = SCRIPT_DIR / "verifiers"
+DEFAULT_TASKS_DIR = SCRIPT_DIR / "tasks"
+DEFAULT_VERIFIERS_DIR = SCRIPT_DIR / "verifiers"
 JUDGE_PROMPT = (SCRIPT_DIR / "judge-prompt.md").read_text()
 
+_BUCKET_RANK = {"S": 0, "M": 1, "L": 2, "XL": 3}
 
-def load_task(task_id: str) -> dict:
-    matches = list(TASKS_DIR.glob(f"{task_id}-*.md"))
+
+def _bucket_order(bucket: str) -> int:
+    return _BUCKET_RANK.get(bucket, 9)
+
+
+def load_task(tasks_dir: Path, task_id: str) -> dict:
+    matches = list(tasks_dir.glob(f"{task_id}-*.md"))
     if not matches:
-        sys.exit(f"ERROR: no task {task_id}")
+        sys.exit(f"ERROR: no task {task_id} in {tasks_dir}")
     raw = matches[0].read_text()
     end = raw.find("\n---", 3)
     return yaml.safe_load(raw[3:end])
 
 
-def run_verifier(task_id: str, content: str) -> dict:
-    verifier = VERIFIERS_DIR / f"{task_id}.py"
+def run_verifier(verifiers_dir: Path, task_id: str, content: str) -> dict:
+    verifier = verifiers_dir / f"{task_id}.py"
     if not verifier.exists():
         return {"ran": False, "pass": None, "msg": "no verifier"}
     proc = subprocess.run(
@@ -145,7 +154,14 @@ def dispatch_judge(prompt: str) -> dict:
     return parsed
 
 
-def score_run(results_dir: Path, stem: str, only: set[str] | None, skip_judge: bool) -> dict:
+def score_run(
+    results_dir: Path,
+    stem: str,
+    only: set[str] | None,
+    skip_judge: bool,
+    tasks_dir: Path,
+    verifiers_dir: Path,
+) -> dict:
     task_id = stem.split("--")[0]
     if only and task_id not in only:
         return None  # caller ignores None
@@ -162,8 +178,8 @@ def score_run(results_dir: Path, stem: str, only: set[str] | None, skip_judge: b
         if not existing.get("judge", {}).get("error"):
             return existing
 
-    task = load_task(task_id)
-    verifier_result = run_verifier(task_id, content)
+    task = load_task(tasks_dir, task_id)
+    verifier_result = run_verifier(verifiers_dir, task_id, content)
 
     if skip_judge:
         score = {
@@ -198,6 +214,7 @@ def aggregate(results_dir: Path, scores: dict[str, dict], manifest: list[dict]) 
     per_cond = defaultdict(list)
     per_cond_type = defaultdict(list)
     per_task = defaultdict(list)
+    per_bucket = defaultdict(list)
 
     def cell_pass(score: dict) -> bool | None:
         j = score.get("judge") or {}
@@ -211,11 +228,13 @@ def aggregate(results_dir: Path, scores: dict[str, dict], manifest: list[dict]) 
         j = score.get("judge") or {}
         cond = m.get("condition", "?")
         ttype = m.get("task_type", "?")
+        bucket = m.get("size_bucket")
         rows.append({
             "stem": stem,
             "task": score["task"],
             "cond": cond,
             "task_type": ttype,
+            "size_bucket": bucket,
             "rep": m.get("rep"),
             "judge_error": j.get("error"),
             "acceptance_pass": j.get("acceptance_pass"),
@@ -228,12 +247,15 @@ def aggregate(results_dir: Path, scores: dict[str, dict], manifest: list[dict]) 
             "prompt_tokens": m.get("prompt_tokens"),
             "reasoning_chars": m.get("reasoning_chars"),
             "elapsed_s": m.get("elapsed_s"),
+            "finish_reason": m.get("finish_reason"),
         })
         cp = cell_pass(score)
         if cp is not None:
             per_cond[cond].append((cp, j))
             per_cond_type[(cond, ttype)].append((cp, j))
             per_task[(score["task"], cond)].append((cp, j))
+            if bucket:
+                per_bucket[(bucket, cond)].append((cp, j))
 
     def summarize_cells(cells: list[tuple[bool, dict]]) -> dict:
         n = len(cells)
@@ -274,6 +296,24 @@ def aggregate(results_dir: Path, scores: dict[str, dict], manifest: list[dict]) 
             s = summarize_cells(per_cond_type.get((cond, ttype), []))
             md.append(f"| {cond} | {ttype} | {s['n']} | {s['pass_rate']} | {s['mean_quality']} | {s['fab_rate']} |")
     md.append("")
+
+    # Size-bucket roll-up (Phase 2A — only populated when manifest has size_bucket)
+    buckets_present = sorted({b for (b, _cond) in per_bucket.keys()}, key=_bucket_order)
+    if buckets_present:
+        md.append("## Per size bucket × condition (Phase 2A scale trial)\n")
+        md.append("| Bucket | Condition | N | Pass rate | Mean quality | Fab rate |")
+        md.append("|---|---|---|---|---|---|")
+        for bucket in buckets_present:
+            for cond in conds:
+                cells = per_bucket.get((bucket, cond), [])
+                if not cells:
+                    continue
+                s = summarize_cells(cells)
+                md.append(
+                    f"| {bucket} | {cond} | {s['n']} | {s['pass_rate']} "
+                    f"| {s['mean_quality']} | {s['fab_rate']} |"
+                )
+        md.append("")
 
     # Per-task variance
     md.append("## Per-task × condition (variance check)\n")
@@ -343,11 +383,34 @@ def main() -> None:
     ap.add_argument("results_dir")
     ap.add_argument("--only", nargs="+", default=None)
     ap.add_argument("--skip-judge", action="store_true")
+    ap.add_argument(
+        "--tasks-dir",
+        default=None,
+        help="task directory (relative to script or absolute); default = tasks/",
+    )
+    ap.add_argument(
+        "--verifiers-dir",
+        default=None,
+        help="verifier directory (relative to script or absolute); default = verifiers/",
+    )
     args = ap.parse_args()
 
     results_dir = Path(args.results_dir)
     if not results_dir.is_dir():
         sys.exit(f"ERROR: no such dir: {results_dir}")
+
+    def _resolve(p: str | None, default: Path) -> Path:
+        if not p:
+            return default
+        path = Path(p)
+        if not path.is_absolute():
+            path = SCRIPT_DIR / path
+        if not path.is_dir():
+            sys.exit(f"ERROR: dir not found: {path}")
+        return path
+
+    tasks_dir = _resolve(args.tasks_dir, DEFAULT_TASKS_DIR)
+    verifiers_dir = _resolve(args.verifiers_dir, DEFAULT_VERIFIERS_DIR)
 
     manifest = load_manifest(results_dir)
     only = set(args.only) if args.only else None
@@ -359,7 +422,14 @@ def main() -> None:
         if only and m["task"] not in only:
             continue
         print(f"[{i}/{total}] scoring {stem}")
-        s = score_run(results_dir, stem, only, args.skip_judge)
+        s = score_run(
+            results_dir,
+            stem,
+            only,
+            args.skip_judge,
+            tasks_dir,
+            verifiers_dir,
+        )
         if s is not None:
             scores[stem] = s
 
