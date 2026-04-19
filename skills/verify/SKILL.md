@@ -17,6 +17,22 @@ Read `.claude/references/language.md` if it exists. Present all findings and sta
 
 ---
 
+## Mission-Control Mode Detection
+
+Run at verify start, before Stage 1.
+
+1. Run mc detection per `skills/spec/references/mc-detection.md`.
+2. Attempt ticket ID resolution per `skills/verify/references/mc-verdict-schema.md` § "Ticket ID Resolution":
+   - Explicit flag: `--ticket TCK-X-NNN`
+   - Most recent `vault/agents/logs/{ticket-id}-execute-pickup.md`
+   - Operator-provided
+3. If `mc_active` AND ticket ID resolved → enter mc-mode (write verdict files per R5.4).
+4. Otherwise → v0.13 mode (human-readable operator summary, no verdict files).
+
+If `mc_active` but ticket ID NOT resolvable, ask the operator before falling back — silent fallback hides mc-mode regressions.
+
+---
+
 ## Stage 1: Spec Review — "Did the worker build what the plan said?"
 
 Dispatch a subagent using the prompt template in `references/spec-reviewer-prompt.md`.
@@ -34,6 +50,8 @@ The reviewer does NOT trust the report. They read code and compare to requiremen
 - **Misunderstandings** — wrong interpretation, wrong problem, right feature wrong way
 
 Output: `✅ Spec compliant` or `❌ Issues found` with specific location references.
+
+**In mc-mode:** after Stage 1 completes, write `vault/agents/reviewer/{ticket-id}-spec-compliance.md` per R5.4.a schema (YAML frontmatter). See `skills/verify/references/mc-verdict-schema.md` for the exact schema.
 
 ---
 
@@ -63,6 +81,35 @@ If `code-review` is not installed, warn and offer inline fallback:
 > "Stage 2 craft review works best with the code-review plugin. Install with `claude install @anthropic/code-review`. Running inline craft review instead."
 
 Then fall back to per-task mode using the SHA range of the PR.
+
+**In mc-mode:** after Stage 2 completes (only if Stage 1 passed — stage ordering rule unchanged), write `vault/agents/reviewer/{ticket-id}-craft-quality.md` per R5.4.a schema.
+
+---
+
+## Combined Verdict Synthesis (Mc-Mode Only)
+
+After both stages complete (or Stage 1 failed → Stage 2 skipped), write the canonical combined verdict at `vault/agents/reviewer/{ticket-id}.md` using mc's **plain-header format** per R5.4.b schema. This file is parsed by mc's downstream tools — do NOT drift.
+
+Combined status derivation per R5.7:
+
+| Stage 1 | Stage 2 | Critical in S2 (≥90 confidence)? | Combined |
+|---|---|---|---|
+| pass | pass | — | `approved` |
+| pass | fail | no | `approved_with_notes` |
+| pass | fail | yes | `escalate` |
+| fail | skipped | — | `escalate` (reason: "spec compliance failed — craft review skipped per pipeline policy") |
+
+See `skills/verify/references/mc-verdict-schema.md` for:
+- The exact plain-header format
+- The Stage-verdicts extension section (non-breaking gigo addition)
+- Re-verification history-append pattern
+- Validation step (run `mc-ticket-stats {ticket-id}` to confirm parsability)
+
+**Operator-facing summary in mc-mode** (appended to existing v0.13 operator-readable summary):
+
+> "Verdicts written to `vault/agents/reviewer/{ticket-id}.md` (combined), `{ticket-id}-spec-compliance.md`, `{ticket-id}-craft-quality.md`. Mission-control will pick up state transitions per its own rules. Suggested ticket status: [done | escalate]."
+
+**Non-Mutation Rule:** verify NEVER writes to `vault/tickets/*.md` frontmatter. mc transitions ticket state; gigo provides verdicts.
 
 ---
 
