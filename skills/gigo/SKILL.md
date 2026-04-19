@@ -153,7 +153,7 @@ Don't ask about this. Just calibrate.
 | Style | What you get |
 |---|---|
 | **Characters** | Named personas with personality and voice. They speak up, push back, have opinions. More engaging. |
-| **Lenses** | Functional descriptors that work silently. Same expertise, no character voice. Cleaner output. |
+| **Lenses** | Functional descriptors that work silently. Same expertise, no character voice. Cleaner output. Edges on quality-bar enforcement and adversarial/push-back prompts — good fit for review-heavy or compliance-focused projects. |
 
 Skippable — if the operator passes, default to **Characters**. Save the choice to `.claude/references/persona-style.md`:
 ```markdown
