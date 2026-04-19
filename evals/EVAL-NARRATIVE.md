@@ -723,9 +723,85 @@ This maps to the two-bosses finding: stage 1 is the planning boss checking "did 
 | **Review 2: Code quality** | Bare workers | code-review:code-review | Is the code production-ready? 5 focused reviewers. |
 | **Operator approval** | Human | PR review | Human tests, reviews summary, approves |
 
+## Phase 9: Opus 4.7 Context Evals (Briefs 13 & 14)
+
+Two eval runs on 2026-04-19 against Claude Opus 4.7 + gigo v0.14.0-beta. Same two fixtures (`rails-api`, `childrens-novel`), same base harness. Brief 13 re-ran the assembled-vs-bare comparison from earlier phases. Brief 14 swept the context-mass axis with 5 conditions to locate the sweet spot.
+
+Harness fixes landed pre-run: `--model claude-opus-4-7` pinned explicitly (CLI default drifts between runs); bare condition excluded `CLAUDE.md*` as a glob (previously exact-match, which leaked `CLAUDE.md.original` fixtures into bare).
+
+### Brief 13 — Assembled vs Bare
+
+**Question:** Does gigo context still help on Opus 4.7 + v0.14?
+
+**Headline:** 99/100 criteria wins for assembled. One tie, zero losses. +16–17pp vs the 2026-04-12 baseline (was 82–83% on v0.11).
+
+**Why the jump — two non-exclusive reads:**
+
+1. **Cold-context pushback.** 6+ of 20 bare responses hallucinated menu structure ("this looks like a menu of A/B/C options"), refused to engage, or answered a fabricated version of the question. The assembled condition didn't fix grounding — it gave the model a stance to act from. Bare "lost" partly because bare didn't engage. See `memory/feedback_opus_47_cold_context_pushback.md`.
+2. **v0.14 rules carry stronger citation language.** `workflow.md`, `standards.md`, and Overwatch all ship more explicit rule-citing patterns than v0.11. These load on every assembled call.
+
+Disentangling (1) and (2) needs a v0.11 fixture run against Opus 4.7 — Phase 3 candidate.
+
+**Honest caveats:**
+
+- **Judge rubric fabrication blindspot (rails-api #06).** Assembled hallucinated a controller, then produced detailed review of the fabrication. Rubric rewarded "richness on its own terms" with no penalty for invented substrate. In production this would be actively harmful. See `memory/feedback_judge_rubric_fabrication_blindspot.md`. Every future rubric needs a "grounded in real files?" check.
+- **Verbosity isn't the explanation.** Assembled was 2.6× longer but judge notes tracked specificity (named personas, cited files), not length. Prompt 09 tied on Pushback specifically because bare was substantive but didn't cite rules by name.
+
+**Verdict:** v0.14 + Opus 4.7 clears the 90% threshold. Writeup: `docs/gigo/experiments/02-opus-4-7-v0.14-assembled-vs-bare.md`.
+
+### Brief 14 — Context-Dosing Sweep
+
+**Question:** If full gigo wins, is it winning by more context or right context?
+
+**Design:** Five conditions on the context-mass axis, rank-of-5 judge per prompt, Borda aggregation.
+
+| Condition | What | rails words | childrens words |
+|---|---|---|---|
+| c0-bare | No CLAUDE.md, no .claude/ | 0 | 0 |
+| c1-roster | Thin CLAUDE.md (stems) + rules + references | 1969 | 2291 |
+| c2-team-no-rules | Full CLAUDE.md, no rules/references | 569 | 553 |
+| c3-full | Everything (= Brief 13 assembled) | 2432 | 2729 |
+| c4-rules-only | No CLAUDE.md, rules + references | 1863 | 2176 |
+
+**Headline Borda totals:**
+
+|  | c0 | c1 | c2 | c3 | c4 |
+|---|---|---|---|---|---|
+| rails-api | 77 | 179 | 149 | **196** | 149 |
+| childrens-novel | 50 | **189** | 155 | **188** | 168 |
+
+**Key findings:**
+
+1. **Context is strongly load-bearing 0→~2000 words.** c0 loses by 70–140 Borda on both domains. The "Opus 4.7 ignores extra context" hypothesis is refuted — extra context decisively helps up to ~2k words.
+2. **Past ~2000 words, returns depend on task type.** On childrens-novel, c1-roster TIES c3-full (189 vs 188) at 84% of the tokens. On rails-api, c3 still wins but only by 17 Borda over c1.
+3. **Over-contexting signal on creative/open-ended prompts.** childrens C-axis (beta-reader critique, setting change, new chapter) — c3 drops to 4th, losing to c4, c2, and c1. Does not replicate on rails-api C-axis, where c3 still wins.
+4. **Token efficiency champion is c2-team-no-rules** at 262–280 Borda/1k-words — 3–4× more efficient than c3, but loses 40–45 Borda overall.
+5. **Personas add signal even in thin form.** c1 (+106-word roster over c4) beats c4 by 20–30 Borda on both domains — measurable per-word return on the persona stems.
+
+**Hypothesis verdict:** H1 (over-contexted on Opus 4.7) partially supported — domain/axis-dependent, not pervasive. H2 (architecture carries coherence) partially supported — c4 > c2 on open-ended tasks, c4 > c1 only on childrens C-axis. H3 (model ignores extra context) refuted.
+
+**Recommendation:** Keep c3-full as v0.14 default. Log c1-roster as the live efficiency hypothesis. Flag creative/open-ended prompts as the domain where trimming earns its keep.
+
+Memory amendment: `feedback_right_context_for_the_job.md` now carries the 2026-04-19 refinement — execution-layer contexts should stay under ~2000 words; planning-layer contexts can go higher when the task is structural.
+
+Writeup: `docs/gigo/experiments/03-opus-4-7-context-dosing.md`.
+
+### Combined Implication
+
+Brief 13 answers "does gigo help?" — yes, decisively (99%). Brief 14 answers "is there a ceiling?" — yes, around ~2000 words, and it's task-type dependent. On structural/dangerous tasks (migrations, deploy, early-reveal) full context still wins. On generative/exploratory tasks in creative domains, full context hurts — extra rules over-constrain the response.
+
+**Cost:** Brief 13 ≈ $4, Brief 14 ≈ $21 generation + ~$5 judge = ~$30 total.
+
 ## Open Questions
 
 1. **Product integration:** How does the generated project output instruct this pipeline? The workflow needs to describe when to trigger each review stage.
 2. **Auto-team-growth:** Should the team detect expertise gaps during planning and propose new teammates?
 3. **New domains:** All tests used Rails and children's novel. More domains needed.
-4. **Naming:** Project needs a public-ready name. Leading candidate: GIGO (Garbage In, Garbage Out).
+4. **Naming:** Project needs a public-ready name. Leading candidate: GIGO (Garbage In, Garbage Out). *(Settled — public as GIGO.)*
+5. **Persona style (Brief 15, pending):** Characters (current default) vs Lenses on Opus 4.7 — does the style choice move scores? Running 2026-04-19.
+6. **Domain-aware dosing (Phase 3):** Is the creative-domain over-contexting penalty about the domain, or about small codebases? Test with a large-codebase creative fixture (e.g., screenplay repo).
+7. **Cast-only test (Phase 3):** Is the persona roster specifically load-bearing, or does any CLAUDE.md header work?
+8. **Prompt-axis routing (Phase 3):** Could gigo detect task type at runtime and dose context differently?
+9. **Widen childrens C-axis prompts (Phase 3):** 10 prompts isn't enough to separate c1 vs c3 (189 vs 188 is within noise). Need ~30 to call the tie.
+10. **Model family generalization (Phase 3):** Is cold-context pushback an Opus 4.7 thing or model-family-wide? Run the same sweep on Sonnet 4.6 and Haiku 4.5.
+11. **Rubric fabrication-check retrofit:** Add "grounded in real files?" penalty to rank-of-5 and pairwise judge rubrics before the next run.
