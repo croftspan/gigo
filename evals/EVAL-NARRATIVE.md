@@ -798,7 +798,7 @@ Brief 13 answers "does gigo help?" — yes, decisively (99%). Brief 14 answers "
 2. **Auto-team-growth:** Should the team detect expertise gaps during planning and propose new teammates?
 3. **New domains:** All tests used Rails and children's novel. More domains needed.
 4. **Naming:** Project needs a public-ready name. Leading candidate: GIGO (Garbage In, Garbage Out). *(Settled — public as GIGO.)*
-5. **Persona style (Brief 15, pending):** Characters (current default) vs Lenses on Opus 4.7 — does the style choice move scores? Running 2026-04-19.
+5. **Persona style (Brief 15, resolved 2026-04-19):** Characters beats Lenses 41-28-31 across 100 judgments on Opus 4.7 (2 domains × 10 prompts × 5 criteria). Characters wins persona_voice (11-3) and expertise_routing (12-7); Lenses edges quality_bar (7-5); Lenses dominates rails-api push-back prompts (axis A 10-3). `skills/gigo/SKILL.md:158` "default to Lenses" label flip pending operator approval. Writeup: `docs/gigo/experiments/04-opus-4-7-lenses-vs-characters.md`. One known anomaly: rails-api prompt 04 returned an empty Characters response — excluding it, margin is 41-23-31. Re-run that prompt 3-5× to rule out persona-collapse-to-silence.
 6. **Domain-aware dosing (Phase 3):** Is the creative-domain over-contexting penalty about the domain, or about small codebases? Test with a large-codebase creative fixture (e.g., screenplay repo).
 7. **Cast-only test (Phase 3):** Is the persona roster specifically load-bearing, or does any CLAUDE.md header work?
 8. **Prompt-axis routing (Phase 3):** Could gigo detect task type at runtime and dose context differently?
