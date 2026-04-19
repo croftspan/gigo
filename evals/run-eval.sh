@@ -64,12 +64,12 @@ for domain in "${DOMAINS[@]}"; do
 
     # Bare run — temp dir with no CLAUDE.md or .claude/
     echo "  Running bare..."
-    (cd "$BARE_TMPDIR" && claude -p "$prompt" --output-format json --permission-mode bypassPermissions 2>/dev/null) \
+    (cd "$BARE_TMPDIR" && claude -p "$prompt" --model claude-opus-4-7 --output-format json --permission-mode bypassPermissions 2>/dev/null) \
       > "$DOMAIN_RESULTS/${PADDED}-bare.json" || true
 
     # Assembled run — temp dir with CLAUDE.md and .claude/rules/
     echo "  Running assembled..."
-    (cd "$ASSEMBLED_TMPDIR" && claude -p "$prompt" --output-format json --permission-mode bypassPermissions 2>/dev/null) \
+    (cd "$ASSEMBLED_TMPDIR" && claude -p "$prompt" --model claude-opus-4-7 --output-format json --permission-mode bypassPermissions 2>/dev/null) \
       > "$DOMAIN_RESULTS/${PADDED}-assembled.json" || true
 
     echo "  Done."
