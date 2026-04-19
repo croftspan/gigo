@@ -4,4 +4,9 @@ gigo-workspace/
 # Eval results (keep scripts, ignore outputs)
 evals/blueprint-flow-test/results/
 evals/results/
+evals/qwen-worker-eval/results/
 docs/prompts/
+
+# Python bytecode
+__pycache__/
+*.pyc

@@ -792,6 +792,43 @@ Brief 13 answers "does gigo help?" — yes, decisively (99%). Brief 14 answers "
 
 **Cost:** Brief 13 ≈ $4, Brief 14 ≈ $21 generation + ~$5 judge = ~$30 total.
 
+## Phase 9-B: Qwen3.6 as the Local Worker (Brief 16)
+
+A different question: if Opus plans and Qwen executes, what does Qwen need to behave like a worker? Run on 2026-04-19 against `unsloth/Qwen3.6-35B-A3B-MLX-8bit` (MLX, MoE 35B / ~3B active) via local `mlx_lm.server`. Opus 4.7 judge. 180 runs: 3 ticket formats × 2 thinking modes × 10 tasks × 3 replicates.
+
+**Question:** What **ticket format** and **thinking setting** maximizes Qwen3.6's reliability on a plan → execute → review loop?
+
+**Three ticket formats:**
+
+- **TF1** — spec block only (task + embedded data, no scaffolding).
+- **TF2** — the current gigo:execute Tier-2 dispatch (role lead-in + `## Task Description` / `## Acceptance` / `## Output Format` / `## Your Job`).
+- **TF3** — Qwen-optimized per Unsloth's notes (`role` line → `SPEC` / `ACCEPTANCE` / `OUTPUT FORMAT` / `MODE HINT`, all indented).
+
+**Headline:**
+
+| Condition | Pass rate | Mean quality | Mean walltime | Mean completion tokens |
+|---|---|---|---|---|
+| TF1 on | 0.23 | 2.80 | 42.7s | 2716 |
+| TF1 off | 0.40 | 2.80 | 7.9s | 495 |
+| TF2 on | 1.00 | 4.03 | 26.9s | 1705 |
+| TF2 off | 0.90 | 3.87 | 2.7s | 164 |
+| TF3 on | 0.93 | 3.67 | 67.8s | 4127 |
+| **TF3 off** | **1.00** | **4.07** | **2.0s** | **118** |
+
+**Three findings that change the story:**
+
+1. **Structure matters far more than which specific structure.** TF2 and TF3 are tied within noise (±5pp, ±0.2 quality). Both clear 90% across all task types. The gap to TF1 (bare spec) is the whole signal — scaffolding turns a 30% pass rate into a 95% pass rate. H1 (TF3 > TF2) is not supported by a meaningful margin.
+2. **Thinking-on does not help — and introduces a silent-failure tail.** TF3-off matches or beats TF3-on on every task type, at 1/34 the walltime and 1/35 the completion tokens. H2 (thinking-on beats thinking-off) is refuted. The concrete risk: T7 × TF3 × thinking-on produced two empty responses at the 32768 max_tokens limit (9+ minutes each) — reasoning trace oscillating between equivalent regex forms, never emitting content. Same pathology noted in Brief 15's rails-api prompt 04 (empty Characters response). Qwen3.6 thinking-mode has a silent-non-completion failure mode.
+3. **TF1 on reasoning and structured tasks is 0/9.** Without a stated OUTPUT FORMAT, Qwen reliably returns prose where the verifier demands JSON. Fabrication (worker inventing numbers/APIs) appeared only under TF1-thinking-on — zero cases in 120 TF2/TF3 runs.
+
+**Harness gotcha — logged for future evals:** First scoring pass produced 75 parse errors (out of 180). Root cause: the `explanatory` output style in the parent Claude Code session bled into `claude -p` subprocesses, wrapping the YAML verdict in `★ Insight` prose blocks. Fix: dispatch with `--json-schema` and read `wrapped["structured_output"]` instead of parsing `result` text. `--bare` also fixes it but strips OAuth auth, so `--json-schema` alone is the right lever. See `memory/feedback_claude_p_output_style_leak.md`.
+
+**Verdict:** Wire **TF3 + thinking-off** as the Qwen Tier-2 default — 100% pass, highest quality, 2.0s walltime, 118 tokens per call. Keep thinking-on for Opus planning; do not use it on Qwen worker dispatch.
+
+**Cost:** Qwen local/free. Opus judge ~$10 (cache-warmed; first pass + re-run of 75 failed judges).
+
+**Writeup:** `docs/gigo/experiments/05-qwen36-worker-profile.md`. **Results:** `evals/qwen-worker-eval/results/2026-04-19-085822/`.
+
 ## Open Questions
 
 1. **Product integration:** How does the generated project output instruct this pipeline? The workflow needs to describe when to trigger each review stage.
@@ -805,3 +842,7 @@ Brief 13 answers "does gigo help?" — yes, decisively (99%). Brief 14 answers "
 9. **Widen childrens C-axis prompts (Phase 3):** 10 prompts isn't enough to separate c1 vs c3 (189 vs 188 is within noise). Need ~30 to call the tie.
 10. **Model family generalization (Phase 3):** Is cold-context pushback an Opus 4.7 thing or model-family-wide? Run the same sweep on Sonnet 4.6 and Haiku 4.5.
 11. **Rubric fabrication-check retrofit:** Add "grounded in real files?" penalty to rank-of-5 and pairwise judge rubrics before the next run.
+12. **Qwen thinking-loop failure mode (Brief 16 follow-up):** 2/30 TF3-thinking-on runs for T7 burned the full 32768 max_tokens in reasoning and produced empty content. Same pathology as Brief 15's empty Characters response. Reproduce with a targeted sweep (regex-from-examples × 20 replicates) to characterise the tail — is it T7-specific, TF3-specific, or thinking-on-general?
+13. **Phase 2 of the Qwen worker profile (Brief 16 deferred):** Sampling profile was pinned per task type from the Unsloth recommendations. Sweep it (temp/top_p/top_k/presence_penalty) against TF3-thinking-off to verify the pins are actually optimal.
+14. **Multi-turn Qwen with `preserve_thinking` (Brief 16 deferred):** Single-shot only in Brief 16. Multi-turn is where thinking-mode pays off in principle, so worth measuring against plan → execute → review loops specifically.
+15. **Local-worker bake-off (Brief 16 deferred, operator-prioritized):** Compare Qwen3.6 against **Gemma4** first, then DeepSeek-Coder, Qwen3-Coder, Codestral, Llama at the same TF3-off recipe to see if the harness is Qwen-specific or a general local-worker pattern. Scheduled after Phase 2A (scale) and Phase 2B/C (loop + loop-failure).
