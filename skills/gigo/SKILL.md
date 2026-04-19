@@ -155,7 +155,7 @@ Don't ask about this. Just calibrate.
 | **Characters** | Named personas with personality and voice. They speak up, push back, have opinions. More engaging. |
 | **Lenses** | Functional descriptors that work silently. Same expertise, no character voice. Cleaner output. |
 
-Skippable — if the operator passes, default to **Lenses**. Save the choice to `.claude/references/persona-style.md`:
+Skippable — if the operator passes, default to **Characters**. Save the choice to `.claude/references/persona-style.md`:
 ```markdown
 # Persona Style
 style: characters  # or: lenses
