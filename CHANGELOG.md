@@ -18,7 +18,7 @@ Loose-coupling integration across 4 gigo skills (spec, execute, verify, maintain
 
 - **Add Mission-Control mode in maintain.** New auto-detected mode retrofits mc onto existing projects. Triggered by explicit `add-mission-control` argument OR auto-suggested when no preference file exists and mc state is NOT_INITIALIZED / UNAVAILABLE. Per-state behavior: ACTIVE reports status only (vault audit deferred to v2); NOT_INITIALIZED runs the shared Mc-Init Invocation Procedure; UNAVAILABLE resolves the mc source path then runs install.sh + the procedure. Procedure in new `skills/maintain/references/add-mission-control.md`.
 
-- **Mc-Init Invocation Procedure (R3.1.a).** Shared subroutine in `skills/spec/references/mc-detection.md`. Handles three vault states: vault absent → plain `mc-init`; vault exists without tickets → `mc-init --force` with announcement; vault exists WITH tickets → operator confirmation → `mc-init --force --yes`. On abort, falls back to monolithic mode without writing preference file. Closes the retrofit-safety gap on projects with half-initialized or legacy vaults.
+- **Mc-Init Invocation Procedure (R3.1.a).** Shared subroutine in `skills/spec/references/mc-detection.md`. Handles three vault states: vault absent → plain `mc-init`; vault exists without tickets → `mc-init --force` with announcement; vault exists WITH ≥1 ticket → ABORT with a three-option message (vault-is-usable / manual-rebuild preserving tickets / back-up-and-fresh-start). The ABORT path is load-bearing safety: mc's `mc-init --force` calls `shutil.rmtree(vault)` (verified at `mission-control/bin/mc-init` line 288), which would delete all tickets, logs, and verdicts. On abort, falls back to monolithic mode without writing a preference file — operator re-runs after choosing an option. Closes the retrofit-safety gap on projects with legacy vaults.
 
 - **Configurable mc source path.** No `~/projects/mission-control/` path is hardcoded. `resolve_mc_source_path()` helper (documented in `mc-detection.md`) checks `GIGO_MC_SOURCE` env var → preference field `mc-source-path` → default `~/projects/mission-control/`. Clone-instructions error when resolution fails shows all three options to the operator.
 
@@ -29,6 +29,7 @@ Loose-coupling integration across 4 gigo skills (spec, execute, verify, maintain
 - `mc-ticket-status --json` emits `{id, title}` per ticket (NOT rich objects with body) — execute MUST read `vault/tickets/{ticket-id}.md` for full context before worker dispatch.
 - `install.sh` is non-interactive (sets `set -euo pipefail`, symlinks bin/ + skill, exits cleanly) — gigo invokes directly via Bash, no operator intervention needed when source repo is cloned.
 - `mc-scrub` (default 30 days) deletes files in `vault/agents/logs/` — constrains signal-file crash recovery to 30-day window; Pass B covers beyond that.
+- Pass B crash recovery uses `mc-ticket-ls --status in_progress --json` (verified in `mission-control/bin/mc-ticket-ls` lines 35/43) — `mc-ticket-status --json` returns `by_status` as a count dict, not an enumerable ticket list.
 
 ### Design references
 
