@@ -69,9 +69,11 @@ After Phase 0 (Gate 1) completes and BEFORE drafting the spec:
 4. On STATE_ACTIVE OR operator-approved nudge → enter slice mode per `skills/spec/references/slice-mode.md`.
 5. On all other combinations → proceed with v0.13 monolithic mode (no changes below).
 
-For install/init prompts in UNAVAILABLE and NOT_INITIALIZED states, use the Mc-Init Invocation Procedure in `skills/spec/references/mc-detection.md` (handles vault-exists case with operator confirmation).
+For install/init prompts:
+- **NOT_INITIALIZED** (mc-init is on PATH, vault just missing) → use the Mc-Init Invocation Procedure in `skills/spec/references/mc-detection.md` (handles vault-exists case with operator confirmation).
+- **UNAVAILABLE** (mc-init not on PATH) → delegate to `gigo:maintain add-mission-control` via the Skill tool. That mode already handles source-path resolution, `install.sh` invocation, and the Mc-Init Procedure in sequence. Do NOT call the Mc-Init Procedure directly from spec in this state — `bash("mc-init ...")` would fail with "command not found" before installation.
 
-For source-path resolution when mc is unavailable, call `resolve_mc_source_path()` per `mc-detection.md` — do NOT hardcode `~/projects/mission-control/`.
+`gigo:maintain` uses `resolve_mc_source_path()` per `mc-detection.md` — do NOT hardcode `~/projects/mission-control/` anywhere.
 
 Read the approved design brief. If Gate 1 ran, also read `docs/gigo/research/<date>-<topic>-tech-constraints.md` — the spec's Conventions section and Tech Stack references must reflect verified constraints, not assumed ones. If Gate 1 flagged `Host-Shell Requirement: MISSING`, include the host-shell addition (or an explicit `**External-consumer-only:** true` declaration) as a spec requirement.
 

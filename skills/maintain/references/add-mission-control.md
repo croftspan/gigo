@@ -18,7 +18,7 @@ Read `skills/spec/references/mc-detection.md` for the canonical detection algori
 |---|---|
 | ACTIVE | Print: *"Mission-control already active in this project. Audit vault for issues? (Vault audit deferred to v2; for now, status report only.)"* Print `mc-ticket-status --json` summary. |
 | NOT_INITIALIZED | Run the **Mc-Init Invocation Procedure** per `skills/spec/references/mc-detection.md`. Report what was created. On success, update preference file: `mc-integration: enabled`. |
-| UNAVAILABLE | Resolve mc source path per `resolve_mc_source_path()` in `skills/spec/references/mc-detection.md`. Check `{mc-source}/install.sh` exists; if yes, invoke via Bash, then run the Mc-Init Invocation Procedure. If mc source missing, surface clone instructions (all three resolution options). |
+| UNAVAILABLE | Resolve mc source path per `resolve_mc_source_path()` in `skills/spec/references/mc-detection.md`. Check `{mc-source}/install.sh` exists; if yes, invoke via Bash, then run the Mc-Init Invocation Procedure. If mc source missing, surface clone instructions (all three resolution options). If source exists but `install.sh` is absent, surface: *"Source at {resolved-path} has no install.sh — the mc repo layout may have changed. Re-clone or run `mc-init` directly."* Fall back to monolithic mode without writing preference file. |
 
 ## Install Instructions Template (UNAVAILABLE, source missing)
 
