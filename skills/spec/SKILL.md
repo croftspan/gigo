@@ -11,6 +11,8 @@ Your input is an approved design brief. Your output is an approved spec and an a
 
 **Announce every phase.** "Phase 0: Researching platform targets...", "Phase 5: Writing spec...", "Phase 6: Self-reviewing spec...", "Phase 6.5: Running Challenger review...", "Phase 7: Spec ready for review...", "Phase 8: Writing implementation plan...", "Phase 9: Self-reviewing plan...", "Phase 9.75: Verifying plan against live docs...", "Phase 10: Plan ready for review..."
 
+In slice mode, announce "Phase 5: Writing PRD foundation + {N} slice designs...", "Phase 8: Writing {N} slice plans...", "Phase 9.75: Verifying {N} slice plans...", "Phase 10: {N} slice plans ready for review...".
+
 ## The Hard Gate
 
 Do NOT invoke gigo:execute, write any code, scaffold any project, or take any implementation action until the operator has approved the plan. The plan can be short, but it must exist and be approved.
@@ -56,6 +58,20 @@ Before writing the spec, verify the target runtime's API surface against live do
 ---
 
 ## Phase 5: Write Spec
+
+### Mission-Control Mode Decision (R3.1)
+
+After Phase 0 (Gate 1) completes and BEFORE drafting the spec:
+
+1. Run mc detection per `skills/spec/references/mc-detection.md` (three-check, three-state).
+2. Read preference file at `.claude/references/mission-control-preference.md` if it exists.
+3. Apply the state × preference behavior table from `mc-detection.md`.
+4. On STATE_ACTIVE OR operator-approved nudge → enter slice mode per `skills/spec/references/slice-mode.md`.
+5. On all other combinations → proceed with v0.13 monolithic mode (no changes below).
+
+For install/init prompts in UNAVAILABLE and NOT_INITIALIZED states, use the Mc-Init Invocation Procedure in `skills/spec/references/mc-detection.md` (handles vault-exists case with operator confirmation).
+
+For source-path resolution when mc is unavailable, call `resolve_mc_source_path()` per `mc-detection.md` — do NOT hardcode `~/projects/mission-control/`.
 
 Read the approved design brief. If Gate 1 ran, also read `docs/gigo/research/<date>-<topic>-tech-constraints.md` — the spec's Conventions section and Tech Stack references must reflect verified constraints, not assumed ones. If Gate 1 flagged `Host-Shell Requirement: MISSING`, include the host-shell addition (or an explicit `**External-consumer-only:** true` declaration) as a spec requirement.
 
@@ -148,6 +164,8 @@ Read the approved design brief and spec. If Gate 1 ran, also read `docs/gigo/res
 
 Save to `docs/gigo/plans/YYYY-MM-DD-<feature-name>.md`.
 
+**If in slice mode (R3.4):** write ONE plan file per slice at `docs/gigo/plans/{date}-slice-{N}-{name}.md`. Each plan's header cites its slice spec in the `**Spec:**` field. See `skills/spec/references/slice-mode.md` for the full slice-mode procedure.
+
 Plans are always in English. For tasks producing user-facing deliverables, include `**Output languages:** {codes from language.md}`.
 
 Read `references/planning-procedure.md` for the full procedure.
@@ -197,6 +215,8 @@ Adversarially verify that every specific API, method, library, or pattern the pl
 
 **Independence rule (non-negotiable):** Gate 2 runs as its own subagent with fresh context — NOT the spec author's session, NOT sharing context with Gate 1's subagent, NOT the Challenger's subagent. The via-negativa framing is load-bearing; shared context collapses the pattern back to single-pass verification (Shinn et al. Reflexion). Dispatch via `Agent` with `subagent_type: "general-purpose"` and the prompt template from `references/research-gate-2.md`.
 
+**If in slice mode:** Gate 2 runs PER-SLICE-PLAN, not per-PRD. Each slice plan gets its own `docs/gigo/research/{date}-slice-{N}-{name}-plan-verification.md`. Dispatch one verification subagent per slice plan in parallel if independent; sequential if dependencies overlap. Gate 1 (Phase 0) still runs ONCE at PRD level — runtime targets don't vary per slice.
+
 ---
 
 ## Phase 10: Operator Reviews Plan
@@ -208,6 +228,19 @@ If Gate 2 ran, also present the verification artifact:
 > "Plan verification saved to `docs/gigo/research/<date>-<topic>-plan-verification.md`. Effective status: [pass / needs-override / fail]. [Summary of ❌ findings if any.]"
 
 Wait for approval. On `fail` effective status, operator must either request plan revision (Gate 2 re-runs on revision) or add override markers per `references/research-gate-2.md`. Do NOT write the approval marker while any ❌ remains unaddressed.
+
+**Monolithic mode:** single approval marker on the single plan file (existing behavior).
+
+**Slice mode (R3.3):** offer batch approval with per-slice review on request. See `skills/spec/references/slice-mode.md` § "Approval Ceremony" for the exact prompt and per-slice iteration. Apply `<!-- approved: plan {timestamp} by:{username} -->` marker to every approved slice plan.
+
+**After all slice plans are approved:** invoke mission-control's ticket-generation subcommand for each approved slice plan in order:
+
+```
+for plan_file in approved_slice_plans:
+    Skill(skill="mission-control", args=f"ticket {plan_file}")
+```
+
+mission-control creates `vault/tickets/TCK-{phase}-{seq}.md` files per slice plan. Present the consolidated ticket-creation report to the operator.
 
 **Write approval marker:**
 ```
