@@ -732,7 +732,7 @@ mc-ticket-status's by_status count dict)."
 **Files:**
 - Modify: `skills/spec/SKILL.md`
 
-- [ ] **Step 1: Read the current file to identify Phase 5, Phase 8, Phase 9.75, Phase 10 anchors.**
+- [x] **Step 1: Read the current file to identify Phase 5, Phase 8, Phase 9.75, Phase 10 anchors.**
 
 ```bash
 wc -l skills/spec/SKILL.md
@@ -741,7 +741,7 @@ grep -n "^## Phase" skills/spec/SKILL.md
 
 Note the line numbers. Baseline is v0.13's 251 lines.
 
-- [ ] **Step 2: In Phase 5 section, after the Phase 0 reference and BEFORE the "Read the approved design brief" line, insert the mc-mode decision block:**
+- [x] **Step 2: In Phase 5 section, after the Phase 0 reference and BEFORE the "Read the approved design brief" line, insert the mc-mode decision block:**
 
 Insert this text (adjust surrounding markdown as needed):
 
@@ -761,19 +761,19 @@ For install/init prompts in UNAVAILABLE and NOT_INITIALIZED states, use the Mc-I
 For source-path resolution when mc is unavailable, call `resolve_mc_source_path()` per `mc-detection.md` — do NOT hardcode `~/projects/mission-control/`.
 ```
 
-- [ ] **Step 3: In Phase 8 (Write Implementation Plan) section, after the existing "Save to `docs/gigo/plans/YYYY-MM-DD-<feature-name>.md`" line, insert the slice-mode branch:**
+- [x] **Step 3: In Phase 8 (Write Implementation Plan) section, after the existing "Save to `docs/gigo/plans/YYYY-MM-DD-<feature-name>.md`" line, insert the slice-mode branch:**
 
 ```markdown
 **If in slice mode (R3.4):** write ONE plan file per slice at `docs/gigo/plans/{date}-slice-{N}-{name}.md`. Each plan's header cites its slice spec in the `**Spec:**` field. See `skills/spec/references/slice-mode.md` for the full slice-mode procedure.
 ```
 
-- [ ] **Step 4: In Phase 9.75 section (Plan Verification Gate), at the end of the existing procedure, append the slice-mode branch:**
+- [x] **Step 4: In Phase 9.75 section (Plan Verification Gate), at the end of the existing procedure, append the slice-mode branch:**
 
 ```markdown
 **If in slice mode:** Gate 2 runs PER-SLICE-PLAN, not per-PRD. Each slice plan gets its own `docs/gigo/research/{date}-slice-{N}-{name}-plan-verification.md`. Dispatch one verification subagent per slice plan in parallel if independent; sequential if dependencies overlap. Gate 1 (Phase 0) still runs ONCE at PRD level — runtime targets don't vary per slice.
 ```
 
-- [ ] **Step 5: In Phase 10 section, replace the single-approval-marker logic with the batch-or-per-slice logic for slice mode:**
+- [x] **Step 5: In Phase 10 section, replace the single-approval-marker logic with the batch-or-per-slice logic for slice mode:**
 
 Find the existing Phase 10 approval marker instructions. Replace with:
 
@@ -792,7 +792,7 @@ for plan_file in approved_slice_plans:
 mission-control creates `vault/tickets/TCK-{phase}-{seq}.md` files per slice plan. Present the consolidated ticket-creation report to the operator.
 ```
 
-- [ ] **Step 6: Update the announce line at the top of the file to reference slice-mode phase variants.**
+- [x] **Step 6: Update the announce line at the top of the file to reference slice-mode phase variants.**
 
 Find:
 ```
@@ -804,20 +804,20 @@ Append to that instruction:
 In slice mode, announce "Phase 5: Writing PRD foundation + {N} slice designs...", "Phase 8: Writing {N} slice plans...", "Phase 9.75: Verifying {N} slice plans...", "Phase 10: {N} slice plans ready for review...".
 ```
 
-- [ ] **Step 7: Verify line cap.**
+- [x] **Step 7: Verify line cap.**
 
 Run: `wc -l skills/spec/SKILL.md`
 
 Must be < 500. If ≥ 500, move additional procedural detail to `skills/spec/references/slice-mode.md` or `mc-detection.md`.
 
-- [ ] **Step 8: Verify cross-references resolve.**
+- [x] **Step 8: Verify cross-references resolve.**
 
 ```bash
 grep -c "skills/spec/references/mc-detection.md" skills/spec/SKILL.md      # expect ≥ 2
 grep -c "skills/spec/references/slice-mode.md" skills/spec/SKILL.md         # expect ≥ 2
 ```
 
-- [ ] **Step 9: Commit.**
+- [x] **Step 9: Commit.**
 
 ```bash
 git add skills/spec/SKILL.md
@@ -828,6 +828,11 @@ Phase 5 branches to slice mode when mc is ACTIVE; Phase 8 writes per-slice plans
 Phase 9.75 runs per-slice Gate 2; Phase 10 invokes mission-control's ticket
 subcommand after approval. Monolithic mode unchanged for backward compatibility."
 ```
+
+#### What Was Built
+- **Deviations:** The pre-existing `**Write approval marker:**` template block (L245-248 of the modified SKILL.md) was preserved alongside the new monolithic/slice mode logic inserted above it. Reviewer flagged this as an ordering ambiguity (confidence 70, below the 80+ threshold) — for slice mode, the marker is applied per-slice BEFORE mc ticket generation, but the template block now sits AFTER the ticket-generation loop. Not a spec violation; plan Step 5 said "replace" but the worker interpreted "replace logic" (the surrounding descriptive text) while preserving the canonical marker template for reuse.
+- **Review changes:** None.
+- **Notes for downstream:** 6 edits landed verbatim at correct anchors. Cross-refs: mc-detection.md = 2, slice-mode.md = 3. Line cap 284 < 500. All R3.1-R4.4 requirements satisfied. Authority principle preserved — no direct mc frontmatter mutation; ticket creation delegated via `Skill(skill="mission-control", args=f"ticket {plan_file}")`. Announce-line slice variants follow existing "Phase N:" pattern. Task 10 (CHANGELOG) should note the Phase 10 ordering caveat as a known polish opportunity.
 
 ---
 
@@ -840,7 +845,7 @@ subcommand after approval. Monolithic mode unchanged for backward compatibility.
 **Files:**
 - Modify: `skills/execute/SKILL.md`
 
-- [ ] **Step 1: Read the current file to identify Before-Starting anchor.**
+- [x] **Step 1: Read the current file to identify Before-Starting anchor.**
 
 ```bash
 wc -l skills/execute/SKILL.md
@@ -849,7 +854,7 @@ grep -n "^## Before Starting\|^1\.\|^2\.\|^3\." skills/execute/SKILL.md | head -
 
 Baseline is v0.13's 242 lines.
 
-- [ ] **Step 2: In the Before-Starting section, AFTER existing step 2 (plan-verification check) and BEFORE existing step 3 (read full plan), insert new step 3:**
+- [x] **Step 2: In the Before-Starting section, AFTER existing step 2 (plan-verification check) and BEFORE existing step 3 (read full plan), insert new step 3:**
 
 ```markdown
 3. **Mission-control mode detection.** Run mc detection per `skills/spec/references/mc-detection.md`.
@@ -862,7 +867,7 @@ Baseline is v0.13's 242 lines.
 
 Renumber existing steps 3 → 4, 4 → 5.
 
-- [ ] **Step 3: Add a new short pointer section after the existing Tier 1/2/3 sections and before Red Flags.**
+- [x] **Step 3: Add a new short pointer section after the existing Tier 1/2/3 sections and before Red Flags.**
 
 Insert (replaces the old plan's ~80-line inline block — procedure is now in Task 5's reference file):
 
@@ -880,7 +885,7 @@ Key constraints enforced by the reference:
 - Execute NEVER writes to ticket frontmatter — state changes flow through signal files and verify verdicts
 ```
 
-- [ ] **Step 4: Add a Red Flag entry.**
+- [x] **Step 4: Add a Red Flag entry.**
 
 In the existing Red Flags section, add:
 
@@ -890,20 +895,20 @@ In the existing Red Flags section, add:
 - Use `mc-ticket-status`'s `by_status.in_progress` count as a ticket list (it's a count int, not an iterable — use `mc-ticket-ls --status in_progress --json` for enumeration)
 ```
 
-- [ ] **Step 5: Verify line cap.**
+- [x] **Step 5: Verify line cap.**
 
 Run: `wc -l skills/execute/SKILL.md`
 
 Must be < 500. With procedure extracted to the reference file, expect roughly 260-270 lines (baseline 243 + ~15 line Before-Starting insert + ~10 line pointer section + 3 Red Flags bullets).
 
-- [ ] **Step 6: Verify cross-references.**
+- [x] **Step 6: Verify cross-references.**
 
 ```bash
 grep -c "skills/spec/references/mc-detection.md" skills/execute/SKILL.md        # expect ≥ 1
 grep -c "skills/execute/references/mc-mode-work-loop.md" skills/execute/SKILL.md # expect ≥ 1
 ```
 
-- [ ] **Step 7: Commit.**
+- [x] **Step 7: Commit.**
 
 ```bash
 git add skills/execute/SKILL.md
@@ -914,6 +919,11 @@ Before-Starting gains mc-mode detection step; new Mc-Mode Work Loop section
 with mandatory ticket-body read from vault/tickets/, signal emission, and
 two-pass crash recovery. Execute never mutates ticket frontmatter."
 ```
+
+#### What Was Built
+- **Deviations:** None — all 4 edits verbatim. Reviewer noted a pre-existing stale reference in the Phase 0 (Gate 2) block: lines 25-33 of the modified SKILL.md say "Proceed to step 3" — after renumbering (old step 3 → new step 4), these now semantically point to mc detection (the new step 3) rather than read-plan. Not blocking; semantically still resolves to "proceed past the gate". Fixing it is out of Task 7 scope (Gate 2 procedure ownership belongs to the two-gate research pipeline spec, not Brief 12).
+- **Review changes:** None.
+- **Notes for downstream:** Renumbering chain 1→2→3 (new)→4 (was 3)→5 (was 4) verified unbroken. Mc-Mode Work Loop pointer section (10 lines, 4 constraint bullets) lives between "When All Tasks Complete" and "Red Flags". Three new Red Flag bullets enforce authority principle (no frontmatter mutation), mandatory ticket-body read from `vault/tickets/`, and `in_progress` count misuse. Cross-refs: mc-detection.md = 1, mc-mode-work-loop.md = 1. Line cap 264 < 500. Downstream (Task 10 CHANGELOG) can reference the stale "Proceed to step 3" language as a polish follow-up.
 
 ---
 
@@ -926,7 +936,7 @@ two-pass crash recovery. Execute never mutates ticket frontmatter."
 **Files:**
 - Modify: `skills/verify/SKILL.md`
 
-- [ ] **Step 1: Read the current file.**
+- [x] **Step 1: Read the current file.**
 
 ```bash
 wc -l skills/verify/SKILL.md
@@ -935,7 +945,7 @@ grep -n "^## " skills/verify/SKILL.md
 
 Baseline is v0.13's 195 lines.
 
-- [ ] **Step 2: After the opening persona paragraph (before Stage 1), insert the Mc-Mode Detection section:**
+- [x] **Step 2: After the opening persona paragraph (before Stage 1), insert the Mc-Mode Detection section:**
 
 ```markdown
 ---
@@ -955,19 +965,19 @@ Run at verify start, before Stage 1.
 If `mc_active` but ticket ID NOT resolvable, ask the operator before falling back — silent fallback hides mc-mode regressions.
 ```
 
-- [ ] **Step 3: In the Stage 1 section, at the end, add the mc-mode output branch:**
+- [x] **Step 3: In the Stage 1 section, at the end, add the mc-mode output branch:**
 
 ```markdown
 **In mc-mode:** after Stage 1 completes, write `vault/agents/reviewer/{ticket-id}-spec-compliance.md` per R5.4.a schema (YAML frontmatter). See `skills/verify/references/mc-verdict-schema.md` for the exact schema.
 ```
 
-- [ ] **Step 4: In the Stage 2 section, at the end, add the mc-mode output branch:**
+- [x] **Step 4: In the Stage 2 section, at the end, add the mc-mode output branch:**
 
 ```markdown
 **In mc-mode:** after Stage 2 completes (only if Stage 1 passed — stage ordering rule unchanged), write `vault/agents/reviewer/{ticket-id}-craft-quality.md` per R5.4.a schema.
 ```
 
-- [ ] **Step 5: Add a new section after Stage 2 and before Spec/Plan Review Mode: "Combined Verdict Synthesis (Mc-Mode Only)".**
+- [x] **Step 5: Add a new section after Stage 2 and before Spec/Plan Review Mode: "Combined Verdict Synthesis (Mc-Mode Only)".**
 
 ```markdown
 ---
@@ -998,20 +1008,20 @@ See `skills/verify/references/mc-verdict-schema.md` for:
 **Non-Mutation Rule:** verify NEVER writes to `vault/tickets/*.md` frontmatter. mc transitions ticket state; gigo provides verdicts.
 ```
 
-- [ ] **Step 6: Verify line cap.**
+- [x] **Step 6: Verify line cap.**
 
 Run: `wc -l skills/verify/SKILL.md`
 
 Must be < 500.
 
-- [ ] **Step 7: Verify cross-references.**
+- [x] **Step 7: Verify cross-references.**
 
 ```bash
 grep -c "skills/spec/references/mc-detection.md" skills/verify/SKILL.md        # expect ≥ 1
 grep -c "skills/verify/references/mc-verdict-schema.md" skills/verify/SKILL.md  # expect ≥ 2
 ```
 
-- [ ] **Step 8: Commit.**
+- [x] **Step 8: Commit.**
 
 ```bash
 git add skills/verify/SKILL.md
@@ -1022,6 +1032,11 @@ Stage files use gigo-owned YAML frontmatter; canonical combined file uses
 mc-compatible plain-header format so mc-ticket-stats, mc-dashboard, mc-retro
 can parse it. Combined-status synthesis: any Critical issue → escalate."
 ```
+
+#### What Was Built
+- **Deviations:** None — all 4 insertions verbatim.
+- **Review changes:** None.
+- **Notes for downstream:** Mc-Mode Detection section (L18-33) placed between intro paragraphs and `## Stage 1: Spec Review` (L36). Ticket ID resolution priority order (flag → pickup signal → operator → v0.13 fallback). Two-schema distinction explicit: R5.4.a YAML frontmatter for per-stage files (`{ticket-id}-spec-compliance.md`, `{ticket-id}-craft-quality.md`), R5.4.b mc plain-header format for combined canonical file (`{ticket-id}.md`). Status-synthesis table at L95-100 has 4 rows matching R5.7 exactly: pass/pass → `approved`; pass/fail no-Critical → `approved_with_notes`; pass/fail with-Critical → `escalate`; fail/skipped → `escalate`. Non-Mutation Rule at L112 inside Combined Verdict Synthesis section — placement is verbatim per plan Step 5. Cross-refs: mc-detection.md = 1, mc-verdict-schema.md = 3. Line cap 241 < 500.
 
 ---
 
@@ -1034,7 +1049,7 @@ can parse it. Combined-status synthesis: any Critical issue → escalate."
 **Files:**
 - Modify: `skills/maintain/SKILL.md`
 
-- [ ] **Step 1: Read the current file.**
+- [x] **Step 1: Read the current file.**
 
 ```bash
 wc -l skills/maintain/SKILL.md
@@ -1043,7 +1058,7 @@ grep -n "^## \|^### " skills/maintain/SKILL.md
 
 Baseline is roughly 70 lines.
 
-- [ ] **Step 2: In the mode auto-detect section, add the new mode.**
+- [x] **Step 2: In the mode auto-detect section, add the new mode.**
 
 Find the existing mode list (Targeted Addition / Health Check / Restructure / Upgrade). Add:
 
@@ -1051,7 +1066,7 @@ Find the existing mode list (Targeted Addition / Health Check / Restructure / Up
 - **Add Mission-Control** — retrofit mission-control onto the project (scaffold vault, extract governance, augment CLAUDE.md). Triggered by `$ARGUMENTS` containing `add-mission-control` OR auto-suggested when mc detection returns NOT_INITIALIZED or UNAVAILABLE AND no preference file exists. See `skills/maintain/references/add-mission-control.md` for the procedure.
 ```
 
-- [ ] **Step 3: In the auto-detect logic section, insert the auto-suggestion rule.**
+- [x] **Step 3: In the auto-detect logic section, insert the auto-suggestion rule.**
 
 After the existing auto-detect triggers, add:
 
@@ -1073,20 +1088,20 @@ When operator runs `gigo:maintain` with no args:
 4. If state is ACTIVE, do not auto-suggest (mc is already integrated).
 ```
 
-- [ ] **Step 4: Verify line cap.**
+- [x] **Step 4: Verify line cap.**
 
 Run: `wc -l skills/maintain/SKILL.md`
 
 Must be < 500.
 
-- [ ] **Step 5: Verify cross-reference.**
+- [x] **Step 5: Verify cross-reference.**
 
 ```bash
 grep -c "skills/maintain/references/add-mission-control.md" skills/maintain/SKILL.md  # expect ≥ 1
 grep -c "skills/spec/references/mc-detection.md" skills/maintain/SKILL.md              # expect ≥ 1
 ```
 
-- [ ] **Step 6: Commit.**
+- [x] **Step 6: Commit.**
 
 ```bash
 git add skills/maintain/SKILL.md
@@ -1096,6 +1111,11 @@ Implements R6.1-R6.5 from the pipeline-wide mission-control integration spec.
 New mode retrofits mc onto existing projects. Auto-suggested when no
 preference file exists and mc state is NOT_INITIALIZED or UNAVAILABLE."
 ```
+
+#### What Was Built
+- **Deviations:** None — both blocks verbatim. Reviewer noted a stylistic inconsistency in rendering: the new `- **Add Mission-Control**` bullet at L37 uses dash-bullet format while existing modes (Targeted Addition, Health Check, Restructure, Upgrade) use paragraph-style `**Name (Mode N)** —`. Traces to the plan's verbatim spec text — not the worker's execution. Polish opportunity for a follow-up reconciliation pass.
+- **Review changes:** None.
+- **Notes for downstream:** Both spec-mandated blocks inserted between Upgrade mode (L35) and the `---` (L55) preceding "Pipeline Health" (L57). 5-option menu at L39-54 includes mc as option 5 with `(mc detected: {state})` annotation. Auto-suggest 4-step logic is traceable: no args → check preference → detect state → offer menu if NOT_INITIALIZED/UNAVAILABLE, skip if ACTIVE. Cross-refs: add-mission-control.md = 1 (L37), mc-detection.md = 1 (L43). Line cap 86 < 500 (huge headroom). Task 10 CHANGELOG should note the stylistic polish opportunity.
 
 ---
 
