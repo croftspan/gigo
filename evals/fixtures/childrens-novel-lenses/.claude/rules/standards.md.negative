@@ -1,0 +1,77 @@
+# Standards — The Vanishing Paintings
+
+## Prose That Looks Fine But Isn't
+
+```
+CLUE PLANTED AND SOLVED IN THE SAME SCENE:
+"Maya noticed the scratch on the display case. It was exactly the kind
+of mark a lockpick would leave — three parallel lines, evenly spaced,
+right next to the latch mechanism. Someone had picked this lock."
+
+The reader didn't get to figure anything out. The detective solved
+it for them in the same paragraph she found it. Plant the scratch.
+Let Maya notice it. Let her NOT understand it. The reader figures
+it out three chapters later when they learn what lockpick marks look like.
+```
+
+```
+DEUS EX MACHINA:
+"Maya was stuck. She'd been staring at the clue wall for an hour.
+Then her mom walked in, glanced at the photos, and said 'Oh, that's
+obviously the janitor's master key pattern.' Mystery solved."
+
+A 10-year-old beta reader said: "That's not fair. I wanted to figure
+it out." Adults don't solve kids' mysteries. Ever.
+```
+
+```
+THE INFO DUMP:
+"As you know, Oliver," Maya said, "the museum uses a Kensington lock
+system installed in 1987, which requires a seven-pin tumbler mechanism
+that can only be operated with a registered key card..."
+
+Two characters explaining things they both already know, for the
+reader's benefit. Show the lock. Show it not opening. Don't lecture.
+```
+
+```
+TELLING INSTEAD OF SHOWING:
+"Maya felt scared. She was very nervous about going into the dark room.
+She was anxious and her heart was beating fast."
+
+vs.
+
+"Maya's hand tightened on the sketchbook. She made herself breathe —
+in for four, hold, out for four — the way the counselor taught her."
+
+The second one never says "scared." The reader feels it anyway.
+```
+
+```
+CHAPTER THAT ENDS AT A STOPPING POINT:
+"Maya closed her notebook, said goodnight to Oliver, and went to bed.
+It had been a long day."
+
+The beta reader put the book down and didn't pick it up for two days.
+End mid-tension. Mid-discovery. Mid-danger. Never where it's
+comfortable to stop reading.
+```
+
+```
+FLAT DIALOGUE — everyone sounds the same:
+"I think we should check the loading dock," Maya said.
+"I think that's a good idea," Oliver said.
+"I think we should be careful," Dr. Winters said.
+
+Maya is precise: "The loading dock log doesn't match Tuesday's schedule."
+Oliver is impulsive: "Let's just go look."
+Winters is nervous: "I'm not sure that's — I mean, should we really —"
+```
+
+## When to Go Deeper
+
+When plotting or structuring chapters, read `.claude/references/mystery-craft.md` — especially revelation pacing and plant-and-payoff patterns.
+When writing dialogue or prose, read `.claude/references/mystery-craft.md` — especially clue types and red herring design.
+When a reader reports pacing problems or boredom, read `.claude/references/mystery-craft.md` — check revelation pacing for the chapter range, verify every chapter earns its length, and audit clue density in the flagged section.
+When changing setting, characters, or plot structure, read `.claude/references/mystery-craft.md` — verify the fair-play rules still hold and no clue chains are broken by the change.
+When writing a new chapter, read `.claude/references/mystery-craft.md` — check where this chapter sits in revelation pacing and what clue types are due.

@@ -1,0 +1,77 @@
+# Standards — OrderFlow API
+
+## Code That Looks Fine But Isn't
+
+```ruby
+# RACE CONDITION — two users reserve the last copy simultaneously
+book = Book.find(params[:book_id])
+if book.copies_available > 0
+  book.update!(copies_available: book.copies_available - 1)
+  Reservation.create!(book: book, user: current_user)
+end
+# Both threads read copies_available = 1, both decrement, copies_available = -1
+# Fix: wrap in transaction with Book.lock.find
+```
+
+```ruby
+# DUPLICATE CHECK RACE — application-level uniqueness isn't enough
+if Reservation.where(user: user, book: book, status: [:pending, :active]).exists?
+  render_error("duplicate")
+else
+  Reservation.create!(user: user, book: book, status: :pending)
+end
+# Two requests pass the exists? check before either inserts
+# Fix: partial unique index in the migration: WHERE status IN ('pending', 'active')
+```
+
+```ruby
+# CANCEL RACE — checking status outside the lock
+def cancel(reservation)
+  return error if reservation.status == "cancelled"  # reads stale data
+  ActiveRecord::Base.transaction do
+    reservation.update!(status: "cancelled")          # no lock, no re-check
+    book.update!(copies_available: book.copies_available + 1)
+  end
+end
+# Two concurrent cancels both pass the status check, both increment
+# Fix: lock the reservation inside the transaction, re-read status
+```
+
+```ruby
+# N+1 — invisible until production load
+def index
+  @orders = user.orders
+  render json: @orders.map { |o| { id: o.id, item: o.item.name } }
+end
+# 1 query for orders + N queries for items. Fine with 5 orders, death with 5000.
+# Fix: user.orders.includes(:item)
+```
+
+```ruby
+# TABLE LOCK — adding a column with a default on a large table
+class AddStatusToOrders < ActiveRecord::Migration[7.1]
+  def change
+    add_column :orders, :priority, :integer, default: 0
+  end
+end
+# Locks the orders table for the entire rewrite. 10M rows = minutes of downtime.
+# Fix: add_column without default, backfill separately, then set default
+```
+
+```ruby
+# INCONSISTENT ERRORS — three endpoints, three formats
+# Endpoint 1: { error: "not found" }
+# Endpoint 2: { message: "Invalid", errors: [...] }
+# Endpoint 3: { status: 422, detail: "bad request" }
+# Mobile team writes three different error handlers
+# Fix: one envelope everywhere: { error: { code: String, message: String } }
+```
+
+## When to Go Deeper
+
+When writing or reviewing a migration, read `.claude/references/rails-patterns.md` — especially safe migration patterns and lock-duration checks.
+When designing or reviewing an endpoint, read `.claude/references/rails-patterns.md` — especially N+1 prevention and pagination requirements.
+When reviewing existing controller code, read `.claude/references/rails-patterns.md` — check for N+1 queries, missing pagination, and thin-controller violations.
+When deploying or preparing for production, read `.claude/references/rails-patterns.md` — verify migration safety, index strategy, and CI status before shipping.
+When diagnosing slow tests, read `.claude/references/rails-patterns.md` — check factory design, unnecessary database hits, and spec isolation patterns.
+When scoping a new feature or system, read `.claude/references/rails-patterns.md` — audit existing code for violations first, then plan migrations, endpoints, and specs using established patterns.

@@ -1,0 +1,26 @@
+# Standards — OrderFlow API
+
+## Lessons Learned
+
+`remove_column` without rollback → deploy failed halfway, 4h incident at 2am → every migration uses `change`; test `down` before shipping `up`
+
+Unpaginated `Order.all` → 10k-row customer timed out, killed connection pool, took down API → paginate everything, default 25, max 100
+
+N+1 on orders index → 1k users x 5 orders = 5000 queries, 8-second page load → `includes(:user)`, Bullet gem in dev/test
+
+Happy path only, "tests later" → silent bug, 3 weeks of corrupted data → spec first, watch it fail, no feature ships without green request spec + error case
+
+3 endpoints, 3 error formats → mobile team spent 2 days special-casing → `{ error: { code: String, message: String, details: Hash? } }` on every non-2xx, no exceptions
+
+Raw SQL when AR could handle it → schema changed 6 months later, silent wrong results → AR preferred, raw SQL needs comment + dedicated test
+
+Mocked database in all tests → uniqueness constraint rejected every prod write → real database in specs, always
+
+## When to Go Deeper
+
+When writing or reviewing a migration, read `.claude/references/rails-patterns.md` — especially safe migration patterns and lock-duration checks.
+When designing or reviewing an endpoint, read `.claude/references/rails-patterns.md` — especially N+1 prevention and pagination requirements.
+When reviewing existing controller code, read `.claude/references/rails-patterns.md` — check for N+1 queries, missing pagination, and thin-controller violations.
+When deploying or preparing for production, read `.claude/references/rails-patterns.md` — verify migration safety, index strategy, and CI status before shipping.
+When diagnosing slow tests, read `.claude/references/rails-patterns.md` — check factory design, unnecessary database hits, and spec isolation patterns.
+When scoping a new feature or system, read `.claude/references/rails-patterns.md` — audit existing code for violations first, then plan migrations, endpoints, and specs using established patterns.
