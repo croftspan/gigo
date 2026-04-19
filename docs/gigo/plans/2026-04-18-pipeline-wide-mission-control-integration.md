@@ -1128,7 +1128,7 @@ preference file exists and mc state is NOT_INITIALIZED or UNAVAILABLE."
 **Files:**
 - Modify: `CHANGELOG.md`
 
-- [ ] **Step 1: Read current CHANGELOG to find the insertion point (above the most recent version section).**
+- [x] **Step 1: Read current CHANGELOG to find the insertion point (above the most recent version section).**
 
 ```bash
 head -40 CHANGELOG.md
@@ -1136,7 +1136,7 @@ head -40 CHANGELOG.md
 
 Insertion point: above `## v0.13.0-beta (2026-04-17)`.
 
-- [ ] **Step 2: Insert the new `[Unreleased]` section.**
+- [x] **Step 2: Insert the new `[Unreleased]` section.**
 
 Append above `## v0.13.0-beta (2026-04-17)`:
 
@@ -1179,14 +1179,14 @@ Loose-coupling integration across 4 gigo skills (spec, execute, verify, maintain
 - Loose-coupling principle memory: `feedback_skill_integration_loose_coupling.md`
 ```
 
-- [ ] **Step 3: Verify.**
+- [x] **Step 3: Verify.**
 
 ```bash
 head -80 CHANGELOG.md
 grep -c "^## \[Unreleased\]" CHANGELOG.md   # expect 1
 ```
 
-- [ ] **Step 4: Commit.**
+- [x] **Step 4: Commit.**
 
 ```bash
 git add CHANGELOG.md
@@ -1194,6 +1194,11 @@ git commit -m "docs: add [Unreleased] changelog entry for mc integration
 
 Implements R8 from the pipeline-wide mission-control integration spec."
 ```
+
+#### What Was Built
+- **Deviations:** Worker's Sonnet model committed directly to `main` instead of a `worktree-agent-*` branch despite `isolation: "worktree"` dispatch — same "worktree escape" pattern previously observed with haiku (memory: `feedback_haiku_worktree_escape.md`). Content-only review unaffected (commit 03fa63e is already on main with correct content). Worker also dropped the `Implements R8 from the pipeline-wide mission-control integration spec.` body line from the commit message, using only the header line. Minor deviation; not worth amending a commit on main.
+- **Review changes:** None.
+- **Notes for downstream:** All 9 feature bullets verbatim match (plan lists 9 including "Blueprint unchanged"; the review prompt's "8 bullets" count was off-by-one — plan and CHANGELOG both carry 9). Fact-check findings (3 bullets) and Design references (4 bullets) verbatim. `[Unreleased]` count = 1. CHANGELOG now 146 lines. R-number references preserved (R3.1.a, R5.4.a, R5.4.b). Session retro should capture the recurring worktree-escape pattern — now observed on both haiku and sonnet workers.
 
 ---
 
