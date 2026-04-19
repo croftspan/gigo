@@ -1,5 +1,42 @@
 # Changelog
 
+## [Unreleased]
+
+### Pipeline-Wide Mission-Control Integration
+
+Loose-coupling integration across 4 gigo skills (spec, execute, verify, maintain) when mission-control is available in the session. Detect-and-adapt with install/init nudge — never a hard requirement. Authority principle: mission-control owns ticket state, gigo emits signals via file writes. Repeats none of v0.12's tight-coupling failure; composition test passes (uninstall mc → all 4 skills fall back to v0.13 behavior cleanly).
+
+- **Detection + preference.** New canonical detection helper at `skills/spec/references/mc-detection.md` — three-check (skill list, `command -v mc-init`, `$CLAUDE_PROJECT_DIR/vault/_schema/ticket.md`), three-state (UNAVAILABLE / NOT_INITIALIZED / ACTIVE), < 100ms per invocation. Preference file at `.claude/references/mission-control-preference.md` controls nudge behavior (`enabled` / `disabled` / `never-ask`) plus `tiebreak` and `mc-source-path` fields. All 12 state×preference combinations behave per the behavior table.
+
+- **Slice mode in spec.** When mc is STATE_ACTIVE (or operator accepts nudge), Phase 5 produces a PRD foundation + N per-slice design files instead of a monolithic spec. Phase 8 writes one plan per slice. Phase 9.75 runs Gate 2 per-slice plan (Gate 1 still runs once at PRD level). Phase 10 offers batch-or-per-slice approval. After all slice plans approved, spec invokes `/mission-control ticket <plan-path>` per plan to generate tickets in mc's vault. Procedure in new `skills/spec/references/slice-mode.md`.
+
+- **Mc-mode work loop in execute.** Before-Starting gains a new mc-mode detection step. When `mc_active` AND `vault/tickets/` has tickets, execute enters the ticket loop: query `mc-ticket-status --json` for `unblocked` array (minimal `{id, title}` objects), read full ticket body from `vault/tickets/{ticket-id}.md` (mandatory — minimal JSON is NOT treated as sufficient context), emit pickup signal to `vault/agents/logs/{ticket-id}-execute-pickup.md`, dispatch worker with full ticket context, run `mc-proof-of-work` and gigo:verify on DONE, emit completion/blocked signals per worker result. Execute NEVER mutates ticket frontmatter.
+
+- **Two-pass crash recovery in execute.** Pass A scans signal files (within 30-day mc-scrub window) for pickup signals without matching completion signals. Pass B queries `mc-ticket-status --json` for `in_progress` tickets without matching current pickup signals (catches interruptions before scrub or by other executors). Honest non-claim: mission-control currently has no automatic stale-`in_progress` detection — operators needing it must run `mc-ticket-status --json` manually or rely on execute's startup audit on resume.
+
+- **Per-stage + canonical combined verdicts in verify.** When mc is active AND ticket ID is resolvable (priority: `--ticket` flag → recent execute-pickup signal → operator input → fallback to v0.13), verify writes 3 verdict files per ticket: `{ticket-id}-spec-compliance.md` and `{ticket-id}-craft-quality.md` in gigo's structured YAML frontmatter schema (R5.4.a), plus the canonical combined `{ticket-id}.md` in mc's **plain-header format** (R5.4.b) — structurally matching `mission-control/skills/mission-control/references/reviewer-verdict.md` so downstream mc tools (`mc-ticket-stats`, `mc-dashboard`, `mc-retro`, all present in `mission-control/bin/`) parse gigo-written verdicts correctly. The `Reviewer:` field carries `gigo:verify` (not mc's `mission-control:review`) — consumers display who actually wrote the verdict; mc's parsers are value-agnostic on that field. Combined-status synthesis: any Critical issue (≥90 confidence) in Stage 2 → `escalate`; otherwise `approved_with_notes`.
+
+- **Add Mission-Control mode in maintain.** New auto-detected mode retrofits mc onto existing projects. Triggered by explicit `add-mission-control` argument OR auto-suggested when no preference file exists and mc state is NOT_INITIALIZED / UNAVAILABLE. Per-state behavior: ACTIVE reports status only (vault audit deferred to v2); NOT_INITIALIZED runs the shared Mc-Init Invocation Procedure; UNAVAILABLE resolves the mc source path then runs install.sh + the procedure. Procedure in new `skills/maintain/references/add-mission-control.md`.
+
+- **Mc-Init Invocation Procedure (R3.1.a).** Shared subroutine in `skills/spec/references/mc-detection.md`. Handles three vault states: vault absent → plain `mc-init`; vault exists without tickets → `mc-init --force` with announcement; vault exists WITH tickets → operator confirmation → `mc-init --force --yes`. On abort, falls back to monolithic mode without writing preference file. Closes the retrofit-safety gap on projects with half-initialized or legacy vaults.
+
+- **Configurable mc source path.** No `~/projects/mission-control/` path is hardcoded. `resolve_mc_source_path()` helper (documented in `mc-detection.md`) checks `GIGO_MC_SOURCE` env var → preference field `mc-source-path` → default `~/projects/mission-control/`. Clone-instructions error when resolution fails shows all three options to the operator.
+
+- **Blueprint unchanged.** v1 defers slicing-hint in blueprint — spec detects scope from brief content (≥3 distinct components, "vertical slice" language). Keeps v1 surface smaller; blueprint remains monolithic.
+
+### Fact-check findings noted (from spec Phase 4.25)
+
+- `mc-ticket-status --json` emits `{id, title}` per ticket (NOT rich objects with body) — execute MUST read `vault/tickets/{ticket-id}.md` for full context before worker dispatch.
+- `install.sh` is non-interactive (sets `set -euo pipefail`, symlinks bin/ + skill, exits cleanly) — gigo invokes directly via Bash, no operator intervention needed when source repo is cloned.
+- `mc-scrub` (default 30 days) deletes files in `vault/agents/logs/` — constrains signal-file crash recovery to 30-day window; Pass B covers beyond that.
+
+### Design references
+
+- Spec: `docs/gigo/specs/2026-04-18-pipeline-wide-mission-control-integration-design.md`
+- Plan: `docs/gigo/plans/2026-04-18-pipeline-wide-mission-control-integration.md`
+- Motivating brief: `briefs/12-mission-control-slice-integration.md`
+- Loose-coupling principle memory: `feedback_skill_integration_loose_coupling.md`
+
 ## v0.13.0-beta (2026-04-17)
 
 ### Two-Gate context7 Research Pipeline
