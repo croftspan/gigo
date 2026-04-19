@@ -43,12 +43,14 @@ for domain in "${DOMAINS[@]}"; do
   cp -r "$DOMAIN_DIR"/* "$ASSEMBLED_TMPDIR/" 2>/dev/null || true
   cp -r "$DOMAIN_DIR"/.claude "$ASSEMBLED_TMPDIR/" 2>/dev/null || true
 
-  # Bare gets source files only — no .claude/ or CLAUDE.md
+  # Bare gets source files only — no .claude/ or CLAUDE.md (or any variants like
+  # CLAUDE.md.original / CLAUDE.md.firstperson that the fixtures carry).
   for f in "$DOMAIN_DIR"/*; do
     fname=$(basename "$f")
-    if [ "$fname" != "CLAUDE.md" ]; then
-      cp -r "$f" "$BARE_TMPDIR/" 2>/dev/null || true
-    fi
+    case "$fname" in
+      CLAUDE.md*) ;;  # skip CLAUDE.md and all variants (prevents persona bleed)
+      *) cp -r "$f" "$BARE_TMPDIR/" 2>/dev/null || true ;;
+    esac
   done
 
   echo "[$domain] Bare dir: $BARE_TMPDIR"
