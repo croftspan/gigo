@@ -5,14 +5,14 @@
   },
   "metadata": {
     "description": "Nine skills for building expert Claude Code projects with a proven plan→execute→review pipeline",
-    "version": "0.13.0-beta"
+    "version": "0.14.0-beta"
   },
   "plugins": [
     {
       "name": "gigo",
       "source": "./",
       "description": "Expert team assembly, planning, execution, review, maintenance, audit, and eval for Claude Code projects",
-      "version": "0.13.0-beta",
+      "version": "0.14.0-beta",
       "author": {
         "name": "Eaven"
       },

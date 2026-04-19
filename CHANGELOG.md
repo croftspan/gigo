@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## v0.14.0-beta (2026-04-19)
 
 ### Pipeline-Wide Mission-Control Integration
 
