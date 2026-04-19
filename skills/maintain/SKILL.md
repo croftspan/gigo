@@ -34,6 +34,24 @@ Then determine which mode applies. If `$ARGUMENTS` is "upgrade", go straight to 
 
 **Upgrade** — the operator says "upgrade" or old format is detected (missing "When to Go Deeper" pointers, no cumulative budget checks, old snap protocol, personas over line targets, no two-tier split). Read `references/upgrade-checklist.md` and follow it.
 
+- **Add Mission-Control** — retrofit mission-control onto the project (scaffold vault, extract governance, augment CLAUDE.md). Triggered by `$ARGUMENTS` containing `add-mission-control` OR auto-suggested when mc detection returns NOT_INITIALIZED or UNAVAILABLE AND no preference file exists. See `skills/maintain/references/add-mission-control.md` for the procedure.
+
+### Auto-Suggesting Add Mission-Control
+
+When operator runs `gigo:maintain` with no args:
+1. Check whether `.claude/references/mission-control-preference.md` exists. If yes, skip auto-suggestion (operator has already made a decision).
+2. If not, run mc detection per `skills/spec/references/mc-detection.md`.
+3. If state is NOT_INITIALIZED or UNAVAILABLE, offer Add Mission-Control as an additional option in the top-level menu:
+
+   > "Which maintenance task?
+   >  [1] Targeted Addition
+   >  [2] Health Check
+   >  [3] Restructure
+   >  [4] Upgrade
+   >  [5] Add Mission-Control (mc detected: {state})"
+
+4. If state is ACTIVE, do not auto-suggest (mc is already integrated).
+
 ---
 
 ## Pipeline Health
