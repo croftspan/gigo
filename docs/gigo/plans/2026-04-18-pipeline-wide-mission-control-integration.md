@@ -65,7 +65,7 @@ Wave 3:
 **Files:**
 - Create: `skills/spec/references/mc-detection.md`
 
-- [ ] **Step 1: Write the detection reference file.**
+- [x] **Step 1: Write the detection reference file.**
 
 File contents (complete, copy-paste ready):
 
@@ -179,11 +179,11 @@ If mc-init exits non-zero at any step, surface stderr verbatim — do not hide m
 - **maintain/SKILL.md auto-detect:** when auto-suggesting the Add Mission-Control mode.
 ````
 
-- [ ] **Step 2: Verify the file is complete and well-formed.**
+- [x] **Step 2: Verify the file is complete and well-formed.**
 
 Run: `wc -l skills/spec/references/mc-detection.md` — expect 110-135 lines (expanded R3.1.a retrofit-safety block). Read the file to confirm no placeholders.
 
-- [ ] **Step 3: Commit.**
+- [x] **Step 3: Commit.**
 
 ```bash
 git add skills/spec/references/mc-detection.md
@@ -192,6 +192,11 @@ git commit -m "feat(spec): add mc-detection reference — canonical detection + 
 Shared reference for spec, execute, verify, maintain — implements R1, R2, R-ADV
 from the pipeline-wide mission-control integration spec."
 ```
+
+#### What Was Built
+- **Deviations:** None. Worker reproduced the plan's copy-paste content byte-for-byte (107 lines; plan's 110-135 estimate was stale).
+- **Review changes:** None.
+- **Notes for downstream:** Retrofit-safety ABORT path is load-bearing — cites `mission-control/bin/mc-init` line 288 (`shutil.rmtree(vault)`). Task 4 correctly delegates to this file's Mc-Init Invocation Procedure rather than duplicating. All 4 consuming skills (spec/execute/verify/maintain) must route through `resolve_mc_source_path()` helper — do NOT hardcode `~/projects/mission-control/` elsewhere.
 
 ---
 
@@ -204,7 +209,7 @@ from the pipeline-wide mission-control integration spec."
 **Files:**
 - Create: `skills/spec/references/slice-mode.md`
 
-- [ ] **Step 1: Write the slice-mode reference file.**
+- [x] **Step 1: Write the slice-mode reference file.**
 
 File contents (copy-paste ready):
 
@@ -296,11 +301,11 @@ Slicing-hint in blueprint is deferred to v2. In v1, spec detects scope from brie
 The nudge and the preference gate still apply — detection only determines whether slice mode is *offered*, not whether it's *forced*.
 ````
 
-- [ ] **Step 2: Verify.**
+- [x] **Step 2: Verify.**
 
 Run: `wc -l skills/spec/references/slice-mode.md` — expect 70-90 lines. No placeholders.
 
-- [ ] **Step 3: Commit.**
+- [x] **Step 3: Commit.**
 
 ```bash
 git add skills/spec/references/slice-mode.md
@@ -308,6 +313,11 @@ git commit -m "feat(spec): add slice-mode reference — PRD foundation + N slice
 
 Implements R3.2-R3.7 from the pipeline-wide mission-control integration spec."
 ```
+
+#### What Was Built
+- **Deviations:** None — byte-identical to plan's copy-paste content (85 lines, within 70-90 range).
+- **Review changes:** None.
+- **Notes for downstream:** Ticket trigger fires AFTER each slice plan's Phase 10 approval (not during design). Invocation pattern: `Skill(skill="mission-control", args=f"ticket {plan_file}")` per approved slice plan in order. Task 6 (spec/SKILL.md) must wire the Phase 5 mc-mode branch to reference this file, the Phase 9.75 per-slice Gate 2 dispatch, the Phase 10 batch-or-per-slice approval flow, and the post-Phase-10 ticket trigger loop.
 
 ---
 
@@ -320,7 +330,7 @@ Implements R3.2-R3.7 from the pipeline-wide mission-control integration spec."
 **Files:**
 - Create: `skills/verify/references/mc-verdict-schema.md`
 
-- [ ] **Step 1: Write the verdict-schema reference.**
+- [x] **Step 1: Write the verdict-schema reference.**
 
 File contents (copy-paste ready):
 
@@ -450,11 +460,11 @@ After writing all 3 files:
 After writing the combined file, sanity-check by running: `mc-ticket-stats {ticket-id}`. The rendered Status line must match what gigo wrote. If mc-ticket-stats reports something else, the combined file format drifted — fix it.
 ````
 
-- [ ] **Step 2: Verify.**
+- [x] **Step 2: Verify.**
 
 Run: `wc -l skills/verify/references/mc-verdict-schema.md` — expect 90-120 lines. No placeholders.
 
-- [ ] **Step 3: Commit.**
+- [x] **Step 3: Commit.**
 
 ```bash
 git add skills/verify/references/mc-verdict-schema.md
@@ -465,6 +475,11 @@ Stage files use gigo-owned YAML frontmatter; canonical combined file uses
 mc-compatible plain-header format so downstream mc tools (mc-ticket-stats,
 mc-dashboard, mc-retro) parse it correctly."
 ```
+
+#### What Was Built
+- **Deviations:** 123 lines vs 90-120 plan estimate (+3 lines). Reviewer confirmed all content load-bearing; no trimmable sections. Matches plan's copy-paste block verbatim.
+- **Review changes:** None.
+- **Notes for downstream:** Two schemas locked: R5.4.a YAML-frontmatter for stage files, R5.4.b mc plain-header for canonical combined file. `Reviewer:` field value is `gigo:verify` (not `mission-control:review`) — verified safe because mc parsers read field labels, not values. The "Stage verdicts (gigo extension)" section MUST remain AFTER mc's canonical sections — Task 8 consumers must not reorder or move the extension. Final sanity check is `mc-ticket-stats {ticket-id}` against the rendered Status line.
 
 ---
 
@@ -477,7 +492,7 @@ mc-dashboard, mc-retro) parse it correctly."
 **Files:**
 - Create: `skills/maintain/references/add-mission-control.md`
 
-- [ ] **Step 1: Write the add-mission-control reference.**
+- [x] **Step 1: Write the add-mission-control reference.**
 
 File contents (copy-paste ready):
 
@@ -551,11 +566,11 @@ If the operator wants those, they can run `gigo:maintain` again in the appropria
 Deferred to v2. v1 reports "active" status without auditing vault contents.
 ````
 
-- [ ] **Step 2: Verify.**
+- [x] **Step 2: Verify.**
 
 Run: `wc -l skills/maintain/references/add-mission-control.md` — expect 60-80 lines. No placeholders.
 
-- [ ] **Step 3: Commit.**
+- [x] **Step 3: Commit.**
 
 ```bash
 git add skills/maintain/references/add-mission-control.md
@@ -565,6 +580,11 @@ Implements R6.3 from the pipeline-wide mission-control integration spec.
 Handles three states (ACTIVE/NOT_INITIALIZED/UNAVAILABLE) with operator
 confirmation for existing-vault case via shared Mc-Init Invocation Procedure."
 ```
+
+#### What Was Built
+- **Deviations:** None (67 lines, within 60-80 range).
+- **Review changes:** None.
+- **Notes for downstream:** Correctly DELEGATES to Shared Mc-Init Invocation Procedure in `skills/spec/references/mc-detection.md` rather than inlining — prevents DRY drift on the safety-critical vault-with-tickets ABORT path. Task 9 (maintain/SKILL.md) must wire the mode into (a) auto-detect logic when `$ARGUMENTS` contains `add-mission-control`, (b) top-level menu option alongside Targeted Addition / Health Check / Restructure / Upgrade when detection returns NOT_INITIALIZED/UNAVAILABLE and no preference exists.
 
 ---
 
@@ -579,7 +599,7 @@ confirmation for existing-vault case via shared Mc-Init Invocation Procedure."
 
 **Rationale:** R4.3 describes ~80 lines of procedural detail (crash recovery, main loop, worker prompt contents, non-mutation rule). Inlining it in `execute/SKILL.md` violates GIGO's hub-and-spoke convention (`.claude/rules/skill-engineering.md`: *"If a mode section in SKILL.md exceeds ~5 lines of procedure, move it to a reference file and replace with a pointer"*). This task extracts the procedure; Task 7 adds a short pointer in SKILL.md.
 
-- [ ] **Step 1: Write the mc-mode work loop reference.**
+- [x] **Step 1: Write the mc-mode work loop reference.**
 
 File contents (copy-paste ready):
 
@@ -678,11 +698,11 @@ Execute NEVER writes to `vault/tickets/*.md` frontmatter. All state changes prop
 Operator (or future mc automation) transitions ticket state by running `mc-ticket-transition` directly. This is load-bearing for the authority principle — violating it repeats v0.12's tight-coupling failure.
 ````
 
-- [ ] **Step 2: Verify.**
+- [x] **Step 2: Verify.**
 
 Run: `wc -l skills/execute/references/mc-mode-work-loop.md` — expect 90-115 lines. No placeholders. No inline mc-init calls (those belong to maintain/spec retrofit paths).
 
-- [ ] **Step 3: Commit.**
+- [x] **Step 3: Commit.**
 
 ```bash
 git add skills/execute/references/mc-mode-work-loop.md
@@ -695,6 +715,11 @@ lines belong in references/). Task 7 adds the pointer in execute/SKILL.md.
 Pass B crash recovery uses mc-ticket-ls --status in_progress --json (not
 mc-ticket-status's by_status count dict)."
 ```
+
+#### What Was Built
+- **Deviations:** Commit message's "R4.3-R4.9" claim is slightly overclaimed — R4.8 (plan.md coexistence / `tiebreak`) is correctly scoped OUT of this file (belongs in execute/SKILL.md Before-Starting via Task 7). File implements R4.3-R4.7 + R4.9. Worker resolved spec ambiguity inline: Pass B uses `mc-ticket-ls --status in_progress --json` (not the Counter-dict `by_status` spec R4.6 loosely referenced) — clarification, not deviation.
+- **Review changes:** None.
+- **Notes for downstream:** Main loop uses `mc-ticket-status --json` with `unblocked[0].id` — verified correct per mc source (mc-ticket-status lines 63-73): `unblocked` is already DAG-dependency-resolved. Do NOT switch to `mc-ticket-ls --status ready`. Authority principle enforced in 3 places (lines 25, 64, 86-92). Task 7 (execute/SKILL.md) must add: Before-Starting mc detection step between existing step 2 (plan-verification) and step 3 (read plan), the plan.md coexistence prompt + `tiebreak` preference storage (R4.8), and the "When to Go Deeper" pointer to this file.
 
 ---
 
