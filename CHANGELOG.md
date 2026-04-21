@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.14.1-beta (2026-04-21)
+
+### Persona Style Default — Characters
+
+Flips the persona-style default from Lenses to Characters based on Brief 15 head-to-head (Opus 4.7, 100 assemblies across 5 domains). Characters won 41-28-31 on quality and read as more alive to downstream operators; Lenses remains a first-class option for review-heavy or compliance-focused projects.
+
+- **Default flipped** in `skills/gigo/SKILL.md` persona-style section. Operator-skippable prompt now saves `style: characters` to `.claude/references/persona-style.md` if the default is accepted.
+- **Lenses description clarified** to surface its quality-bar enforcement / adversarial-prompt edge, so the trade-off is visible at the point of choice.
+- **Writeup:** `docs/gigo/experiments/04-opus-4-7-lenses-vs-characters.md` has the full Brief 15 methodology and per-domain results.
+
 ## v0.14.0-beta (2026-04-19)
 
 ### Pipeline-Wide Mission-Control Integration
