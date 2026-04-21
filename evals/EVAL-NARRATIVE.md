@@ -870,6 +870,54 @@ Brief 16's win condition — **TF3 + thinking-off** — was proven on 10 toy tas
 
 **Writeup:** `docs/gigo/experiments/06-qwen36-scale-trial.md`. **Results:** `evals/qwen-worker-eval/results/phase2a-sweep/`.
 
+## Phase 9-D: Qwen3.6 Multi-Turn (Brief 18)
+
+Brief 18 extended the Qwen worker harness to 2-turn revision flows and asked whether Qwen3's native `chat_template_kwargs.preserve_thinking` flag flips thinking-mode from a net-negative (Brief 16's T7 oscillation tail) to a net-positive when the model can read its own turn-1 reasoning on turn 2. 6 Phase 2A tasks (M1, M3, L1, L3, XL1, XL2) × 3 cells × 5 reps = 90 runs. Run 2026-04-19.
+
+**Question:** In a 2-turn revision loop — worker ships code, worker receives a critique, worker revises — does turning thinking on (with `preserve_thinking: true`) pay for itself, or does it replay the T7 loop as a walltime / fabrication tail?
+
+**Headline:** Quality ties across all three cells. Thinking-on costs 6.5× walltime and 7.5× completion tokens (both turns summed) for a quality delta that sits inside judge noise. **Thinking-off remains the production recipe.**
+
+| Cell | N | Pass rate | Critique-addressed | Mean quality | Fab rate | Mean t1+t2 walltime | Mean t1+t2 completion tokens |
+|---|---|---|---|---|---|---|---|
+| T-off                | 30 | **1.00** | 1.00 | 4.43 | 0.00 |  28.9s |  1,273 |
+| T-on preserve-on     | 30 | **1.00** | 1.00 | 4.50 | 0.00 | 189.4s |  9,572 |
+| T-on preserve-off    | 30 | **1.00** | 1.00 | 4.47 | 0.00 | 267.0s | 10,530 |
+
+**90/90 deterministic PASS. 90/90 critique-addressed. 0 fabrications. 0 `finish_reason: length`. 0 verifier/judge disagreements.**
+
+**Four findings:**
+
+1. **Thinking-off holds through multi-turn (H1 confirmed).** T-off cleared the parity gate at 100% on the same 6 Brief 17 tasks in revision mode. The Brief 16/17 recipe carries over to revision flows unchanged.
+2. **Thinking-on doesn't lift real-defect craft (H2 refuted).** Real-defect subset (M1, M3 — both anchored to Phase 2A judge-observed defects) saw Δquality of +0.10 preserve-on and +0.20 preserve-off vs T-off. Predicted ≥ +0.30. Thinking-on is either not routing into craft improvement, or the judge can't distinguish "thought harder" from "wrote good code" at this difficulty. Cost of that non-lift: 7.5× completion tokens end-to-end.
+3. **preserve-off reproduces T7 on demand (H3 partially confirmed).** 3/30 preserve-off runs drove turn-2 walltime past 300s (max 831s — M1 r2 emitted 26 code fences and 52 "I will output" phrases in a single turn, full oscillation). 0/30 preserve-on runs did. Zero length-truncations in either cell because the 32,768-token budget is too generous to surface the cap — in a bounded-budget deploy, preserve-off would silently fail in 10% of runs.
+4. **`preserve_thinking` is mechanistically real (H4 confirmed).** Turn-2 walltime differs by 2.4× between preserve-on (46.5s) and preserve-off (113.0s). The flag is not a no-op — its absence is what lets the T7 loop resurface.
+
+**Per critique type:**
+
+| Cell | Real-defect (N=10) | Synthetic-craft (N=20) |
+|---|---|---|
+| T-off                | Q 4.10 | Q 4.60 |
+| T-on preserve-on     | Q 4.20 | Q 4.65 |
+| T-on preserve-off    | Q 4.30 | Q 4.55 |
+
+Real-defect quality floor is lower across all cells — which is to say "pick a better name" and "preserve the signature" are where Qwen worked hardest, not where thinking-on bought a lift.
+
+**Harness shipped with Brief 18 (additive):**
+
+- `build_critique.py` — single-template turn-2 message renderer; pure function of `revision_critique` + inherited `output_format`.
+- `run_qwen_eval.py` — `--mode {single-turn|multi-turn}`, `--preserves`, `--pin-preserve` flags. When thinking=off, preserve axis collapses to `na`. Turn-2 request body threads `reasoning` into the assistant message only when thinking was on.
+- `score_qwen_eval.py` — detects `mode=multi-turn` from the manifest, routes to `judge-prompt-revision.md`, adds "Revision outcomes" rollup grouped by `(condition, critique_type)`.
+- `judge-prompt-revision.md` — turn-2-only rubric adding `critique_addressed` alongside the Brief 16 fields.
+- `verifiers/phase2b/*.py` + `_smoke.py` — 2-stage verifiers: stage 1 subprocesses the Phase 2A verifier (acceptance must hold), stage 2 does an AST or regex check that the critique was addressed.
+- `tasks/phase2b/*.md` — 6 task files with `reference_task: phase2a/<stem>` inheritance; no new turn-1 task bodies.
+
+**Verdict:** **gigo:execute Tier-2 dispatch stays on `enable_thinking: false`.** No evidence thinking-on pays for itself in a revision loop. If a future dispatch role (e.g. planner) does require thinking, the correct secondary default is `preserve_thinking: true` — the preserve-off tail is the T7 pathology, measurable at 10% of runs. The revision loop wires directly to the existing single-shot dispatch; no conditional "turn on thinking for feedback" logic is warranted.
+
+**Cost:** Qwen local/free. T-off cell ~15m, T-on cells ~3h49m (thinking dominates). Opus judge ~15m combined across 90 judgments, cache-warmed, 0 errors, 0 re-runs.
+
+**Writeup:** `docs/gigo/experiments/07-qwen36-multi-turn.md`. **Results:** `evals/qwen-worker-eval/results/phase2b-toff/` and `evals/qwen-worker-eval/results/phase2b-ton/`.
+
 ## Open Questions
 
 1. **Product integration:** How does the generated project output instruct this pipeline? The workflow needs to describe when to trigger each review stage.
@@ -885,6 +933,10 @@ Brief 16's win condition — **TF3 + thinking-off** — was proven on 10 toy tas
 11. **Rubric fabrication-check retrofit:** Add "grounded in real files?" penalty to rank-of-5 and pairwise judge rubrics before the next run.
 12. **Qwen thinking-loop failure mode (Brief 16 follow-up):** 2/30 TF3-thinking-on runs for T7 burned the full 32768 max_tokens in reasoning and produced empty content. Same pathology as Brief 15's empty Characters response. Reproduce with a targeted sweep (regex-from-examples × 20 replicates) to characterise the tail — is it T7-specific, TF3-specific, or thinking-on-general?
 13. **Phase 2 of the Qwen worker profile (Brief 16 deferred):** Sampling profile was pinned per task type from the Unsloth recommendations. Sweep it (temp/top_p/top_k/presence_penalty) against TF3-thinking-off to verify the pins are actually optimal.
-14. **Multi-turn Qwen with `preserve_thinking` (Brief 16 deferred):** Single-shot only in Brief 16. Multi-turn is where thinking-mode pays off in principle, so worth measuring against plan → execute → review loops specifically.
+14. **Multi-turn Qwen with `preserve_thinking` (Brief 16 → Brief 18, resolved 2026-04-19):** Thinking-on does not pay for itself in multi-turn revision — quality ties (Δ ≤ 0.07 on a 5-point scale) at 6.5× the walltime and **7.5× the completion-token cost** (both turns summed). `preserve_thinking: true` is measurably real (2.4× turn-2 walltime improvement over preserve-off) and is the correct secondary default if thinking-on is ever required for a non-worker dispatch. Worker role stays on `enable_thinking: false`. Writeup: `docs/gigo/experiments/07-qwen36-multi-turn.md`.
 15. **Local-worker bake-off (Brief 16 deferred, operator-prioritized):** Compare Qwen3.6 against **Gemma4** first, then DeepSeek-Coder, Qwen3-Coder, Codestral, Llama at the same TF3-off recipe to see if the harness is Qwen-specific or a general local-worker pattern. Phase 2A (scale) complete as of Brief 17 — recipe confirmed at up to 500-line / 4-file scope. Still scheduled after Phase 2B/C (loop + loop-failure).
 16. **Scale ceiling (Brief 17 follow-up):** Phase 2A found no ceiling at 600 lines / 4 files. Extend the sweep at 800-1200 lines and 6-10 files to locate where the recipe breaks, if it does.
+17. **Bounded-budget oscillation (Brief 18 follow-up):** Phase 2B's 32,768-token ceiling is too generous to surface the T7 cap — all 3 preserve-off oscillations completed under the limit. Re-run the preserve-off cell at `max_tokens=8,192` (or shorter) on the same 6 tasks to confirm the loop registers as `finish_reason: length` under realistic deploy budgets. Pair with Open Question #12 — same pathology, different trigger regime.
+18. **Phase 2C loop-failure characterisation (Brief 16 → still open):** Original T7 pathology (TF3 × thinking-on, 2/30 silent non-completions on the dedupe task) was not directly reproduced in Brief 18 — the 6 Phase 2B tasks never hit it. Reproduce the T7 spec with a targeted sweep (20+ replicates) to confirm it's task-specific rather than axis-specific before deciding whether the regex-from-examples pattern in general is at risk.
+19. **Multi-turn at 3+ turns (Brief 18 follow-up):** Phase 2B is 2-turn only. Each additional turn adds another reasoning payload to preserve or discard. Preserve-on's gap over preserve-off should widen monotonically with turn count; measure it at 3-5 turns to confirm.
+20. **Scorer summary inconsistency (Brief 18 harness bug):** `score_qwen_eval.py` emits "Mean walltime" as t1+t2 summed but "Mean completion tokens" as turn-2 only in multi-turn mode. Almost caused a writeup to ship claiming 4.15× token cost when the honest number (both turns summed) is 7.5×. Fix the scorer to report both turns consistently, or rename columns to make the scope explicit.

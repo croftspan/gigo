@@ -19,17 +19,7 @@ import yaml
 TASKS_DIR = Path(__file__).parent / "tasks"
 
 
-def load_task(task_ref: str) -> dict:
-    if "/" in task_ref or task_ref.endswith(".md"):
-        path = Path(task_ref)
-    else:
-        matches = list(TASKS_DIR.glob(f"{task_ref}-*.md"))
-        if not matches:
-            sys.exit(f"ERROR: no task file matching {task_ref!r} in {TASKS_DIR}")
-        if len(matches) > 1:
-            sys.exit(f"ERROR: ambiguous task ref {task_ref!r}: {[m.name for m in matches]}")
-        path = matches[0]
-
+def _parse_frontmatter(path: Path) -> dict:
     raw = path.read_text()
     if not raw.startswith("---"):
         sys.exit(f"ERROR: {path} has no YAML front-matter")
@@ -39,6 +29,46 @@ def load_task(task_ref: str) -> dict:
     fm = yaml.safe_load(raw[3:end])
     if not isinstance(fm, dict):
         sys.exit(f"ERROR: front-matter in {path} is not a mapping")
+    return fm
+
+
+def _resolve_path(task_ref: str, base: Path) -> Path:
+    """Resolve a task reference to a file path.
+
+    Accepts an absolute path, a path ending in .md, a phase-qualified stem
+    like `phase2a/M1-inheritance-to-composition`, or a bare stem like `T1`.
+    Bare stems are searched under `base` recursively.
+    """
+    if "/" in task_ref or task_ref.endswith(".md"):
+        path = Path(task_ref)
+        if not path.is_absolute():
+            # Try relative to base first (e.g. "phase2a/M1-...")
+            candidate = (base / path).with_suffix(".md") if not path.suffix else base / path
+            if candidate.exists():
+                return candidate
+            # Fall through to the raw path
+        return path
+    matches = list(base.glob(f"{task_ref}-*.md")) + list(base.glob(f"**/{task_ref}-*.md"))
+    matches = sorted(set(matches))
+    if not matches:
+        sys.exit(f"ERROR: no task file matching {task_ref!r} in {base}")
+    if len(matches) > 1:
+        sys.exit(f"ERROR: ambiguous task ref {task_ref!r}: {[m.name for m in matches]}")
+    return matches[0]
+
+
+def load_task(task_ref: str) -> dict:
+    """Load a task's front-matter. Follows `reference_task` links by merging
+    the referenced file's fields underneath the current file's fields (so
+    overrides in the referring file win)."""
+    path = _resolve_path(task_ref, TASKS_DIR)
+    fm = _parse_frontmatter(path)
+    ref = fm.get("reference_task")
+    if ref:
+        ref_path = _resolve_path(ref, TASKS_DIR)
+        ref_fm = _parse_frontmatter(ref_path)
+        merged = {**ref_fm, **fm}
+        return merged
     return fm
 
 

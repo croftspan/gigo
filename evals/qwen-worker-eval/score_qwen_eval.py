@@ -35,6 +35,10 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 DEFAULT_TASKS_DIR = SCRIPT_DIR / "tasks"
 DEFAULT_VERIFIERS_DIR = SCRIPT_DIR / "verifiers"
 JUDGE_PROMPT = (SCRIPT_DIR / "judge-prompt.md").read_text()
+REVISION_PROMPT_PATH = SCRIPT_DIR / "judge-prompt-revision.md"
+REVISION_JUDGE_PROMPT = (
+    REVISION_PROMPT_PATH.read_text() if REVISION_PROMPT_PATH.exists() else ""
+)
 
 _BUCKET_RANK = {"S": 0, "M": 1, "L": 2, "XL": 3}
 
@@ -80,6 +84,29 @@ def build_judge_prompt(task: dict, verifier_result: dict, output: str) -> str:
     return prompt
 
 
+def build_revision_judge_prompt(
+    task: dict,
+    verifier_result: dict,
+    critique: str,
+    output: str,
+) -> str:
+    if not REVISION_JUDGE_PROMPT:
+        raise RuntimeError(
+            f"revision judge prompt missing: {REVISION_PROMPT_PATH} not found"
+        )
+    v_text = f"acceptance_pass: {verifier_result['pass']}\nmessage: {verifier_result['msg']}"
+    if not verifier_result["ran"]:
+        v_text = "(no deterministic verifier for this task — rate on substance)"
+    prompt = REVISION_JUDGE_PROMPT
+    prompt = prompt.replace("{TASK_SPEC}", (task.get("spec") or "").strip())
+    prompt = prompt.replace("{TASK_ACCEPTANCE}", (task.get("acceptance") or "").strip())
+    prompt = prompt.replace("{TASK_OUTPUT_FORMAT}", (task.get("output_format") or "").strip())
+    prompt = prompt.replace("{REVISION_CRITIQUE}", (critique or "").strip())
+    prompt = prompt.replace("{VERIFIER_RESULT}", v_text)
+    prompt = prompt.replace("{OUTPUT}", output)
+    return prompt
+
+
 JUDGE_SCHEMA = {
     "type": "object",
     "properties": {
@@ -93,15 +120,42 @@ JUDGE_SCHEMA = {
     "additionalProperties": False,
 }
 
+REVISION_JUDGE_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "acceptance_pass": {"type": "boolean"},
+        "critique_addressed": {"type": "boolean"},
+        "format_adherence": {"type": "boolean"},
+        "fabrication_present": {"type": "boolean"},
+        "quality": {"type": "integer", "minimum": 1, "maximum": 5},
+        "notes": {"type": "string"},
+    },
+    "required": [
+        "acceptance_pass",
+        "critique_addressed",
+        "format_adherence",
+        "fabrication_present",
+        "quality",
+        "notes",
+    ],
+    "additionalProperties": False,
+}
 
-def dispatch_judge(prompt: str) -> dict:
+
+def dispatch_judge(prompt: str, schema: dict | None = None) -> dict:
     """Return parsed score dict, or {'error': msg} on failure.
 
     Uses --json-schema to force structured JSON output — makes the judge
     robust against session-level settings like the 'explanatory' output
     style that would otherwise prepend insight blocks into the response.
     (Not using --bare because it strips OAuth auth.)
+
+    Pass `schema` to use a custom JSON schema (e.g., REVISION_JUDGE_SCHEMA
+    for multi-turn scoring). Defaults to the single-turn JUDGE_SCHEMA.
     """
+    if schema is None:
+        schema = JUDGE_SCHEMA
+    required = set(schema.get("required") or [])
     proc = subprocess.run(
         [
             "claude",
@@ -114,7 +168,7 @@ def dispatch_judge(prompt: str) -> dict:
             "--permission-mode",
             "bypassPermissions",
             "--json-schema",
-            json.dumps(JUDGE_SCHEMA),
+            json.dumps(schema),
         ],
         capture_output=True,
         text=True,
@@ -146,26 +200,58 @@ def dispatch_judge(prompt: str) -> dict:
     if not isinstance(parsed, dict):
         return {"error": "judge did not return a mapping", "raw": str(parsed)[:500]}
 
-    required = {"acceptance_pass", "format_adherence", "fabrication_present", "quality", "notes"}
     missing = required - set(parsed.keys())
     if missing:
-        return {"error": f"missing keys {sorted(missing)}", "raw": inner[:500], "parsed": parsed}
+        inner_raw = wrapped.get("result", "") if isinstance(wrapped, dict) else ""
+        return {"error": f"missing keys {sorted(missing)}", "raw": inner_raw[:500], "parsed": parsed}
 
     return parsed
 
 
+def _resolve_reference_task(tasks_dir: Path, fm: dict) -> dict:
+    """Merge `reference_task` front-matter underneath current fm (as in
+    build_ticket.load_task). Lets Phase 2B tasks inherit Phase 2A spec."""
+    ref = fm.get("reference_task")
+    if not ref:
+        return fm
+    # Resolve the ref relative to tasks_dir's parent (so `phase2a/<stem>`
+    # works from a phase2b task file).
+    ref_path = None
+    candidate = (tasks_dir.parent / ref).with_suffix(".md")
+    if candidate.exists():
+        ref_path = candidate
+    else:
+        matches = list(tasks_dir.parent.glob(f"**/{Path(ref).name}*.md"))
+        if matches:
+            ref_path = sorted(matches)[0]
+    if not ref_path:
+        return fm
+    raw = ref_path.read_text()
+    end = raw.find("\n---", 3)
+    ref_fm = yaml.safe_load(raw[3:end])
+    return {**ref_fm, **fm}
+
+
 def score_run(
     results_dir: Path,
-    stem: str,
+    manifest_record: dict,
     only: set[str] | None,
     skip_judge: bool,
     tasks_dir: Path,
     verifiers_dir: Path,
-) -> dict:
-    task_id = stem.split("--")[0]
+) -> dict | None:
+    stem = manifest_record["stem"]
+    task_id = manifest_record["task"]
     if only and task_id not in only:
-        return None  # caller ignores None
-    content = (results_dir / f"{stem}.content.txt").read_text()
+        return None
+    mode = manifest_record.get("mode", "single-turn")
+    is_multi = mode == "multi-turn"
+
+    if is_multi:
+        content_path = results_dir / f"{stem}.turn2.content.txt"
+    else:
+        content_path = results_dir / f"{stem}.content.txt"
+    content = content_path.read_text()
     score_path = results_dir / f"{stem}.score.json"
 
     if skip_judge and score_path.exists():
@@ -179,24 +265,36 @@ def score_run(
             return existing
 
     task = load_task(tasks_dir, task_id)
+    if is_multi:
+        task = _resolve_reference_task(tasks_dir, task)
     verifier_result = run_verifier(verifiers_dir, task_id, content)
 
     if skip_judge:
         score = {
             "stem": stem,
             "task": task_id,
+            "mode": mode,
             "verifier": verifier_result,
             "judge": {"error": "judge skipped (--skip-judge)"},
         }
         score_path.write_text(json.dumps(score, indent=2))
         return score
 
-    prompt = build_judge_prompt(task, verifier_result, content)
-    judge = dispatch_judge(prompt)
+    if is_multi:
+        critique_path = results_dir / f"{stem}.critique.txt"
+        critique = critique_path.read_text() if critique_path.exists() else (
+            task.get("revision_critique") or ""
+        )
+        prompt = build_revision_judge_prompt(task, verifier_result, critique, content)
+        judge = dispatch_judge(prompt, schema=REVISION_JUDGE_SCHEMA)
+    else:
+        prompt = build_judge_prompt(task, verifier_result, content)
+        judge = dispatch_judge(prompt, schema=JUDGE_SCHEMA)
 
     score = {
         "stem": stem,
         "task": task_id,
+        "mode": mode,
         "verifier": verifier_result,
         "judge": judge,
     }
@@ -216,11 +314,22 @@ def aggregate(results_dir: Path, scores: dict[str, dict], manifest: list[dict]) 
     per_task = defaultdict(list)
     per_bucket = defaultdict(list)
 
-    def cell_pass(score: dict) -> bool | None:
+    # Detect mode mix — if any run is multi-turn, the summary reports the
+    # critique_addressed axis and the combined-pass gate includes it.
+    any_multi = any(m.get("mode") == "multi-turn" for m in manifest)
+
+    def cell_pass(score: dict, is_multi: bool) -> bool | None:
         j = score.get("judge") or {}
         if j.get("error"):
             return None
-        return bool(j.get("acceptance_pass")) and bool(j.get("format_adherence")) and not bool(j.get("fabrication_present"))
+        base = (
+            bool(j.get("acceptance_pass"))
+            and bool(j.get("format_adherence"))
+            and not bool(j.get("fabrication_present"))
+        )
+        if is_multi:
+            return base and bool(j.get("critique_addressed"))
+        return base
 
     rows = []
     for stem, score in scores.items():
@@ -229,6 +338,21 @@ def aggregate(results_dir: Path, scores: dict[str, dict], manifest: list[dict]) 
         cond = m.get("condition", "?")
         ttype = m.get("task_type", "?")
         bucket = m.get("size_bucket")
+        run_is_multi = m.get("mode") == "multi-turn"
+        if run_is_multi:
+            t1 = m.get("turn1") or {}
+            t2 = m.get("turn2") or {}
+            completion_tokens = t2.get("completion_tokens")
+            prompt_tokens = t2.get("prompt_tokens")
+            reasoning_chars = t2.get("reasoning_chars")
+            elapsed_s = (t1.get("elapsed_s") or 0) + (t2.get("elapsed_s") or 0)
+            finish_reason = t2.get("finish_reason")
+        else:
+            completion_tokens = m.get("completion_tokens")
+            prompt_tokens = m.get("prompt_tokens")
+            reasoning_chars = m.get("reasoning_chars")
+            elapsed_s = m.get("elapsed_s")
+            finish_reason = m.get("finish_reason")
         rows.append({
             "stem": stem,
             "task": score["task"],
@@ -236,20 +360,23 @@ def aggregate(results_dir: Path, scores: dict[str, dict], manifest: list[dict]) 
             "task_type": ttype,
             "size_bucket": bucket,
             "rep": m.get("rep"),
+            "mode": m.get("mode", "single-turn"),
+            "critique_type": m.get("critique_type"),
             "judge_error": j.get("error"),
             "acceptance_pass": j.get("acceptance_pass"),
+            "critique_addressed": j.get("critique_addressed"),
             "format_adherence": j.get("format_adherence"),
             "fabrication_present": j.get("fabrication_present"),
             "quality": j.get("quality"),
             "verifier_pass": (score.get("verifier") or {}).get("pass"),
             "verifier_ran": (score.get("verifier") or {}).get("ran"),
-            "completion_tokens": m.get("completion_tokens"),
-            "prompt_tokens": m.get("prompt_tokens"),
-            "reasoning_chars": m.get("reasoning_chars"),
-            "elapsed_s": m.get("elapsed_s"),
-            "finish_reason": m.get("finish_reason"),
+            "completion_tokens": completion_tokens,
+            "prompt_tokens": prompt_tokens,
+            "reasoning_chars": reasoning_chars,
+            "elapsed_s": elapsed_s,
+            "finish_reason": finish_reason,
         })
-        cp = cell_pass(score)
+        cp = cell_pass(score, run_is_multi)
         if cp is not None:
             per_cond[cond].append((cp, j))
             per_cond_type[(cond, ttype)].append((cp, j))
@@ -260,31 +387,54 @@ def aggregate(results_dir: Path, scores: dict[str, dict], manifest: list[dict]) 
     def summarize_cells(cells: list[tuple[bool, dict]]) -> dict:
         n = len(cells)
         if n == 0:
-            return {"n": 0, "pass_rate": None, "mean_quality": None, "fab_rate": None}
+            return {
+                "n": 0, "pass_rate": None, "mean_quality": None,
+                "fab_rate": None, "crit_rate": None,
+            }
         passes = sum(1 for cp, _ in cells if cp)
         qs = [j.get("quality") for _, j in cells if isinstance(j.get("quality"), (int, float))]
         fabs = sum(1 for _, j in cells if j.get("fabrication_present"))
+        crit_cells = [j for _, j in cells if j.get("critique_addressed") is not None]
+        crit_passes = sum(1 for j in crit_cells if j.get("critique_addressed"))
         return {
             "n": n,
             "pass_rate": round(passes / n, 3),
             "mean_quality": round(mean(qs), 2) if qs else None,
             "fab_rate": round(fabs / n, 3),
+            "crit_rate": round(crit_passes / len(crit_cells), 3) if crit_cells else None,
         }
+
+    # Derive condition list from the manifest so multi-turn cells
+    # (e.g. TF3-thinking-on-preserve-on) show up correctly.
+    conds = sorted({m.get("condition", "?") for m in manifest if m.get("condition")})
 
     # Condition table
     md = ["# Qwen Worker Eval Summary\n"]
     md.append(f"Run: `{results_dir.name}`  ")
     md.append(f"Total runs: {len(rows)}  ")
     judge_errors = sum(1 for r in rows if r["judge_error"])
-    md.append(f"Judge errors: {judge_errors}\n")
+    md.append(f"Judge errors: {judge_errors}  ")
+    if any_multi:
+        md.append("Mode: multi-turn (combined pass = acceptance ∧ critique_addressed ∧ format ∧ ¬fab)\n")
+    else:
+        md.append("Mode: single-turn\n")
 
     md.append("## Per condition (all tasks)\n")
-    md.append("| Condition | N | Pass rate | Mean quality | Fabrication rate |")
-    md.append("|---|---|---|---|---|")
-    conds = ["TF1-thinking-on", "TF1-thinking-off", "TF2-thinking-on", "TF2-thinking-off", "TF3-thinking-on", "TF3-thinking-off"]
-    for cond in conds:
-        s = summarize_cells(per_cond.get(cond, []))
-        md.append(f"| {cond} | {s['n']} | {s['pass_rate']} | {s['mean_quality']} | {s['fab_rate']} |")
+    if any_multi:
+        md.append("| Condition | N | Pass rate | Critique-addressed | Mean quality | Fabrication rate |")
+        md.append("|---|---|---|---|---|---|")
+        for cond in conds:
+            s = summarize_cells(per_cond.get(cond, []))
+            md.append(
+                f"| {cond} | {s['n']} | {s['pass_rate']} | {s['crit_rate']} "
+                f"| {s['mean_quality']} | {s['fab_rate']} |"
+            )
+    else:
+        md.append("| Condition | N | Pass rate | Mean quality | Fabrication rate |")
+        md.append("|---|---|---|---|---|")
+        for cond in conds:
+            s = summarize_cells(per_cond.get(cond, []))
+            md.append(f"| {cond} | {s['n']} | {s['pass_rate']} | {s['mean_quality']} | {s['fab_rate']} |")
     md.append("")
 
     # Condition × task_type table
@@ -296,6 +446,37 @@ def aggregate(results_dir: Path, scores: dict[str, dict], manifest: list[dict]) 
             s = summarize_cells(per_cond_type.get((cond, ttype), []))
             md.append(f"| {cond} | {ttype} | {s['n']} | {s['pass_rate']} | {s['mean_quality']} | {s['fab_rate']} |")
     md.append("")
+
+    # Revision-specific rollup (multi-turn only)
+    if any_multi:
+        md.append("## Revision outcomes (multi-turn only)\n")
+        md.append("| Condition | Critique type | N | Critique-addressed | Acceptance held | Mean quality |")
+        md.append("|---|---|---|---|---|---|")
+        by_cond_crit: dict[tuple[str, str], list[dict]] = defaultdict(list)
+        for r in rows:
+            if r["mode"] != "multi-turn":
+                continue
+            key = (r["cond"], r.get("critique_type") or "?")
+            by_cond_crit[key].append(r)
+        for (cond, ct), bucket_rows in sorted(by_cond_crit.items()):
+            n = len(bucket_rows)
+            crit_cells = [b for b in bucket_rows if b["critique_addressed"] is not None]
+            crit_rate = (
+                round(
+                    sum(1 for b in crit_cells if b["critique_addressed"]) / len(crit_cells),
+                    3,
+                )
+                if crit_cells else None
+            )
+            acc_cells = [b for b in bucket_rows if b["acceptance_pass"] is not None]
+            acc_rate = (
+                round(sum(1 for b in acc_cells if b["acceptance_pass"]) / len(acc_cells), 3)
+                if acc_cells else None
+            )
+            qs = [b["quality"] for b in bucket_rows if isinstance(b["quality"], (int, float))]
+            mq = round(mean(qs), 2) if qs else None
+            md.append(f"| {cond} | {ct} | {n} | {crit_rate} | {acc_rate} | {mq} |")
+        md.append("")
 
     # Size-bucket roll-up (Phase 2A — only populated when manifest has size_bucket)
     buckets_present = sorted({b for (b, _cond) in per_bucket.keys()}, key=_bucket_order)
@@ -424,7 +605,7 @@ def main() -> None:
         print(f"[{i}/{total}] scoring {stem}")
         s = score_run(
             results_dir,
-            stem,
+            m,
             only,
             args.skip_judge,
             tasks_dir,

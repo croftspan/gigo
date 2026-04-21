@@ -1,10 +1,14 @@
 gigo-workspace/
 .local/
+.DS_Store
 
-# Eval results (keep scripts, ignore outputs)
-evals/blueprint-flow-test/results/
-evals/results/
-evals/qwen-worker-eval/results/
+# Claude Code runtime state (machine-specific)
+.claude/worktrees/
+.claude/scheduled_tasks.lock
+.claude/settings.local.json
+
+# Eval outputs are ignored via per-dir .gitignore stubs that preserve the
+# directory structure on clone (see evals/*/results/.gitignore).
 docs/prompts/
 
 # Python bytecode
